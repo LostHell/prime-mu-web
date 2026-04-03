@@ -28,7 +28,7 @@ export async function unstuckAction(
   }
 
   const { characterName } = validated.data;
-  const character = await verifyCharacterOwnership(accountId, characterName);
+  const character = await verifyCharacterOwnership(characterName);
 
   if (!character) {
     return { success: false, message: "Character not found." };

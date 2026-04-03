@@ -5,10 +5,6 @@ export { clearPkAction } from "./clear-pk";
 export { loginAction } from "./login";
 export { logoutAction } from "./logout";
 export { registerAction } from "./register";
-export {
-  MIN_RESET_LEVEL,
-  POINTS_PER_RESET,
-  resetCharacterAction
-} from "./reset-character";
+export { resetCharacterAction } from "./reset-character";
 export { unstuckAction } from "./unstuck";
 
