@@ -11,27 +11,6 @@ export interface Player {
   guild?: string;
 }
 
-export interface DevilSquareEntry {
-  rank: number;
-  name: string;
-  class: MuClass;
-  score: number;
-}
-
-export interface BloodCastleEntry {
-  rank: number;
-  name: string;
-  class: MuClass;
-  score: number;
-}
-
-export interface DisconnectedUser {
-  name: string;
-  map: string;
-  class: MuClass;
-  time: string;
-}
-
 export const classColors: Record<MuClass, string> = {
   "Dark Knight": "class-badge-dk",
   "Dark Wizard": "class-badge-dw",
@@ -56,35 +35,6 @@ export const topPlayers: Player[] = [
   { rank: 13, name: "DarkPhoenix", class: "Dark Wizard", level: 400, resets: 8, guild: "Phoenix" },
   { rank: 14, name: "IronFist", class: "Dark Knight", level: 380, resets: 8 },
   { rank: 15, name: "MysticLord", class: "Dark Lord", level: 375, resets: 7, guild: "Valor" },
-];
-
-export const devilSquareRanking: DevilSquareEntry[] = [
-  { rank: 1, name: "xDarkLord", class: "Dark Lord", score: 98500 },
-  { rank: 2, name: "ShadowBlade", class: "Dark Knight", score: 95200 },
-  { rank: 3, name: "MageSlayer", class: "Magic Gladiator", score: 91800 },
-  { rank: 4, name: "ArcaneStorm", class: "Dark Wizard", score: 88400 },
-  { rank: 5, name: "ElvenQueen", class: "Fairy Elf", score: 85100 },
-];
-
-export const bloodCastleRanking: BloodCastleEntry[] = [
-  { rank: 1, name: "ShadowBlade", class: "Dark Knight", score: 87600 },
-  { rank: 2, name: "ArcaneStorm", class: "Dark Wizard", score: 84300 },
-  { rank: 3, name: "xDarkLord", class: "Dark Lord", score: 81900 },
-  { rank: 4, name: "NightFury", class: "Dark Knight", score: 78500 },
-  { rank: 5, name: "FrostMage", class: "Dark Wizard", score: 75200 },
-];
-
-export const lastDisconnected: DisconnectedUser[] = [
-  { name: "xDarkLord", map: "Lorencia", class: "Magic Gladiator", time: "2 min ago" },
-  { name: "FrostMage", map: "Noria", class: "Dark Wizard", time: "5 min ago" },
-  { name: "WindArcher", map: "Davias", class: "Fairy Elf", time: "8 min ago" },
-  { name: "NightFury", map: "Lost Tower", class: "Dark Lord", time: "12 min ago" },
-  { name: "ElvenQueen", map: "Davias", class: "Fairy Elf", time: "15 min ago" },
-  { name: "BladeMaster", map: "Tarkan", class: "Dark Knight", time: "20 min ago" },
-  { name: "ThunderGod", map: "Icarus", class: "Magic Gladiator", time: "25 min ago" },
-  { name: "DarkPhoenix", map: "Atlans", class: "Dark Wizard", time: "30 min ago" },
-  { name: "IronFist", map: "Tarkan", class: "Dark Knight", time: "35 min ago" },
-  { name: "SilverArrow", map: "Davias", class: "Fairy Elf", time: "42 min ago" },
 ];
 
 // Event schedules — hours (local time) at which each event starts

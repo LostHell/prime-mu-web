@@ -1,6 +1,8 @@
 services:
   db:
     image: mysql:8.0
+    restart: always
+    container_name: mysql-db
     ports:
       - '3306:3306'
     environment:
@@ -8,7 +10,7 @@ services:
       - MYSQL_DATABASE=MuOnline97
     volumes:
       - ./db:/var/lib/mysql
-    restart: always
+
   phpmyadmin:
     image: phpmyadmin
     restart: always

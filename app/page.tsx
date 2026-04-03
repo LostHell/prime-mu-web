@@ -1,18 +1,21 @@
+import { getBloodCastleRanking } from "@/app/_lib/get-blood-castle-ranking";
+import { getDevilSquareRanking } from "@/app/_lib/get-devil-square-ranking";
+import { getLastDisconnected } from "@/app/_lib/get-last-disconnected";
 import Divider from "@/components/divider";
 import EventCountdown from "@/components/event-countdown";
 import Hero from "@/components/hero";
 import ServerInfo from "@/components/server-info";
-import {
-  bloodCastleRanking,
-  classColors,
-  devilSquareRanking,
-  eventSchedules,
-  lastDisconnected,
-  serverInfo,
-} from "@/lib/mock-data";
+import { eventSchedules, serverInfo } from "@/lib/mock-data";
+import { CLASS_COLOR } from "@/lib/types/character";
 import { Shield, Skull } from "lucide-react";
 
-const Home = () => {
+const Home = async () => {
+  const [bloodCastleRanking, devilSquareRanking, lastDisconnected] = await Promise.all([
+    getBloodCastleRanking(),
+    getDevilSquareRanking(),
+    getLastDisconnected(),
+  ]);
+
   return (
     <>
       {/* Hero */}
@@ -62,10 +65,7 @@ const Home = () => {
                 <h3 className="section-title">Devil Square</h3>
               </div>
               <div className="flex justify-end mb-4">
-                <EventCountdown
-                  scheduleHours={eventSchedules.devilSquare}
-                  color="hsl(var(--gold))"
-                />
+                <EventCountdown scheduleHours={eventSchedules.devilSquare} color="hsl(var(--gold))" />
               </div>
               <div className="ornament-line mb-4" />
               <table className="w-full">
@@ -79,13 +79,10 @@ const Home = () => {
                 <tbody>
                   {devilSquareRanking.map((entry, i) => (
                     <tr key={i} className="border-b border-border/50 table-row-hover">
-                      <td
-                        className="table-body-cell text-gold"
-                        style={{ color: "hsl(var(--gold))" }}
-                      >
+                      <td className="table-body-cell" style={{ color: "hsl(var(--gold))" }}>
                         {entry.rank}
                       </td>
-                      <td className={`table-body-cell font-medium ${classColors[entry.class]}`}>
+                      <td className="table-body-cell font-medium" style={{ color: CLASS_COLOR[entry.class] }}>
                         {entry.name}
                       </td>
                       <td className="table-body-cell">{entry.score.toLocaleString()}</td>
@@ -102,10 +99,7 @@ const Home = () => {
                 <h3 className="section-title">Blood Castle</h3>
               </div>
               <div className="flex justify-end mb-4">
-                <EventCountdown
-                  scheduleHours={eventSchedules.bloodCastle}
-                  color="hsl(var(--crimson))"
-                />
+                <EventCountdown scheduleHours={eventSchedules.bloodCastle} color="hsl(var(--crimson))" />
               </div>
               <div className="ornament-line mb-4" />
               <table className="w-full">
@@ -122,7 +116,7 @@ const Home = () => {
                       <td className="table-body-cell" style={{ color: "hsl(var(--gold))" }}>
                         {entry.rank}
                       </td>
-                      <td className={`table-body-cell font-medium ${classColors[entry.class]}`}>
+                      <td className="table-body-cell font-medium" style={{ color: CLASS_COLOR[entry.class] }}>
                         {entry.name}
                       </td>
                       <td className="table-body-cell">{entry.score.toLocaleString()}</td>
@@ -147,18 +141,16 @@ const Home = () => {
                 <tr className="border-b border-border">
                   <th className="table-header-cell">Name</th>
                   <th className="table-header-cell">Map</th>
-
                   <th className="table-header-cell text-right">Time</th>
                 </tr>
               </thead>
               <tbody>
                 {lastDisconnected.map((user, i) => (
                   <tr key={i} className="border-b border-border/50 table-row-hover">
-                    <td className={`table-body-cell font-medium  ${classColors[user.class]}`}>
+                    <td className="table-body-cell font-medium" style={{ color: CLASS_COLOR[user.class] }}>
                       {user.name}
                     </td>
-                    <td className="">{user.map}</td>
-
+                    <td className="table-body-cell">{user.map}</td>
                     <td className="table-body-cell text-muted-foreground">{user.time}</td>
                   </tr>
                 ))}

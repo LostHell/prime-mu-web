@@ -1,7 +1,7 @@
 import { getToken } from "next-auth/jwt";
 import { NextRequest, NextResponse } from "next/server";
 
-export const middleware = async (req: NextRequest) => {
+export const proxy = async (req: NextRequest) => {
   const token = await getToken({ req, secret: process.env.AUTH_SECRET });
   const isAuthenticated = Boolean(token?.sub);
   const isUserPanelRoute = req.nextUrl.pathname.startsWith("/user-panel");

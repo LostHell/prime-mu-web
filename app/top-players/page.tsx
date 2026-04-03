@@ -1,18 +1,19 @@
+import { PlayersTable } from "@/app/top-players/_components/players-table";
+import { getTopPlayers } from "@/app/top-players/_lib/get-top-players";
 import Divider from "@/components/divider";
 import { BRAND } from "@/constants/app";
-import { classColors, topPlayers } from "@/lib/mock-data";
+import { CLASS_COLOR } from "@/lib/types/character";
 import { Medal, Trophy } from "lucide-react";
 
-const TopPlayers = () => {
-  const top3 = topPlayers.slice(0, 3);
+const TopPlayers = async () => {
+  const allPlayers = await getTopPlayers();
+  const top3 = allPlayers.slice(0, 3);
 
   return (
     <div className="max-w-6xl mx-auto px-4 pt-48 pb-16">
       {/* Header */}
       <div className="text-center mb-12 animate-fade-up">
-        <h1 className="font-serif text-4xl md:text-5xl font-bold gold-gradient-text mb-4">
-          Top Players
-        </h1>
+        <h1 className="font-serif text-4xl md:text-5xl font-bold gold-gradient-text mb-4">Top Players</h1>
         <p className="text-muted-foreground text-lg">The mightiest warriors of {BRAND}</p>
       </div>
 
@@ -28,9 +29,7 @@ const TopPlayers = () => {
               style={{ animationDelay: `${i * 0.15}s`, animationFillMode: "backwards" }}
             >
               <div className="flex items-center justify-center mb-4">
-                {podiumOrder[i] === 1 && (
-                  <Trophy className="w-8 h-8" style={{ color: "hsl(var(--gold))" }} />
-                )}
+                {podiumOrder[i] === 1 && <Trophy className="w-8 h-8" style={{ color: "hsl(var(--gold))" }} />}
                 {podiumOrder[i] === 2 && <Medal className="w-7 h-7 text-gray-400" />}
                 {podiumOrder[i] === 3 && <Medal className="w-6 h-6 text-amber-700" />}
               </div>
@@ -38,18 +37,16 @@ const TopPlayers = () => {
                 #{podiumOrder[i]}
               </div>
               <h3 className="font-serif text-xl font-bold text-foreground mb-1">{player.name}</h3>
-              <p className={`text-sm ${classColors[player.class]}`}>{player.class}</p>
+              <p className="text-sm" style={{ color: CLASS_COLOR[player.class] }}>
+                {player.class}
+              </p>
               <div className="mt-4 grid grid-cols-2 gap-4">
                 <div>
-                  <div className="text-xs text-muted-foreground uppercase tracking-widest">
-                    Level
-                  </div>
+                  <div className="text-xs text-muted-foreground uppercase tracking-widest">Level</div>
                   <div className="text-lg font-bold gold-gradient-text">{player.level}</div>
                 </div>
                 <div>
-                  <div className="text-xs text-muted-foreground uppercase tracking-widest">
-                    Resets
-                  </div>
+                  <div className="text-xs text-muted-foreground uppercase tracking-widest">Resets</div>
                   <div className="text-lg font-bold gold-gradient-text">{player.resets}</div>
                 </div>
               </div>
@@ -70,34 +67,7 @@ const TopPlayers = () => {
         className="card-dark p-6 card-hover animate-fade-up"
         style={{ animationDelay: "0.3s", animationFillMode: "backwards" }}
       >
-        <table className="w-full">
-          <thead>
-            <tr className="border-b border-border">
-              <th className="table-header-cell">Rank</th>
-              <th className="table-header-cell">Name</th>
-              <th className="table-header-cell">Class</th>
-              <th className="table-header-cell text-center">Level</th>
-              <th className="table-header-cell text-center">Resets</th>
-              <th className="table-header-cell text-right">Guild</th>
-            </tr>
-          </thead>
-          <tbody>
-            {topPlayers.map((player, i) => (
-              <tr key={i} className="border-b border-border/50 table-row-hover">
-                <td className="table-body-cell" style={{ color: "hsl(var(--gold))" }}>
-                  {player.rank}
-                </td>
-                <td className="table-body-cell font-medium">{player.name}</td>
-                <td className={`table-body-cell ${classColors[player.class]}`}>{player.class}</td>
-                <td className="table-body-cell text-center">{player.level}</td>
-                <td className="table-body-cell text-center">{player.resets}</td>
-                <td className="table-body-cell text-right text-muted-foreground">
-                  {player.guild || "—"}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <PlayersTable players={allPlayers} />
       </div>
     </div>
   );
