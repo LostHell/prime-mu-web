@@ -1,8 +1,8 @@
 "use server";
 
 import { signIn, signOut } from "@/auth";
-import { prisma } from "@/lib/prisma";
 import { AuthFormState, loginSchema, registerSchema } from "@/lib/validation/auth";
+import { prisma } from "@/prisma/prisma";
 import { AuthError } from "next-auth";
 import { redirect } from "next/navigation";
 

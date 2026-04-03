@@ -5,7 +5,7 @@ services:
       - '3306:3306'
     environment:
       - MYSQL_ROOT_PASSWORD=password
-      - MYSQL_DATABASE=prime_mu
+      - MYSQL_DATABASE=MuOnline97
     volumes:
       - ./db:/var/lib/mysql
     restart: always

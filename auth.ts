@@ -1,5 +1,5 @@
-import { prisma } from "@/lib/prisma";
 import { loginSchema } from "@/lib/validation/auth";
+import { prisma } from "@/prisma/prisma";
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 
