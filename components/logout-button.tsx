@@ -1,6 +1,6 @@
 "use client";
 
-import { logoutAction } from "@/app/actions/auth-actions";
+import { logoutAction } from "@/actions/logout";
 import type { CSSProperties, ReactNode } from "react";
 
 type LogoutButtonProps = {

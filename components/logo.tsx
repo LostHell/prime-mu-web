@@ -1,4 +1,4 @@
-import { BRAND } from "@/app/constants/app";
+import { BRAND } from "@/constants/app";
 import Image from "next/image";
 
 const Logo = () => {

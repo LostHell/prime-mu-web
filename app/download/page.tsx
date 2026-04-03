@@ -1,6 +1,6 @@
-import { BRAND } from "@/app/constants/app";
 import Divider from "@/components/divider";
 import PageLayout from "@/components/page-layout";
+import { BRAND } from "@/constants/app";
 import { CheckCircle, Download, Monitor, Shield } from "lucide-react";
 import Link from "next/link";
 

@@ -1,5 +1,5 @@
-import { BRAND } from "@/app/constants/app";
 import Divider from "@/components/divider";
+import { BRAND } from "@/constants/app";
 import { classColors, topPlayers } from "@/lib/mock-data";
 import { Medal, Trophy } from "lucide-react";
 

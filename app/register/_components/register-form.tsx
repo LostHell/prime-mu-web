@@ -1,7 +1,7 @@
 "use client";
 
-import { registerAction } from "@/app/actions/auth-actions";
-import { AuthFormState } from "@/lib/validation/auth";
+import { registerAction } from "@/actions/register";
+import { AuthFormState } from "@/lib/validation/types";
 import { useActionState } from "react";
 
 const initialState: AuthFormState = {};

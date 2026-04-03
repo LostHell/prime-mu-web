@@ -1,8 +1,8 @@
 "use client";
 
-import { BRAND } from "@/app/constants/app";
 import Logo from "@/components/logo";
 import LogoutButton from "@/components/logout-button";
+import { BRAND } from "@/constants/app";
 import { Page } from "@/types/navitaion";
 import { Menu, X } from "lucide-react";
 import Link from "next/link";

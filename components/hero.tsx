@@ -1,4 +1,4 @@
-import { BRAND } from "@/app/constants/app";
+import { BRAND } from "@/constants/app";
 import { serverInfo } from "@/lib/mock-data";
 import Link from "next/link";
 import { FC } from "react";

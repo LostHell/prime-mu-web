@@ -1,6 +1,6 @@
-import { BRAND } from "@/app/constants/app";
 import Footer from "@/components/footer";
 import Header from "@/components/header";
+import { BRAND } from "@/constants/app";
 import type { Metadata } from "next";
 import { Cinzel, Raleway } from "next/font/google";
 import "./globals.css";
