@@ -10,10 +10,10 @@ export {
   type ChangePasswordInput
 } from "./change-password";
 export { clearPkSchema, type ClearPkInput } from "./clear-pk";
-export { type UserPanelActionState } from "./types";
 export {
   resetCharacterSchema,
   type ResetCharacterInput
-} from "./user-panel/reset-character";
-export { unstuckSchema, type UnstuckInput } from "./user-panel/unstuck";
+} from "./reset-character";
+export { type UserPanelActionState } from "./types";
+export { unstuckSchema, type UnstuckInput } from "./unstuck";
 
