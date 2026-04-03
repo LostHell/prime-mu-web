@@ -1,65 +1,176 @@
-import Image from "next/image";
+import Divider from "@/components/divider";
+import EventCountdown from "@/components/event-countdown";
+import Hero from "@/components/hero";
+import ServerInfo from "@/components/server-info";
+import {
+  bloodCastleRanking,
+  classColors,
+  devilSquareRanking,
+  eventSchedules,
+  lastDisconnected,
+  serverInfo,
+} from "@/lib/mock-data";
+import { Shield, Skull } from "lucide-react";
 
-export default function Home() {
+const Home = () => {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <>
+      {/* Hero */}
+      <Hero />
+
+      {/* Server Info */}
+      <ServerInfo serverInfo={serverInfo} />
+
+      <Divider />
+
+      {/* Server Info */}
+      <section className="py-12">
+        <div className="max-w-4xl mx-auto px-4">
+          <h2 className="section-title text-center mb-8">Server Information</h2>
+          <div className="card-dark p-6 card-hover">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              {[
+                { label: "Version", value: serverInfo.version },
+                { label: "Experience", value: serverInfo.experience },
+                { label: "Drop", value: serverInfo.drop },
+                { label: "Max Level", value: serverInfo.maxLevel },
+                { label: "Max Resets", value: serverInfo.maxResets },
+                { label: "Points", value: serverInfo.points },
+              ].map((info) => (
+                <div key={info.label} className="flex justify-between border-b border-border pb-2">
+                  <span className="text-muted-foreground">{info.label}</span>
+                  <span className="font-semibold" style={{ color: "hsl(var(--gold))" }}>
+                    {info.value}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </section>
+
+      <Divider />
+
+      {/* Rankings Section */}
+      <section className="py-12">
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="grid md:grid-cols-2 gap-8">
+            {/* Devil Square */}
+            <div className="card-dark p-6 card-hover">
+              <div className="flex items-center gap-3 mb-2">
+                <Skull className="w-6 h-6" style={{ color: "hsl(var(--gold))" }} />
+                <h3 className="section-title">Devil Square</h3>
+              </div>
+              <div className="flex justify-end mb-4">
+                <EventCountdown
+                  scheduleHours={eventSchedules.devilSquare}
+                  color="hsl(var(--gold))"
+                />
+              </div>
+              <div className="ornament-line mb-4" />
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b border-border">
+                    <th className="table-header-cell">#</th>
+                    <th className="table-header-cell">Name</th>
+                    <th className="table-header-cell text-right">Score</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {devilSquareRanking.map((entry, i) => (
+                    <tr key={i} className="border-b border-border/50 table-row-hover">
+                      <td
+                        className="table-body-cell text-gold"
+                        style={{ color: "hsl(var(--gold))" }}
+                      >
+                        {entry.rank}
+                      </td>
+                      <td className={`table-body-cell font-medium ${classColors[entry.class]}`}>
+                        {entry.name}
+                      </td>
+                      <td className="table-body-cell">{entry.score.toLocaleString()}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Blood Castle */}
+            <div className="card-dark p-6 card-hover">
+              <div className="flex items-center gap-3 mb-2">
+                <Shield className="w-6 h-6" style={{ color: "hsl(var(--crimson))" }} />
+                <h3 className="section-title">Blood Castle</h3>
+              </div>
+              <div className="flex justify-end mb-4">
+                <EventCountdown
+                  scheduleHours={eventSchedules.bloodCastle}
+                  color="hsl(var(--crimson))"
+                />
+              </div>
+              <div className="ornament-line mb-4" />
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b border-border">
+                    <th className="table-header-cell">#</th>
+                    <th className="table-header-cell">Name</th>
+                    <th className="table-header-cell text-right">Score</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {bloodCastleRanking.map((entry, i) => (
+                    <tr key={i} className="border-b border-border/50 table-row-hover">
+                      <td className="table-body-cell" style={{ color: "hsl(var(--gold))" }}>
+                        {entry.rank}
+                      </td>
+                      <td className={`table-body-cell font-medium ${classColors[entry.class]}`}>
+                        {entry.name}
+                      </td>
+                      <td className="table-body-cell">{entry.score.toLocaleString()}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
-      </main>
-    </div>
+      </section>
+
+      <Divider />
+
+      {/* Last Disconnected */}
+      <section className="py-12">
+        <div className="max-w-4xl mx-auto px-4">
+          <h2 className="section-title text-center mb-8">Last Disconnected Players</h2>
+          <div className="card-dark p-6 card-hover">
+            <table className="w-full">
+              <thead>
+                <tr className="border-b border-border">
+                  <th className="table-header-cell">Name</th>
+                  <th className="table-header-cell">Map</th>
+
+                  <th className="table-header-cell text-right">Time</th>
+                </tr>
+              </thead>
+              <tbody>
+                {lastDisconnected.map((user, i) => (
+                  <tr key={i} className="border-b border-border/50 table-row-hover">
+                    <td className={`table-body-cell font-medium  ${classColors[user.class]}`}>
+                      {user.name}
+                    </td>
+                    <td className="">{user.map}</td>
+
+                    <td className="table-body-cell text-muted-foreground">{user.time}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <Divider />
+    </>
   );
-}
+};
+
+export default Home;

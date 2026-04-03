@@ -1,0 +1,25 @@
+services:
+  db:
+    image: mysql:8.0
+    ports:
+      - '3306:3306'
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=prime_mu
+    volumes:
+      - ./db:/var/lib/mysql
+    restart: always
+  phpmyadmin:
+    image: phpmyadmin
+    restart: always
+    container_name: php-my-admin
+    ports:
+      - "8081:80"
+    depends_on:
+      - db
+    environment:
+      # - PMA_HOST=10.10.1.16
+      - UPLOAD_LIMIT=200M
+      - MEMORY_LIMIT=6G
+      - MAX_EXECUTION_TIME=160000
+      # - PMA_ABSOLUTE_URI=https://localhost/phpmyadmin

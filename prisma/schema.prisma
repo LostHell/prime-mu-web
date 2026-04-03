@@ -1,0 +1,189 @@
+generator client {
+  provider = "prisma-client"
+  output   = "./generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+model AccountCharacter {
+  Id      String  @id @db.VarChar(10)
+  GameID1 String? @db.VarChar(10)
+  GameID2 String? @db.VarChar(10)
+  GameID3 String? @db.VarChar(10)
+  GameID4 String? @db.VarChar(10)
+  GameID5 String? @db.VarChar(10)
+  GameIDC String? @db.VarChar(10)
+}
+
+model Character {
+  AccountID       String    @db.VarChar(10)
+  Name            String    @id @db.VarChar(10)
+  ResetCount      Int       @default(0) @db.UnsignedInt
+  GrandResetCount Int       @default(0) @db.UnsignedInt
+  cLevel          Int       @default(1) @db.UnsignedInt
+  LevelUpPoint    Int?      @default(0) @db.UnsignedInt
+  Class           Int?      @db.UnsignedTinyInt
+  Experience      Int?      @default(0) @db.UnsignedInt
+  Strength        Int?      @db.UnsignedInt
+  Dexterity       Int?      @db.UnsignedInt
+  Vitality        Int?      @db.UnsignedInt
+  Energy          Int?      @db.UnsignedInt
+  Inventory       Bytes?    @db.VarBinary(760)
+  MagicList       Bytes?    @db.VarBinary(180)
+  Money           Int?      @default(0) @db.UnsignedInt
+  Life            Int?      @db.UnsignedInt
+  MaxLife         Int?      @db.UnsignedInt
+  Mana            Int?      @db.UnsignedInt
+  MaxMana         Int?      @db.UnsignedInt
+  BP              Int?      @db.UnsignedInt
+  MaxBP           Int?      @db.UnsignedInt
+  MapNumber       Int?      @db.UnsignedTinyInt
+  MapPosX         Int?      @db.UnsignedTinyInt
+  MapPosY         Int?      @db.UnsignedTinyInt
+  MapDir          Int?      @default(0) @db.UnsignedTinyInt
+  PkCount         Int?      @default(0) @db.UnsignedInt
+  PkLevel         Int?      @default(3)
+  PkTime          Int?      @default(0) @db.UnsignedInt
+  CtlCode         Int?      @default(0) @db.UnsignedTinyInt
+  Bloc_Expire     DateTime? @db.DateTime(0)
+  Quest           Bytes?    @default(dbgenerated("0x30")) @db.VarBinary(50)
+  FruitPoint      Int?      @default(0)
+  EffectList      Bytes?    @db.VarBinary(208)
+  FruitAddPoint   Int       @default(0)
+  FruitSubPoint   Int       @default(0)
+}
+
+model DefaultClassType {
+  Class        Int    @id @db.UnsignedTinyInt
+  Level        Int?   @default(0) @db.UnsignedInt
+  LevelUpPoint Int?   @default(0) @db.UnsignedInt
+  Strength     Int?   @db.UnsignedInt
+  Dexterity    Int?   @db.UnsignedInt
+  Vitality     Int?   @db.UnsignedInt
+  Energy       Int?   @db.UnsignedInt
+  Inventory    Bytes? @db.VarBinary(760)
+  MagicList    Bytes? @db.VarBinary(180)
+  Life         Int?   @db.UnsignedInt
+  MaxLife      Int?   @db.UnsignedInt
+  Mana         Int?   @db.UnsignedInt
+  MaxMana      Int?   @db.UnsignedInt
+  MapNumber    Int?   @db.UnsignedTinyInt
+  MapPosX      Int?   @db.UnsignedTinyInt
+  MapPosY      Int?   @db.UnsignedTinyInt
+  Quest        Bytes? @db.VarBinary(50)
+  EffectList   Bytes? @db.VarBinary(208)
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model ExtWarehouse {
+  AccountID String @db.VarChar(10)
+  Number    Int?   @db.UnsignedInt
+  Items     Bytes? @db.VarBinary(1920)
+  Money     Int?   @db.UnsignedInt
+
+  @@index([AccountID], map: "IX_ExtWarehouse_AccountID")
+  @@ignore
+}
+
+model GameServerInfo {
+  Number    Int @id @default(0) @db.UnsignedInt
+  ItemCount Int @db.UnsignedInt
+}
+
+model GoldenArcherCoin {
+  AccountID   String  @id @db.VarChar(10)
+  Renas       Int     @default(0) @db.UnsignedInt
+  Stones      Int     @default(0) @db.UnsignedInt
+  LuckyNumber String? @db.Char(12)
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model GoldenArcherLuckyNumbers {
+  AccountID   String @db.VarChar(10)
+  LuckyNumber String @db.Char(12)
+
+  @@index([AccountID], map: "IX_GoldenArcherLuckyNumbers_AccountID")
+  @@ignore
+}
+
+model Guild {
+  Number   Int     @id @default(autoincrement()) @db.UnsignedInt
+  G_Name   String  @db.VarChar(8)
+  G_Mark   Bytes?  @db.VarBinary(32)
+  G_Score  Int?    @default(0) @db.UnsignedInt
+  G_Master String? @db.VarChar(10)
+  G_Notice String? @db.VarChar(60)
+}
+
+model GuildMember {
+  Name     String @id @db.VarChar(10)
+  G_Name   String @db.VarChar(8)
+  G_Status Int    @default(0) @db.UnsignedTinyInt
+}
+
+model MEMB_INFO {
+  memb___id         String   @id @db.VarChar(10)
+  memb__pwd         String   @db.VarChar(10)
+  memb_name         String   @db.VarChar(10)
+  mail_addr         String?  @db.VarChar(50)
+  sno__numb         String   @db.Char(18)
+  AccountLevel      Int      @default(0)
+  AccountExpireDate DateTime @default(now()) @db.DateTime(0)
+  bloc_code         String   @db.Char(1)
+  Bloc_Expire       DateTime @default(now()) @db.DateTime(0)
+}
+
+model MEMB_STAT {
+  memb___id    String    @id @db.VarChar(10)
+  ConnectStat  Int?      @db.UnsignedTinyInt
+  ServerName   String?   @db.VarChar(50)
+  IP           String?   @db.VarChar(15)
+  ConnectTM    DateTime? @db.DateTime(0)
+  DisConnectTM DateTime? @db.DateTime(0)
+  OnlineHours  Int?      @default(0) @db.UnsignedInt
+}
+
+model OptionData {
+  Name       String @id @db.VarChar(10)
+  SkillKey   Bytes? @db.Binary(10)
+  GameOption Int?   @db.UnsignedTinyInt
+  Qkey       Int?   @db.UnsignedTinyInt
+  Wkey       Int?   @db.UnsignedTinyInt
+  Ekey       Int?   @db.UnsignedTinyInt
+  ChatWindow Int?   @db.UnsignedTinyInt
+}
+
+model RankingBloodCastle {
+  Name  String @id @db.VarChar(10)
+  Score Int?   @db.UnsignedInt
+}
+
+model RankingDevilSquare {
+  Name  String @id @db.VarChar(10)
+  Score Int?   @db.UnsignedInt
+}
+
+model ResetInfo {
+  Name              String    @id @db.VarChar(10)
+  ResetDay          Int       @default(0) @db.UnsignedInt
+  ResetDayDate      DateTime? @db.DateTime(0)
+  ResetWek          Int       @default(0) @db.UnsignedInt
+  ResetWekDate      DateTime? @db.DateTime(0)
+  ResetMon          Int       @default(0) @db.UnsignedInt
+  ResetMonDate      DateTime? @db.DateTime(0)
+  GrandResetDay     Int       @default(0) @db.UnsignedInt
+  GrandResetDayDate DateTime? @db.DateTime(0)
+  GrandResetWek     Int       @default(0) @db.UnsignedInt
+  GrandResetWekDate DateTime? @db.DateTime(0)
+  GrandResetMon     Int       @default(0) @db.UnsignedInt
+  GrandResetMonDate DateTime? @db.DateTime(0)
+}
+
+model warehouse {
+  AccountID String @id @db.VarChar(10)
+  Items     Bytes? @db.VarBinary(1200)
+  Money     Int?   @default(0) @db.UnsignedInt
+  pw        Int?   @default(0) @db.SmallInt
+}
