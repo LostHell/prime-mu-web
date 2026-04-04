@@ -27,7 +27,7 @@ const Navigation: FC<NavigationProps> = ({ pages, isAuthenticated }) => {
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
-      <div className="mx-auto px-4 py-4 flex items-center justify-between">
+      <div className="mx-auto max-w-5xl px-4 py-4 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-3">
           <Logo />
           <span className="font-serif text-xl font-bold gold-gradient-text">{BRAND}</span>

@@ -22,7 +22,7 @@ const LoginPage = async () => {
           <LoginForm />
         </div>
         <p className="mt-6 text-center text-sm text-muted-foreground">
-          No account yet?{" "}
+          Don&#39;t have an account yet?{" "}
           <Link href="/register" className="text-gold hover:underline">
             Register
           </Link>

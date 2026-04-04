@@ -64,8 +64,7 @@ export default async function CharacterOverviewPage({
 
       <div className="ornament-line" />
       <h3
-        className="font-serif text-sm uppercase tracking-widest"
-        style={{ color: "hsl(var(--gold))" }}
+        className="font-serif text-sm uppercase tracking-widest text-gold"
       >
         Base Stats
       </h3>
@@ -77,8 +76,7 @@ export default async function CharacterOverviewPage({
                 {key}
               </div>
               <div
-                className="font-bold font-mono"
-                style={{ color: "hsl(var(--gold))" }}
+                className="font-bold font-mono text-gold"
               >
                 {val}
               </div>

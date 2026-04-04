@@ -24,7 +24,7 @@ const steps = [
 const DownloadPage = () => {
   return (
     <PageLayout>
-      <div className="max-w-4xl mx-auto px-4">
+      <div className="max-w-5xl mx-auto px-4">
         {/* Header */}
         <div className="text-center mb-12 animate-fade-up">
           <h1 className="font-serif text-4xl md:text-5xl font-bold gold-gradient-text mb-4">
@@ -38,7 +38,7 @@ const DownloadPage = () => {
           className="card-dark p-8 text-center mb-8 card-hover animate-fade-up animate-glow"
           style={{ animationDelay: "0.1s", animationFillMode: "backwards" }}
         >
-          <Download className="w-16 h-16 mx-auto mb-6" style={{ color: "hsl(var(--gold))" }} />
+          <Download className="w-16 h-16 mx-auto mb-6 text-gold" />
           <h2 className="font-serif text-2xl font-bold text-foreground mb-2">
             {BRAND} Full Client
           </h2>
@@ -59,7 +59,7 @@ const DownloadPage = () => {
             style={{ animationDelay: "0.2s", animationFillMode: "backwards" }}
           >
             <div className="flex items-center gap-3 mb-6">
-              <Monitor className="w-6 h-6" style={{ color: "hsl(var(--gold))" }} />
+              <Monitor className="w-6 h-6 text-gold" />
               <h3 className="section-title">System Requirements</h3>
             </div>
             <div className="ornament-line mb-4" />
@@ -82,7 +82,7 @@ const DownloadPage = () => {
             style={{ animationDelay: "0.3s", animationFillMode: "backwards" }}
           >
             <div className="flex items-center gap-3 mb-6">
-              <Shield className="w-6 h-6" style={{ color: "hsl(var(--gold))" }} />
+              <Shield className="w-6 h-6 text-gold" />
               <h3 className="section-title">Installation Guide</h3>
             </div>
             <div className="ornament-line mb-4" />
@@ -90,8 +90,7 @@ const DownloadPage = () => {
               {steps.map((step, i) => (
                 <div key={i} className="flex items-start gap-3">
                   <CheckCircle
-                    className="w-5 h-5 shrink-0 mt-0.5"
-                    style={{ color: "hsl(var(--gold))" }}
+                    className="w-5 h-5 shrink-0 mt-0.5 text-gold"
                   />
                   <span className="text-foreground text-sm">{step}</span>
                 </div>

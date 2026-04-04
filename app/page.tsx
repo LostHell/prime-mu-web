@@ -23,7 +23,7 @@ const Home = async () => {
       <Divider />
 
       <section className="py-12">
-        <div className="max-w-6xl mx-auto px-4">
+        <div className="max-w-5xl mx-auto px-4">
           <div className="grid md:grid-cols-2 gap-8">
             <Suspense fallback={<SuspenseFallback />}>
               <DevilSquareRanking />
@@ -39,7 +39,7 @@ const Home = async () => {
       <Divider />
 
       <section className="py-12">
-        <div className="max-w-4xl mx-auto px-4">
+        <div className="max-w-5xl mx-auto px-4">
           <h2 className="section-title text-center mb-8">Last Disconnected Players</h2>
           <Suspense fallback={<SuspenseFallback />}>
             <LastDisconnected />

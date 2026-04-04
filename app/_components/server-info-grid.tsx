@@ -12,7 +12,7 @@ const ServerInfoGrid = () => {
 
   return (
     <section className="py-12">
-      <div className="max-w-4xl mx-auto px-4">
+      <div className="max-w-5xl mx-auto px-4">
         <h2 className="section-title text-center mb-8">Server Information</h2>
         <div className="card-dark p-6 card-hover">
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">

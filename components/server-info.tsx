@@ -27,7 +27,7 @@ const ServerInfo: FC<ServerInfoProps> = ({ serverInfo }) => {
 
   return (
     <section className="py-12 -mt-20 relative z-20">
-      <div className="max-w-4xl mx-auto px-4">
+      <div className="max-w-5xl mx-auto px-4">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {/* Online Players — with capacity progress bar */}
           <div className="stat-card card-hover animate-fade-up delay-0">

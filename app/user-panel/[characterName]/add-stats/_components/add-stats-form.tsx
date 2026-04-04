@@ -43,8 +43,7 @@ export function AddStatsForm({ character }: AddStatsFormProps) {
       <div className="flex items-center justify-between">
         <h2 className="section-title">Add Stats</h2>
         <span
-          className="text-xs font-mono"
-          style={{ color: "hsl(var(--gold))" }}
+          className="text-xs font-mono text-gold"
         >
           {remaining} pts remaining
         </span>
@@ -59,8 +58,7 @@ export function AddStatsForm({ character }: AddStatsFormProps) {
             >
               <div>
                 <div
-                  className="text-xs font-serif uppercase tracking-widest mb-1"
-                  style={{ color: "hsl(var(--gold))" }}
+                  className="text-xs font-serif uppercase tracking-widest mb-1 text-gold"
                 >
                   {STAT_LABELS[stat]}
                 </div>
