@@ -39,4 +39,12 @@ export const CLASS_COLOR: Record<MuClass, string> = {
   "Dark Lord": "hsl(45 90% 55%)",
 };
 
+export const CLASS_TEXT_COLOR: Record<MuClass, string> = {
+  "Dark Knight": "class-badge-dk",
+  "Dark Wizard": "class-badge-dw",
+  "Fairy Elf": "class-badge-fe",
+  "Magic Gladiator": "class-badge-mg",
+  "Dark Lord": "class-badge-dl",
+};
+
 export const CMD_CLASSES: MuClass[] = ["Dark Lord"];

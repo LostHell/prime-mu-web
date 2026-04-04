@@ -29,7 +29,7 @@ const RootLayout = ({
   children: React.ReactNode;
 }>) => {
   return (
-    <html lang="en" className={`${cinzel.variable} ${raleway.variable}`}>
+    <html lang="en" className={`${cinzel.variable} ${raleway.variable}`} suppressHydrationWarning>
       <body className="font-sans antialiased bg-background text-foreground min-h-screen">
         <div className="page-background" />
         <Header />

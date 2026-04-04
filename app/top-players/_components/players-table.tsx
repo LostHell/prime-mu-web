@@ -1,25 +1,19 @@
 "use client";
 
-import { CLASS_COLOR, MuClass } from "@/lib/types/character";
+import { TopPlayerEntry } from "@/app/top-players/_lib/get-top-players";
+import { CLASS_TEXT_COLOR, MuClass } from "@/lib/types/character";
+import { cn } from "@/lib/utils";
 import { useState } from "react";
-import { TopPlayerEntry } from "../_lib/get-top-players";
 
 const PAGE_SIZE = 20;
 
-const CLASS_FILTERS: ("All" | MuClass)[] = [
-  "All",
-  "Dark Knight",
-  "Dark Wizard",
-  "Fairy Elf",
-  "Magic Gladiator",
-  // "Dark Lord",
-];
+const CLASS_FILTERS: ("All" | MuClass)[] = ["All", "Dark Knight", "Dark Wizard", "Fairy Elf", "Magic Gladiator"];
 
 interface PlayersTableProps {
   players: TopPlayerEntry[];
 }
 
-export function PlayersTable({ players }: PlayersTableProps) {
+const PlayersTable = ({ players }: PlayersTableProps) => {
   const [activeClass, setActiveClass] = useState<"All" | MuClass>("All");
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
@@ -50,6 +44,7 @@ export function PlayersTable({ players }: PlayersTableProps) {
         onChange={handleSearch}
         placeholder="Search by name..."
         className="input-gold w-full mb-4"
+        suppressHydrationWarning
       />
       <div className="flex flex-wrap gap-2 mb-6">
         {CLASS_FILTERS.map((cls) => (
@@ -67,37 +62,40 @@ export function PlayersTable({ players }: PlayersTableProps) {
         ))}
       </div>
 
-      <table className="w-full">
-        <thead>
-          <tr className="border-b border-border">
-            <th className="table-header-cell">Rank</th>
-            <th className="table-header-cell">Name</th>
-            <th className="table-header-cell">Class</th>
-            <th className="table-header-cell text-center">Level</th>
-            <th className="table-header-cell text-center">Resets</th>
-            <th className="table-header-cell text-right">Guild</th>
-          </tr>
-        </thead>
-        <tbody>
-          {paginated.map((player, i) => (
-            <tr key={i} className="border-b border-border/50 table-row-hover">
-              <td className="table-body-cell" style={{ color: "hsl(var(--gold))" }}>
-                {player.rank}
-              </td>
-              <td className="table-body-cell font-medium">{player.name}</td>
-              <td className="table-body-cell" style={{ color: CLASS_COLOR[player.class] }}>
-                {player.class}
-              </td>
-              <td className="table-body-cell text-center">{player.level}</td>
-              <td className="table-body-cell text-center">{player.resets}</td>
-              <td className="table-body-cell text-right text-muted-foreground">{player.guild || "—"}</td>
+      <div className="overflow-x-auto">
+        <table className="w-full">
+          <thead>
+            <tr className="border-b border-border">
+              <th className="table-header-cell">Rank</th>
+              <th className="table-header-cell">Name</th>
+              <th className="table-header-cell hidden md:table-cell">Class</th>
+              <th className="table-header-cell">Level</th>
+              <th className="table-header-cell">Resets</th>
+              <th className="table-header-cell hidden md:table-cell">Guild</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {paginated.map((player) => (
+              <tr key={player.name} className="border-b border-border/50 table-row-hover">
+                <td className="table-body-cell text-gold">{player.rank}</td>
+                <td className="table-body-cell font-medium">
+                  <span>{player.name}</span>
+                  <span className={cn("block text-xs md:hidden", CLASS_TEXT_COLOR[player.class])}>{player.class}</span>
+                </td>
+                <td className={cn("table-body-cell hidden md:table-cell", CLASS_TEXT_COLOR[player.class])}>
+                  {player.class}
+                </td>
+                <td className="table-body-cell">{player.level}</td>
+                <td className="table-body-cell">{player.resets}</td>
+                <td className="table-body-cell text-muted-foreground hidden md:table-cell">{player.guild || "—"}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
       {totalPages > 1 && (
-        <div className="flex items-center justify-between mt-6">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mt-6">
           <span className="text-sm text-muted-foreground">
             Page {currentPage} of {totalPages} &mdash; {filtered.length} players
           </span>
@@ -105,14 +103,14 @@ export function PlayersTable({ players }: PlayersTableProps) {
             <button
               onClick={() => setPage((p) => Math.max(1, p - 1))}
               disabled={currentPage === 1}
-              className="px-3 py-1.5 text-sm rounded border border-border text-muted-foreground disabled:opacity-40 hover:border-[hsl(var(--gold)/0.5)] hover:text-foreground transition-colors"
+              className="flex-1 sm:flex-none px-3 py-1.5 text-sm rounded border border-border text-muted-foreground disabled:opacity-40 hover:border-[hsl(var(--gold)/0.5)] hover:text-foreground transition-colors"
             >
               Previous
             </button>
             <button
               onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
               disabled={currentPage === totalPages}
-              className="px-3 py-1.5 text-sm rounded border border-border text-muted-foreground disabled:opacity-40 hover:border-[hsl(var(--gold)/0.5)] hover:text-foreground transition-colors"
+              className="flex-1 sm:flex-none px-3 py-1.5 text-sm rounded border border-border text-muted-foreground disabled:opacity-40 hover:border-[hsl(var(--gold)/0.5)] hover:text-foreground transition-colors"
             >
               Next
             </button>
@@ -121,4 +119,6 @@ export function PlayersTable({ players }: PlayersTableProps) {
       )}
     </div>
   );
-}
+};
+
+export default PlayersTable;

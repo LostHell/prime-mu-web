@@ -43,10 +43,8 @@ function getNextOccurrence(scheduleHours: number[]): { countdown: string; nextAt
   };
 }
 
-const EventCountdown = ({ scheduleHours, color }: { scheduleHours: number[]; color: string }) => {
-  const [state, setState] = useState<{ countdown: string; nextAt: string }>(() =>
-    getNextOccurrence(scheduleHours),
-  );
+const EventCountdown = ({ scheduleHours, colorClass }: { scheduleHours: number[]; colorClass: string }) => {
+  const [state, setState] = useState<{ countdown: string; nextAt: string } | null>(null);
 
   useEffect(() => {
     let timeoutId: ReturnType<typeof setTimeout> | null = null;
@@ -74,17 +72,19 @@ const EventCountdown = ({ scheduleHours, color }: { scheduleHours: number[]; col
   }, [scheduleHours]);
 
   return (
-    <div className="flex items-center gap-2" style={{ color: "hsl(var(--muted-foreground))" }}>
-      <Clock className="w-3.5 h-3.5 shrink-0" style={{ color }} />
+    <div className="flex items-center gap-2 text-muted-foreground">
+      <Clock className={`w-3.5 h-3.5 shrink-0 ${colorClass}`} />
       <span className="text-xs uppercase tracking-widest">
-        {"Next in "}
-        <span className="font-mono font-semibold" style={{ color }}>
-          {state.countdown}
-        </span>
-        {" · at "}
-        <span className="font-semibold" style={{ color }}>
-          {state.nextAt}
-        </span>
+        {state === null ? (
+          <span className={`font-mono font-semibold ${colorClass}`}>--:--:--</span>
+        ) : (
+          <>
+            {"Next in "}
+            <span className={`font-mono font-semibold ${colorClass}`}>{state.countdown}</span>
+            {" · at "}
+            <span className={`font-semibold ${colorClass}`}>{state.nextAt}</span>
+          </>
+        )}
       </span>
     </div>
   );
