@@ -2,6 +2,7 @@
 
 import { logoutAction } from "@/actions/logout";
 import type { CSSProperties, ReactNode } from "react";
+import { useTransition } from "react";
 
 type LogoutButtonProps = {
   className?: string;
@@ -10,12 +11,19 @@ type LogoutButtonProps = {
   children?: ReactNode;
 };
 
-const LogoutButton = ({ className, style, onClick, children }: LogoutButtonProps) => (
-  <form action={logoutAction} className="inline">
-    <button type="submit" className={className} style={style} onClick={onClick}>
+const LogoutButton = ({ className, style, onClick, children }: LogoutButtonProps) => {
+  const [, startTransition] = useTransition();
+
+  const handleClick = () => {
+    onClick?.();
+    startTransition(() => logoutAction());
+  };
+
+  return (
+    <button type="button" className={className} style={style} onClick={handleClick}>
       {children ?? "Logout"}
     </button>
-  </form>
-);
+  );
+};
 
 export default LogoutButton;
