@@ -1,7 +1,5 @@
 import TopPlayersRankings from "@/app/top-players/_components/top-players-rankings";
-import SuspenseFallback from "@/components/suspense-fallback";
 import { BRAND } from "@/constants/app";
-import { Suspense } from "react";
 
 const TopPlayers = () => {
   return (
@@ -11,9 +9,7 @@ const TopPlayers = () => {
         <p className="text-muted-foreground text-lg">The mightiest warriors of {BRAND}</p>
       </div>
 
-      <Suspense fallback={<SuspenseFallback />}>
-        <TopPlayersRankings />
-      </Suspense>
+      <TopPlayersRankings />
     </div>
   );
 };

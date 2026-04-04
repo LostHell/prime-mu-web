@@ -4,10 +4,42 @@ import { eventSchedules } from "@/lib/mock-data";
 import { CLASS_TEXT_COLOR } from "@/lib/types/character";
 import { cn } from "@/lib/utils";
 import { Shield } from "lucide-react";
+import { Suspense } from "react";
 
-const BloodCastleRanking = async () => {
+const BloodCastleRows = async () => {
   const bloodCastleRanking = await getBloodCastleRanking();
+  return (
+    <tbody>
+      {bloodCastleRanking.map((entry) => (
+        <tr key={entry.name} className="border-b border-border/50 table-row-hover">
+          <td className="table-body-cell text-gold">{entry.rank}</td>
+          <td className={cn("table-body-cell font-medium", CLASS_TEXT_COLOR[entry.class])}>{entry.name}</td>
+          <td className="table-body-cell text-right">{entry.score.toLocaleString()}</td>
+        </tr>
+      ))}
+    </tbody>
+  );
+};
 
+const RowsSkeleton = () => (
+  <tbody>
+    {Array.from({ length: 5 }).map((_, i) => (
+      <tr key={i} className="border-b border-border/50">
+        <td className="table-body-cell">
+          <div className="h-4 w-6 bg-muted animate-pulse rounded" />
+        </td>
+        <td className="table-body-cell">
+          <div className="h-4 w-28 bg-muted animate-pulse rounded" />
+        </td>
+        <td className="table-body-cell text-right">
+          <div className="h-4 w-16 bg-muted animate-pulse rounded ml-auto" />
+        </td>
+      </tr>
+    ))}
+  </tbody>
+);
+
+const BloodCastleRanking = () => {
   return (
     <div className="card-dark p-6 card-hover">
       <div className="flex items-center gap-3 mb-2">
@@ -26,15 +58,9 @@ const BloodCastleRanking = async () => {
             <th className="table-header-cell text-right">Score</th>
           </tr>
         </thead>
-        <tbody>
-          {bloodCastleRanking.map((entry) => (
-            <tr key={entry.name} className="border-b border-border/50 table-row-hover">
-              <td className="table-body-cell text-gold">{entry.rank}</td>
-              <td className={cn("table-body-cell font-medium", CLASS_TEXT_COLOR[entry.class])}>{entry.name}</td>
-              <td className="table-body-cell">{entry.score.toLocaleString()}</td>
-            </tr>
-          ))}
-        </tbody>
+        <Suspense fallback={<RowsSkeleton />}>
+          <BloodCastleRows />
+        </Suspense>
       </table>
     </div>
   );

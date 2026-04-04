@@ -5,11 +5,9 @@ import ServerInfoGrid from "@/app/_components/server-info-grid";
 import Divider from "@/components/divider";
 import Hero from "@/components/hero";
 import ServerInfo from "@/components/server-info";
-import SuspenseFallback from "@/components/suspense-fallback";
 import { serverInfo } from "@/lib/mock-data";
-import { Suspense } from "react";
 
-const Home = async () => {
+const Home = () => {
   return (
     <>
       <Hero />
@@ -25,13 +23,8 @@ const Home = async () => {
       <section className="py-12">
         <div className="max-w-5xl mx-auto px-4">
           <div className="grid md:grid-cols-2 gap-8">
-            <Suspense fallback={<SuspenseFallback />}>
-              <DevilSquareRanking />
-            </Suspense>
-
-            <Suspense fallback={<SuspenseFallback />}>
-              <BloodCastleRanking />
-            </Suspense>
+            <DevilSquareRanking />
+            <BloodCastleRanking />
           </div>
         </div>
       </section>
@@ -41,9 +34,7 @@ const Home = async () => {
       <section className="py-12">
         <div className="max-w-5xl mx-auto px-4">
           <h2 className="section-title text-center mb-8">Last Disconnected Players</h2>
-          <Suspense fallback={<SuspenseFallback />}>
-            <LastDisconnected />
-          </Suspense>
+          <LastDisconnected />
         </div>
       </section>
 
