@@ -9,12 +9,14 @@ import {
 } from "@/constants/resets";
 import { prisma } from "@/prisma/prisma";
 import { ServerInfo } from "@/types/server-info";
+import { checkServerStatus } from "./check-server-status";
 
 export async function getServerInfo(): Promise<ServerInfo> {
-  const [online, registered, guilds] = await Promise.all([
+  const [online, registered, guilds, statusResult] = await Promise.all([
     prisma.mEMB_STAT.count({ where: { ConnectStat: { not: 0 } } }),
     prisma.mEMB_INFO.count(),
     prisma.guild.count(),
+    checkServerStatus(),
   ]);
 
   return {
@@ -28,6 +30,6 @@ export async function getServerInfo(): Promise<ServerInfo> {
     maxOnline: MAX_ONLINE,
     registered,
     guilds,
-    status: "online",
+    status: statusResult.status,
   };
 }

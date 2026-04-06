@@ -6,10 +6,7 @@ import { prisma } from "@/prisma/prisma";
 import { revalidatePath } from "next/cache";
 import { getAuthenticatedUser, verifyCharacterOwnership } from "./utils";
 
-export async function addStatsAction(
-  _state: UserPanelActionState,
-  formData: FormData,
-): Promise<UserPanelActionState> {
+export async function addStatsAction(_state: UserPanelActionState, formData: FormData): Promise<UserPanelActionState> {
   const accountId = await getAuthenticatedUser();
   if (!accountId) {
     return { success: false, message: "You must be logged in." };
@@ -29,6 +26,25 @@ export async function addStatsAction(
       success: false,
       errors: validated.error.flatten().fieldErrors,
       message: "Invalid input.",
+    };
+  }
+
+  const accountStatus = await prisma.mEMB_STAT.findUnique({
+    where: { memb___id: accountId },
+    select: { ConnectStat: true },
+  });
+
+  if (!accountStatus) {
+    return {
+      success: false,
+      message: "Unable to verify account online status.",
+    };
+  }
+
+  if ((accountStatus.ConnectStat ?? 0) !== 0) {
+    return {
+      success: false,
+      message: "Stats can be added only while account is offline.",
     };
   }
 

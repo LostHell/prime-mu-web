@@ -1,10 +1,13 @@
 import { BRAND } from "@/constants/app";
-import { serverInfo } from "@/lib/mock-data";
 import Link from "next/link";
 import { FC } from "react";
 import ServerStatus from "./server-status";
 
-const Hero: FC = () => {
+type HeroProps = {
+  serverStatus: "online" | "offline";
+};
+
+const Hero: FC<HeroProps> = ({ serverStatus }) => {
   const subtitle = "Season 0.97d \u2014 The Classic Experience";
 
   return (
@@ -17,8 +20,7 @@ const Hero: FC = () => {
           {subtitle}
         </p>
 
-        {/* Server Status Badge */}
-        <ServerStatus status={serverInfo.status} />
+        <ServerStatus status={serverStatus} />
 
         <div className="flex gap-4 justify-center animate-fade-up delay-200">
           <Link href="/download" className="btn-gold">

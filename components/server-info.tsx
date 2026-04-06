@@ -30,23 +30,17 @@ const ServerInfo: FC<ServerInfoProps> = ({ serverInfo }) => {
       <div className="max-w-5xl mx-auto px-4">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {/* Online Players — with capacity progress bar */}
-          <div className="stat-card card-hover animate-fade-up delay-0">
+          <div className="stat-card card-hover animate-fade-up delay-0 p-6">
             <Users className="w-6 h-6 mx-auto mb-2 text-gold" />
             <div className="text-2xl font-bold gold-gradient-text">
               {serverInfo.online}
-              <span className="text-sm font-normal text-muted-foreground">
-                &nbsp;/&nbsp;{serverInfo.maxOnline}
-              </span>
+              <span className="text-sm font-normal text-muted-foreground">&nbsp;/&nbsp;{serverInfo.maxOnline}</span>
             </div>
-            <div className="text-xs text-muted-foreground uppercase tracking-widest mb-2">
-              Online
-            </div>
+            <div className="text-xs text-muted-foreground uppercase tracking-widest mb-2">Online</div>
             {/* Capacity bar */}
 
             <div className="h-1 w-full rounded-full overflow-hidden bg-muted">
-              <div
-                className={`h-full rounded-full bg-linear-to-r from-gold-dim to-gold-glow ${widthClass}`}
-              />
+              <div className={`h-full rounded-full bg-linear-to-r from-gold-dim to-gold-glow ${widthClass}`} />
             </div>
           </div>
 
@@ -55,12 +49,10 @@ const ServerInfo: FC<ServerInfoProps> = ({ serverInfo }) => {
             { icon: Star, label: "Experience", value: serverInfo.experience },
             { icon: Swords, label: "Drop Rate", value: serverInfo.drop },
           ].map((stat, i) => (
-            <div key={i} className={`stat-card card-hover animate-fade-up ${animationDelay[i]}`}>
+            <div key={i} className={`stat-card card-hover animate-fade-up p-6 ${animationDelay[i]}`}>
               <stat.icon className="w-6 h-6 mx-auto mb-2 text-gold" />
               <div className="text-2xl font-bold gold-gradient-text">{stat.value}</div>
-              <div className="text-xs text-muted-foreground uppercase tracking-widest">
-                {stat.label}
-              </div>
+              <div className="text-xs text-muted-foreground uppercase tracking-widest">{stat.label}</div>
             </div>
           ))}
         </div>
