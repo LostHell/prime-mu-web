@@ -11,7 +11,7 @@ const LastDisconnectedRows = async () => {
         <tr key={user.name} className="border-b border-border/50 table-row-hover">
           <td className={cn("table-body-cell font-medium", CLASS_TEXT_COLOR[user.class])}>{user.name}</td>
           <td className="table-body-cell">{user.map}</td>
-          <td className="table-body-cell text-right text-muted-foreground">{user.time}</td>
+          <td className="table-body-cell text-muted-foreground">{user.time}</td>
         </tr>
       ))}
     </tbody>
@@ -28,7 +28,7 @@ const RowsSkeleton = () => (
         <td className="table-body-cell">
           <div className="h-4 w-24 bg-muted animate-pulse rounded" />
         </td>
-        <td className="table-body-cell text-right">
+        <td className="table-body-cell">
           <div className="h-4 w-16 bg-muted animate-pulse rounded ml-auto" />
         </td>
       </tr>
@@ -44,7 +44,7 @@ const LastDisconnected = () => {
           <tr className="border-b border-border">
             <th className="table-header-cell">Name</th>
             <th className="table-header-cell">Map</th>
-            <th className="table-header-cell text-right">Time</th>
+            <th className="table-header-cell">Time</th>
           </tr>
         </thead>
         <Suspense fallback={<RowsSkeleton />}>

@@ -14,7 +14,7 @@ const BloodCastleRows = async () => {
         <tr key={entry.name} className="border-b border-border/50 table-row-hover">
           <td className="table-body-cell text-gold">{entry.rank}</td>
           <td className={cn("table-body-cell font-medium", CLASS_TEXT_COLOR[entry.class])}>{entry.name}</td>
-          <td className="table-body-cell text-right">{entry.score.toLocaleString()}</td>
+          <td className="table-body-cell">{entry.score.toLocaleString()}</td>
         </tr>
       ))}
     </tbody>
@@ -31,7 +31,7 @@ const RowsSkeleton = () => (
         <td className="table-body-cell">
           <div className="h-4 w-28 bg-muted animate-pulse rounded" />
         </td>
-        <td className="table-body-cell text-right">
+        <td className="table-body-cell">
           <div className="h-4 w-16 bg-muted animate-pulse rounded ml-auto" />
         </td>
       </tr>
@@ -55,7 +55,7 @@ const BloodCastleRanking = () => {
           <tr className="border-b border-border">
             <th className="table-header-cell">#</th>
             <th className="table-header-cell">Name</th>
-            <th className="table-header-cell text-right">Score</th>
+            <th className="table-header-cell">Score</th>
           </tr>
         </thead>
         <Suspense fallback={<RowsSkeleton />}>
