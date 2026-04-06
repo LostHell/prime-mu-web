@@ -4,30 +4,40 @@ import { Clock } from "lucide-react";
 import { useEffect, useState } from "react";
 
 function getNextOccurrence(scheduleHours: number[]): { countdown: string; nextAt: string } {
-  const safeHours = scheduleHours
-    .filter((hour) => Number.isFinite(hour) && hour >= 0 && hour <= 23)
-    .sort((a, b) => a - b);
+  const safeTimes = scheduleHours
+    .filter((time) => Number.isFinite(time) && time >= 0 && time < 24)
+    .map((time) => {
+      const hour = Math.floor(time);
+      const minute = Math.round((time - hour) * 60);
 
-  if (safeHours.length === 0) {
+      if (!Number.isInteger(hour) || !Number.isInteger(minute) || minute < 0 || minute > 59) {
+        return null;
+      }
+
+      return { hour, minute };
+    })
+    .filter((entry): entry is { hour: number; minute: number } => entry !== null)
+    .sort((a, b) => (a.hour === b.hour ? a.minute - b.minute : a.hour - b.hour));
+
+  if (safeTimes.length === 0) {
     return { countdown: "00:00:00", nextAt: "--:--" };
   }
 
   const now = new Date();
 
-  let nextHour: number | null = null;
-  for (const h of safeHours) {
-    if (h > now.getHours() || (h === now.getHours() && now.getMinutes() === 0 && now.getSeconds() === 0)) {
-      nextHour = h;
-      break;
-    }
-  }
+  let next = safeTimes
+    .map(({ hour, minute }) => {
+      const candidate = new Date(now);
+      candidate.setHours(hour, minute, 0, 0);
+      return candidate;
+    })
+    .find((candidate) => candidate.getTime() > now.getTime());
 
-  const next = new Date(now);
-  if (nextHour !== null) {
-    next.setHours(nextHour, 0, 0, 0);
-  } else {
+  if (!next) {
+    const first = safeTimes[0];
+    next = new Date(now);
     next.setDate(next.getDate() + 1);
-    next.setHours(safeHours[0], 0, 0, 0);
+    next.setHours(first.hour, first.minute, 0, 0);
   }
 
   const diffMs = next.getTime() - now.getTime();
@@ -39,7 +49,7 @@ function getNextOccurrence(scheduleHours: number[]): { countdown: string; nextAt
   const pad = (n: number) => String(n).padStart(2, "0");
   return {
     countdown: `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`,
-    nextAt: `${pad(next.getHours())}:00`,
+    nextAt: `${pad(next.getHours())}:${pad(next.getMinutes())}`,
   };
 }
 

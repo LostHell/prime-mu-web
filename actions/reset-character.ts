@@ -130,6 +130,9 @@ export async function resetCharacterAction(
       Dexterity: true,
       Vitality: true,
       Energy: true,
+      MapNumber: true,
+      MapPosX: true,
+      MapPosY: true,
     },
   });
 
@@ -154,6 +157,9 @@ export async function resetCharacterAction(
       Dexterity: defaultClassType.Dexterity ?? 0,
       Vitality: defaultClassType.Vitality ?? 0,
       Energy: defaultClassType.Energy ?? 0,
+      MapNumber: defaultClassType.MapNumber ?? 0,
+      MapPosX: defaultClassType.MapPosX ?? 125,
+      MapPosY: defaultClassType.MapPosY ?? 125,
       Money: { decrement: resetCost },
       Experience: 0,
     },
