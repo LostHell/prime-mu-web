@@ -2,12 +2,14 @@ import BloodCastleRanking from "@/app/_components/blood-castle-ranking";
 import DevilSquareRanking from "@/app/_components/devil-square-ranking";
 import LastDisconnected from "@/app/_components/last-disconnected";
 import ServerInfoGrid from "@/app/_components/server-info-grid";
+import { getServerInfo } from "@/app/_lib/get-server-info";
 import Divider from "@/components/divider";
 import Hero from "@/components/hero";
 import ServerInfo from "@/components/server-info";
-import { serverInfo } from "@/lib/mock-data";
 
-const Home = () => {
+const Home = async () => {
+  const serverInfo = await getServerInfo();
+
   return (
     <>
       <Hero />
