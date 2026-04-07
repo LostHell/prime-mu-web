@@ -1,8 +1,8 @@
 "use client";
 
 import { TopPlayerEntry } from "@/app/top-players/_lib/get-top-players";
-import { CLASS_TEXT_COLOR, MuClass } from "@/lib/types/character";
 import { cn } from "@/lib/utils";
+import { CLASS_TEXT_COLOR, MuClass } from "@/types/character";
 import { useState } from "react";
 
 const PAGE_SIZE = 20;

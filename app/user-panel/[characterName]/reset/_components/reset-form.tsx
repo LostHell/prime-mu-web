@@ -5,7 +5,7 @@ import ConfirmAction from "@/components/ui/confirm-action";
 import Feedback from "@/components/ui/feedback";
 import OrnamentLine from "@/components/ui/ornament-line";
 import { MAX_RESETS, MIN_RESET_LEVEL, POINTS_PER_RESET, RESET_COST_PER_RESET } from "@/constants/resets";
-import { Character } from "@/lib/types/character";
+import { Character } from "@/types/character";
 import { startTransition, useActionState } from "react";
 
 interface ResetFormProps {

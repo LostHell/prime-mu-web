@@ -1,6 +1,11 @@
 import { auth } from "@/auth";
-import Navigation from "@/components/navigation";
-import { navigation } from "@/lib/navigation-data";
+import Navigation, { type Page } from "@/components/navigation";
+
+const pages: Page[] = [
+  { path: "/", label: "Home" },
+  { path: "/top-players", label: "Top Players" },
+  { path: "/download", label: "Download" },
+];
 
 const Header = async () => {
   const session = await auth();
@@ -8,7 +13,7 @@ const Header = async () => {
 
   return (
     <header>
-      <Navigation pages={navigation} isAuthenticated={isAuthenticated} />
+      <Navigation pages={pages} isAuthenticated={isAuthenticated} />
     </header>
   );
 };

@@ -1,6 +1,6 @@
 import ClassAvatar from "@/components/class-avatar";
 import OrnamentLine from "@/components/ui/ornament-line";
-import { Character, CLASS_COLOR } from "@/lib/types/character";
+import { Character, CLASS_COLOR } from "@/types/character";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 

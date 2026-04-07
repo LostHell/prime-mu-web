@@ -1,9 +1,9 @@
 import { getDevilSquareRanking } from "@/app/_lib/get-devil-square-ranking";
 import EventCountdown from "@/components/event-countdown";
 import OrnamentLine from "@/components/ui/ornament-line";
-import { eventSchedules } from "@/lib/mock-data";
-import { CLASS_TEXT_COLOR } from "@/lib/types/character";
+import { eventSchedules } from "@/constants/events";
 import { cn } from "@/lib/utils";
+import { CLASS_TEXT_COLOR } from "@/types/character";
 import { Skull } from "lucide-react";
 import { Suspense } from "react";
 

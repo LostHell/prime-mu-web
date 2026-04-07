@@ -1,6 +1,6 @@
 import { auth } from "@/auth";
 import OrnamentLine from "@/components/ui/ornament-line";
-import { CLASS_COLOR, CMD_CLASSES } from "@/lib/types/character";
+import { CLASS_COLOR, CMD_CLASSES } from "@/types/character";
 import { notFound, redirect } from "next/navigation";
 import { getCharacter } from "../_lib/get-character";
 

@@ -3,7 +3,7 @@
 import { addStatsAction } from "@/actions/add-stats";
 import Feedback from "@/components/ui/feedback";
 import OrnamentLine from "@/components/ui/ornament-line";
-import { Character, CMD_CLASSES } from "@/lib/types/character";
+import { Character, CMD_CLASSES } from "@/types/character";
 import { useActionState, useState } from "react";
 
 interface AddStatsFormProps {

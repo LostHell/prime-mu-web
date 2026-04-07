@@ -1,6 +1,6 @@
 import { getLastDisconnected } from "@/app/_lib/get-last-disconnected";
-import { CLASS_TEXT_COLOR } from "@/lib/types/character";
 import { cn } from "@/lib/utils";
+import { CLASS_TEXT_COLOR } from "@/types/character";
 import { Suspense } from "react";
 
 const LastDisconnectedRows = async () => {

@@ -1,4 +1,4 @@
-import { Character, CLASS_COLOR } from "@/lib/types/character";
+import { Character, CLASS_COLOR } from "@/types/character";
 import { User } from "lucide-react";
 import Link from "next/link";
 

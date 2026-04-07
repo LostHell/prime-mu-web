@@ -4,7 +4,7 @@ import { clearPkAction } from "@/actions/clear-pk";
 import ConfirmAction from "@/components/ui/confirm-action";
 import Feedback from "@/components/ui/feedback";
 import OrnamentLine from "@/components/ui/ornament-line";
-import { Character } from "@/lib/types/character";
+import { Character } from "@/types/character";
 import { useActionState } from "react";
 
 interface ClearPkFormProps {

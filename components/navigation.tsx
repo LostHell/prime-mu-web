@@ -3,11 +3,15 @@
 import Logo from "@/components/logo";
 import LogoutButton from "@/components/logout-button";
 import { BRAND } from "@/constants/app";
-import { Page } from "@/types/navitaion";
 import { Menu, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FC, useState } from "react";
+
+export type Page = {
+  path: string;
+  label: string;
+};
 
 type NavigationProps = {
   pages: Page[];

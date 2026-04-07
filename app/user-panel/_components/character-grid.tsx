@@ -1,4 +1,4 @@
-import { Character } from "@/lib/types/character";
+import { Character } from "@/types/character";
 import CharacterCard from "./character-card";
 
 interface CharacterGridProps {
