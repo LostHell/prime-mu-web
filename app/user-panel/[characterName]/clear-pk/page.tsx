@@ -1,13 +1,13 @@
 import { auth } from "@/auth";
 import { notFound, redirect } from "next/navigation";
 import { getCharacter } from "../../_lib/get-character";
-import { ClearPkForm } from "./_components/clear-pk-form";
+import ClearPkForm from "./_components/clear-pk-form";
 
 interface ClearPkPageProps {
   params: Promise<{ characterName: string }>;
 }
 
-export default async function ClearPkPage({ params }: ClearPkPageProps) {
+const ClearPkPage = async ({ params }: ClearPkPageProps) => {
   const session = await auth();
 
   if (!session?.user?.id) {
@@ -23,4 +23,6 @@ export default async function ClearPkPage({ params }: ClearPkPageProps) {
   }
 
   return <ClearPkForm character={character} />;
-}
+};
+
+export default ClearPkPage;

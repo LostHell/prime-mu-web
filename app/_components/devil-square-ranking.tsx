@@ -1,5 +1,6 @@
 import { getDevilSquareRanking } from "@/app/_lib/get-devil-square-ranking";
 import EventCountdown from "@/components/event-countdown";
+import OrnamentLine from "@/components/ui/ornament-line";
 import { eventSchedules } from "@/lib/mock-data";
 import { CLASS_TEXT_COLOR } from "@/lib/types/character";
 import { cn } from "@/lib/utils";
@@ -49,7 +50,7 @@ const DevilSquareRanking = () => {
       <div className="flex justify-end mb-4">
         <EventCountdown scheduleHours={eventSchedules.devilSquare} colorClass="text-gold" />
       </div>
-      <div className="ornament-line mb-4" />
+      <OrnamentLine className="mb-4" />
       <table className="w-full">
         <thead>
           <tr className="border-b border-border">

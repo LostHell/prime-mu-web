@@ -1,11 +1,11 @@
 import { Character } from "@/lib/types/character";
-import { CharacterCard } from "./character-card";
+import CharacterCard from "./character-card";
 
 interface CharacterGridProps {
   characters: Character[];
 }
 
-export function CharacterGrid({ characters }: CharacterGridProps) {
+const CharacterGrid = ({ characters }: CharacterGridProps) => {
   if (characters.length === 0) {
     return (
       <div className="text-center text-muted-foreground text-sm py-8">
@@ -21,4 +21,6 @@ export function CharacterGrid({ characters }: CharacterGridProps) {
       ))}
     </div>
   );
-}
+};
+
+export default CharacterGrid;

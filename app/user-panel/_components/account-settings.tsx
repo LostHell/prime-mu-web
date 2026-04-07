@@ -2,12 +2,13 @@
 
 import { changeEmailAction } from "@/actions/change-email";
 import { changePasswordAction } from "@/actions/change-password";
-import { Feedback } from "@/components/ui/feedback";
-import { FieldLabel } from "@/components/ui/field-label";
+import Feedback from "@/components/ui/feedback";
+import FieldLabel from "@/components/ui/field-label";
+import OrnamentLine from "@/components/ui/ornament-line";
 import { ChevronRight, Key, Lock, Mail, Settings } from "lucide-react";
 import { useActionState, useState } from "react";
 
-export function AccountSettings() {
+const AccountSettings = () => {
   const [isOpen, setIsOpen] = useState(true);
 
   const [pwState, pwAction, pwPending] = useActionState(
@@ -49,7 +50,7 @@ export function AccountSettings() {
                 Change Password
               </h3>
             </div>
-            <div className="ornament-line mb-4" />
+            <OrnamentLine className="mb-4" />
             <form action={pwAction} className="space-y-4">
               <div>
                 <FieldLabel>Current Password</FieldLabel>
@@ -132,7 +133,7 @@ export function AccountSettings() {
                 Change Email
               </h3>
             </div>
-            <div className="ornament-line mb-4" />
+            <OrnamentLine className="mb-4" />
             <form action={emailAction} className="space-y-4">
               <div>
                 <FieldLabel>New Email</FieldLabel>
@@ -190,3 +191,5 @@ export function AccountSettings() {
     </div>
   );
 }
+
+export default AccountSettings;

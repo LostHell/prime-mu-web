@@ -28,7 +28,7 @@ interface DashboardSidebarProps {
   characterName: string;
 }
 
-export function DashboardSidebar({ characterName }: DashboardSidebarProps) {
+const DashboardSidebar = ({ characterName }: DashboardSidebarProps) => {
   const pathname = usePathname();
   const basePath = `/user-panel/${encodeURIComponent(characterName)}`;
 
@@ -72,4 +72,6 @@ export function DashboardSidebar({ characterName }: DashboardSidebarProps) {
       })}
     </nav>
   );
-}
+};
+
+export default DashboardSidebar;

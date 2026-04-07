@@ -1,8 +1,9 @@
 "use client";
 
 import { resetCharacterAction } from "@/actions/reset-character";
-import { ConfirmAction } from "@/components/ui/confirm-action";
-import { Feedback } from "@/components/ui/feedback";
+import ConfirmAction from "@/components/ui/confirm-action";
+import Feedback from "@/components/ui/feedback";
+import OrnamentLine from "@/components/ui/ornament-line";
 import { MAX_RESETS, MIN_RESET_LEVEL, POINTS_PER_RESET, RESET_COST_PER_RESET } from "@/constants/resets";
 import { Character } from "@/lib/types/character";
 import { startTransition, useActionState } from "react";
@@ -11,7 +12,7 @@ interface ResetFormProps {
   character: Character;
 }
 
-export function ResetForm({ character }: ResetFormProps) {
+const ResetForm = ({ character }: ResetFormProps) => {
   const [state, formAction, isPending] = useActionState(resetCharacterAction, {});
 
   const resetCost = (character.resets + 1) * RESET_COST_PER_RESET;
@@ -49,7 +50,7 @@ export function ResetForm({ character }: ResetFormProps) {
           </div>
         ))}
       </div>
-      <div className="ornament-line" />
+      <OrnamentLine />
       {state.message && <Feedback type={state.success ? "success" : "error"} message={state.message} />}
       {!hasRequiredLevel ? (
         <p className="text-sm text-center text-muted-foreground">
@@ -74,3 +75,5 @@ export function ResetForm({ character }: ResetFormProps) {
     </div>
   );
 }
+
+export default ResetForm;

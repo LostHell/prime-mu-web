@@ -1,4 +1,5 @@
 import { auth } from "@/auth";
+import OrnamentLine from "@/components/ui/ornament-line";
 import { CLASS_COLOR, CMD_CLASSES } from "@/lib/types/character";
 import { notFound, redirect } from "next/navigation";
 import { getCharacter } from "../_lib/get-character";
@@ -55,7 +56,7 @@ export default async function CharacterOverviewPage({ params }: CharacterOvervie
         ))}
       </div>
 
-      <div className="ornament-line" />
+      <OrnamentLine />
       <h3 className="font-serif text-sm uppercase tracking-widest text-gold">Base Stats</h3>
       <div className={`grid ${hasCmd ? "grid-cols-5" : "grid-cols-4"} gap-2 text-center`}>
         {(Object.entries(character.stats) as [string, number][])

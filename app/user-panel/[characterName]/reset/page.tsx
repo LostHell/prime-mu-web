@@ -1,13 +1,13 @@
 import { auth } from "@/auth";
 import { notFound, redirect } from "next/navigation";
 import { getCharacter } from "../../_lib/get-character";
-import { ResetForm } from "./_components/reset-form";
+import ResetForm from "./_components/reset-form";
 
 interface ResetPageProps {
   params: Promise<{ characterName: string }>;
 }
 
-export default async function ResetPage({ params }: ResetPageProps) {
+const ResetPage = async ({ params }: ResetPageProps) => {
   const session = await auth();
 
   if (!session?.user?.id) {
@@ -23,4 +23,6 @@ export default async function ResetPage({ params }: ResetPageProps) {
   }
 
   return <ResetForm character={character} />;
-}
+};
+
+export default ResetPage;

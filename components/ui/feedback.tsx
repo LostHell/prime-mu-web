@@ -3,7 +3,7 @@ interface FeedbackProps {
   message: string;
 }
 
-export function Feedback({ type, message }: FeedbackProps) {
+const Feedback = ({ type, message }: FeedbackProps) => {
   return (
     <div
       className="text-sm font-semibold px-4 py-3 rounded border"
@@ -24,3 +24,5 @@ export function Feedback({ type, message }: FeedbackProps) {
     </div>
   );
 }
+
+export default Feedback;

@@ -11,14 +11,14 @@ interface ConfirmActionProps {
   disabled?: boolean;
 }
 
-export function ConfirmAction({
+const ConfirmAction = ({
   label,
   description,
   buttonLabel,
   buttonColor,
   onConfirm,
   disabled,
-}: ConfirmActionProps) {
+}: ConfirmActionProps) => {
   const [confirmed, setConfirmed] = useState(false);
 
   return (
@@ -71,3 +71,5 @@ export function ConfirmAction({
     </div>
   );
 }
+
+export default ConfirmAction;

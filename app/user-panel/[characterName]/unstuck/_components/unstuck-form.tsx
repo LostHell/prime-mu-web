@@ -1,7 +1,8 @@
 "use client";
 
 import { unstuckAction } from "@/actions/unstuck";
-import { Feedback } from "@/components/ui/feedback";
+import Feedback from "@/components/ui/feedback";
+import OrnamentLine from "@/components/ui/ornament-line";
 import { Character } from "@/lib/types/character";
 import { useActionState } from "react";
 
@@ -9,7 +10,7 @@ interface UnstuckFormProps {
   character: Character;
 }
 
-export function UnstuckForm({ character }: UnstuckFormProps) {
+const UnstuckForm = ({ character }: UnstuckFormProps) => {
   const [state, formAction, isPending] = useActionState(unstuckAction, {});
 
   const handleClick = () => {
@@ -46,7 +47,7 @@ export function UnstuckForm({ character }: UnstuckFormProps) {
           </div>
         ))}
       </div>
-      <div className="ornament-line" />
+      <OrnamentLine />
       {state.message && (
         <Feedback
           type={state.success ? "success" : "error"}
@@ -62,4 +63,6 @@ export function UnstuckForm({ character }: UnstuckFormProps) {
       </button>
     </div>
   );
-}
+};
+
+export default UnstuckForm;

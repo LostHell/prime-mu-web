@@ -6,7 +6,7 @@ interface DashboardHeaderProps {
   character: Character;
 }
 
-export function DashboardHeader({ character }: DashboardHeaderProps) {
+const DashboardHeader = ({ character }: DashboardHeaderProps) => {
   return (
     <div className="flex items-center justify-between mb-8 animate-fade-up">
       <div>
@@ -42,4 +42,6 @@ export function DashboardHeader({ character }: DashboardHeaderProps) {
       </div>
     </div>
   );
-}
+};
+
+export default DashboardHeader;

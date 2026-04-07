@@ -1,4 +1,4 @@
-export function FieldLabel({ children }: { children: React.ReactNode }) {
+const FieldLabel = ({ children }: { children: React.ReactNode }) => {
   return (
     <label
       className="block text-sm font-serif uppercase tracking-widest mb-2"
@@ -8,3 +8,5 @@ export function FieldLabel({ children }: { children: React.ReactNode }) {
     </label>
   );
 }
+
+export default FieldLabel;

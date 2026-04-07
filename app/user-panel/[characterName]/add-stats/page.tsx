@@ -1,13 +1,13 @@
 import { auth } from "@/auth";
 import { notFound, redirect } from "next/navigation";
 import { getCharacter } from "../../_lib/get-character";
-import { AddStatsForm } from "./_components/add-stats-form";
+import AddStatsForm from "./_components/add-stats-form";
 
 interface AddStatsPageProps {
   params: Promise<{ characterName: string }>;
 }
 
-export default async function AddStatsPage({ params }: AddStatsPageProps) {
+const AddStatsPage = async ({ params }: AddStatsPageProps) => {
   const session = await auth();
 
   if (!session?.user?.id) {
@@ -23,4 +23,6 @@ export default async function AddStatsPage({ params }: AddStatsPageProps) {
   }
 
   return <AddStatsForm character={character} />;
-}
+};
+
+export default AddStatsPage;

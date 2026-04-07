@@ -2,11 +2,11 @@ import { auth } from "@/auth";
 import Divider from "@/components/divider";
 import PageLayout from "@/components/page-layout";
 import { redirect } from "next/navigation";
-import { AccountSettings } from "./_components/account-settings";
-import { CharacterGrid } from "./_components/character-grid";
+import AccountSettings from "./_components/account-settings";
+import CharacterGrid from "./_components/character-grid";
 import { getCharacters } from "./_lib/get-characters";
 
-export default async function UserPanelPage() {
+const UserPanelPage = async () => {
   const session = await auth();
 
   if (!session?.user?.id) {
@@ -46,4 +46,6 @@ export default async function UserPanelPage() {
       </div>
     </PageLayout>
   );
-}
+};
+
+export default UserPanelPage;

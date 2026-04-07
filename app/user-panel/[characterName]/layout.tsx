@@ -2,18 +2,18 @@ import { auth } from "@/auth";
 import PageLayout from "@/components/page-layout";
 import { notFound, redirect } from "next/navigation";
 import { getCharacter } from "../_lib/get-character";
-import { DashboardHeader } from "./_components/dashboard-header";
-import { DashboardSidebar } from "./_components/dashboard-sidebar";
+import DashboardHeader from "./_components/dashboard-header";
+import DashboardSidebar from "./_components/dashboard-sidebar";
 
 interface CharacterLayoutProps {
   children: React.ReactNode;
   params: Promise<{ characterName: string }>;
 }
 
-export default async function CharacterLayout({
+const CharacterLayout = async ({
   children,
   params,
-}: CharacterLayoutProps) {
+}: CharacterLayoutProps) => {
   const session = await auth();
 
   if (!session?.user?.id) {
@@ -44,3 +44,5 @@ export default async function CharacterLayout({
     </PageLayout>
   );
 }
+
+export default CharacterLayout;

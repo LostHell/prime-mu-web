@@ -1,8 +1,9 @@
 "use client";
 
 import { clearPkAction } from "@/actions/clear-pk";
-import { ConfirmAction } from "@/components/ui/confirm-action";
-import { Feedback } from "@/components/ui/feedback";
+import ConfirmAction from "@/components/ui/confirm-action";
+import Feedback from "@/components/ui/feedback";
+import OrnamentLine from "@/components/ui/ornament-line";
 import { Character } from "@/lib/types/character";
 import { useActionState } from "react";
 
@@ -10,7 +11,7 @@ interface ClearPkFormProps {
   character: Character;
 }
 
-export function ClearPkForm({ character }: ClearPkFormProps) {
+const ClearPkForm = ({ character }: ClearPkFormProps) => {
   const [state, formAction, isPending] = useActionState(clearPkAction, {});
 
   const handleConfirm = () => {
@@ -36,7 +37,7 @@ export function ClearPkForm({ character }: ClearPkFormProps) {
           {character.pkCount}
         </span>
       </div>
-      <div className="ornament-line" />
+      <OrnamentLine />
       {state.message && (
         <Feedback
           type={state.success ? "success" : "error"}
@@ -60,3 +61,5 @@ export function ClearPkForm({ character }: ClearPkFormProps) {
     </div>
   );
 }
+
+export default ClearPkForm;

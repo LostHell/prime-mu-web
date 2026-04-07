@@ -1,7 +1,8 @@
 "use client";
 
 import { addStatsAction } from "@/actions/add-stats";
-import { Feedback } from "@/components/ui/feedback";
+import Feedback from "@/components/ui/feedback";
+import OrnamentLine from "@/components/ui/ornament-line";
 import { Character, CMD_CLASSES } from "@/lib/types/character";
 import { useActionState, useState } from "react";
 
@@ -17,7 +18,7 @@ const STAT_LABELS: Record<string, string> = {
   cmd: "Command",
 };
 
-export function AddStatsForm({ character }: AddStatsFormProps) {
+const AddStatsForm = ({ character }: AddStatsFormProps) => {
   const [pts, setPts] = useState({ str: 0, agi: 0, vit: 0, ene: 0, cmd: 0 });
   const [state, formAction, isPending] = useActionState(addStatsAction, {});
 
@@ -75,7 +76,7 @@ export function AddStatsForm({ character }: AddStatsFormProps) {
               />
             </div>
           ))}
-        <div className="ornament-line" />
+        <OrnamentLine />
         {state.message && <Feedback type={state.success ? "success" : "error"} message={state.message} />}
         <button type="submit" className="btn-gold w-full" disabled={ptsTotal === 0 || isPending}>
           {isPending ? "Applying..." : `Apply ${ptsTotal > 0 ? `(${ptsTotal} pts)` : ""}`}
@@ -83,4 +84,6 @@ export function AddStatsForm({ character }: AddStatsFormProps) {
       </form>
     </div>
   );
-}
+};
+
+export default AddStatsForm;

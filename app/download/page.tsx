@@ -1,5 +1,6 @@
 import Divider from "@/components/divider";
 import PageLayout from "@/components/page-layout";
+import OrnamentLine from "@/components/ui/ornament-line";
 import { BRAND } from "@/constants/app";
 import { CheckCircle, Download, Monitor, Shield } from "lucide-react";
 import Link from "next/link";
@@ -62,7 +63,7 @@ const DownloadPage = () => {
               <Monitor className="w-6 h-6 text-gold" />
               <h3 className="section-title">System Requirements</h3>
             </div>
-            <div className="ornament-line mb-4" />
+            <OrnamentLine className="mb-4" />
             <div className="space-y-3">
               {requirements.map((req) => (
                 <div
@@ -85,7 +86,7 @@ const DownloadPage = () => {
               <Shield className="w-6 h-6 text-gold" />
               <h3 className="section-title">Installation Guide</h3>
             </div>
-            <div className="ornament-line mb-4" />
+            <OrnamentLine className="mb-4" />
             <div className="space-y-3">
               {steps.map((step, i) => (
                 <div key={i} className="flex items-start gap-3">

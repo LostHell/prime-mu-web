@@ -1,4 +1,5 @@
 import ClassAvatar from "@/components/class-avatar";
+import OrnamentLine from "@/components/ui/ornament-line";
 import { Character, CLASS_COLOR } from "@/lib/types/character";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
@@ -7,7 +8,7 @@ interface CharacterCardProps {
   character: Character;
 }
 
-export function CharacterCard({ character }: CharacterCardProps) {
+const CharacterCard = ({ character }: CharacterCardProps) => {
   const classColor = CLASS_COLOR[character.class];
 
   return (
@@ -40,7 +41,7 @@ export function CharacterCard({ character }: CharacterCardProps) {
         {character.name}
       </div>
 
-      <div className="ornament-line w-full mb-3" />
+      <OrnamentLine className="mb-4" />
 
       <div className="w-full grid grid-cols-2 gap-x-4 gap-y-1">
         {[
@@ -72,4 +73,6 @@ export function CharacterCard({ character }: CharacterCardProps) {
       />
     </Link>
   );
-}
+};
+
+export default CharacterCard;

@@ -2,7 +2,6 @@ import PlayersTable from "@/app/top-players/_components/players-table";
 import PodiumCard from "@/app/top-players/_components/podium-card";
 import { getTopPlayers } from "@/app/top-players/_lib/get-top-players";
 import Divider from "@/components/divider";
-import { Suspense } from "react";
 
 const TopPlayersContent = async () => {
   const allPlayers = await getTopPlayers();
@@ -25,36 +24,8 @@ const TopPlayersContent = async () => {
   );
 };
 
-const TopPlayersContentSkeleton = () => (
-  <>
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-      {[0, 1, 2].map((i) => (
-        <div key={i} className="card-dark p-6 animate-pulse h-48" />
-      ))}
-    </div>
-
-    <Divider />
-
-    <div className="card-dark p-6">
-      <div className="h-10 bg-muted animate-pulse rounded mb-4" />
-      <div className="flex gap-2 mb-6">
-        {[0, 1, 2, 3, 4].map((i) => (
-          <div key={i} className="h-8 w-24 bg-muted animate-pulse rounded" />
-        ))}
-      </div>
-      <div className="space-y-3">
-        {Array.from({ length: 8 }).map((_, i) => (
-          <div key={i} className="h-10 bg-muted animate-pulse rounded" />
-        ))}
-      </div>
-    </div>
-  </>
-);
-
 const TopPlayersRankings = () => (
-  <Suspense fallback={<TopPlayersContentSkeleton />}>
     <TopPlayersContent />
-  </Suspense>
 );
 
 export default TopPlayersRankings;
