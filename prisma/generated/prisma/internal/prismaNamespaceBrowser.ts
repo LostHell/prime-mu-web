@@ -54,6 +54,7 @@ export const ModelName = {
   AccountCharacter: 'AccountCharacter',
   Character: 'Character',
   DefaultClassType: 'DefaultClassType',
+  ExtWarehouse: 'ExtWarehouse',
   GameServerInfo: 'GameServerInfo',
   GoldenArcherCoin: 'GoldenArcherCoin',
   Guild: 'Guild',
@@ -64,7 +65,9 @@ export const ModelName = {
   RankingBloodCastle: 'RankingBloodCastle',
   RankingDevilSquare: 'RankingDevilSquare',
   ResetInfo: 'ResetInfo',
-  warehouse: 'warehouse'
+  warehouse: 'warehouse',
+  MarketplaceListing: 'MarketplaceListing',
+  AccountCredits: 'AccountCredits'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -159,6 +162,16 @@ export const DefaultClassTypeScalarFieldEnum = {
 } as const
 
 export type DefaultClassTypeScalarFieldEnum = (typeof DefaultClassTypeScalarFieldEnum)[keyof typeof DefaultClassTypeScalarFieldEnum]
+
+
+export const ExtWarehouseScalarFieldEnum = {
+  AccountID: 'AccountID',
+  Number: 'Number',
+  Items: 'Items',
+  Money: 'Money'
+} as const
+
+export type ExtWarehouseScalarFieldEnum = (typeof ExtWarehouseScalarFieldEnum)[keyof typeof ExtWarehouseScalarFieldEnum]
 
 
 export const GameServerInfoScalarFieldEnum = {
@@ -286,6 +299,35 @@ export const WarehouseScalarFieldEnum = {
 export type WarehouseScalarFieldEnum = (typeof WarehouseScalarFieldEnum)[keyof typeof WarehouseScalarFieldEnum]
 
 
+export const MarketplaceListingScalarFieldEnum = {
+  id: 'id',
+  sellerAccountId: 'sellerAccountId',
+  sellerCharacter: 'sellerCharacter',
+  itemGroup: 'itemGroup',
+  itemIndex: 'itemIndex',
+  itemLevel: 'itemLevel',
+  itemData: 'itemData',
+  warehouseSlot: 'warehouseSlot',
+  currencyType: 'currencyType',
+  price: 'price',
+  listedAt: 'listedAt',
+  status: 'status',
+  buyerAccountId: 'buyerAccountId',
+  buyerCharacter: 'buyerCharacter',
+  soldAt: 'soldAt'
+} as const
+
+export type MarketplaceListingScalarFieldEnum = (typeof MarketplaceListingScalarFieldEnum)[keyof typeof MarketplaceListingScalarFieldEnum]
+
+
+export const AccountCreditsScalarFieldEnum = {
+  accountId: 'accountId',
+  credits: 'credits'
+} as const
+
+export type AccountCreditsScalarFieldEnum = (typeof AccountCreditsScalarFieldEnum)[keyof typeof AccountCreditsScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -321,6 +363,13 @@ export const CharacterOrderByRelevanceFieldEnum = {
 } as const
 
 export type CharacterOrderByRelevanceFieldEnum = (typeof CharacterOrderByRelevanceFieldEnum)[keyof typeof CharacterOrderByRelevanceFieldEnum]
+
+
+export const ExtWarehouseOrderByRelevanceFieldEnum = {
+  AccountID: 'AccountID'
+} as const
+
+export type ExtWarehouseOrderByRelevanceFieldEnum = (typeof ExtWarehouseOrderByRelevanceFieldEnum)[keyof typeof ExtWarehouseOrderByRelevanceFieldEnum]
 
 
 export const GoldenArcherCoinOrderByRelevanceFieldEnum = {
@@ -402,4 +451,23 @@ export const warehouseOrderByRelevanceFieldEnum = {
 } as const
 
 export type warehouseOrderByRelevanceFieldEnum = (typeof warehouseOrderByRelevanceFieldEnum)[keyof typeof warehouseOrderByRelevanceFieldEnum]
+
+
+export const MarketplaceListingOrderByRelevanceFieldEnum = {
+  sellerAccountId: 'sellerAccountId',
+  sellerCharacter: 'sellerCharacter',
+  currencyType: 'currencyType',
+  status: 'status',
+  buyerAccountId: 'buyerAccountId',
+  buyerCharacter: 'buyerCharacter'
+} as const
+
+export type MarketplaceListingOrderByRelevanceFieldEnum = (typeof MarketplaceListingOrderByRelevanceFieldEnum)[keyof typeof MarketplaceListingOrderByRelevanceFieldEnum]
+
+
+export const AccountCreditsOrderByRelevanceFieldEnum = {
+  accountId: 'accountId'
+} as const
+
+export type AccountCreditsOrderByRelevanceFieldEnum = (typeof AccountCreditsOrderByRelevanceFieldEnum)[keyof typeof AccountCreditsOrderByRelevanceFieldEnum]
 

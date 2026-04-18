@@ -57,6 +57,11 @@ export type Character = Prisma.CharacterModel
  */
 export type DefaultClassType = Prisma.DefaultClassTypeModel
 /**
+ * Model ExtWarehouse
+ * The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+ */
+export type ExtWarehouse = Prisma.ExtWarehouseModel
+/**
  * Model GameServerInfo
  * 
  */
@@ -111,3 +116,13 @@ export type ResetInfo = Prisma.ResetInfoModel
  * 
  */
 export type warehouse = Prisma.warehouseModel
+/**
+ * Model MarketplaceListing
+ * 
+ */
+export type MarketplaceListing = Prisma.MarketplaceListingModel
+/**
+ * Model AccountCredits
+ * 
+ */
+export type AccountCredits = Prisma.AccountCreditsModel

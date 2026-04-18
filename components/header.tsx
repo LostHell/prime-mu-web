@@ -3,6 +3,7 @@ import Navigation, { type Page } from "@/components/navigation";
 
 const pages: Page[] = [
   { path: "/", label: "Home" },
+  { path: "/marketplace", label: "Marketplace" },
   { path: "/top-players", label: "Top Players" },
   { path: "/download", label: "Download" },
 ];

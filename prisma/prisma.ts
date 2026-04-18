@@ -15,7 +15,17 @@ const adapter = new PrismaMariaDb({
   allowPublicKeyRetrieval: true,
 });
 
-export const prisma = globalThis.prisma ?? new PrismaClient({ adapter });
+const cachedPrisma = globalThis.prisma;
+const canReuseCachedClient = Boolean(
+  cachedPrisma &&
+  "marketplaceListing" in cachedPrisma &&
+  "accountCredits" in cachedPrisma &&
+  "warehouse" in cachedPrisma,
+);
+
+const createPrismaClient = () => new PrismaClient({ adapter });
+
+export const prisma: PrismaClient = canReuseCachedClient ? (cachedPrisma as PrismaClient) : createPrismaClient();
 
 if (process.env.NODE_ENV !== "production") {
   globalThis.prisma = prisma;

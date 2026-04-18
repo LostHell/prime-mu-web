@@ -79,12 +79,12 @@ model DefaultClassType {
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 model ExtWarehouse {
   AccountID String @db.VarChar(10)
-  Number    Int?   @db.UnsignedInt
+  Number    Int    @default(0) @db.UnsignedInt
   Items     Bytes? @db.VarBinary(1920)
   Money     Int?   @db.UnsignedInt
 
+  @@id([AccountID, Number])
   @@index([AccountID], map: "IX_ExtWarehouse_AccountID")
-  @@ignore
 }
 
 model GameServerInfo {
@@ -186,4 +186,30 @@ model warehouse {
   Items     Bytes? @db.VarBinary(1200)
   Money     Int?   @default(0) @db.UnsignedInt
   pw        Int?   @default(0) @db.SmallInt
+}
+
+model MarketplaceListing {
+  id              Int       @id @default(autoincrement())
+  sellerAccountId String    @db.VarChar(10)
+  sellerCharacter String    @db.VarChar(10)
+  itemGroup       Int       @db.UnsignedTinyInt
+  itemIndex       Int       @db.UnsignedTinyInt
+  itemLevel       Int       @db.UnsignedTinyInt
+  itemData        Bytes     @db.VarBinary(10)
+  warehouseSlot   Int       @db.UnsignedSmallInt
+  currencyType    String    @db.VarChar(10)
+  price           Int       @db.UnsignedInt
+  listedAt        DateTime  @default(now()) @db.DateTime(0)
+  status          String    @default("active") @db.VarChar(10)
+  buyerAccountId  String?   @db.VarChar(10)
+  buyerCharacter  String?   @db.VarChar(10)
+  soldAt          DateTime? @db.DateTime(0)
+
+  @@index([status], map: "IX_MarketplaceListing_Status")
+  @@index([sellerAccountId], map: "IX_MarketplaceListing_Seller")
+}
+
+model AccountCredits {
+  accountId String @id @db.VarChar(10)
+  credits   Int    @default(0) @db.UnsignedInt
 }

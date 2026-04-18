@@ -1,10 +1,12 @@
 export { addStatsAction } from "./add-stats";
+export { buyMarketplaceItemAction } from "./buy-marketplace-item";
+export { cancelMarketplaceListingAction } from "./cancel-marketplace-listing";
 export { changeEmailAction } from "./change-email";
 export { changePasswordAction } from "./change-password";
 export { clearPkAction } from "./clear-pk";
+export { listMarketplaceItemAction } from "./list-marketplace-item";
 export { loginAction } from "./login";
 export { logoutAction } from "./logout";
 export { registerAction } from "./register";
 export { resetCharacterAction } from "./reset-character";
 export { unstuckAction } from "./unstuck";
-

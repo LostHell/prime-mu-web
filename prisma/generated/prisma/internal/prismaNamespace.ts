@@ -387,6 +387,7 @@ export const ModelName = {
   AccountCharacter: 'AccountCharacter',
   Character: 'Character',
   DefaultClassType: 'DefaultClassType',
+  ExtWarehouse: 'ExtWarehouse',
   GameServerInfo: 'GameServerInfo',
   GoldenArcherCoin: 'GoldenArcherCoin',
   Guild: 'Guild',
@@ -397,7 +398,9 @@ export const ModelName = {
   RankingBloodCastle: 'RankingBloodCastle',
   RankingDevilSquare: 'RankingDevilSquare',
   ResetInfo: 'ResetInfo',
-  warehouse: 'warehouse'
+  warehouse: 'warehouse',
+  MarketplaceListing: 'MarketplaceListing',
+  AccountCredits: 'AccountCredits'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -413,7 +416,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "accountCharacter" | "character" | "defaultClassType" | "gameServerInfo" | "goldenArcherCoin" | "guild" | "guildMember" | "mEMB_INFO" | "mEMB_STAT" | "optionData" | "rankingBloodCastle" | "rankingDevilSquare" | "resetInfo" | "warehouse"
+    modelProps: "accountCharacter" | "character" | "defaultClassType" | "extWarehouse" | "gameServerInfo" | "goldenArcherCoin" | "guild" | "guildMember" | "mEMB_INFO" | "mEMB_STAT" | "optionData" | "rankingBloodCastle" | "rankingDevilSquare" | "resetInfo" | "warehouse" | "marketplaceListing" | "accountCredits"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -612,6 +615,72 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.DefaultClassTypeCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.DefaultClassTypeCountAggregateOutputType> | number
+        }
+      }
+    }
+    ExtWarehouse: {
+      payload: Prisma.$ExtWarehousePayload<ExtArgs>
+      fields: Prisma.ExtWarehouseFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ExtWarehouseFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExtWarehousePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ExtWarehouseFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExtWarehousePayload>
+        }
+        findFirst: {
+          args: Prisma.ExtWarehouseFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExtWarehousePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ExtWarehouseFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExtWarehousePayload>
+        }
+        findMany: {
+          args: Prisma.ExtWarehouseFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExtWarehousePayload>[]
+        }
+        create: {
+          args: Prisma.ExtWarehouseCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExtWarehousePayload>
+        }
+        createMany: {
+          args: Prisma.ExtWarehouseCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.ExtWarehouseDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExtWarehousePayload>
+        }
+        update: {
+          args: Prisma.ExtWarehouseUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExtWarehousePayload>
+        }
+        deleteMany: {
+          args: Prisma.ExtWarehouseDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ExtWarehouseUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.ExtWarehouseUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExtWarehousePayload>
+        }
+        aggregate: {
+          args: Prisma.ExtWarehouseAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateExtWarehouse>
+        }
+        groupBy: {
+          args: Prisma.ExtWarehouseGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ExtWarehouseGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ExtWarehouseCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ExtWarehouseCountAggregateOutputType> | number
         }
       }
     }
@@ -1341,6 +1410,138 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    MarketplaceListing: {
+      payload: Prisma.$MarketplaceListingPayload<ExtArgs>
+      fields: Prisma.MarketplaceListingFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.MarketplaceListingFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MarketplaceListingPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.MarketplaceListingFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MarketplaceListingPayload>
+        }
+        findFirst: {
+          args: Prisma.MarketplaceListingFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MarketplaceListingPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.MarketplaceListingFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MarketplaceListingPayload>
+        }
+        findMany: {
+          args: Prisma.MarketplaceListingFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MarketplaceListingPayload>[]
+        }
+        create: {
+          args: Prisma.MarketplaceListingCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MarketplaceListingPayload>
+        }
+        createMany: {
+          args: Prisma.MarketplaceListingCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.MarketplaceListingDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MarketplaceListingPayload>
+        }
+        update: {
+          args: Prisma.MarketplaceListingUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MarketplaceListingPayload>
+        }
+        deleteMany: {
+          args: Prisma.MarketplaceListingDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.MarketplaceListingUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.MarketplaceListingUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MarketplaceListingPayload>
+        }
+        aggregate: {
+          args: Prisma.MarketplaceListingAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateMarketplaceListing>
+        }
+        groupBy: {
+          args: Prisma.MarketplaceListingGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MarketplaceListingGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.MarketplaceListingCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MarketplaceListingCountAggregateOutputType> | number
+        }
+      }
+    }
+    AccountCredits: {
+      payload: Prisma.$AccountCreditsPayload<ExtArgs>
+      fields: Prisma.AccountCreditsFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AccountCreditsFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccountCreditsPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AccountCreditsFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccountCreditsPayload>
+        }
+        findFirst: {
+          args: Prisma.AccountCreditsFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccountCreditsPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AccountCreditsFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccountCreditsPayload>
+        }
+        findMany: {
+          args: Prisma.AccountCreditsFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccountCreditsPayload>[]
+        }
+        create: {
+          args: Prisma.AccountCreditsCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccountCreditsPayload>
+        }
+        createMany: {
+          args: Prisma.AccountCreditsCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.AccountCreditsDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccountCreditsPayload>
+        }
+        update: {
+          args: Prisma.AccountCreditsUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccountCreditsPayload>
+        }
+        deleteMany: {
+          args: Prisma.AccountCreditsDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AccountCreditsUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.AccountCreditsUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccountCreditsPayload>
+        }
+        aggregate: {
+          args: Prisma.AccountCreditsAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAccountCredits>
+        }
+        groupBy: {
+          args: Prisma.AccountCreditsGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AccountCreditsGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AccountCreditsCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AccountCreditsCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1456,6 +1657,16 @@ export const DefaultClassTypeScalarFieldEnum = {
 } as const
 
 export type DefaultClassTypeScalarFieldEnum = (typeof DefaultClassTypeScalarFieldEnum)[keyof typeof DefaultClassTypeScalarFieldEnum]
+
+
+export const ExtWarehouseScalarFieldEnum = {
+  AccountID: 'AccountID',
+  Number: 'Number',
+  Items: 'Items',
+  Money: 'Money'
+} as const
+
+export type ExtWarehouseScalarFieldEnum = (typeof ExtWarehouseScalarFieldEnum)[keyof typeof ExtWarehouseScalarFieldEnum]
 
 
 export const GameServerInfoScalarFieldEnum = {
@@ -1583,6 +1794,35 @@ export const WarehouseScalarFieldEnum = {
 export type WarehouseScalarFieldEnum = (typeof WarehouseScalarFieldEnum)[keyof typeof WarehouseScalarFieldEnum]
 
 
+export const MarketplaceListingScalarFieldEnum = {
+  id: 'id',
+  sellerAccountId: 'sellerAccountId',
+  sellerCharacter: 'sellerCharacter',
+  itemGroup: 'itemGroup',
+  itemIndex: 'itemIndex',
+  itemLevel: 'itemLevel',
+  itemData: 'itemData',
+  warehouseSlot: 'warehouseSlot',
+  currencyType: 'currencyType',
+  price: 'price',
+  listedAt: 'listedAt',
+  status: 'status',
+  buyerAccountId: 'buyerAccountId',
+  buyerCharacter: 'buyerCharacter',
+  soldAt: 'soldAt'
+} as const
+
+export type MarketplaceListingScalarFieldEnum = (typeof MarketplaceListingScalarFieldEnum)[keyof typeof MarketplaceListingScalarFieldEnum]
+
+
+export const AccountCreditsScalarFieldEnum = {
+  accountId: 'accountId',
+  credits: 'credits'
+} as const
+
+export type AccountCreditsScalarFieldEnum = (typeof AccountCreditsScalarFieldEnum)[keyof typeof AccountCreditsScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -1618,6 +1858,13 @@ export const CharacterOrderByRelevanceFieldEnum = {
 } as const
 
 export type CharacterOrderByRelevanceFieldEnum = (typeof CharacterOrderByRelevanceFieldEnum)[keyof typeof CharacterOrderByRelevanceFieldEnum]
+
+
+export const ExtWarehouseOrderByRelevanceFieldEnum = {
+  AccountID: 'AccountID'
+} as const
+
+export type ExtWarehouseOrderByRelevanceFieldEnum = (typeof ExtWarehouseOrderByRelevanceFieldEnum)[keyof typeof ExtWarehouseOrderByRelevanceFieldEnum]
 
 
 export const GoldenArcherCoinOrderByRelevanceFieldEnum = {
@@ -1699,6 +1946,25 @@ export const warehouseOrderByRelevanceFieldEnum = {
 } as const
 
 export type warehouseOrderByRelevanceFieldEnum = (typeof warehouseOrderByRelevanceFieldEnum)[keyof typeof warehouseOrderByRelevanceFieldEnum]
+
+
+export const MarketplaceListingOrderByRelevanceFieldEnum = {
+  sellerAccountId: 'sellerAccountId',
+  sellerCharacter: 'sellerCharacter',
+  currencyType: 'currencyType',
+  status: 'status',
+  buyerAccountId: 'buyerAccountId',
+  buyerCharacter: 'buyerCharacter'
+} as const
+
+export type MarketplaceListingOrderByRelevanceFieldEnum = (typeof MarketplaceListingOrderByRelevanceFieldEnum)[keyof typeof MarketplaceListingOrderByRelevanceFieldEnum]
+
+
+export const AccountCreditsOrderByRelevanceFieldEnum = {
+  accountId: 'accountId'
+} as const
+
+export type AccountCreditsOrderByRelevanceFieldEnum = (typeof AccountCreditsOrderByRelevanceFieldEnum)[keyof typeof AccountCreditsOrderByRelevanceFieldEnum]
 
 
 
@@ -1839,6 +2105,7 @@ export type GlobalOmitConfig = {
   accountCharacter?: Prisma.AccountCharacterOmit
   character?: Prisma.CharacterOmit
   defaultClassType?: Prisma.DefaultClassTypeOmit
+  extWarehouse?: Prisma.ExtWarehouseOmit
   gameServerInfo?: Prisma.GameServerInfoOmit
   goldenArcherCoin?: Prisma.GoldenArcherCoinOmit
   guild?: Prisma.GuildOmit
@@ -1850,6 +2117,8 @@ export type GlobalOmitConfig = {
   rankingDevilSquare?: Prisma.RankingDevilSquareOmit
   resetInfo?: Prisma.ResetInfoOmit
   warehouse?: Prisma.warehouseOmit
+  marketplaceListing?: Prisma.MarketplaceListingOmit
+  accountCredits?: Prisma.AccountCreditsOmit
 }
 
 /* Types for Logging */
