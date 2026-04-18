@@ -1,5 +1,7 @@
 import { auth } from "@/auth";
 import Navigation, { type Page } from "@/components/navigation";
+import { IS_HEADER_STICKY } from "@/constants/header";
+import { cn } from "@/lib/utils";
 
 const pages: Page[] = [
   { path: "/", label: "Home" },
@@ -12,7 +14,7 @@ const Header = async () => {
   const isAuthenticated = !!session?.user?.id;
 
   return (
-    <header>
+    <header className={cn(IS_HEADER_STICKY && "sticky top-0 z-50")}>
       <Navigation pages={pages} isAuthenticated={isAuthenticated} />
     </header>
   );

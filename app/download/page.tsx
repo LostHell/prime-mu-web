@@ -1,6 +1,8 @@
 import Divider from "@/components/divider";
 import PageLayout from "@/components/page-layout";
+import Headline from "@/components/ui/headline";
 import OrnamentLine from "@/components/ui/ornament-line";
+import Text from "@/components/ui/text";
 import { BRAND } from "@/constants/app";
 import { CheckCircle, Download, Monitor, Shield } from "lucide-react";
 import Link from "next/link";
@@ -27,17 +29,14 @@ const DownloadPage = () => {
     <PageLayout>
       <div className="max-w-5xl mx-auto px-4">
         {/* Header */}
-        <div className="text-center mb-12 animate-fade-up">
-          <h1 className="font-serif text-4xl md:text-5xl font-bold gold-gradient-text mb-4">
-            Download Client
-          </h1>
-          <p className="text-muted-foreground text-lg">Get started in minutes</p>
-        </div>
+        <Headline className="text-center">
+          <Text variant="h1" className="text-center">Download Client</Text>
+          <Text variant="p">Get started in minutes</Text>
+        </Headline>
 
         {/* Download Button */}
         <div
-          className="card-dark p-8 text-center mb-8 card-hover animate-fade-up animate-glow"
-          style={{ animationDelay: "0.1s", animationFillMode: "backwards" }}
+          className="card-dark p-8 text-center mb-8 card-hover animate-glow"
         >
           <Download className="w-16 h-16 mx-auto mb-6 text-gold" />
           <h2 className="font-serif text-2xl font-bold text-foreground mb-2">
@@ -56,8 +55,7 @@ const DownloadPage = () => {
         <div className="grid md:grid-cols-2 gap-8">
           {/* System Requirements */}
           <div
-            className="card-dark p-6 card-hover animate-fade-up"
-            style={{ animationDelay: "0.2s", animationFillMode: "backwards" }}
+            className="card-dark p-6 card-hover"
           >
             <div className="flex items-center gap-3 mb-6">
               <Monitor className="w-6 h-6 text-gold" />
@@ -79,8 +77,7 @@ const DownloadPage = () => {
 
           {/* Installation Guide */}
           <div
-            className="card-dark p-6 card-hover animate-fade-up"
-            style={{ animationDelay: "0.3s", animationFillMode: "backwards" }}
+            className="card-dark p-6 card-hover"
           >
             <div className="flex items-center gap-3 mb-6">
               <Shield className="w-6 h-6 text-gold" />

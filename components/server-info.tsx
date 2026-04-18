@@ -30,7 +30,7 @@ const ServerInfo: FC<ServerInfoProps> = ({ serverInfo }) => {
       <div className="max-w-5xl mx-auto px-4">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {/* Online Players — with capacity progress bar */}
-          <div className="stat-card card-hover animate-fade-up delay-0 p-6">
+          <div className="stat-card card-hover p-6">
             <Users className="w-6 h-6 mx-auto mb-2 text-gold" />
             <div className="text-2xl font-bold gold-gradient-text">
               {serverInfo.online}

@@ -1,8 +1,11 @@
 import RegisterForm from "@/app/register/_components/register-form";
 import { auth } from "@/auth";
 import PageLayout from "@/components/page-layout";
+import Headline from "@/components/ui/headline";
+import Text from "@/components/ui/text";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+
 
 const RegisterPage = async () => {
   const session = await auth();
@@ -14,12 +17,10 @@ const RegisterPage = async () => {
   return (
     <PageLayout>
       <div className="mx-auto max-w-md px-4">
-        <h1 className="mb-3 text-center font-serif text-4xl font-bold gold-gradient-text">
-          Register
-        </h1>
-        <p className="mb-8 text-center text-sm text-muted-foreground">
-          Create a new account using legacy-compatible fields.
-        </p>
+        <Headline className="text-center">
+          <Text variant="h1">Register</Text>
+          <Text variant="p">Create a new account using your email address.</Text>
+        </Headline>
         <div className="card-dark p-6">
           <RegisterForm />
         </div>

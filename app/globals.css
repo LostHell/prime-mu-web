@@ -176,9 +176,9 @@
   position: absolute;
   inset: 0;
   background: linear-gradient(180deg, 
-    hsl(var(--background) / 0.25) 0%, 
-    hsl(var(--background) / 0.5) 30%, 
-    hsl(var(--background) / 0.75) 60%,
+    hsl(var(--background) / 0.40) 0%, 
+    hsl(var(--background) / 0.65) 30%, 
+    hsl(var(--background) / 0.80) 60%,
     hsl(var(--background)) 100%
   );
 }
@@ -319,30 +319,6 @@
   background: hsl(var(--gold) / 0.1);
   border-color: hsl(var(--gold));
   box-shadow: 0 0 15px hsl(var(--gold) / 0.3);
-}
-
-/* Input styles */
-@layer components {
-  .input-gold {
-    width: 100%;
-    padding: 0.75rem 1rem;
-    border-radius: var(--radius);
-    font-size: 0.875rem;
-    background: hsl(var(--background));
-    border: 1px solid hsl(var(--border));
-    color: hsl(var(--foreground));
-    transition: all 0.3s ease;
-  }
-
-  .input-gold:focus {
-    outline: none;
-    border-color: hsl(var(--gold));
-    box-shadow: 0 0 10px hsl(var(--gold) / 0.2);
-  }
-
-  .input-gold::placeholder {
-    color: hsl(var(--muted-foreground));
-  }
 }
 
 /* Card hover effect */

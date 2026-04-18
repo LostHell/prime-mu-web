@@ -9,7 +9,7 @@ const TopPlayersContent = async () => {
 
   return (
     <>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 my-3">
         <PodiumCard player={top3[1]} position={2} className="order-2 md:order-1" />
         <PodiumCard player={top3[0]} position={1} className="order-1 md:order-2" />
         <PodiumCard player={top3[2]} position={3} className="order-3 md:order-3" />
@@ -17,7 +17,7 @@ const TopPlayersContent = async () => {
 
       <Divider />
 
-      <div className="card-dark p-6 card-hover animate-fade-up [animation-delay:0.3s] fill-mode-[backwards]">
+      <div className="card-dark p-6 card-hover">
         <PlayersTable players={allPlayers} />
       </div>
     </>

@@ -1,0 +1,1 @@
+export const IS_HEADER_STICKY = false;

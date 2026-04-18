@@ -17,7 +17,7 @@ const ServerInfoGrid = () => {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {items.map((info) => (
               <div key={info.label} className="flex justify-between border-b border-border pb-2">
-                <span className="text-muted-foreground">{info.label}</span>
+                <span>{info.label}</span>
                 <span className="font-semibold gold-gradient-text">{info.value}</span>
               </div>
             ))}

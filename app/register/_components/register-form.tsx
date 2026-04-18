@@ -1,6 +1,7 @@
 "use client";
 
 import { registerAction } from "@/actions/register";
+import { Input } from "@/components/ui/input";
 import { AuthFormState } from "@/lib/validation/types";
 import { useActionState } from "react";
 
@@ -15,7 +16,7 @@ const RegisterForm = () => {
         <label htmlFor="username" className="mb-2 block text-sm font-semibold">
           Username
         </label>
-        <input id="username" name="username" className="input-gold" placeholder="Choose username (4-10 chars)" />
+        <Input id="username" name="username" placeholder="Choose username (4-10 chars)" />
         {state.errors?.username && <p className="mt-1 text-sm text-red-400">{state.errors.username[0]}</p>}
       </div>
 
@@ -23,7 +24,7 @@ const RegisterForm = () => {
         <label htmlFor="email" className="mb-2 block text-sm font-semibold">
           Email
         </label>
-        <input id="email" name="email" type="email" className="input-gold" placeholder="Enter email" />
+        <Input id="email" name="email" type="email" placeholder="Enter email" />
         {state.errors?.email && <p className="mt-1 text-sm text-red-400">{state.errors.email[0]}</p>}
       </div>
 
@@ -31,7 +32,7 @@ const RegisterForm = () => {
         <label htmlFor="password" className="mb-2 block text-sm font-semibold">
           Password
         </label>
-        <input id="password" name="password" type="password" className="input-gold" placeholder="Choose password" />
+        <Input id="password" name="password" type="password" placeholder="Choose password" />
         {state.errors?.password && <p className="mt-1 text-sm text-red-400">{state.errors.password[0]}</p>}
       </div>
 
@@ -39,11 +40,10 @@ const RegisterForm = () => {
         <label htmlFor="confirmPassword" className="mb-2 block text-sm font-semibold">
           Confirm password
         </label>
-        <input
+        <Input
           id="confirmPassword"
           name="confirmPassword"
           type="password"
-          className="input-gold"
           placeholder="Confirm password"
         />
         {state.errors?.confirmPassword && (

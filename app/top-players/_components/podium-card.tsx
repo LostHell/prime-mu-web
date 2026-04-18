@@ -8,15 +8,15 @@ type PodiumPosition = 1 | 2 | 3;
 const PODIUM_CONFIG: Record<PodiumPosition, { icon: React.ReactNode; className: string }> = {
   1: {
     icon: <Trophy className="w-8 h-8 text-gold" />,
-    className: "md:scale-110 md:-mt-4 animate-glow [animation-delay:0.15s]",
+    className: "animate-glow md:-translate-y-3 [animation-delay:0.15s]",
   },
   2: {
     icon: <Medal className="w-7 h-7 text-gray-400" />,
-    className: "[animation-delay:0s]",
+    className: "md:translate-y-3 [animation-delay:0s]",
   },
   3: {
-    icon: <Medal className="w-6 h-6 text-amber-700" />,
-    className: "[animation-delay:0.30s]",
+    icon: <Medal className="md:mt-4 w-6 h-6 text-amber-700" />,
+    className: "md:translate-y-3 [animation-delay:0.30s]",
   },
 };
 
@@ -32,7 +32,7 @@ const PodiumCard = ({ player, position, className }: PodiumCardProps) => {
   return (
     <div
       className={cn(
-        "card-dark p-6 text-center card-hover animate-fade-up fill-mode-[backwards]",
+        "card-dark p-6 text-center card-hover",
         config.className,
         className,
       )}
