@@ -1,12 +1,17 @@
-const FieldLabel = ({ children }: { children: React.ReactNode }) => {
+import type { ReactNode } from "react";
+
+const FieldLabel = ({
+  children,
+  htmlFor,
+}: {
+  children: ReactNode;
+  htmlFor: string;
+}) => {
   return (
-    <label
-      className="block text-sm font-serif uppercase tracking-widest mb-2"
-      style={{ color: "hsl(var(--gold))" }}
-    >
+    <label htmlFor={htmlFor} className="mb-2 block text-sm font-semibold">
       {children}
     </label>
   );
-}
+};
 
 export default FieldLabel;

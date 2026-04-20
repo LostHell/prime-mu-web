@@ -131,20 +131,6 @@
   color: hsl(var(--foreground));
 }
 
-.nav-link {
-  font-family: var(--font-serif);
-  font-size: 0.875rem;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: hsl(var(--muted-foreground));
-  transition: color 0.3s ease, text-shadow 0.3s ease;
-}
-
-.nav-link:hover, .nav-link.active {
-  color: hsl(var(--gold));
-  text-shadow: 0 0 10px hsl(var(--gold) / 0.5);
-}
-
 .stat-card {
   background-color: hsl(var(--card));
   border-radius: var(--radius);
@@ -281,44 +267,6 @@
 
 .table-row-hover:hover {
   background-color: hsl(var(--gold) / 0.05);
-}
-
-/* Button styles */
-.btn-gold {
-  padding: 0.75rem 2rem;
-  font-family: var(--font-serif);
-  font-size: 0.875rem;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  border-radius: var(--radius);
-  background: linear-gradient(135deg, hsl(var(--gold)), hsl(var(--gold-dim)));
-  color: hsl(var(--background));
-  transition: all 0.3s ease;
-  border: 1px solid hsl(var(--gold));
-}
-
-.btn-gold:hover {
-  box-shadow: 0 0 20px hsl(var(--gold) / 0.5), 0 0 40px hsl(var(--gold) / 0.2);
-  transform: translateY(-2px);
-}
-
-.btn-outline {
-  padding: 0.75rem 2rem;
-  font-family: var(--font-serif);
-  font-size: 0.875rem;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  border-radius: var(--radius);
-  background: transparent;
-  color: hsl(var(--gold));
-  border: 1px solid hsl(var(--gold-dim));
-  transition: all 0.3s ease;
-}
-
-.btn-outline:hover {
-  background: hsl(var(--gold) / 0.1);
-  border-color: hsl(var(--gold));
-  box-shadow: 0 0 15px hsl(var(--gold) / 0.3);
 }
 
 /* Card hover effect */
