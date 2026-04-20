@@ -1,12 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import { Button } from "./button";
 
 interface ConfirmActionProps {
   label: string;
   description: string;
   buttonLabel: string;
-  buttonColor: string;
   onConfirm: () => void;
   disabled?: boolean;
 }
@@ -15,7 +15,6 @@ const ConfirmAction = ({
   label,
   description,
   buttonLabel,
-  buttonColor,
   onConfirm,
   disabled,
 }: ConfirmActionProps) => {
@@ -27,36 +26,22 @@ const ConfirmAction = ({
         {description}
       </p>
       {!confirmed ? (
-        <button
-          className="btn-outline w-full"
-          style={{ borderColor: buttonColor, color: buttonColor }}
-          onClick={() => setConfirmed(true)}
-          disabled={disabled}
-        >
+        <Button onClick={() => setConfirmed(true)} disabled={disabled}>
           {label}
-        </button>
+        </Button>
       ) : (
         <div className="space-y-3">
           <p
             className="text-sm text-center font-semibold uppercase tracking-widest"
-            style={{ color: buttonColor }}
           >
             Are you sure? This cannot be undone.
           </p>
           <div className="grid grid-cols-2 gap-3">
-            <button
-              className="btn-outline"
-              onClick={() => setConfirmed(false)}
-            >
+            <Button variant="outline" onClick={() => setConfirmed(false)}>
               Cancel
-            </button>
-            <button
-              className="btn-outline"
-              style={{
-                borderColor: buttonColor,
-                color: buttonColor,
-                background: `${buttonColor}18`,
-              }}
+            </Button>
+            <Button
+              variant="outline"
               onClick={() => {
                 setConfirmed(false);
                 onConfirm();
@@ -64,12 +49,12 @@ const ConfirmAction = ({
               disabled={disabled}
             >
               {buttonLabel}
-            </button>
+            </Button>
           </div>
         </div>
       )}
     </div>
   );
-}
+};
 
 export default ConfirmAction;

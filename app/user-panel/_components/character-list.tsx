@@ -46,7 +46,7 @@ export function CharacterList({ characters }: CharacterListProps) {
               <ClassAvatar
                 muClass={character.class}
                 color={classColor}
-                className="w-12 h-14 flex-shrink-0"
+                className="w-12 h-14 shrink-0"
               />
 
               <div className="flex-1 min-w-0 text-left">
@@ -55,7 +55,7 @@ export function CharacterList({ characters }: CharacterListProps) {
                     {character.name}
                   </span>
                   <span
-                    className="text-xs uppercase tracking-wide flex-shrink-0"
+                    className="text-xs uppercase tracking-wide shrink-0"
                     style={{ color: classColor }}
                   >
                     {character.class}

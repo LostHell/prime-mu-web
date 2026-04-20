@@ -1,22 +1,20 @@
-"use client";
-
-import { CircleDollarSign } from "lucide-react";
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
+import { getMyListings } from "../../_lib/get-marketplace-listings";
 import { MarketLayout } from "../_components/market-layout";
+import { SoldItems } from "./_components/sold-items";
 
-export default function SoldItemsPage() {
+export default async function SoldItemsPage() {
+  const session = await auth();
+  if (!session?.user?.id) {
+    redirect("/login");
+  }
+
+  const listings = await getMyListings(session.user.id, "sold");
+
   return (
     <MarketLayout>
-      <div className="text-center py-12">
-        <div className="w-16 h-16 mx-auto rounded-full bg-muted/30 flex items-center justify-center mb-4">
-          <CircleDollarSign className="size-8 text-muted-foreground" />
-        </div>
-        <h3 className="font-medium text-lg mb-2">No Sales Yet</h3>
-        <p className="text-sm text-muted-foreground max-w-sm mx-auto">
-          You haven&apos;t sold any items yet.
-          <br />
-          Your completed sales will appear here.
-        </p>
-      </div>
+      <SoldItems listings={listings} />
     </MarketLayout>
   );
 }

@@ -1,22 +1,20 @@
-"use client";
-
-import { Package } from "lucide-react";
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
+import { getMyPurchases } from "../../_lib/get-marketplace-listings";
 import { MarketLayout } from "../_components/market-layout";
+import { BoughtItems } from "./_components/bought-items";
 
-export default function BoughtItemsPage() {
+export default async function BoughtItemsPage() {
+  const session = await auth();
+  if (!session?.user?.id) {
+    redirect("/login");
+  }
+
+  const purchases = await getMyPurchases(session.user.id);
+
   return (
     <MarketLayout>
-      <div className="text-center py-12">
-        <div className="w-16 h-16 mx-auto rounded-full bg-muted/30 flex items-center justify-center mb-4">
-          <Package className="size-8 text-muted-foreground" />
-        </div>
-        <h3 className="font-medium text-lg mb-2">No Purchases Yet</h3>
-        <p className="text-sm text-muted-foreground max-w-sm mx-auto">
-          You haven&apos;t purchased any items yet.
-          <br />
-          Browse the market to find items to buy.
-        </p>
-      </div>
+      <BoughtItems purchases={purchases} />
     </MarketLayout>
   );
 }

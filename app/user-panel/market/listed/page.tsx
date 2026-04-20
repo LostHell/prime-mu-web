@@ -1,22 +1,20 @@
-"use client";
-
-import { ShoppingBag } from "lucide-react";
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
+import { getMyListings } from "../../_lib/get-marketplace-listings";
 import { MarketLayout } from "../_components/market-layout";
+import { MyListings } from "./_components/my-listings";
 
-export default function ListedItemsPage() {
+export default async function ListedItemsPage() {
+  const session = await auth();
+  if (!session?.user?.id) {
+    redirect("/login");
+  }
+
+  const listings = await getMyListings(session.user.id, "active");
+
   return (
     <MarketLayout>
-      <div className="text-center py-12">
-        <div className="w-16 h-16 mx-auto rounded-full bg-muted/30 flex items-center justify-center mb-4">
-          <ShoppingBag className="size-8 text-muted-foreground" />
-        </div>
-        <h3 className="font-medium text-lg mb-2">No Active Listings</h3>
-        <p className="text-sm text-muted-foreground max-w-sm mx-auto">
-          You don&apos;t have any items listed for sale.
-          <br />
-          Go to &quot;Sell Item&quot; to list your first item.
-        </p>
-      </div>
+      <MyListings listings={listings} />
     </MarketLayout>
   );
 }

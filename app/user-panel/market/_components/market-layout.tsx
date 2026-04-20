@@ -1,6 +1,8 @@
 "use client";
 
+import Headline from "@/components/ui/headline";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import Text from "@/components/ui/text";
 import { CircleDollarSign, Package, PlusCircle, ShoppingBag, Store } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -12,14 +14,14 @@ const MARKET_TABS = [
     icon: Store,
   },
   {
-    label: "Sell Item",
-    href: "/user-panel/market/sell",
-    icon: PlusCircle,
-  },
-  {
     label: "My Listings",
     href: "/user-panel/market/listed",
     icon: ShoppingBag,
+  },
+  {
+    label: "Sell Item",
+    href: "/user-panel/market/sell",
+    icon: PlusCircle,
   },
   {
     label: "Sold",
@@ -47,21 +49,15 @@ export function MarketLayout({ children }: MarketLayoutProps) {
   };
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center gap-4">
-        <div className="w-12 h-12 rounded-xl bg-gold/10 flex items-center justify-center">
-          <Store className="size-6 text-gold" />
-        </div>
-        <div>
-          <h1 className="text-2xl font-serif font-bold gold-gradient-text">
-            Market
-          </h1>
-          <p className="text-sm text-muted-foreground mt-0.5">
-            Buy and sell items with other players
-          </p>
-        </div>
-      </div>
+    <>
+      <Headline>
+        <Text as="h1" variant="h4">
+          Market
+        </Text>
+        <Text variant="small">
+          Buy and sell items with other players
+        </Text>
+      </Headline>
 
       {/* Tabs Navigation */}
       <div className="overflow-x-auto -mx-4 px-4 pb-2">
@@ -79,11 +75,10 @@ export function MarketLayout({ children }: MarketLayoutProps) {
                 >
                   <Link
                     href={tab.href}
-                    className={`flex items-center gap-2 px-4 py-2 text-sm font-medium whitespace-nowrap transition-colors ${
-                      isActive
+                    className={`flex items-center gap-2 px-4 py-2 text-sm font-medium whitespace-nowrap transition-colors ${isActive
                         ? "text-gold"
                         : "text-muted-foreground hover:text-foreground"
-                    }`}
+                      }`}
                   >
                     <Icon className="size-4" />
                     <span className="hidden sm:inline">{tab.label}</span>
@@ -96,7 +91,7 @@ export function MarketLayout({ children }: MarketLayoutProps) {
       </div>
 
       {/* Content */}
-      <div className="card-dark p-6">{children}</div>
-    </div>
+      <div className="card-dark overflow-visible p-6">{children}</div>
+    </>
   );
 }

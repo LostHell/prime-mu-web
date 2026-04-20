@@ -102,7 +102,6 @@ export function ResetForm({ character }: ResetFormProps) {
           label="Reset Character"
           description={`Resetting will set your level back to 1, restore base stats from your class defaults, grant +${POINTS_PER_RESET} points, and cost ${resetCost.toLocaleString()} Zen.`}
           buttonLabel="Confirm Reset"
-          buttonColor="hsl(var(--crimson))"
           onConfirm={handleConfirm}
           disabled={isPending}
         />

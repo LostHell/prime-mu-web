@@ -1,6 +1,8 @@
 "use client";
 
 import { loginAction } from "@/actions/login";
+import { Button } from "@/components/ui/button";
+import FieldLabel from "@/components/ui/field-label";
 import { Input } from "@/components/ui/input";
 import { AuthFormState } from "@/lib/validation/types";
 import { useActionState } from "react";
@@ -16,9 +18,7 @@ const LoginForm = () => {
   return (
     <form action={formAction} className="space-y-4">
       <div>
-        <label htmlFor="username" className="mb-2 block text-sm font-semibold">
-          Username
-        </label>
+        <FieldLabel htmlFor="username">Username</FieldLabel>
         <Input id="username" name="username" placeholder="Username" />
         {state.errors?.username && (
           <p className="mt-1 text-sm text-red-400">
@@ -28,9 +28,7 @@ const LoginForm = () => {
       </div>
 
       <div>
-        <label htmlFor="password" className="mb-2 block text-sm font-semibold">
-          Password
-        </label>
+        <FieldLabel htmlFor="password">Password</FieldLabel>
         <Input
           id="password"
           name="password"
@@ -46,9 +44,9 @@ const LoginForm = () => {
 
       {state.message && <p className="text-sm text-red-400">{state.message}</p>}
 
-      <button type="submit" className="btn-gold w-full" disabled={isPending}>
+      <Button type="submit" className="w-full" disabled={isPending}>
         {isPending ? "Signing in..." : "Login"}
-      </button>
+      </Button>
     </form>
   );
 };

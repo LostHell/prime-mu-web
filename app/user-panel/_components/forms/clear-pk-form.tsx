@@ -4,8 +4,8 @@ import { clearPkAction } from "@/actions/clear-pk";
 import ConfirmAction from "@/components/ui/confirm-action";
 import Feedback from "@/components/ui/feedback";
 import { Character } from "@/types/character";
+import { ShieldCheck, Skull } from "lucide-react";
 import { useActionState } from "react";
-import { Skull, ShieldCheck } from "lucide-react";
 
 interface ClearPkFormProps {
   character: Character;
@@ -69,7 +69,6 @@ export function ClearPkForm({ character }: ClearPkFormProps) {
           label="Clear PK Status"
           description="This will remove all Player Killer marks from your character, allowing you to enter towns and interact with NPCs freely."
           buttonLabel="Confirm Clear"
-          buttonColor="hsl(var(--crimson))"
           onConfirm={handleConfirm}
           disabled={isPending}
         />

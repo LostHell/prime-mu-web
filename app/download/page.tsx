@@ -1,11 +1,11 @@
 import Divider from "@/components/divider";
 import PageLayout from "@/components/page-layout";
+import { Button } from "@/components/ui/button";
 import Headline from "@/components/ui/headline";
 import OrnamentLine from "@/components/ui/ornament-line";
 import Text from "@/components/ui/text";
 import { BRAND } from "@/constants/app";
 import { CheckCircle, Download, Monitor, Shield } from "lucide-react";
-import Link from "next/link";
 
 const requirements = [
   { label: "OS", value: "Windows 7 / 8 / 10 / 11" },
@@ -44,10 +44,11 @@ const DownloadPage = () => {
           </h2>
           <p className="text-muted-foreground mb-1">Version 0.97d - 1.8 GB</p>
           <p className="text-muted-foreground text-sm mb-6">Last updated: March 2024</p>
-          <Link href="#" className="btn-gold inline-flex items-center gap-2">
-            <Download className="w-5 h-5" />
-            Download Now
-          </Link>
+          <Button className="flex-1" variant="default" asChild>
+            <a href="#">
+              <span>Download Now</span>
+            </a>
+          </Button>
         </div>
 
         <Divider />

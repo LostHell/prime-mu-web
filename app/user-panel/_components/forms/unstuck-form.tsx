@@ -1,10 +1,11 @@
 "use client";
 
 import { unstuckAction } from "@/actions/unstuck";
+import { Button } from "@/components/ui/button";
 import Feedback from "@/components/ui/feedback";
 import { Character } from "@/types/character";
-import { useActionState } from "react";
 import { MapPin } from "lucide-react";
+import { useActionState } from "react";
 
 interface UnstuckFormProps {
   character: Character;
@@ -59,13 +60,13 @@ export function UnstuckForm({ character }: UnstuckFormProps) {
         />
       )}
 
-      <button
-        className="btn-gold w-full"
+      <Button
+        className="w-full"
         onClick={handleClick}
         disabled={isPending}
       >
         {isPending ? "Teleporting..." : "Teleport to Lorencia"}
-      </button>
+      </Button>
     </div>
   );
 }

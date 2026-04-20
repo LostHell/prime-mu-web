@@ -1,40 +1,38 @@
 "use client";
 
 import { changePasswordAction } from "@/actions/change-password";
+import { Button } from "@/components/ui/button";
 import Feedback from "@/components/ui/feedback";
 import FieldLabel from "@/components/ui/field-label";
+import Headline from "@/components/ui/headline";
 import { Input } from "@/components/ui/input";
-import { Key, Lock } from "lucide-react";
+import Text from "@/components/ui/text";
+import { Lock } from "lucide-react";
 import { useActionState } from "react";
 
 export default function ChangePasswordPage() {
   const [state, action, isPending] = useActionState(changePasswordAction, {});
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center gap-4">
-        <div className="w-12 h-12 rounded-xl bg-gold/10 flex items-center justify-center">
-          <Key className="size-6 text-gold" />
-        </div>
-        <div>
-          <h1 className="text-2xl font-serif font-bold gold-gradient-text">
-            Change Password
-          </h1>
-          <p className="text-sm text-muted-foreground mt-0.5">
-            Update your account password
-          </p>
-        </div>
-      </div>
+    <>
+      <Headline>
+        <Text as="h1" variant="h4">
+          Change Password
+        </Text>
+        <Text variant="small">
+          Update your account password
+        </Text>
+      </Headline>
 
       <div className="card-dark p-6 max-w-md">
-        <form action={action} className="space-y-4">
+        <form action={action} className="space-y-6">
           <div>
-            <FieldLabel>Current Password</FieldLabel>
+            <FieldLabel htmlFor="currentPassword">Current Password</FieldLabel>
             <div className="relative">
               <Lock className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
               <Input
                 type="password"
+                id="currentPassword"
                 name="currentPassword"
                 placeholder="Enter current password"
                 className="pl-10"
@@ -49,11 +47,12 @@ export default function ChangePasswordPage() {
           </div>
 
           <div>
-            <FieldLabel>New Password</FieldLabel>
+            <FieldLabel htmlFor="newPassword">New Password</FieldLabel>
             <div className="relative">
               <Lock className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
               <Input
                 type="password"
+                id="newPassword"
                 name="newPassword"
                 placeholder="6-10 characters"
                 className="pl-10"
@@ -68,11 +67,12 @@ export default function ChangePasswordPage() {
           </div>
 
           <div>
-            <FieldLabel>Confirm New Password</FieldLabel>
+            <FieldLabel htmlFor="confirmPassword">Confirm New Password</FieldLabel>
             <div className="relative">
               <Lock className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
               <Input
                 type="password"
+                id="confirmPassword"
                 name="confirmPassword"
                 placeholder="Repeat new password"
                 className="pl-10"
@@ -93,11 +93,11 @@ export default function ChangePasswordPage() {
             />
           )}
 
-          <button type="submit" className="btn-gold w-full" disabled={isPending}>
-            {isPending ? "Saving..." : "Update Password"}
-          </button>
+          <Button type="submit" className="w-full" disabled={isPending}>
+            {isPending ? "Saving..." : "Save"}
+          </Button>
         </form>
       </div>
-    </div>
+    </>
   );
 }

@@ -81,7 +81,7 @@ export function CharacterSelector({
   return (
     <Select value={selected?.name ?? ""} onValueChange={handleSelect}>
       <SelectTrigger className="w-full h-auto p-4 bg-card border-gold-dim/50 hover:border-gold/50 transition-colors [&>span]:flex [&>span]:items-center [&>span]:gap-3 [&>span]:w-full">
-        <SelectValue placeholder="Select a character">
+        <SelectValue id="characterSelector" placeholder="Select a character">
           {selected ? (
             <>
               <div className="min-w-0 text-left">
@@ -120,7 +120,7 @@ export function CharacterSelector({
         </SelectValue>
       </SelectTrigger>
 
-      <SelectContent className="p-2 min-w-[var(--radix-select-trigger-width)]">
+      <SelectContent className="p-2 min-w-(--radix-select-trigger-width)">
         {characters.map((character) => {
           const classColor = CLASS_COLOR[character.class];
           return (

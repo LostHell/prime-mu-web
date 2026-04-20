@@ -2,6 +2,7 @@ import { BRAND } from "@/constants/app";
 import Link from "next/link";
 import { FC } from "react";
 import ServerStatus from "./server-status";
+import { Button } from "./ui/button";
 import Headline from "./ui/headline";
 import Text from "./ui/text";
 
@@ -26,16 +27,21 @@ const Hero: FC<HeroProps> = ({ serverStatus }) => {
 
         <ServerStatus status={serverStatus} />
 
-        <div className="flex gap-4 justify-center">
-          <Link href="/download" className="btn-gold w-full">
-            Play Now
-          </Link>
-          <Link href="/register" className="btn-outline w-full">
-            Register
-          </Link>
+        <div className="flex gap-4 justify-center max-w-md mx-auto">
+          <Button className="flex-1" variant="default" asChild>
+            <Link href="/download">
+              Play Now
+            </Link>
+          </Button>
+
+          <Button className="flex-1" variant="outline" asChild>
+            <Link href="/register">
+              Register
+            </Link>
+          </Button>
         </div>
       </div>
-    </section>
+    </section >
   );
 };
 

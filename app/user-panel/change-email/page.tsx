@@ -1,9 +1,12 @@
 "use client";
 
 import { changeEmailAction } from "@/actions/change-email";
+import { Button } from "@/components/ui/button";
 import Feedback from "@/components/ui/feedback";
 import FieldLabel from "@/components/ui/field-label";
+import Headline from "@/components/ui/headline";
 import { Input } from "@/components/ui/input";
+import Text from "@/components/ui/text";
 import { Lock, Mail } from "lucide-react";
 import { useActionState } from "react";
 
@@ -13,28 +16,24 @@ export default function ChangeEmailPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center gap-4">
-        <div className="w-12 h-12 rounded-xl bg-gold/10 flex items-center justify-center">
-          <Mail className="size-6 text-gold" />
-        </div>
-        <div>
-          <h1 className="text-2xl font-serif font-bold gold-gradient-text">
-            Change Email
-          </h1>
-          <p className="text-sm text-muted-foreground mt-0.5">
-            Update your account email address
-          </p>
-        </div>
-      </div>
+      <Headline>
+        <Text as="h1" variant="h4">
+          Change Email
+        </Text>
+        <Text variant="small">
+          Update your account email address
+        </Text>
+      </Headline>
 
       <div className="card-dark p-6 max-w-md">
         <form action={action} className="space-y-4">
           <div>
-            <FieldLabel>New Email Address</FieldLabel>
+            <FieldLabel htmlFor="newEmail">New Email Address</FieldLabel>
             <div className="relative">
               <Mail className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
               <Input
                 type="email"
+                id="newEmail"
                 name="newEmail"
                 placeholder="Enter new email"
                 className="pl-10"
@@ -49,11 +48,12 @@ export default function ChangeEmailPage() {
           </div>
 
           <div>
-            <FieldLabel>Current Password</FieldLabel>
+            <FieldLabel htmlFor="currentPassword">Current Password</FieldLabel>
             <div className="relative">
               <Lock className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
               <Input
                 type="password"
+                id="currentPassword"
                 name="currentPassword"
                 placeholder="Confirm with your password"
                 className="pl-10"
@@ -74,9 +74,9 @@ export default function ChangeEmailPage() {
             />
           )}
 
-          <button type="submit" className="btn-gold w-full" disabled={isPending}>
-            {isPending ? "Saving..." : "Update Email"}
-          </button>
+          <Button type="submit" className="w-full" disabled={isPending}>
+            {isPending ? "Saving..." : "Save"}
+          </Button>
         </form>
       </div>
     </div>

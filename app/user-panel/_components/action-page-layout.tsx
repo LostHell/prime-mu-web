@@ -1,5 +1,8 @@
 "use client";
 
+import FieldLabel from "@/components/ui/field-label";
+import Headline from "@/components/ui/headline";
+import Text from "@/components/ui/text";
 import { Character } from "@/types/character";
 import { useUserPanel } from "../_context/user-panel-context";
 import { CharacterSelector, RelevantField } from "./character-selector";
@@ -20,33 +23,19 @@ export function ActionPageLayout({
   const { selectedCharacter } = useUserPanel();
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center gap-4">
-        <div>
-          <h1 className="text-2xl font-serif font-bold gold-gradient-text">
-            {title}
-          </h1>
-          {description && (
-            <p className="text-sm text-muted-foreground mt-0.5">{description}</p>
-          )}
-        </div>
-      </div>
+    <>
+      <Headline>
+        <Text as="h1" variant="h4">
+          {title}
+        </Text>
+        {description && <Text variant="small">{description}</Text>}
+      </Headline>
 
-      {/* Character Selector */}
       <div className="card-dark p-6">
-        <label className="block text-xs text-muted-foreground uppercase tracking-wider mb-3">
-          Select Character
-        </label>
+        <FieldLabel htmlFor="characterSelector">Select Character</FieldLabel>
         <CharacterSelector relevantFields={relevantFields} />
+        {selectedCharacter && children(selectedCharacter)}
       </div>
-
-      {/* Action Form - Only shown when character is selected */}
-      {selectedCharacter && (
-        <div className="card-dark p-6">
-          {children(selectedCharacter)}
-        </div>
-      )}
-    </div>
+    </>
   );
 }
