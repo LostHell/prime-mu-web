@@ -87,3 +87,8 @@ export type ResetInfo = Prisma.ResetInfoModel
  * 
  */
 export type warehouse = Prisma.warehouseModel
+/**
+ * Model MarketplaceListing
+ * 
+ */
+export type MarketplaceListing = Prisma.MarketplaceListingModel

@@ -27,3 +27,12 @@ export async function verifyCharacterOwnership(
 
   return character;
 }
+
+export async function isAccountOffline(accountId: string): Promise<boolean> {
+  const stat = await prisma.mEMB_STAT.findUnique({
+    where: { memb___id: accountId },
+    select: { ConnectStat: true },
+  });
+
+  return (stat?.ConnectStat ?? 0) === 0;
+}

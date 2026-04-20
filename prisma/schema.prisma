@@ -187,3 +187,20 @@ model warehouse {
   Money     Int?   @default(0) @db.UnsignedInt
   pw        Int?   @default(0) @db.SmallInt
 }
+
+model MarketplaceListing {
+  id              Int       @id @default(autoincrement())
+  sellerAccountId String    @db.VarChar(10)
+  sellerCharacter String    @db.VarChar(10)
+  itemHex         Bytes     @db.VarBinary(32)
+  zenPrice        Int?      @db.UnsignedInt
+  listedAt        DateTime  @default(now()) @db.DateTime(0)
+  status          String    @default("active") @db.VarChar(10)
+  buyerAccountId  String?   @db.VarChar(10)
+  buyerCharacter  String?   @db.VarChar(10)
+  soldAt          DateTime? @db.DateTime(0)
+
+  @@index([status], map: "IX_MarketplaceListing_Status")
+  @@index([sellerAccountId], map: "IX_MarketplaceListing_Seller")
+}
+

@@ -64,7 +64,8 @@ export const ModelName = {
   RankingBloodCastle: 'RankingBloodCastle',
   RankingDevilSquare: 'RankingDevilSquare',
   ResetInfo: 'ResetInfo',
-  warehouse: 'warehouse'
+  warehouse: 'warehouse',
+  MarketplaceListing: 'MarketplaceListing'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -286,6 +287,22 @@ export const WarehouseScalarFieldEnum = {
 export type WarehouseScalarFieldEnum = (typeof WarehouseScalarFieldEnum)[keyof typeof WarehouseScalarFieldEnum]
 
 
+export const MarketplaceListingScalarFieldEnum = {
+  id: 'id',
+  sellerAccountId: 'sellerAccountId',
+  sellerCharacter: 'sellerCharacter',
+  itemHex: 'itemHex',
+  zenPrice: 'zenPrice',
+  listedAt: 'listedAt',
+  status: 'status',
+  buyerAccountId: 'buyerAccountId',
+  buyerCharacter: 'buyerCharacter',
+  soldAt: 'soldAt'
+} as const
+
+export type MarketplaceListingScalarFieldEnum = (typeof MarketplaceListingScalarFieldEnum)[keyof typeof MarketplaceListingScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -402,4 +419,15 @@ export const warehouseOrderByRelevanceFieldEnum = {
 } as const
 
 export type warehouseOrderByRelevanceFieldEnum = (typeof warehouseOrderByRelevanceFieldEnum)[keyof typeof warehouseOrderByRelevanceFieldEnum]
+
+
+export const MarketplaceListingOrderByRelevanceFieldEnum = {
+  sellerAccountId: 'sellerAccountId',
+  sellerCharacter: 'sellerCharacter',
+  status: 'status',
+  buyerAccountId: 'buyerAccountId',
+  buyerCharacter: 'buyerCharacter'
+} as const
+
+export type MarketplaceListingOrderByRelevanceFieldEnum = (typeof MarketplaceListingOrderByRelevanceFieldEnum)[keyof typeof MarketplaceListingOrderByRelevanceFieldEnum]
 

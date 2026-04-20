@@ -397,7 +397,8 @@ export const ModelName = {
   RankingBloodCastle: 'RankingBloodCastle',
   RankingDevilSquare: 'RankingDevilSquare',
   ResetInfo: 'ResetInfo',
-  warehouse: 'warehouse'
+  warehouse: 'warehouse',
+  MarketplaceListing: 'MarketplaceListing'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -413,7 +414,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "accountCharacter" | "character" | "defaultClassType" | "gameServerInfo" | "goldenArcherCoin" | "guild" | "guildMember" | "mEMB_INFO" | "mEMB_STAT" | "optionData" | "rankingBloodCastle" | "rankingDevilSquare" | "resetInfo" | "warehouse"
+    modelProps: "accountCharacter" | "character" | "defaultClassType" | "gameServerInfo" | "goldenArcherCoin" | "guild" | "guildMember" | "mEMB_INFO" | "mEMB_STAT" | "optionData" | "rankingBloodCastle" | "rankingDevilSquare" | "resetInfo" | "warehouse" | "marketplaceListing"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1341,6 +1342,72 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    MarketplaceListing: {
+      payload: Prisma.$MarketplaceListingPayload<ExtArgs>
+      fields: Prisma.MarketplaceListingFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.MarketplaceListingFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MarketplaceListingPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.MarketplaceListingFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MarketplaceListingPayload>
+        }
+        findFirst: {
+          args: Prisma.MarketplaceListingFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MarketplaceListingPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.MarketplaceListingFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MarketplaceListingPayload>
+        }
+        findMany: {
+          args: Prisma.MarketplaceListingFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MarketplaceListingPayload>[]
+        }
+        create: {
+          args: Prisma.MarketplaceListingCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MarketplaceListingPayload>
+        }
+        createMany: {
+          args: Prisma.MarketplaceListingCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.MarketplaceListingDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MarketplaceListingPayload>
+        }
+        update: {
+          args: Prisma.MarketplaceListingUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MarketplaceListingPayload>
+        }
+        deleteMany: {
+          args: Prisma.MarketplaceListingDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.MarketplaceListingUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.MarketplaceListingUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MarketplaceListingPayload>
+        }
+        aggregate: {
+          args: Prisma.MarketplaceListingAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateMarketplaceListing>
+        }
+        groupBy: {
+          args: Prisma.MarketplaceListingGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MarketplaceListingGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.MarketplaceListingCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MarketplaceListingCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1583,6 +1650,22 @@ export const WarehouseScalarFieldEnum = {
 export type WarehouseScalarFieldEnum = (typeof WarehouseScalarFieldEnum)[keyof typeof WarehouseScalarFieldEnum]
 
 
+export const MarketplaceListingScalarFieldEnum = {
+  id: 'id',
+  sellerAccountId: 'sellerAccountId',
+  sellerCharacter: 'sellerCharacter',
+  itemHex: 'itemHex',
+  zenPrice: 'zenPrice',
+  listedAt: 'listedAt',
+  status: 'status',
+  buyerAccountId: 'buyerAccountId',
+  buyerCharacter: 'buyerCharacter',
+  soldAt: 'soldAt'
+} as const
+
+export type MarketplaceListingScalarFieldEnum = (typeof MarketplaceListingScalarFieldEnum)[keyof typeof MarketplaceListingScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -1699,6 +1782,17 @@ export const warehouseOrderByRelevanceFieldEnum = {
 } as const
 
 export type warehouseOrderByRelevanceFieldEnum = (typeof warehouseOrderByRelevanceFieldEnum)[keyof typeof warehouseOrderByRelevanceFieldEnum]
+
+
+export const MarketplaceListingOrderByRelevanceFieldEnum = {
+  sellerAccountId: 'sellerAccountId',
+  sellerCharacter: 'sellerCharacter',
+  status: 'status',
+  buyerAccountId: 'buyerAccountId',
+  buyerCharacter: 'buyerCharacter'
+} as const
+
+export type MarketplaceListingOrderByRelevanceFieldEnum = (typeof MarketplaceListingOrderByRelevanceFieldEnum)[keyof typeof MarketplaceListingOrderByRelevanceFieldEnum]
 
 
 
@@ -1850,6 +1944,7 @@ export type GlobalOmitConfig = {
   rankingDevilSquare?: Prisma.RankingDevilSquareOmit
   resetInfo?: Prisma.ResetInfoOmit
   warehouse?: Prisma.warehouseOmit
+  marketplaceListing?: Prisma.MarketplaceListingOmit
 }
 
 /* Types for Logging */
