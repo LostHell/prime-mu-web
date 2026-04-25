@@ -9,7 +9,7 @@ let cachedDb: ItemDb | null = null;
 export function getItemDatabase(): ItemDb {
   if (cachedDb) return cachedDb;
 
-  const filePath = path.join(process.cwd(), "lib", "game-data", "Item.txt");
+  const filePath = path.join(process.cwd(), "lib", "game", "data", "Item.txt");
   const text = fs.readFileSync(filePath, "utf8");
   const lines = text.split("\n");
 
