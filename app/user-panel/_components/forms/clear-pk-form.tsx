@@ -1,8 +1,8 @@
 "use client";
 
-import { clearPkAction } from "@/actions/clear-pk";
 import ConfirmAction from "@/components/ui/confirm-action";
 import Feedback from "@/components/ui/feedback";
+import { clearPkAction } from "@/lib/actions/clear-pk";
 import { Character } from "@/types/character";
 import { ShieldCheck, Skull } from "lucide-react";
 import { useActionState } from "react";

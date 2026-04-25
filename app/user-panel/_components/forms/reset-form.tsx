@@ -1,6 +1,5 @@
 "use client";
 
-import { resetCharacterAction } from "@/actions/reset-character";
 import ConfirmAction from "@/components/ui/confirm-action";
 import Feedback from "@/components/ui/feedback";
 import {
@@ -9,6 +8,7 @@ import {
   POINTS_PER_RESET,
   RESET_COST_PER_RESET,
 } from "@/constants/resets";
+import { resetCharacterAction } from "@/lib/actions/reset-character";
 import { Character } from "@/types/character";
 import { startTransition, useActionState } from "react";
 

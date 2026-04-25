@@ -1,17 +1,17 @@
-import { getBloodCastleRanking } from "@/app/_lib/get-blood-castle-ranking";
 import EventCountdown from "@/components/event-countdown";
 import OrnamentLine from "@/components/ui/ornament-line";
 import { eventSchedules } from "@/constants/events";
+import { getDevilSquareRanking } from "@/lib/queries/get-devil-square-ranking";
 import { cn } from "@/lib/utils";
 import { CLASS_TEXT_COLOR } from "@/types/character";
-import { Shield } from "lucide-react";
+import { Skull } from "lucide-react";
 import { Suspense } from "react";
 
-const BloodCastleRows = async () => {
-  const bloodCastleRanking = await getBloodCastleRanking();
+const DevilSquareRows = async () => {
+  const devilSquareRanking = await getDevilSquareRanking();
   return (
     <tbody>
-      {bloodCastleRanking.map((entry) => (
+      {devilSquareRanking.map((entry) => (
         <tr key={entry.name} className="border-b border-border/50 table-row-hover">
           <td className="table-body-cell text-gold">{entry.rank}</td>
           <td className={cn("table-body-cell font-medium", CLASS_TEXT_COLOR[entry.class])}>{entry.name}</td>
@@ -40,15 +40,15 @@ const RowsSkeleton = () => (
   </tbody>
 );
 
-const BloodCastleRanking = () => {
+const DevilSquareRanking = () => {
   return (
     <div className="card-dark p-6 card-hover">
       <div className="flex items-center gap-3 mb-2">
-        <Shield className="w-6 h-6 text-crimson" />
-        <h3 className="section-title">Blood Castle</h3>
+        <Skull className="w-6 h-6 text-gold" />
+        <h3 className="section-title">Devil Square</h3>
       </div>
       <div className="flex justify-end mb-4">
-        <EventCountdown scheduleHours={eventSchedules.bloodCastle} colorClass="text-crimson" />
+        <EventCountdown scheduleHours={eventSchedules.devilSquare} colorClass="text-gold" />
       </div>
       <OrnamentLine className="mb-4" />
       <table className="w-full">
@@ -60,11 +60,11 @@ const BloodCastleRanking = () => {
           </tr>
         </thead>
         <Suspense fallback={<RowsSkeleton />}>
-          <BloodCastleRows />
+          <DevilSquareRows />
         </Suspense>
       </table>
     </div>
   );
 };
 
-export default BloodCastleRanking;
+export default DevilSquareRanking;

@@ -1,12 +1,12 @@
 "use client";
 
-import { changePasswordAction } from "@/actions/change-password";
 import { Button } from "@/components/ui/button";
 import Feedback from "@/components/ui/feedback";
 import FieldLabel from "@/components/ui/field-label";
 import Headline from "@/components/ui/headline";
 import { Input } from "@/components/ui/input";
 import Text from "@/components/ui/text";
+import { changePasswordAction } from "@/lib/actions/change-password";
 import { Lock } from "lucide-react";
 import { useActionState } from "react";
 

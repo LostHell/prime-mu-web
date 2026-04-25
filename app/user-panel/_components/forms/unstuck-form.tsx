@@ -1,8 +1,8 @@
 "use client";
 
-import { unstuckAction } from "@/actions/unstuck";
 import { Button } from "@/components/ui/button";
 import Feedback from "@/components/ui/feedback";
+import { unstuckAction } from "@/lib/actions/unstuck";
 import { Character } from "@/types/character";
 import { MapPin } from "lucide-react";
 import { useActionState } from "react";

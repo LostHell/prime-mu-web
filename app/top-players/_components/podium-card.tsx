@@ -1,4 +1,4 @@
-import { TopPlayerEntry } from "@/app/top-players/_lib/get-top-players";
+import { TopPlayerEntry } from "@/lib/queries/get-top-players";
 import { cn } from "@/lib/utils";
 import { CLASS_TEXT_COLOR } from "@/types/character";
 import { Medal, Trophy } from "lucide-react";

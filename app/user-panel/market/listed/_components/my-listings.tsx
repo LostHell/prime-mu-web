@@ -1,8 +1,8 @@
 "use client";
 
-import { cancelMarketplaceListingAction } from "@/actions/cancel-market-listing";
-import { MarketListing } from "@/app/user-panel/_lib/get-marketplace-listings";
 import { ItemHoverCard } from "@/components/item-hover-card";
+import { cancelMarketplaceListingAction } from "@/lib/actions/cancel-market-listing";
+import { MarketListing } from "@/lib/queries/get-marketplace-listings";
 import { CircleDollarSign, Loader2, ShoppingBag, X } from "lucide-react";
 import { useActionState } from "react";
 

@@ -1,7 +1,7 @@
 "use client";
 
-import { MarketListing } from "@/app/user-panel/_lib/get-marketplace-listings";
 import { ItemHoverCard } from "@/components/item-hover-card";
+import { MarketListing } from "@/lib/queries/get-marketplace-listings";
 import { CircleDollarSign, Receipt } from "lucide-react";
 
 interface SoldItemsProps {

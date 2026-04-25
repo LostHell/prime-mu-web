@@ -1,8 +1,8 @@
-import { logoutAction } from "@/actions/logout";
 import { auth } from "@/auth";
 import Navigation from "@/components/header/navigation";
 import type { HeaderNavItem } from "@/components/header/types";
 import { IS_HEADER_STICKY } from "@/constants/header";
+import { logoutAction } from "@/lib/actions/logout";
 import { cn } from "@/lib/utils";
 
 const HEADER_NAV_PUBLIC: HeaderNavItem[] = [

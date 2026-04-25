@@ -1,6 +1,6 @@
 import { auth } from "@/auth";
+import { getMyPurchases } from "@/lib/queries/get-marketplace-listings";
 import { redirect } from "next/navigation";
-import { getMyPurchases } from "../../_lib/get-marketplace-listings";
 import { MarketLayout } from "../_components/market-layout";
 import { BoughtItems } from "./_components/bought-items";
 

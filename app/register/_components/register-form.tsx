@@ -1,9 +1,9 @@
 "use client";
 
-import { registerAction } from "@/actions/register";
 import { Button } from "@/components/ui/button";
 import FieldLabel from "@/components/ui/field-label";
 import { Input } from "@/components/ui/input";
+import { registerAction } from "@/lib/actions/register";
 import { AuthFormState } from "@/lib/validation/types";
 import { useActionState } from "react";
 

@@ -1,7 +1,7 @@
 "use client";
 
-import { addStatsAction } from "@/actions/add-stats";
 import Feedback from "@/components/ui/feedback";
+import { addStatsAction } from "@/lib/actions/add-stats";
 import { Character, CLASS_COLOR, CMD_CLASSES } from "@/types/character";
 import { useActionState, useState } from "react";
 

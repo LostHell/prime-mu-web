@@ -1,6 +1,6 @@
 import { auth } from "@/auth";
+import { getWarehouseItems } from "@/lib/queries/get-warehouse-items";
 import { redirect } from "next/navigation";
-import { getWarehouseItems } from "../../_lib/get-warehouse-items";
 import { MarketLayout } from "../_components/market-layout";
 import { SellItemForm } from "./_components/sell-item-form";
 

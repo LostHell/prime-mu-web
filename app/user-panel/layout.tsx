@@ -1,9 +1,9 @@
 import { auth } from "@/auth";
 import PageLayout from "@/components/page-layout";
+import { getCharacters } from "@/lib/queries/get-characters";
 import { redirect } from "next/navigation";
 import { UserPanelNav } from "./_components/user-panel-nav";
 import { UserPanelProvider } from "./_context/user-panel-context";
-import { getCharacters } from "./_lib/get-characters";
 
 interface UserPanelLayoutProps {
   children: React.ReactNode;

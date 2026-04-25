@@ -1,7 +1,7 @@
 import PlayersTable from "@/app/top-players/_components/players-table";
 import PodiumCard from "@/app/top-players/_components/podium-card";
-import { getTopPlayers } from "@/app/top-players/_lib/get-top-players";
 import Divider from "@/components/divider";
+import { getTopPlayers } from "@/lib/queries/get-top-players";
 
 const TopPlayersContent = async () => {
   const allPlayers = await getTopPlayers();
