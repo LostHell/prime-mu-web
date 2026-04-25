@@ -9,23 +9,33 @@ const TopPlayersContent = async () => {
 
   return (
     <>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 my-3">
-        <PodiumCard player={top3[1]} position={2} className="order-2 md:order-1" />
-        <PodiumCard player={top3[0]} position={1} className="order-1 md:order-2" />
-        <PodiumCard player={top3[2]} position={3} className="order-3 md:order-3" />
+      <div className="my-3 grid grid-cols-1 gap-6 md:grid-cols-3">
+        <PodiumCard
+          player={top3[1]}
+          position={2}
+          className="order-2 md:order-1"
+        />
+        <PodiumCard
+          player={top3[0]}
+          position={1}
+          className="order-1 md:order-2"
+        />
+        <PodiumCard
+          player={top3[2]}
+          position={3}
+          className="order-3 md:order-3"
+        />
       </div>
 
       <Divider />
 
-      <div className="card-dark p-6 card-hover">
+      <div className="card-dark card-hover p-6">
         <PlayersTable players={allPlayers} />
       </div>
     </>
   );
 };
 
-const TopPlayersRankings = () => (
-    <TopPlayersContent />
-);
+const TopPlayersRankings = () => <TopPlayersContent />;
 
 export default TopPlayersRankings;

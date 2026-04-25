@@ -12,6 +12,6 @@ const OrnamentLine = ({ className }: HTMLAttributes<HTMLDivElement>) => {
       }}
     />
   );
-}
+};
 
 export default OrnamentLine;

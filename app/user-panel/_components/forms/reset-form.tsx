@@ -19,7 +19,7 @@ interface ResetFormProps {
 export function ResetForm({ character }: ResetFormProps) {
   const [state, formAction, isPending] = useActionState(
     resetCharacterAction,
-    {}
+    {},
   );
 
   const resetCost = (character.resets + 1) * RESET_COST_PER_RESET;
@@ -52,11 +52,11 @@ export function ResetForm({ character }: ResetFormProps) {
         {statsData.map(({ label, value }) => (
           <div
             key={label}
-            className="flex justify-between border-b border-border/50 pb-2"
+            className="border-border/50 flex justify-between border-b pb-2"
           >
             <span className="text-muted-foreground text-sm">{label}</span>
             <span
-              className="font-semibold text-sm"
+              className="text-sm font-semibold"
               style={{ color: "hsl(var(--gold))" }}
             >
               {value}
@@ -73,23 +73,23 @@ export function ResetForm({ character }: ResetFormProps) {
       )}
 
       {!hasRequiredLevel ? (
-        <div className="text-center py-4 rounded-lg bg-muted/30">
-          <p className="text-sm text-muted-foreground">
+        <div className="bg-muted/30 rounded-lg py-4 text-center">
+          <p className="text-muted-foreground text-sm">
             Your character must be at least level{" "}
             <span className="text-gold font-semibold">{MIN_RESET_LEVEL}</span>{" "}
             to reset.
           </p>
         </div>
       ) : !isUnderResetLimit ? (
-        <div className="text-center py-4 rounded-lg bg-muted/30">
-          <p className="text-sm text-muted-foreground">
+        <div className="bg-muted/30 rounded-lg py-4 text-center">
+          <p className="text-muted-foreground text-sm">
             Your character reached the reset limit (
             <span className="text-gold font-semibold">{MAX_RESETS}</span>).
           </p>
         </div>
       ) : !hasEnoughZen ? (
-        <div className="text-center py-4 rounded-lg bg-muted/30">
-          <p className="text-sm text-muted-foreground">
+        <div className="bg-muted/30 rounded-lg py-4 text-center">
+          <p className="text-muted-foreground text-sm">
             You need{" "}
             <span className="text-gold font-semibold">
               {resetCost.toLocaleString()}

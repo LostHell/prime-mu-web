@@ -47,7 +47,10 @@ export async function listMarketItemAction(
   });
 
   if (!firstCharacter) {
-    return { success: false, message: "You need at least one character to list items." };
+    return {
+      success: false,
+      message: "You need at least one character to list items.",
+    };
   }
 
   const warehouse = await prisma.warehouse.findUnique({

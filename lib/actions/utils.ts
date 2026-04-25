@@ -9,9 +9,7 @@ export async function getAuthenticatedUser() {
   return session.user.id;
 }
 
-export async function verifyCharacterOwnership(
-  characterName: string,
-) {
+export async function verifyCharacterOwnership(characterName: string) {
   const accountId = await getAuthenticatedUser();
 
   if (!accountId) {

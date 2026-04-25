@@ -1,7 +1,11 @@
 "use server";
 
 import { getItemDefinition } from "@/lib/item-database";
-import { decodeWarehouseItems, findFreeArea, writeItemToSlot } from "@/lib/item-decoder";
+import {
+  decodeWarehouseItems,
+  findFreeArea,
+  writeItemToSlot,
+} from "@/lib/item-decoder";
 import { UserPanelActionState } from "@/lib/validation/types";
 import { prisma } from "@/prisma/prisma";
 import { revalidatePath } from "next/cache";
@@ -90,5 +94,8 @@ export async function cancelMarketplaceListingAction(
   revalidatePath("/user-panel/market");
   revalidatePath("/user-panel/market/listed");
 
-  return { success: true, message: "Listing cancelled. Item returned to warehouse." };
+  return {
+    success: true,
+    message: "Listing cancelled. Item returned to warehouse.",
+  };
 }

@@ -19,17 +19,15 @@ export default function ChangePasswordPage() {
         <Text as="h1" variant="h4">
           Change Password
         </Text>
-        <Text variant="small">
-          Update your account password
-        </Text>
+        <Text variant="small">Update your account password</Text>
       </Headline>
 
-      <div className="card-dark p-6 max-w-md">
+      <div className="card-dark max-w-md p-6">
         <form action={action} className="space-y-6">
           <div>
             <FieldLabel htmlFor="currentPassword">Current Password</FieldLabel>
             <div className="relative">
-              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+              <Lock className="text-muted-foreground absolute top-1/2 left-3 size-4 -translate-y-1/2" />
               <Input
                 type="password"
                 id="currentPassword"
@@ -40,7 +38,7 @@ export default function ChangePasswordPage() {
               />
             </div>
             {state.errors?.currentPassword && (
-              <p className="text-xs text-crimson mt-1">
+              <p className="text-crimson mt-1 text-xs">
                 {state.errors.currentPassword[0]}
               </p>
             )}
@@ -49,7 +47,7 @@ export default function ChangePasswordPage() {
           <div>
             <FieldLabel htmlFor="newPassword">New Password</FieldLabel>
             <div className="relative">
-              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+              <Lock className="text-muted-foreground absolute top-1/2 left-3 size-4 -translate-y-1/2" />
               <Input
                 type="password"
                 id="newPassword"
@@ -60,16 +58,18 @@ export default function ChangePasswordPage() {
               />
             </div>
             {state.errors?.newPassword && (
-              <p className="text-xs text-crimson mt-1">
+              <p className="text-crimson mt-1 text-xs">
                 {state.errors.newPassword[0]}
               </p>
             )}
           </div>
 
           <div>
-            <FieldLabel htmlFor="confirmPassword">Confirm New Password</FieldLabel>
+            <FieldLabel htmlFor="confirmPassword">
+              Confirm New Password
+            </FieldLabel>
             <div className="relative">
-              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+              <Lock className="text-muted-foreground absolute top-1/2 left-3 size-4 -translate-y-1/2" />
               <Input
                 type="password"
                 id="confirmPassword"
@@ -80,7 +80,7 @@ export default function ChangePasswordPage() {
               />
             </div>
             {state.errors?.confirmPassword && (
-              <p className="text-xs text-crimson mt-1">
+              <p className="text-crimson mt-1 text-xs">
                 {state.errors.confirmPassword[0]}
               </p>
             )}

@@ -34,9 +34,7 @@ const NAV_GROUPS: NavGroup[] = [
   },
   {
     label: "Wallet",
-    items: [
-      { label: "Deposits", href: "/user-panel/deposits" },
-    ],
+    items: [{ label: "Deposits", href: "/user-panel/deposits" }],
   },
   {
     label: "Account",
@@ -57,40 +55,42 @@ export function UserPanelNav() {
   };
 
   return (
-    <nav className="border-b border-gold-dim/30 bg-card/80 backdrop-blur-md">
-      <div className="max-w-5xl mx-auto px-4">
-          <div className="py-4 border-t border-border/50 animate-fade-in">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-              {NAV_GROUPS.map((group) => (
-                <div key={group.label}>
-                  <div className="mb-2 text-xs text-muted-foreground uppercase tracking-wider">
-                    {group.label}
-                  </div>
-                  <div className="space-y-1">
-                    {group.items.map((item) => (
-                      <Link
-                        key={item.href}
-                        href={item.href}
-                        className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-colors ${
-                          isActive(item.href)
-                            ? "text-gold bg-gold/10"
-                            : "text-foreground hover:bg-muted/50"
-                        }`}
-                      >
-                        <ChevronRight
-                          className={`w-4 h-4 flex-shrink-0 ${
-                            isActive(item.href) ? "text-gold" : "text-muted-foreground"
-                          }`}
-                          aria-hidden="true"
-                        />
-                        <span className="text-sm">{item.label}</span>
-                      </Link>
-                    ))}
-                  </div>
+    <nav className="border-gold-dim/30 bg-card/80 border-b backdrop-blur-md">
+      <div className="mx-auto max-w-5xl px-4">
+        <div className="border-border/50 animate-fade-in border-t py-4">
+          <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
+            {NAV_GROUPS.map((group) => (
+              <div key={group.label}>
+                <div className="text-muted-foreground mb-2 text-xs tracking-wider uppercase">
+                  {group.label}
                 </div>
-              ))}
-            </div>
+                <div className="space-y-1">
+                  {group.items.map((item) => (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      className={`flex items-center gap-2 rounded-lg px-3 py-2 transition-colors ${
+                        isActive(item.href)
+                          ? "text-gold bg-gold/10"
+                          : "text-foreground hover:bg-muted/50"
+                      }`}
+                    >
+                      <ChevronRight
+                        className={`h-4 w-4 flex-shrink-0 ${
+                          isActive(item.href)
+                            ? "text-gold"
+                            : "text-muted-foreground"
+                        }`}
+                        aria-hidden="true"
+                      />
+                      <span className="text-sm">{item.label}</span>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            ))}
           </div>
+        </div>
       </div>
     </nav>
   );

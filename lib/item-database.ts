@@ -98,7 +98,10 @@ export function getItemName(group: number, index: number): string {
   return db.get(`${group}-${index}`)?.name ?? `Item (${group}-${index})`;
 }
 
-export function getItemDefinition(group: number, index: number): ItemDefinition | undefined {
+export function getItemDefinition(
+  group: number,
+  index: number,
+): ItemDefinition | undefined {
   const db = getItemDatabase();
   return db.get(`${group}-${index}`);
 }

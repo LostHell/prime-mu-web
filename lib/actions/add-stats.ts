@@ -6,7 +6,10 @@ import { prisma } from "@/prisma/prisma";
 import { revalidatePath } from "next/cache";
 import { getAuthenticatedUser, verifyCharacterOwnership } from "./utils";
 
-export async function addStatsAction(_state: UserPanelActionState, formData: FormData): Promise<UserPanelActionState> {
+export async function addStatsAction(
+  _state: UserPanelActionState,
+  formData: FormData,
+): Promise<UserPanelActionState> {
   const accountId = await getAuthenticatedUser();
   if (!accountId) {
     return { success: false, message: "You must be logged in." };

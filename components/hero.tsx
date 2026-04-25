@@ -14,34 +14,28 @@ const Hero: FC<HeroProps> = ({ serverStatus }) => {
   const subtitle = "Season 0.97d \u2014 The Classic Experience";
 
   return (
-    <section className="relative h-[80vh] flex items-center justify-center overflow-hidden">
-      <div className="relative z-10 text-center px-4">
+    <section className="relative flex h-[80vh] items-center justify-center overflow-hidden">
+      <div className="relative z-10 px-4 text-center">
         <Headline>
-          <Text variant="hero" className="text-center mb-3" >
+          <Text variant="hero" className="mb-3 text-center">
             {BRAND}
           </Text>
-          <Text variant="subtitle">
-            {subtitle}
-          </Text>
+          <Text variant="subtitle">{subtitle}</Text>
         </Headline>
 
         <ServerStatus status={serverStatus} />
 
-        <div className="flex gap-4 justify-center max-w-md mx-auto">
+        <div className="mx-auto flex max-w-md justify-center gap-4">
           <Button className="flex-1" variant="default" asChild>
-            <Link href="/download">
-              Play Now
-            </Link>
+            <Link href="/download">Play Now</Link>
           </Button>
 
           <Button className="flex-1" variant="outline" asChild>
-            <Link href="/register">
-              Register
-            </Link>
+            <Link href="/register">Register</Link>
           </Button>
         </div>
       </div>
-    </section >
+    </section>
   );
 };
 

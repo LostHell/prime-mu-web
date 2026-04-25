@@ -4,7 +4,16 @@ import { prisma } from "@/prisma/prisma";
 import { DecodedItem, ItemDefinition } from "@/types/item";
 
 export type ListingItem = DecodedItem &
-  Pick<ItemDefinition, "defense" | "defRate" | "dmgMin" | "dmgMax" | "reqStr" | "reqAgi" | "classFlags"> & {
+  Pick<
+    ItemDefinition,
+    | "defense"
+    | "defRate"
+    | "dmgMin"
+    | "dmgMax"
+    | "reqStr"
+    | "reqAgi"
+    | "classFlags"
+  > & {
     name: string;
     width: number;
     height: number;
@@ -45,7 +54,10 @@ function decodeItemFromHex(itemHex: Buffer): ListingItem | null {
   };
 }
 
-export async function getMyListings(accountId: string, status?: string): Promise<MarketListing[]> {
+export async function getMyListings(
+  accountId: string,
+  status?: string,
+): Promise<MarketListing[]> {
   const listings = await prisma.marketplaceListing.findMany({
     where: {
       sellerAccountId: accountId,
@@ -101,7 +113,9 @@ export async function getAllActiveListings(): Promise<MarketListing[]> {
     .filter((l): l is MarketListing => l !== null);
 }
 
-export async function getMyPurchases(accountId: string): Promise<MarketListing[]> {
+export async function getMyPurchases(
+  accountId: string,
+): Promise<MarketListing[]> {
   const listings = await prisma.marketplaceListing.findMany({
     where: {
       buyerAccountId: accountId,

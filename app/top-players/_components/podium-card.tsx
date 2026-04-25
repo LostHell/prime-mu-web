@@ -5,17 +5,20 @@ import { Medal, Trophy } from "lucide-react";
 
 type PodiumPosition = 1 | 2 | 3;
 
-const PODIUM_CONFIG: Record<PodiumPosition, { icon: React.ReactNode; className: string }> = {
+const PODIUM_CONFIG: Record<
+  PodiumPosition,
+  { icon: React.ReactNode; className: string }
+> = {
   1: {
-    icon: <Trophy className="w-8 h-8 text-gold" />,
+    icon: <Trophy className="text-gold h-8 w-8" />,
     className: "animate-glow md:-translate-y-3 [animation-delay:0.15s]",
   },
   2: {
-    icon: <Medal className="w-7 h-7 text-gray-400" />,
+    icon: <Medal className="h-7 w-7 text-gray-400" />,
     className: "md:translate-y-3 [animation-delay:0s]",
   },
   3: {
-    icon: <Medal className="md:mt-4 w-6 h-6 text-amber-700" />,
+    icon: <Medal className="h-6 w-6 text-amber-700 md:mt-4" />,
     className: "md:translate-y-3 [animation-delay:0.30s]",
   },
 };
@@ -32,30 +35,42 @@ const PodiumCard = ({ player, position, className }: PodiumCardProps) => {
   return (
     <div
       className={cn(
-        "card-dark p-6 text-center card-hover",
+        "card-dark card-hover p-6 text-center",
         config.className,
         className,
       )}
     >
-      <div className="flex items-center justify-center mb-4">{config.icon}</div>
+      <div className="mb-4 flex items-center justify-center">{config.icon}</div>
 
-      <div className="font-serif text-lg text-gold mb-2">#{position}</div>
-      <h3 className="font-serif text-xl font-bold text-foreground mb-1">{player.name}</h3>
-      <p className={cn("text-sm", CLASS_TEXT_COLOR[player.class])}>{player.class}</p>
+      <div className="text-gold mb-2 font-serif text-lg">#{position}</div>
+      <h3 className="text-foreground mb-1 font-serif text-xl font-bold">
+        {player.name}
+      </h3>
+      <p className={cn("text-sm", CLASS_TEXT_COLOR[player.class])}>
+        {player.class}
+      </p>
 
       <div className="mt-4 grid grid-cols-2 gap-4">
         <div>
-          <div className="text-xs text-muted-foreground uppercase tracking-widest">Level</div>
-          <div className="text-lg font-bold gold-gradient-text">{player.level}</div>
+          <div className="text-muted-foreground text-xs tracking-widest uppercase">
+            Level
+          </div>
+          <div className="gold-gradient-text text-lg font-bold">
+            {player.level}
+          </div>
         </div>
         <div>
-          <div className="text-xs text-muted-foreground uppercase tracking-widest">Resets</div>
-          <div className="text-lg font-bold gold-gradient-text">{player.resets}</div>
+          <div className="text-muted-foreground text-xs tracking-widest uppercase">
+            Resets
+          </div>
+          <div className="gold-gradient-text text-lg font-bold">
+            {player.resets}
+          </div>
         </div>
       </div>
 
       {player.guild && (
-        <p className="mt-3 text-xs text-muted-foreground">
+        <p className="text-muted-foreground mt-3 text-xs">
           Guild: <span className="text-gold">{player.guild}</span>
         </p>
       )}

@@ -1,5 +1,5 @@
 const SuspenseFallback = () => {
-  return <div className="card-dark p-6 animate-pulse h-64" />;
+  return <div className="card-dark h-64 animate-pulse p-6" />;
 };
 
 export default SuspenseFallback;

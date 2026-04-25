@@ -5,7 +5,9 @@ export const proxy = async (req: NextRequest) => {
   const token = await getToken({ req, secret: process.env.AUTH_SECRET });
   const isAuthenticated = Boolean(token?.sub);
   const isUserPanelRoute = req.nextUrl.pathname.startsWith("/user-panel");
-  const isAuthRoute = req.nextUrl.pathname.startsWith("/login") || req.nextUrl.pathname.startsWith("/register");
+  const isAuthRoute =
+    req.nextUrl.pathname.startsWith("/login") ||
+    req.nextUrl.pathname.startsWith("/register");
 
   if (isUserPanelRoute && !isAuthenticated) {
     return NextResponse.redirect(new URL("/login", req.nextUrl));

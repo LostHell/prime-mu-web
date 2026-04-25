@@ -3,7 +3,13 @@
 import Headline from "@/components/ui/headline";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Text from "@/components/ui/text";
-import { CircleDollarSign, Package, PlusCircle, ShoppingBag, Store } from "lucide-react";
+import {
+  CircleDollarSign,
+  Package,
+  PlusCircle,
+  ShoppingBag,
+  Store,
+} from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -44,7 +50,9 @@ export function MarketLayout({ children }: MarketLayoutProps) {
 
   const getCurrentTab = () => {
     if (pathname === "/user-panel/market") return "/user-panel/market";
-    const tab = MARKET_TABS.find((t) => pathname.startsWith(t.href) && t.href !== "/user-panel/market");
+    const tab = MARKET_TABS.find(
+      (t) => pathname.startsWith(t.href) && t.href !== "/user-panel/market",
+    );
     return tab?.href ?? "/user-panel/market";
   };
 
@@ -54,15 +62,16 @@ export function MarketLayout({ children }: MarketLayoutProps) {
         <Text as="h1" variant="h4">
           Market
         </Text>
-        <Text variant="small">
-          Buy and sell items with other players
-        </Text>
+        <Text variant="small">Buy and sell items with other players</Text>
       </Headline>
 
       {/* Tabs Navigation */}
-      <div className="overflow-x-auto -mx-4 px-4 pb-2">
+      <div className="-mx-4 overflow-x-auto px-4 pb-2">
         <Tabs value={getCurrentTab()} className="w-full">
-          <TabsList variant="line" className="w-full justify-start gap-0 bg-transparent">
+          <TabsList
+            variant="line"
+            className="w-full justify-start gap-0 bg-transparent"
+          >
             {MARKET_TABS.map((tab) => {
               const Icon = tab.icon;
               const isActive = getCurrentTab() === tab.href;
@@ -75,10 +84,11 @@ export function MarketLayout({ children }: MarketLayoutProps) {
                 >
                   <Link
                     href={tab.href}
-                    className={`flex items-center gap-2 px-4 py-2 text-sm font-medium whitespace-nowrap transition-colors ${isActive
+                    className={`flex items-center gap-2 px-4 py-2 text-sm font-medium whitespace-nowrap transition-colors ${
+                      isActive
                         ? "text-gold"
                         : "text-muted-foreground hover:text-foreground"
-                      }`}
+                    }`}
                   >
                     <Icon className="size-4" />
                     <span className="hidden sm:inline">{tab.label}</span>

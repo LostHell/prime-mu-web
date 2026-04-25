@@ -48,14 +48,21 @@ export function decodeWarehouseItems(data: Buffer | Uint8Array): DecodedItem[] {
   return items;
 }
 
-export function clearWarehouseSlot(data: Buffer | Uint8Array, slot: number): Buffer {
+export function clearWarehouseSlot(
+  data: Buffer | Uint8Array,
+  slot: number,
+): Buffer {
   const buf = Buffer.from(data);
   const offset = slot * BYTES_PER_SLOT;
   buf.fill(0xff, offset, offset + BYTES_PER_SLOT);
   return buf;
 }
 
-export function writeItemToSlot(data: Buffer | Uint8Array, slot: number, itemBytes: number[]): Buffer {
+export function writeItemToSlot(
+  data: Buffer | Uint8Array,
+  slot: number,
+  itemBytes: number[],
+): Buffer {
   const buf = Buffer.from(data);
   const offset = slot * BYTES_PER_SLOT;
   for (let i = 0; i < BYTES_PER_SLOT && i < itemBytes.length; i++) {
@@ -78,7 +85,7 @@ function buildOccupancyGrid(
   rows: number,
 ): boolean[][] {
   const grid: boolean[][] = Array.from({ length: rows }, () =>
-    Array.from({ length: cols }, () => false)
+    Array.from({ length: cols }, () => false),
   );
 
   const items = decodeWarehouseItems(data);

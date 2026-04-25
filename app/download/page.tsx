@@ -27,23 +27,25 @@ const steps = [
 const DownloadPage = () => {
   return (
     <PageLayout>
-      <div className="max-w-5xl mx-auto px-4">
+      <div className="mx-auto max-w-5xl px-4">
         {/* Header */}
         <Headline className="text-center">
-          <Text variant="h1" className="text-center">Download Client</Text>
+          <Text variant="h1" className="text-center">
+            Download Client
+          </Text>
           <Text variant="p">Get started in minutes</Text>
         </Headline>
 
         {/* Download Button */}
-        <div
-          className="card-dark p-8 text-center mb-8 card-hover animate-glow"
-        >
-          <Download className="w-16 h-16 mx-auto mb-6 text-gold" />
-          <h2 className="font-serif text-2xl font-bold text-foreground mb-2">
+        <div className="card-dark card-hover animate-glow mb-8 p-8 text-center">
+          <Download className="text-gold mx-auto mb-6 h-16 w-16" />
+          <h2 className="text-foreground mb-2 font-serif text-2xl font-bold">
             {BRAND} Full Client
           </h2>
           <p className="text-muted-foreground mb-1">Version 0.97d - 1.8 GB</p>
-          <p className="text-muted-foreground text-sm mb-6">Last updated: March 2024</p>
+          <p className="text-muted-foreground mb-6 text-sm">
+            Last updated: March 2024
+          </p>
           <Button className="flex-1" variant="default" asChild>
             <a href="#">
               <span>Download Now</span>
@@ -53,13 +55,11 @@ const DownloadPage = () => {
 
         <Divider />
 
-        <div className="grid md:grid-cols-2 gap-8">
+        <div className="grid gap-8 md:grid-cols-2">
           {/* System Requirements */}
-          <div
-            className="card-dark p-6 card-hover"
-          >
-            <div className="flex items-center gap-3 mb-6">
-              <Monitor className="w-6 h-6 text-gold" />
+          <div className="card-dark card-hover p-6">
+            <div className="mb-6 flex items-center gap-3">
+              <Monitor className="text-gold h-6 w-6" />
               <h3 className="section-title">System Requirements</h3>
             </div>
             <OrnamentLine className="mb-4" />
@@ -67,7 +67,7 @@ const DownloadPage = () => {
               {requirements.map((req) => (
                 <div
                   key={req.label}
-                  className="flex justify-between border-b border-border/50 pb-2"
+                  className="border-border/50 flex justify-between border-b pb-2"
                 >
                   <span className="text-muted-foreground">{req.label}</span>
                   <span className="text-foreground">{req.value}</span>
@@ -77,20 +77,16 @@ const DownloadPage = () => {
           </div>
 
           {/* Installation Guide */}
-          <div
-            className="card-dark p-6 card-hover"
-          >
-            <div className="flex items-center gap-3 mb-6">
-              <Shield className="w-6 h-6 text-gold" />
+          <div className="card-dark card-hover p-6">
+            <div className="mb-6 flex items-center gap-3">
+              <Shield className="text-gold h-6 w-6" />
               <h3 className="section-title">Installation Guide</h3>
             </div>
             <OrnamentLine className="mb-4" />
             <div className="space-y-3">
               {steps.map((step, i) => (
                 <div key={i} className="flex items-start gap-3">
-                  <CheckCircle
-                    className="w-5 h-5 shrink-0 mt-0.5 text-gold"
-                  />
+                  <CheckCircle className="text-gold mt-0.5 h-5 w-5 shrink-0" />
                   <span className="text-foreground text-sm">{step}</span>
                 </div>
               ))}

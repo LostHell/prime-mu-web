@@ -8,7 +8,9 @@ export interface DevilSquareRankingEntry {
   score: number;
 }
 
-export async function getDevilSquareRanking(): Promise<DevilSquareRankingEntry[]> {
+export async function getDevilSquareRanking(): Promise<
+  DevilSquareRankingEntry[]
+> {
   const rankings = await prisma.rankingDevilSquare.findMany({
     take: 10,
     orderBy: { Score: "desc" },

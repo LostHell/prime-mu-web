@@ -60,7 +60,9 @@ export async function getLastDisconnected(): Promise<LastDisconnectedEntry[]> {
     select: { Id: true, GameIDC: true, GameID1: true },
   });
 
-  const accountCharMap = new Map(accountCharacters.map((ac) => [ac.Id, ac.GameIDC ?? ac.GameID1]));
+  const accountCharMap = new Map(
+    accountCharacters.map((ac) => [ac.Id, ac.GameIDC ?? ac.GameID1]),
+  );
 
   const characterNames = accountCharacters
     .map((ac) => ac.GameIDC ?? ac.GameID1)

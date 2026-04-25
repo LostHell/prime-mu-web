@@ -20,17 +20,15 @@ export default function ChangeEmailPage() {
         <Text as="h1" variant="h4">
           Change Email
         </Text>
-        <Text variant="small">
-          Update your account email address
-        </Text>
+        <Text variant="small">Update your account email address</Text>
       </Headline>
 
-      <div className="card-dark p-6 max-w-md">
+      <div className="card-dark max-w-md p-6">
         <form action={action} className="space-y-4">
           <div>
             <FieldLabel htmlFor="newEmail">New Email Address</FieldLabel>
             <div className="relative">
-              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+              <Mail className="text-muted-foreground absolute top-1/2 left-3 size-4 -translate-y-1/2" />
               <Input
                 type="email"
                 id="newEmail"
@@ -41,7 +39,7 @@ export default function ChangeEmailPage() {
               />
             </div>
             {state.errors?.newEmail && (
-              <p className="text-xs text-crimson mt-1">
+              <p className="text-crimson mt-1 text-xs">
                 {state.errors.newEmail[0]}
               </p>
             )}
@@ -50,7 +48,7 @@ export default function ChangeEmailPage() {
           <div>
             <FieldLabel htmlFor="currentPassword">Current Password</FieldLabel>
             <div className="relative">
-              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+              <Lock className="text-muted-foreground absolute top-1/2 left-3 size-4 -translate-y-1/2" />
               <Input
                 type="password"
                 id="currentPassword"
@@ -61,7 +59,7 @@ export default function ChangeEmailPage() {
               />
             </div>
             {state.errors?.currentPassword && (
-              <p className="text-xs text-crimson mt-1">
+              <p className="text-crimson mt-1 text-xs">
                 {state.errors.currentPassword[0]}
               </p>
             )}

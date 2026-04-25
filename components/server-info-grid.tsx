@@ -1,4 +1,9 @@
-import { MAX_RESETS, MIN_RESET_LEVEL, POINTS_PER_RESET, VERSION } from "@/constants/resets";
+import {
+  MAX_RESETS,
+  MIN_RESET_LEVEL,
+  POINTS_PER_RESET,
+  VERSION,
+} from "@/constants/resets";
 
 const ServerInfoGrid = () => {
   const items = [
@@ -11,14 +16,19 @@ const ServerInfoGrid = () => {
 
   return (
     <section className="py-12">
-      <div className="max-w-5xl mx-auto px-4">
-        <h2 className="section-title text-center mb-8">Server Information</h2>
-        <div className="card-dark p-6 card-hover">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="mx-auto max-w-5xl px-4">
+        <h2 className="section-title mb-8 text-center">Server Information</h2>
+        <div className="card-dark card-hover p-6">
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
             {items.map((info) => (
-              <div key={info.label} className="flex justify-between border-b border-border pb-2">
+              <div
+                key={info.label}
+                className="border-border flex justify-between border-b pb-2"
+              >
                 <span>{info.label}</span>
-                <span className="font-semibold gold-gradient-text">{info.value}</span>
+                <span className="gold-gradient-text font-semibold">
+                  {info.value}
+                </span>
               </div>
             ))}
           </div>

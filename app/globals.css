@@ -1,5 +1,5 @@
-@import 'tailwindcss';
-@import 'tw-animate-css';
+@import "tailwindcss";
+@import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -24,7 +24,7 @@
   --input: 230 15% 20%;
   --ring: 45 90% 50%;
   --radius: 0.25rem;
-  
+
   /* Custom tokens */
   --gold: 45 90% 50%;
   --gold-dim: 45 60% 35%;
@@ -36,9 +36,9 @@
 }
 
 @theme inline {
-  --font-sans: 'Raleway', 'Geist', sans-serif;
-  --font-mono: 'Geist Mono', 'Geist Mono Fallback';
-  --font-serif: 'Cinzel', serif;
+  --font-sans: "Raleway", "Geist", sans-serif;
+  --font-mono: "Geist Mono", "Geist Mono Fallback";
+  --font-serif: "Cinzel", serif;
   --color-background: hsl(var(--background));
   --color-foreground: hsl(var(--foreground));
   --color-card: hsl(var(--card));
@@ -78,7 +78,12 @@
     @apply bg-background text-foreground font-sans;
     font-feature-settings: "liga" 1;
   }
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     @apply font-serif;
   }
 }
@@ -88,18 +93,27 @@
   background-clip: text;
   -webkit-background-clip: text;
   color: transparent;
-  background-image: linear-gradient(135deg, hsl(var(--gold)), hsl(var(--gold-glow)), hsl(var(--gold)));
+  background-image: linear-gradient(
+    135deg,
+    hsl(var(--gold)),
+    hsl(var(--gold-glow)),
+    hsl(var(--gold))
+  );
 }
 
 .gold-glow {
-  box-shadow: 0 0 20px hsl(var(--gold) / 0.3), 0 0 40px hsl(var(--gold) / 0.1);
+  box-shadow:
+    0 0 20px hsl(var(--gold) / 0.3),
+    0 0 40px hsl(var(--gold) / 0.1);
 }
 
 .card-dark {
   background-color: hsl(var(--card));
   border-radius: var(--radius);
   border: 1px solid hsl(var(--gold-dim));
-  box-shadow: inset 0 0 20px hsl(var(--gold) / 0.05), 0 0 15px hsl(var(--gold) / 0.1);
+  box-shadow:
+    inset 0 0 20px hsl(var(--gold) / 0.05),
+    0 0 15px hsl(var(--gold) / 0.1);
   backdrop-filter: blur(10px);
 }
 
@@ -112,7 +126,12 @@
   background-clip: text;
   -webkit-background-clip: text;
   color: transparent;
-  background-image: linear-gradient(135deg, hsl(var(--gold)), hsl(var(--gold-glow)), hsl(var(--gold)));
+  background-image: linear-gradient(
+    135deg,
+    hsl(var(--gold)),
+    hsl(var(--gold-glow)),
+    hsl(var(--gold))
+  );
 }
 
 .table-header-cell {
@@ -135,36 +154,49 @@
   background-color: hsl(var(--card));
   border-radius: var(--radius);
   border: 1px solid hsl(var(--gold-dim));
-  box-shadow: inset 0 0 20px hsl(var(--gold) / 0.05), 0 0 15px hsl(var(--gold) / 0.1);
+  box-shadow:
+    inset 0 0 20px hsl(var(--gold) / 0.05),
+    0 0 15px hsl(var(--gold) / 0.1);
   backdrop-filter: blur(10px);
   text-align: center;
 }
 
-.class-badge-dk { color: hsl(0 70% 55%); }
-.class-badge-dw { color: hsl(220 80% 65%); }
-.class-badge-fe { color: hsl(130 60% 50%); }
-.class-badge-mg { color: hsl(270 70% 65%); }
-.class-badge-dl { color: hsl(45 90% 55%); }
+.class-badge-dk {
+  color: hsl(0 70% 55%);
+}
+.class-badge-dw {
+  color: hsl(220 80% 65%);
+}
+.class-badge-fe {
+  color: hsl(130 60% 50%);
+}
+.class-badge-mg {
+  color: hsl(270 70% 65%);
+}
+.class-badge-dl {
+  color: hsl(45 90% 55%);
+}
 
 /* Page background with hero image */
 .page-background {
   position: fixed;
   inset: 0;
   z-index: -1;
-  background-image: url('/hero-banner.jpg');
+  background-image: url("/hero-banner.jpg");
   background-size: cover;
   background-position: center top;
   background-attachment: fixed;
 }
 
 .page-background::after {
-  content: '';
+  content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, 
-    hsl(var(--background) / 0.40) 0%, 
-    hsl(var(--background) / 0.65) 30%, 
-    hsl(var(--background) / 0.80) 60%,
+  background: linear-gradient(
+    180deg,
+    hsl(var(--background) / 0.4) 0%,
+    hsl(var(--background) / 0.65) 30%,
+    hsl(var(--background) / 0.8) 60%,
     hsl(var(--background)) 100%
   );
 }
@@ -180,10 +212,15 @@
 
 .divider::before,
 .divider::after {
-  content: '';
+  content: "";
   flex: 1;
   height: 1px;
-  background: linear-gradient(90deg, transparent, hsl(var(--gold-dim)), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    hsl(var(--gold-dim)),
+    transparent
+  );
 }
 
 .divider-diamond {
@@ -216,20 +253,28 @@
 }
 
 @keyframes glow {
-  0%, 100% {
-    box-shadow: 0 0 20px hsl(var(--gold) / 0.3), 0 0 40px hsl(var(--gold) / 0.1);
+  0%,
+  100% {
+    box-shadow:
+      0 0 20px hsl(var(--gold) / 0.3),
+      0 0 40px hsl(var(--gold) / 0.1);
   }
   50% {
-    box-shadow: 0 0 30px hsl(var(--gold) / 0.5), 0 0 60px hsl(var(--gold) / 0.2);
+    box-shadow:
+      0 0 30px hsl(var(--gold) / 0.5),
+      0 0 60px hsl(var(--gold) / 0.2);
   }
 }
 
 @keyframes pulse-gold {
-  0%, 100% {
+  0%,
+  100% {
     text-shadow: 0 0 10px hsl(var(--gold) / 0.5);
   }
   50% {
-    text-shadow: 0 0 20px hsl(var(--gold) / 0.8), 0 0 30px hsl(var(--gold) / 0.4);
+    text-shadow:
+      0 0 20px hsl(var(--gold) / 0.8),
+      0 0 30px hsl(var(--gold) / 0.4);
   }
 }
 
@@ -254,15 +299,27 @@
 }
 
 /* Staggered animation delays */
-.delay-100 { animation-delay: 0.1s; }
-.delay-200 { animation-delay: 0.2s; }
-.delay-300 { animation-delay: 0.3s; }
-.delay-400 { animation-delay: 0.4s; }
-.delay-500 { animation-delay: 0.5s; }
+.delay-100 {
+  animation-delay: 0.1s;
+}
+.delay-200 {
+  animation-delay: 0.2s;
+}
+.delay-300 {
+  animation-delay: 0.3s;
+}
+.delay-400 {
+  animation-delay: 0.4s;
+}
+.delay-500 {
+  animation-delay: 0.5s;
+}
 
 /* Table row hover effect */
 .table-row-hover {
-  transition: background-color 0.2s ease, transform 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
 }
 
 .table-row-hover:hover {
@@ -272,12 +329,16 @@
 /* Card hover effect */
 .card-hover {
   animation-fill-mode: backwards;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .card-hover:hover {
   transform: translateY(-4px);
-  box-shadow: 0 0 30px hsl(var(--gold) / 0.2), 0 10px 40px hsl(var(--background) / 0.5);
+  box-shadow:
+    0 0 30px hsl(var(--gold) / 0.2),
+    0 10px 40px hsl(var(--background) / 0.5);
 }
 
 .progress {

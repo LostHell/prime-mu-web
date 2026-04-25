@@ -31,9 +31,7 @@ const ConfirmAction = ({
         </Button>
       ) : (
         <div className="space-y-3">
-          <p
-            className="text-sm text-center font-semibold uppercase tracking-widest"
-          >
+          <p className="text-center text-sm font-semibold tracking-widest uppercase">
             Are you sure? This cannot be undone.
           </p>
           <div className="grid grid-cols-2 gap-3">

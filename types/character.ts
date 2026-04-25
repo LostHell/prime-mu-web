@@ -1,4 +1,9 @@
-export type MuClass = "Dark Knight" | "Dark Wizard" | "Fairy Elf" | "Magic Gladiator" | "Dark Lord";
+export type MuClass =
+  | "Dark Knight"
+  | "Dark Wizard"
+  | "Fairy Elf"
+  | "Magic Gladiator"
+  | "Dark Lord";
 
 export interface CharacterStats {
   str: number;

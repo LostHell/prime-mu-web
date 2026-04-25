@@ -8,19 +8,19 @@ const ServerStatus: FC<ServerStatusProps> = ({ status }) => {
   const serverText = `Server ${status === "online" ? "Online" : "Offline"}`;
 
   return (
-    <div className="flex items-center justify-center gap-2 mb-6">
+    <div className="mb-6 flex items-center justify-center gap-2">
       <span className="relative flex h-2.5 w-2.5">
         {status === "online" && (
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 bg-online" />
+          <span className="bg-online absolute inline-flex h-full w-full animate-ping rounded-full opacity-75" />
         )}
         <span
-          className={`relative inline-flex rounded-full h-2.5 w-2.5 ${
+          className={`relative inline-flex h-2.5 w-2.5 rounded-full ${
             status === "online" ? "bg-online" : "bg-crimson"
           }`}
         />
       </span>
       <span
-        className={`text-xs font-semibold uppercase tracking-widest ${
+        className={`text-xs font-semibold tracking-widest uppercase ${
           status === "online" ? "text-online" : "text-crimson"
         }`}
       >

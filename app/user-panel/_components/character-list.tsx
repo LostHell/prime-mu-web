@@ -15,9 +15,9 @@ export function CharacterList({ characters }: CharacterListProps) {
   if (characters.length === 0) {
     return (
       <div className="card-dark p-8 text-center">
-        <User className="size-12 mx-auto mb-3 text-muted-foreground/50" />
-        <h3 className="font-medium text-lg mb-2">No Characters</h3>
-        <p className="text-sm text-muted-foreground">
+        <User className="text-muted-foreground/50 mx-auto mb-3 size-12" />
+        <h3 className="mb-2 text-lg font-medium">No Characters</h3>
+        <p className="text-muted-foreground text-sm">
           Create a character in-game to get started
         </p>
       </div>
@@ -41,34 +41,34 @@ export function CharacterList({ characters }: CharacterListProps) {
             {/* Main Row */}
             <button
               onClick={() => setExpandedIndex(isExpanded ? null : index)}
-              className="w-full p-4 flex items-center gap-4 hover:bg-muted/20 transition-colors"
+              className="hover:bg-muted/20 flex w-full items-center gap-4 p-4 transition-colors"
             >
               <ClassAvatar
                 muClass={character.class}
                 color={classColor}
-                className="w-12 h-14 shrink-0"
+                className="h-14 w-12 shrink-0"
               />
 
-              <div className="flex-1 min-w-0 text-left">
+              <div className="min-w-0 flex-1 text-left">
                 <div className="flex items-baseline gap-2">
-                  <span className="font-semibold text-foreground truncate">
+                  <span className="text-foreground truncate font-semibold">
                     {character.name}
                   </span>
                   <span
-                    className="text-xs uppercase tracking-wide shrink-0"
+                    className="shrink-0 text-xs tracking-wide uppercase"
                     style={{ color: classColor }}
                   >
                     {character.class}
                   </span>
                 </div>
-                <div className="flex gap-4 mt-1">
-                  <span className="text-xs text-muted-foreground">
+                <div className="mt-1 flex gap-4">
+                  <span className="text-muted-foreground text-xs">
                     Level{" "}
                     <span className="text-foreground font-medium">
                       {character.level}
                     </span>
                   </span>
-                  <span className="text-xs text-muted-foreground">
+                  <span className="text-muted-foreground text-xs">
                     Resets{" "}
                     <span className="text-gold font-medium">
                       {character.resets}
@@ -78,7 +78,7 @@ export function CharacterList({ characters }: CharacterListProps) {
               </div>
 
               <ChevronRight
-                className={`size-5 text-muted-foreground transition-transform ${
+                className={`text-muted-foreground size-5 transition-transform ${
                   isExpanded ? "rotate-90" : ""
                 }`}
               />
@@ -86,9 +86,9 @@ export function CharacterList({ characters }: CharacterListProps) {
 
             {/* Expanded Details */}
             {isExpanded && (
-              <div className="px-4 pb-4 animate-fade-in">
-                <div className="pt-4 border-t border-border/50">
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+              <div className="animate-fade-in px-4 pb-4">
+                <div className="border-border/50 border-t pt-4">
+                  <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
                     {[
                       { label: "Level", value: character.level },
                       { label: "Resets", value: character.resets },
@@ -97,7 +97,9 @@ export function CharacterList({ characters }: CharacterListProps) {
                         label: "PK Count",
                         value: character.pkCount,
                         color:
-                          character.pkCount > 0 ? "hsl(var(--crimson))" : undefined,
+                          character.pkCount > 0
+                            ? "hsl(var(--crimson))"
+                            : undefined,
                       },
                       { label: "Strength", value: character.stats.str },
                       { label: "Agility", value: character.stats.agi },
@@ -105,7 +107,7 @@ export function CharacterList({ characters }: CharacterListProps) {
                       { label: "Energy", value: character.stats.ene },
                     ].map(({ label, value, color }) => (
                       <div key={label}>
-                        <p className="text-xs text-muted-foreground mb-0.5">
+                        <p className="text-muted-foreground mb-0.5 text-xs">
                           {label}
                         </p>
                         <p
@@ -118,10 +120,10 @@ export function CharacterList({ characters }: CharacterListProps) {
                     ))}
                   </div>
 
-                  <div className="mt-4 pt-4 border-t border-border/50">
+                  <div className="border-border/50 mt-4 border-t pt-4">
                     <div className="flex items-center justify-between">
-                      <span className="text-xs text-muted-foreground">Zen</span>
-                      <span className="font-bold text-gold tabular-nums">
+                      <span className="text-muted-foreground text-xs">Zen</span>
+                      <span className="text-gold font-bold tabular-nums">
                         {character.zen.toLocaleString()}
                       </span>
                     </div>

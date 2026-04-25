@@ -32,4 +32,3 @@ export type ItemDefinition = {
   dmgMax?: number;
   classFlags?: ItemClassFlags;
 };
-

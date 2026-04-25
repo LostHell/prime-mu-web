@@ -23,8 +23,8 @@ const Home = async () => {
       <Divider />
 
       <section className="py-12">
-        <div className="max-w-5xl mx-auto px-4">
-          <div className="grid md:grid-cols-2 gap-8">
+        <div className="mx-auto max-w-5xl px-4">
+          <div className="grid gap-8 md:grid-cols-2">
             <DevilSquareRanking />
             <BloodCastleRanking />
           </div>
@@ -34,8 +34,10 @@ const Home = async () => {
       <Divider />
 
       <section className="py-12">
-        <div className="max-w-5xl mx-auto px-4">
-          <h2 className="section-title text-center mb-8">Last Disconnected Players</h2>
+        <div className="mx-auto max-w-5xl px-4">
+          <h2 className="section-title mb-8 text-center">
+            Last Disconnected Players
+          </h2>
           <LastDisconnected />
         </div>
       </section>

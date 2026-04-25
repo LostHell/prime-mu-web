@@ -25,16 +25,16 @@ export default function Navigation({ items }: NavigationProps) {
   const closeSheet = () => setSheetOpen(false);
 
   return (
-    <nav className="bg-background/80 backdrop-blur-md border-b border-border">
-      <div className="mx-auto max-w-5xl px-4 py-4 flex items-center justify-between">
+    <nav className="bg-background/80 border-border border-b backdrop-blur-md">
+      <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-4">
         <Link href="/" className="flex items-center gap-3">
           <Logo />
-          <span className="font-serif text-xl font-bold gold-gradient-text">
+          <span className="gold-gradient-text font-serif text-xl font-bold">
             {BRAND}
           </span>
         </Link>
 
-        <div className="hidden md:flex items-center gap-8">
+        <div className="hidden items-center gap-8 md:flex">
           {items.map((item) => (
             <NavigationItem
               key={"href" in item ? item.href : item.label}

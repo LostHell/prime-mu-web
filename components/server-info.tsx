@@ -7,7 +7,10 @@ type ServerInfoProps = {
 };
 
 const ServerInfo: FC<ServerInfoProps> = ({ serverInfo }) => {
-  const percentage = Math.min(Math.round((serverInfo.online / serverInfo.maxOnline) * 100), 100);
+  const percentage = Math.min(
+    Math.round((serverInfo.online / serverInfo.maxOnline) * 100),
+    100,
+  );
 
   const widthClass = {
     0: "w-0",
@@ -26,33 +29,50 @@ const ServerInfo: FC<ServerInfoProps> = ({ serverInfo }) => {
   const animationDelay = ["delay-100", "delay-200", "delay-300"];
 
   return (
-    <section className="py-12 -mt-20 relative z-20">
-      <div className="max-w-5xl mx-auto px-4">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+    <section className="relative z-20 -mt-20 py-12">
+      <div className="mx-auto max-w-5xl px-4">
+        <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
           {/* Online Players — with capacity progress bar */}
           <div className="stat-card card-hover p-6">
-            <Users className="w-6 h-6 mx-auto mb-2 text-gold" />
-            <div className="text-2xl font-bold gold-gradient-text">
+            <Users className="text-gold mx-auto mb-2 h-6 w-6" />
+            <div className="gold-gradient-text text-2xl font-bold">
               {serverInfo.online}
-              <span className="text-sm font-normal text-muted-foreground">&nbsp;/&nbsp;{serverInfo.maxOnline}</span>
+              <span className="text-muted-foreground text-sm font-normal">
+                &nbsp;/&nbsp;{serverInfo.maxOnline}
+              </span>
             </div>
-            <div className="text-xs text-muted-foreground uppercase tracking-widest mb-2">Online</div>
+            <div className="text-muted-foreground mb-2 text-xs tracking-widest uppercase">
+              Online
+            </div>
             {/* Capacity bar */}
 
-            <div className="h-1 w-full rounded-full overflow-hidden bg-muted">
-              <div className={`h-full rounded-full bg-linear-to-r from-gold-dim to-gold-glow ${widthClass}`} />
+            <div className="bg-muted h-1 w-full overflow-hidden rounded-full">
+              <div
+                className={`from-gold-dim to-gold-glow h-full rounded-full bg-linear-to-r ${widthClass}`}
+              />
             </div>
           </div>
 
           {[
-            { icon: Crown, label: "Registered", value: serverInfo.registered.toLocaleString() },
+            {
+              icon: Crown,
+              label: "Registered",
+              value: serverInfo.registered.toLocaleString(),
+            },
             { icon: Star, label: "Experience", value: serverInfo.experience },
             { icon: Swords, label: "Drop Rate", value: serverInfo.drop },
           ].map((stat, i) => (
-            <div key={i} className={`stat-card card-hover animate-fade-up p-6 ${animationDelay[i]}`}>
-              <stat.icon className="w-6 h-6 mx-auto mb-2 text-gold" />
-              <div className="text-2xl font-bold gold-gradient-text">{stat.value}</div>
-              <div className="text-xs text-muted-foreground uppercase tracking-widest">{stat.label}</div>
+            <div
+              key={i}
+              className={`stat-card card-hover animate-fade-up p-6 ${animationDelay[i]}`}
+            >
+              <stat.icon className="text-gold mx-auto mb-2 h-6 w-6" />
+              <div className="gold-gradient-text text-2xl font-bold">
+                {stat.value}
+              </div>
+              <div className="text-muted-foreground text-xs tracking-widest uppercase">
+                {stat.label}
+              </div>
             </div>
           ))}
         </div>

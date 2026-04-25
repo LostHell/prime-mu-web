@@ -1,6 +1,11 @@
 "use server";
 
-import { MAX_RESETS, MIN_RESET_LEVEL, POINTS_PER_RESET, RESET_COST_PER_RESET } from "@/constants/resets";
+import {
+  MAX_RESETS,
+  MIN_RESET_LEVEL,
+  POINTS_PER_RESET,
+  RESET_COST_PER_RESET,
+} from "@/constants/resets";
 import { resetCharacterSchema } from "@/lib/validation/reset-character";
 import { UserPanelActionState } from "@/lib/validation/types";
 import { prisma } from "@/prisma/prisma";
@@ -29,7 +34,9 @@ function hasEquippedItems(inventory: Uint8Array | null | undefined): boolean {
       break;
     }
 
-    const isEmptySlot = inventory.subarray(start, end).every((byte) => byte === 0xff);
+    const isEmptySlot = inventory
+      .subarray(start, end)
+      .every((byte) => byte === 0xff);
     if (!isEmptySlot) {
       return true;
     }
@@ -104,7 +111,8 @@ export async function resetCharacterAction(
   if (hasEquippedItems(character.Inventory)) {
     return {
       success: false,
-      message: "Please unequip all items and move them to inventory before reset.",
+      message:
+        "Please unequip all items and move them to inventory before reset.",
     };
   }
 
@@ -145,7 +153,8 @@ export async function resetCharacterAction(
 
   const newResetCount = currentResets + 1;
   const baseClassPoints = defaultClassType.LevelUpPoint ?? 0;
-  const totalPointsAfterReset = baseClassPoints + newResetCount * POINTS_PER_RESET;
+  const totalPointsAfterReset =
+    baseClassPoints + newResetCount * POINTS_PER_RESET;
 
   await prisma.character.update({
     where: { Name: characterName },

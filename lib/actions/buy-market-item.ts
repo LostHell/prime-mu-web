@@ -125,5 +125,8 @@ export async function buyMarketItemAction(
 
   revalidatePath("/user-panel/market");
 
-  return { success: true, message: "Item purchased and added to your warehouse." };
+  return {
+    success: true,
+    message: "Item purchased and added to your warehouse.",
+  };
 }

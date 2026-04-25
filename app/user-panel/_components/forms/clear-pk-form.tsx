@@ -24,23 +24,27 @@ export function ClearPkForm({ character }: ClearPkFormProps) {
 
   return (
     <div className="space-y-6">
-      <div className="text-center py-4">
+      <div className="py-4 text-center">
         <div
-          className="w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4"
+          className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full"
           style={{
-            background: hasPk ? "hsl(var(--crimson) / 0.1)" : "hsl(var(--online) / 0.1)",
+            background: hasPk
+              ? "hsl(var(--crimson) / 0.1)"
+              : "hsl(var(--online) / 0.1)",
           }}
         >
           {hasPk ? (
-            <Skull className="size-8 text-crimson" />
+            <Skull className="text-crimson size-8" />
           ) : (
-            <ShieldCheck className="size-8 text-online" />
+            <ShieldCheck className="text-online size-8" />
           )}
         </div>
         <div className="flex items-center justify-center gap-2">
-          <span className="text-muted-foreground text-sm">Current PK Count:</span>
+          <span className="text-muted-foreground text-sm">
+            Current PK Count:
+          </span>
           <span
-            className="font-bold text-2xl tabular-nums"
+            className="text-2xl font-bold tabular-nums"
             style={{
               color: hasPk ? "hsl(var(--crimson))" : "hsl(var(--online))",
             }}
@@ -58,9 +62,9 @@ export function ClearPkForm({ character }: ClearPkFormProps) {
       )}
 
       {!hasPk ? (
-        <div className="text-center py-4 rounded-lg bg-online/5 border border-online/20">
-          <ShieldCheck className="size-5 mx-auto mb-2 text-online" />
-          <p className="text-sm text-muted-foreground">
+        <div className="bg-online/5 border-online/20 rounded-lg border py-4 text-center">
+          <ShieldCheck className="text-online mx-auto mb-2 size-5" />
+          <p className="text-muted-foreground text-sm">
             Your character has no PK kills. Nothing to clear.
           </p>
         </div>

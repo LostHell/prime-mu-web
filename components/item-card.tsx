@@ -103,12 +103,21 @@ export function ItemCard({ item, compact = false }: ItemCardProps) {
   const isShield = item.group === 6;
   const isExcellent = item.excellent > 0;
   const excellentOpts = isDefensive ? ARMOR_EXCELLENT : WEAPON_EXCELLENT;
-  const activeExcellent = excellentOpts.filter((o) => (item.excellent & o.bit) !== 0);
-  const classNames = item.classFlags ? equippableClassNames(item.classFlags) : [];
+  const activeExcellent = excellentOpts.filter(
+    (o) => (item.excellent & o.bit) !== 0,
+  );
+  const classNames = item.classFlags
+    ? equippableClassNames(item.classFlags)
+    : [];
   const additionalText = additionalOptionLabel(item);
 
   const title = (
-    <span className={cn("text-[11px] font-semibold leading-tight", isExcellent ? C.titleExc : C.titleNorm)}>
+    <span
+      className={cn(
+        "text-[11px] leading-tight font-semibold",
+        isExcellent ? C.titleExc : C.titleNorm,
+      )}
+    >
       {isExcellent ? "Excellent " : ""}
       {item.name} +{item.level}
     </span>
@@ -118,7 +127,12 @@ export function ItemCard({ item, compact = false }: ItemCardProps) {
     return (
       <div className="text-center font-sans text-[10px] leading-snug">
         <p>{title}</p>
-        <div className={cn("mt-1 flex flex-wrap justify-center gap-x-2 gap-y-0.5", C.muted)}>
+        <div
+          className={cn(
+            "mt-1 flex flex-wrap justify-center gap-x-2 gap-y-0.5",
+            C.muted,
+          )}
+        >
           {item.skill && <span>Skill</span>}
           {item.luck && (
             <span className="flex w-full flex-col gap-0 text-[9px] leading-tight">
@@ -127,7 +141,9 @@ export function ItemCard({ item, compact = false }: ItemCardProps) {
               ))}
             </span>
           )}
-          {item.defense !== undefined && <span>Def {item.defense + item.addOption}</span>}
+          {item.defense !== undefined && (
+            <span>Def {item.defense + item.addOption}</span>
+          )}
           {item.dmgMin !== undefined && (
             <span>
               Dmg {item.dmgMin + item.addOption}~{item.dmgMax! + item.addOption}
@@ -144,19 +160,24 @@ export function ItemCard({ item, compact = false }: ItemCardProps) {
         <div>{title}</div>
 
         <div className="flex justify-center py-0.5">
-          <div className="flex h-12 w-12 items-center justify-center rounded bg-muted/30">
-            <span className="text-[10px] text-muted-foreground">
+          <div className="bg-muted/30 flex h-12 w-12 items-center justify-center rounded">
+            <span className="text-muted-foreground text-[10px]">
               {item.width ?? 1}×{item.height ?? 1}
             </span>
           </div>
         </div>
 
         <div className={cn("space-y-0.5", C.muted)}>
-          {item.defense !== undefined && <p>Defense: {item.defense + item.addOption}</p>}
-          {isShield && item.defRate !== undefined && <p>Defense rate: {item.defRate}</p>}
+          {item.defense !== undefined && (
+            <p>Defense: {item.defense + item.addOption}</p>
+          )}
+          {isShield && item.defRate !== undefined && (
+            <p>Defense rate: {item.defRate}</p>
+          )}
           {item.dmgMin !== undefined && item.dmgMax !== undefined && (
             <p>
-              Damage: {item.dmgMin + item.addOption} ~ {item.dmgMax + item.addOption}
+              Damage: {item.dmgMin + item.addOption} ~{" "}
+              {item.dmgMax + item.addOption}
             </p>
           )}
           {item.reqStr !== undefined && <p>Strength required {item.reqStr}</p>}
@@ -177,10 +198,7 @@ export function ItemCard({ item, compact = false }: ItemCardProps) {
         {(item.skill || item.luck || additionalText) && (
           <div className={cn("space-y-0.5", C.muted)}>
             {item.skill && <p>Skill (ability)</p>}
-            {item.luck &&
-              LUCK_LINES.map((line) => (
-                <p key={line}>{line}</p>
-              ))}
+            {item.luck && LUCK_LINES.map((line) => <p key={line}>{line}</p>)}
             {additionalText && <p>{additionalText}</p>}
           </div>
         )}

@@ -22,11 +22,11 @@ export function UnstuckForm({ character }: UnstuckFormProps) {
 
   return (
     <div className="space-y-6">
-      <div className="text-center py-4">
-        <div className="w-16 h-16 mx-auto rounded-full bg-gold/10 flex items-center justify-center mb-4">
-          <MapPin className="size-8 text-gold" />
+      <div className="py-4 text-center">
+        <div className="bg-gold/10 mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full">
+          <MapPin className="text-gold size-8" />
         </div>
-        <p className="text-muted-foreground text-sm leading-relaxed max-w-md mx-auto">
+        <p className="text-muted-foreground mx-auto max-w-md text-sm leading-relaxed">
           If your character is trapped or stuck in a location, use this to
           teleport safely to{" "}
           <span className="text-gold font-semibold">Lorencia</span>.
@@ -40,11 +40,11 @@ export function UnstuckForm({ character }: UnstuckFormProps) {
         ].map(({ label, value }) => (
           <div
             key={label}
-            className="flex justify-between border-b border-border/50 pb-2"
+            className="border-border/50 flex justify-between border-b pb-2"
           >
             <span className="text-muted-foreground text-sm">{label}</span>
             <span
-              className="font-semibold text-sm"
+              className="text-sm font-semibold"
               style={{ color: "hsl(var(--gold))" }}
             >
               {value}
@@ -60,11 +60,7 @@ export function UnstuckForm({ character }: UnstuckFormProps) {
         />
       )}
 
-      <Button
-        className="w-full"
-        onClick={handleClick}
-        disabled={isPending}
-      >
+      <Button className="w-full" onClick={handleClick} disabled={isPending}>
         {isPending ? "Teleporting..." : "Teleport to Lorencia"}
       </Button>
     </div>

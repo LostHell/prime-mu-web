@@ -8,7 +8,9 @@ export interface BloodCastleRankingEntry {
   score: number;
 }
 
-export async function getBloodCastleRanking(): Promise<BloodCastleRankingEntry[]> {
+export async function getBloodCastleRanking(): Promise<
+  BloodCastleRankingEntry[]
+> {
   const rankings = await prisma.rankingBloodCastle.findMany({
     take: 10,
     orderBy: { Score: "desc" },

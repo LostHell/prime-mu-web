@@ -28,7 +28,7 @@ export function UserPanelProvider({
   characters,
 }: UserPanelProviderProps) {
   const [selectedCharacter, setSelectedCharacter] = useState<Character | null>(
-    null
+    null,
   );
 
   const selectCharacterByName = useCallback(
@@ -36,7 +36,7 @@ export function UserPanelProvider({
       const character = characters.find((c) => c.name === name) ?? null;
       setSelectedCharacter(character);
     },
-    [characters]
+    [characters],
   );
 
   return (

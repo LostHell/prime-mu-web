@@ -11,7 +11,12 @@ type ItemHoverCardProps = {
   style?: CSSProperties;
 };
 
-export function ItemHoverCard({ item, children, className, style }: ItemHoverCardProps) {
+export function ItemHoverCard({
+  item,
+  children,
+  className,
+  style,
+}: ItemHoverCardProps) {
   return (
     <div className={cn("group/item-tooltip relative", className)} style={style}>
       {children}
@@ -22,7 +27,7 @@ export function ItemHoverCard({ item, children, className, style }: ItemHoverCar
           "group-hover/item-tooltip:pointer-events-auto group-hover/item-tooltip:opacity-100",
         )}
       >
-        <div className="rounded-lg shadow-2xl shadow-black/40 ring-1 ring-gold-dim/40">
+        <div className="ring-gold-dim/40 rounded-lg shadow-2xl ring-1 shadow-black/40">
           <ItemCard item={item} />
         </div>
       </div>

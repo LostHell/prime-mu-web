@@ -56,7 +56,8 @@ export function CharacterSelector({
   relevantFields = ["level", "resets"],
   onSelect,
 }: CharacterSelectorProps) {
-  const { characters, selectedCharacter, selectCharacterByName } = useUserPanel();
+  const { characters, selectedCharacter, selectCharacterByName } =
+    useUserPanel();
 
   const handleSelect = (name: string) => {
     selectCharacterByName(name);
@@ -68,9 +69,9 @@ export function CharacterSelector({
 
   if (characters.length === 0) {
     return (
-      <div className="rounded-xl border border-border/50 p-6 text-center bg-muted/20">
-        <User className="size-10 mx-auto mb-2 text-muted-foreground/50" />
-        <p className="text-sm text-muted-foreground">No characters found</p>
+      <div className="border-border/50 bg-muted/20 rounded-xl border p-6 text-center">
+        <User className="text-muted-foreground/50 mx-auto mb-2 size-10" />
+        <p className="text-muted-foreground text-sm">No characters found</p>
       </div>
     );
   }
@@ -80,25 +81,27 @@ export function CharacterSelector({
 
   return (
     <Select value={selected?.name ?? ""} onValueChange={handleSelect}>
-      <SelectTrigger className="w-full h-auto p-4 bg-card border-gold-dim/50 hover:border-gold/50 transition-colors [&>span]:flex [&>span]:items-center [&>span]:gap-3 [&>span]:w-full">
+      <SelectTrigger className="bg-card border-gold-dim/50 hover:border-gold/50 h-auto w-full p-4 transition-colors [&>span]:flex [&>span]:w-full [&>span]:items-center [&>span]:gap-3">
         <SelectValue id="characterSelector" placeholder="Select a character">
           {selected ? (
             <>
               <div className="min-w-0 text-left">
-                <div className="flex items-center gap-2 flex-wrap">
+                <div className="flex flex-wrap items-center gap-2">
                   <span className="font-semibold">{selected.name}</span>
                   <span
-                    className="text-[10px] uppercase tracking-wide"
+                    className="text-[10px] tracking-wide uppercase"
                     style={{ color: selectedColor }}
                   >
                     {selected.class}
                   </span>
                 </div>
-                <div className="flex gap-3 mt-0.5 text-xs text-muted-foreground">
+                <div className="text-muted-foreground mt-0.5 flex gap-3 text-xs">
                   {relevantFields.slice(0, 3).map((field) => (
                     <span key={field}>
                       {FIELD_LABELS[field]}:{" "}
-                      <span className="text-gold">{formatFieldValue(selected, field)}</span>
+                      <span className="text-gold">
+                        {formatFieldValue(selected, field)}
+                      </span>
                     </span>
                   ))}
                 </div>
@@ -106,12 +109,14 @@ export function CharacterSelector({
             </>
           ) : (
             <>
-              <div className="w-10 h-12 rounded-lg bg-muted/50 flex items-center justify-center shrink-0">
-                <User className="size-5 text-muted-foreground" />
+              <div className="bg-muted/50 flex h-12 w-10 shrink-0 items-center justify-center rounded-lg">
+                <User className="text-muted-foreground size-5" />
               </div>
               <div className="text-left">
-                <div className="font-medium text-muted-foreground">Select a character</div>
-                <div className="text-xs text-muted-foreground/70">
+                <div className="text-muted-foreground font-medium">
+                  Select a character
+                </div>
+                <div className="text-muted-foreground/70 text-xs">
                   {characters.length} available
                 </div>
               </div>
@@ -120,30 +125,31 @@ export function CharacterSelector({
         </SelectValue>
       </SelectTrigger>
 
-      <SelectContent className="p-2 min-w-(--radix-select-trigger-width)">
+      <SelectContent className="min-w-(--radix-select-trigger-width) p-2">
         {characters.map((character) => {
           const classColor = CLASS_COLOR[character.class];
           return (
             <SelectItem
               key={character.name}
               value={character.name}
-              className="p-3 rounded-lg cursor-pointer [&>span:first-child]:hidden"
+              className="cursor-pointer rounded-lg p-3 [&>span:first-child]:hidden"
             >
               <div className="flex items-center gap-3">
                 <div className="min-w-0">
                   <div className="flex items-center gap-2">
                     <span className="font-medium">{character.name}</span>
                     <span
-                      className="text-[10px] uppercase tracking-wide"
+                      className="text-[10px] tracking-wide uppercase"
                       style={{ color: classColor }}
                     >
                       {character.class}
                     </span>
                   </div>
-                  <div className="flex gap-3 mt-0.5 text-xs text-muted-foreground">
+                  <div className="text-muted-foreground mt-0.5 flex gap-3 text-xs">
                     {relevantFields.slice(0, 5).map((field) => (
                       <span key={field}>
-                        {FIELD_LABELS[field]}: {formatFieldValue(character, field)}
+                        {FIELD_LABELS[field]}:{" "}
+                        {formatFieldValue(character, field)}
                       </span>
                     ))}
                   </div>

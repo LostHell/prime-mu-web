@@ -3,21 +3,33 @@
 import { Clock } from "lucide-react";
 import { useEffect, useState } from "react";
 
-function getNextOccurrence(scheduleHours: number[]): { countdown: string; nextAt: string } {
+function getNextOccurrence(scheduleHours: number[]): {
+  countdown: string;
+  nextAt: string;
+} {
   const safeTimes = scheduleHours
     .filter((time) => Number.isFinite(time) && time >= 0 && time < 24)
     .map((time) => {
       const hour = Math.floor(time);
       const minute = Math.round((time - hour) * 60);
 
-      if (!Number.isInteger(hour) || !Number.isInteger(minute) || minute < 0 || minute > 59) {
+      if (
+        !Number.isInteger(hour) ||
+        !Number.isInteger(minute) ||
+        minute < 0 ||
+        minute > 59
+      ) {
         return null;
       }
 
       return { hour, minute };
     })
-    .filter((entry): entry is { hour: number; minute: number } => entry !== null)
-    .sort((a, b) => (a.hour === b.hour ? a.minute - b.minute : a.hour - b.hour));
+    .filter(
+      (entry): entry is { hour: number; minute: number } => entry !== null,
+    )
+    .sort((a, b) =>
+      a.hour === b.hour ? a.minute - b.minute : a.hour - b.hour,
+    );
 
   if (safeTimes.length === 0) {
     return { countdown: "00:00:00", nextAt: "--:--" };
@@ -53,8 +65,17 @@ function getNextOccurrence(scheduleHours: number[]): { countdown: string; nextAt
   };
 }
 
-const EventCountdown = ({ scheduleHours, colorClass }: { scheduleHours: number[]; colorClass: string }) => {
-  const [state, setState] = useState<{ countdown: string; nextAt: string } | null>(null);
+const EventCountdown = ({
+  scheduleHours,
+  colorClass,
+}: {
+  scheduleHours: number[];
+  colorClass: string;
+}) => {
+  const [state, setState] = useState<{
+    countdown: string;
+    nextAt: string;
+  } | null>(null);
 
   useEffect(() => {
     let timeoutId: ReturnType<typeof setTimeout> | null = null;
@@ -82,17 +103,23 @@ const EventCountdown = ({ scheduleHours, colorClass }: { scheduleHours: number[]
   }, [scheduleHours]);
 
   return (
-    <div className="flex items-center gap-2 text-muted-foreground">
-      <Clock className={`w-3.5 h-3.5 shrink-0 ${colorClass}`} />
-      <span className="text-xs uppercase tracking-widest">
+    <div className="text-muted-foreground flex items-center gap-2">
+      <Clock className={`h-3.5 w-3.5 shrink-0 ${colorClass}`} />
+      <span className="text-xs tracking-widest uppercase">
         {state === null ? (
-          <span className={`font-mono font-semibold ${colorClass}`}>--:--:--</span>
+          <span className={`font-mono font-semibold ${colorClass}`}>
+            --:--:--
+          </span>
         ) : (
           <>
             {"Next in "}
-            <span className={`font-mono font-semibold ${colorClass}`}>{state.countdown}</span>
+            <span className={`font-mono font-semibold ${colorClass}`}>
+              {state.countdown}
+            </span>
             {" · at "}
-            <span className={`font-semibold ${colorClass}`}>{state.nextAt}</span>
+            <span className={`font-semibold ${colorClass}`}>
+              {state.nextAt}
+            </span>
           </>
         )}
       </span>

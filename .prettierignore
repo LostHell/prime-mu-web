@@ -1,0 +1,29 @@
+# dependencies
+node_modules
+
+# testing
+coverage
+
+# next
+.next
+out
+
+# production
+build
+dist
+
+# misc
+.DS_Store
+*.pem
+*.log
+
+# env files
+.env*
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# generated
+prisma/generated
+db

@@ -3,14 +3,25 @@ import { decodeWarehouseItems } from "@/lib/item-decoder";
 import { prisma } from "@/prisma/prisma";
 import { DecodedItem, ItemDefinition } from "@/types/item";
 
-export type WarehouseItem = DecodedItem & 
-  Pick<ItemDefinition, "defense" | "defRate" | "dmgMin" | "dmgMax" | "reqStr" | "reqAgi" | "classFlags"> & {
+export type WarehouseItem = DecodedItem &
+  Pick<
+    ItemDefinition,
+    | "defense"
+    | "defRate"
+    | "dmgMin"
+    | "dmgMax"
+    | "reqStr"
+    | "reqAgi"
+    | "classFlags"
+  > & {
     name: string;
     width: number;
     height: number;
   };
 
-export async function getWarehouseItems(accountId: string): Promise<WarehouseItem[]> {
+export async function getWarehouseItems(
+  accountId: string,
+): Promise<WarehouseItem[]> {
   const warehouse = await prisma.warehouse.findUnique({
     where: { AccountID: accountId },
     select: { Items: true },

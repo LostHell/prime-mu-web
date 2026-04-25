@@ -8,8 +8,18 @@ const LastDisconnectedRows = async () => {
   return (
     <tbody>
       {lastDisconnected.map((user) => (
-        <tr key={user.name} className="border-b border-border/50 table-row-hover">
-          <td className={cn("table-body-cell font-medium", CLASS_TEXT_COLOR[user.class])}>{user.name}</td>
+        <tr
+          key={user.name}
+          className="border-border/50 table-row-hover border-b"
+        >
+          <td
+            className={cn(
+              "table-body-cell font-medium",
+              CLASS_TEXT_COLOR[user.class],
+            )}
+          >
+            {user.name}
+          </td>
           <td className="table-body-cell">{user.map}</td>
           <td className="table-body-cell text-muted-foreground">{user.time}</td>
         </tr>
@@ -21,15 +31,15 @@ const LastDisconnectedRows = async () => {
 const RowsSkeleton = () => (
   <tbody>
     {Array.from({ length: 5 }).map((_, i) => (
-      <tr key={i} className="border-b border-border/50">
+      <tr key={i} className="border-border/50 border-b">
         <td className="table-body-cell">
-          <div className="h-4 w-28 bg-muted animate-pulse rounded" />
+          <div className="bg-muted h-4 w-28 animate-pulse rounded" />
         </td>
         <td className="table-body-cell">
-          <div className="h-4 w-24 bg-muted animate-pulse rounded" />
+          <div className="bg-muted h-4 w-24 animate-pulse rounded" />
         </td>
         <td className="table-body-cell">
-          <div className="h-4 w-16 bg-muted animate-pulse rounded ml-auto" />
+          <div className="bg-muted ml-auto h-4 w-16 animate-pulse rounded" />
         </td>
       </tr>
     ))}
@@ -38,10 +48,10 @@ const RowsSkeleton = () => (
 
 const LastDisconnected = () => {
   return (
-    <div className="card-dark p-6 card-hover">
+    <div className="card-dark card-hover p-6">
       <table className="w-full">
         <thead>
-          <tr className="border-b border-border">
+          <tr className="border-border border-b">
             <th className="table-header-cell">Name</th>
             <th className="table-header-cell">Map</th>
             <th className="table-header-cell">Time</th>

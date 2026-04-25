@@ -19,35 +19,47 @@ function SoldItemCard({ listing }: { listing: MarketListing }) {
     : "Unknown";
 
   return (
-    <div className="rounded-xl border border-border/50 bg-card overflow-visible">
+    <div className="border-border/50 bg-card overflow-visible rounded-xl border">
       <ItemHoverCard item={listing.item}>
-        <div className="w-full p-4 flex items-center gap-4 hover:bg-muted/20 transition-colors text-left cursor-default">
-          <div className="w-12 h-12 rounded-lg bg-green-500/10 flex items-center justify-center shrink-0">
+        <div className="hover:bg-muted/20 flex w-full cursor-default items-center gap-4 p-4 text-left transition-colors">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-green-500/10">
             <Receipt className="size-5 text-green-400" />
           </div>
 
-          <div className="flex-1 min-w-0">
-            <p className={`font-semibold truncate ${listing.item.excellent > 0 ? "text-sky-400" : "text-gold"}`}>
-              {listing.item.excellent > 0 ? "Exc " : ""}{listing.item.name} +{listing.item.level}
+          <div className="min-w-0 flex-1">
+            <p
+              className={`truncate font-semibold ${listing.item.excellent > 0 ? "text-sky-400" : "text-gold"}`}
+            >
+              {listing.item.excellent > 0 ? "Exc " : ""}
+              {listing.item.name} +{listing.item.level}
             </p>
-            <p className="text-xs text-muted-foreground mt-0.5">
+            <p className="text-muted-foreground mt-0.5 text-xs">
               Sold {soldDate}
-            {listing.buyerCharacter ? (
-              <> to <span className="text-foreground">{listing.buyerCharacter}</span></>
-            ) : (
-              <> to <span className="text-foreground">another player</span></>
-            )}
+              {listing.buyerCharacter ? (
+                <>
+                  {" "}
+                  to{" "}
+                  <span className="text-foreground">
+                    {listing.buyerCharacter}
+                  </span>
+                </>
+              ) : (
+                <>
+                  {" "}
+                  to <span className="text-foreground">another player</span>
+                </>
+              )}
             </p>
           </div>
 
-          <div className="text-right shrink-0">
+          <div className="shrink-0 text-right">
             <div className="flex items-center gap-1 text-green-400">
               <CircleDollarSign className="size-4" />
               <span className="font-bold tabular-nums">
                 +{listing.zenPrice?.toLocaleString() ?? "—"}
               </span>
             </div>
-            <p className="text-[10px] text-muted-foreground uppercase tracking-wider mt-0.5">
+            <p className="text-muted-foreground mt-0.5 text-[10px] tracking-wider uppercase">
               Zen received
             </p>
           </div>
@@ -60,12 +72,12 @@ function SoldItemCard({ listing }: { listing: MarketListing }) {
 export function SoldItems({ listings }: SoldItemsProps) {
   if (listings.length === 0) {
     return (
-      <div className="text-center py-12">
-        <div className="w-16 h-16 mx-auto rounded-full bg-muted/30 flex items-center justify-center mb-4">
-          <Receipt className="size-8 text-muted-foreground" />
+      <div className="py-12 text-center">
+        <div className="bg-muted/30 mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full">
+          <Receipt className="text-muted-foreground size-8" />
         </div>
-        <h3 className="font-medium text-lg mb-2">No Sales Yet</h3>
-        <p className="text-sm text-muted-foreground max-w-sm mx-auto">
+        <h3 className="mb-2 text-lg font-medium">No Sales Yet</h3>
+        <p className="text-muted-foreground mx-auto max-w-sm text-sm">
           You haven&apos;t sold any items yet.
           <br />
           List items for sale and wait for buyers.
@@ -79,13 +91,17 @@ export function SoldItems({ listings }: SoldItemsProps) {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
+        <h3 className="text-muted-foreground text-sm font-medium tracking-wider uppercase">
           {listings.length} Item{listings.length !== 1 ? "s" : ""} Sold
         </h3>
         <div className="flex items-center gap-1 text-green-400">
           <CircleDollarSign className="size-4" />
-          <span className="font-bold tabular-nums">{totalEarned.toLocaleString()}</span>
-          <span className="text-xs text-muted-foreground ml-1">total earned</span>
+          <span className="font-bold tabular-nums">
+            {totalEarned.toLocaleString()}
+          </span>
+          <span className="text-muted-foreground ml-1 text-xs">
+            total earned
+          </span>
         </div>
       </div>
 

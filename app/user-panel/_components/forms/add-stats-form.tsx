@@ -27,7 +27,7 @@ export function AddStatsForm({ character }: AddStatsFormProps) {
   const [pts, setPts] = useState({ str: 0, agi: 0, vit: 0, ene: 0, cmd: 0 });
   const [state, formAction, isPending] = useActionState<ActionState, FormData>(
     addStatsAction,
-    {}
+    {},
   );
 
   const hasCmd = CMD_CLASSES.includes(character.class);
@@ -65,7 +65,7 @@ export function AddStatsForm({ character }: AddStatsFormProps) {
           border: `1px solid ${classColor}20`,
         }}
       >
-        <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">
+        <p className="text-muted-foreground mb-1 text-xs tracking-wider uppercase">
           Available Points
         </p>
         <p
@@ -77,7 +77,7 @@ export function AddStatsForm({ character }: AddStatsFormProps) {
           {remaining.toLocaleString()}
         </p>
         {ptsTotal > 0 && (
-          <p className="text-xs text-muted-foreground mt-2">
+          <p className="text-muted-foreground mt-2 text-xs">
             Allocating{" "}
             <span className="text-foreground font-medium">{ptsTotal}</span>{" "}
             points
@@ -102,17 +102,17 @@ export function AddStatsForm({ character }: AddStatsFormProps) {
                 }}
               >
                 {/* Stat info */}
-                <div className="flex-1 min-w-0">
+                <div className="min-w-0 flex-1">
                   <div className="flex items-baseline gap-2">
-                    <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                    <span className="text-muted-foreground text-[10px] font-bold tracking-widest uppercase">
                       {STAT_CONFIG[stat].short}
                     </span>
-                    <span className="text-xs text-muted-foreground/60 hidden sm:inline">
+                    <span className="text-muted-foreground/60 hidden text-xs sm:inline">
                       {STAT_CONFIG[stat].label}
                     </span>
                   </div>
-                  <div className="flex items-baseline gap-2 mt-1">
-                    <span className="text-2xl font-bold tabular-nums text-foreground">
+                  <div className="mt-1 flex items-baseline gap-2">
+                    <span className="text-foreground text-2xl font-bold tabular-nums">
                       {character.stats[stat].toLocaleString()}
                     </span>
                     {hasChange && (
@@ -136,7 +136,7 @@ export function AddStatsForm({ character }: AddStatsFormProps) {
                   onChange={(e) => updateStat(stat, e.target.value)}
                   placeholder="0"
                   disabled={isPending}
-                  className="w-20 h-12 text-center text-lg font-bold tabular-nums rounded-xl border-0 bg-background/50 focus:outline-none focus:ring-2 disabled:opacity-50"
+                  className="bg-background/50 h-12 w-20 rounded-xl border-0 text-center text-lg font-bold tabular-nums focus:ring-2 focus:outline-none disabled:opacity-50"
                   style={{
                     color: hasChange
                       ? classColor
@@ -164,7 +164,7 @@ export function AddStatsForm({ character }: AddStatsFormProps) {
         <button
           type="submit"
           disabled={ptsTotal === 0 || isPending}
-          className="w-full mt-4 py-4 rounded-xl font-semibold text-sm transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+          className="mt-4 w-full rounded-xl py-4 text-sm font-semibold transition-all disabled:cursor-not-allowed disabled:opacity-40"
           style={{
             background: ptsTotal > 0 ? classColor : "hsl(var(--muted))",
             color:
