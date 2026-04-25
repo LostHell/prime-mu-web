@@ -7,8 +7,8 @@ import {
   POINTS_PER_RESET,
   VERSION,
 } from "@/constants/resets";
+import { ServerInfo } from "@/lib/types/server-info";
 import { prisma } from "@/prisma/prisma";
-import { ServerInfo } from "@/types/server-info";
 import { checkServerStatus } from "./check-server-status";
 
 export async function getServerInfo(): Promise<ServerInfo> {

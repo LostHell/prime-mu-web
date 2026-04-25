@@ -1,11 +1,11 @@
 "use server";
 
-import { getItemDefinition } from "@/lib/item-database";
+import { getItemDefinition } from "@/lib/game/item-database";
 import {
   decodeWarehouseItems,
   findFreeArea,
   writeItemToSlot,
-} from "@/lib/item-decoder";
+} from "@/lib/game/item-decoder";
 import { buyMarketItemSchema } from "@/lib/validation/buy-market-item";
 import { UserPanelActionState } from "@/lib/validation/types";
 import { prisma } from "@/prisma/prisma";

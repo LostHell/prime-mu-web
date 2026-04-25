@@ -7,7 +7,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Character, CLASS_COLOR } from "@/types/character";
+import { Character, CLASS_COLOR } from "@/lib/types/character";
 import { User } from "lucide-react";
 import { useUserPanel } from "../_context/user-panel-context";
 

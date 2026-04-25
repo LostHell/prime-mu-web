@@ -1,5 +1,5 @@
+import { MU_CLASS_BY_ID, MuClass } from "@/lib/types/character";
 import { prisma } from "@/prisma/prisma";
-import { MU_CLASS_BY_ID, MuClass } from "@/types/character";
 
 export interface DevilSquareRankingEntry {
   rank: number;

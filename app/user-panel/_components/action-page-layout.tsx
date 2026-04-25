@@ -3,7 +3,7 @@
 import FieldLabel from "@/components/ui/field-label";
 import Headline from "@/components/ui/headline";
 import Text from "@/components/ui/text";
-import { Character } from "@/types/character";
+import { type Character } from "@/lib/types/character";
 import { useUserPanel } from "../_context/user-panel-context";
 import { CharacterSelector, RelevantField } from "./character-selector";
 

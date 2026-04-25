@@ -1,6 +1,6 @@
 "use server";
 
-import { BYTES_PER_SLOT, clearWarehouseSlot } from "@/lib/item-decoder";
+import { BYTES_PER_SLOT, clearWarehouseSlot } from "@/lib/game/item-decoder";
 import { listMarketItemSchema } from "@/lib/validation/list-market-item";
 import { UserPanelActionState } from "@/lib/validation/types";
 import { prisma } from "@/prisma/prisma";

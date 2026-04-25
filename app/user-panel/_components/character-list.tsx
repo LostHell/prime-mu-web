@@ -1,7 +1,7 @@
 "use client";
 
 import ClassAvatar from "@/components/class-avatar";
-import { Character, CLASS_COLOR } from "@/types/character";
+import { Character, CLASS_COLOR } from "@/lib/types/character";
 import { ChevronRight, User } from "lucide-react";
 import { useState } from "react";
 

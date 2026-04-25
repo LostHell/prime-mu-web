@@ -1,12 +1,12 @@
 "use client";
 
-import { Character } from "@/types/character";
+import { type Character } from "@/lib/types/character";
 import {
   createContext,
+  ReactNode,
+  useCallback,
   useContext,
   useState,
-  useCallback,
-  ReactNode,
 } from "react";
 
 interface UserPanelContextValue {

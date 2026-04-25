@@ -2,7 +2,7 @@
 
 import Feedback from "@/components/ui/feedback";
 import { addStatsAction } from "@/lib/actions/add-stats";
-import { Character, CLASS_COLOR, CMD_CLASSES } from "@/types/character";
+import { type Character, CLASS_COLOR, CMD_CLASSES } from "@/lib/types/character";
 import { useActionState, useState } from "react";
 
 interface AddStatsFormProps {

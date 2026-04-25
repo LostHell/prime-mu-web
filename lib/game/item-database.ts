@@ -1,4 +1,4 @@
-import { ItemDefinition } from "@/types/item";
+import { ItemDefinition } from "@/lib/types/item";
 import fs from "fs";
 import path from "path";
 

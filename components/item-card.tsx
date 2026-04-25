@@ -1,5 +1,5 @@
+import { DecodedItem, ItemClassFlags, ItemDefinition } from "@/lib/types/item";
 import { cn } from "@/lib/utils";
-import { DecodedItem, ItemClassFlags, ItemDefinition } from "@/types/item";
 
 /** Tooltip palette (legacy MU / web shop style). */
 const C = {

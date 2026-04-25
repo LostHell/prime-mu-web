@@ -1,5 +1,5 @@
+import { Character, MU_CLASS_BY_ID } from "@/lib/types/character";
 import { prisma } from "@/prisma/prisma";
-import { Character, MU_CLASS_BY_ID } from "@/types/character";
 
 export async function getCharacter(
   accountId: string,

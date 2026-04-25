@@ -9,7 +9,7 @@ import {
   RESET_COST_PER_RESET,
 } from "@/constants/resets";
 import { resetCharacterAction } from "@/lib/actions/reset-character";
-import { Character } from "@/types/character";
+import { type Character } from "@/lib/types/character";
 import { startTransition, useActionState } from "react";
 
 interface ResetFormProps {

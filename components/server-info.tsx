@@ -1,4 +1,4 @@
-import { type ServerInfo as ServerInfoType } from "@/types/server-info";
+import { type ServerInfo as ServerInfoType } from "@/lib/types/server-info";
 import { Crown, Star, Swords, Users } from "lucide-react";
 import { FC } from "react";
 

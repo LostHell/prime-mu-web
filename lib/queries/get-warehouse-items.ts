@@ -1,7 +1,7 @@
-import { getItemDefinition, getItemName } from "@/lib/item-database";
-import { decodeWarehouseItems } from "@/lib/item-decoder";
+import { getItemDefinition, getItemName } from "@/lib/game/item-database";
+import { decodeWarehouseItems } from "@/lib/game/item-decoder";
+import { DecodedItem, ItemDefinition } from "@/lib/types/item";
 import { prisma } from "@/prisma/prisma";
-import { DecodedItem, ItemDefinition } from "@/types/item";
 
 export type WarehouseItem = DecodedItem &
   Pick<

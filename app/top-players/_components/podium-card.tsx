@@ -1,6 +1,6 @@
 import { TopPlayerEntry } from "@/lib/queries/get-top-players";
+import { CLASS_TEXT_COLOR } from "@/lib/types/character";
 import { cn } from "@/lib/utils";
-import { CLASS_TEXT_COLOR } from "@/types/character";
 import { Medal, Trophy } from "lucide-react";
 
 type PodiumPosition = 1 | 2 | 3;

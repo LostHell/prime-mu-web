@@ -1,5 +1,5 @@
-import { getItemDefinition } from "@/lib/item-database";
-import { DecodedItem } from "@/types/item";
+import { getItemDefinition } from "@/lib/game/item-database";
+import { DecodedItem } from "@/lib/types/item";
 
 export const WAREHOUSE_COLS = 8;
 export const BYTES_PER_SLOT = 10;
