@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from "@/lib/utils";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -16,8 +17,9 @@ interface NavGroup {
 
 const NAV_GROUPS: NavGroup[] = [
   {
-    label: "Character",
+    label: "Characters",
     items: [
+      { label: "Overview", href: "/user-panel" },
       { label: "Add Stats", href: "/user-panel/add-stats" },
       { label: "Reset", href: "/user-panel/reset" },
       { label: "Unstuck", href: "/user-panel/unstuck" },
@@ -28,8 +30,10 @@ const NAV_GROUPS: NavGroup[] = [
     label: "Market",
     items: [
       { label: "Browse", href: "/user-panel/market" },
+      { label: "Sell an item", href: "/user-panel/market/sell" },
       { label: "My Listings", href: "/user-panel/market/listed" },
-      { label: "Sell", href: "/user-panel/market/sell" },
+      { label: "Sold items", href: "/user-panel/market/sold" },
+      { label: "Purchased items", href: "/user-panel/market/bought" },
     ],
   },
   {
@@ -45,7 +49,12 @@ const NAV_GROUPS: NavGroup[] = [
   },
 ];
 
-export function UserPanelNav() {
+interface UserPanelNavProps {
+  onNavigate?: () => void;
+  className?: string;
+}
+
+export function UserPanelNav({ onNavigate, className }: UserPanelNavProps) {
   const pathname = usePathname();
 
   const isActive = (href: string) => {
@@ -55,42 +64,43 @@ export function UserPanelNav() {
   };
 
   return (
-    <nav className="border-gold-dim/30 bg-card/80 border-b backdrop-blur-md">
-      <div className="mx-auto max-w-5xl px-4">
-        <div className="border-border/50 animate-fade-in border-t py-4">
-          <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
-            {NAV_GROUPS.map((group) => (
-              <div key={group.label}>
-                <div className="text-muted-foreground mb-2 text-xs tracking-wider uppercase">
-                  {group.label}
-                </div>
-                <div className="space-y-1">
-                  {group.items.map((item) => (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      className={`flex items-center gap-2 rounded-lg px-3 py-2 transition-colors ${
-                        isActive(item.href)
-                          ? "text-gold bg-gold/10"
-                          : "text-foreground hover:bg-muted/50"
-                      }`}
-                    >
-                      <ChevronRight
-                        className={`h-4 w-4 flex-shrink-0 ${
-                          isActive(item.href)
-                            ? "text-gold"
-                            : "text-muted-foreground"
-                        }`}
-                        aria-hidden="true"
-                      />
-                      <span className="text-sm">{item.label}</span>
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            ))}
+    <nav className={cn("animate-fade-in h-full px-4", className)}>
+      <div className="grid grid-cols-1 gap-6">
+        {NAV_GROUPS.map((group) => (
+          <div key={group.label}>
+            <div className="text-muted-foreground mb-2 text-xs tracking-wider uppercase">
+              {group.label}
+            </div>
+            <div className="flex flex-col gap-1">
+              {group.items.map((item) => {
+                const active = isActive(item.href);
+
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={onNavigate}
+                    className={cn(
+                      "flex items-center gap-2 rounded-lg px-3 py-2 transition-colors",
+                      active
+                        ? "text-gold bg-gold/10"
+                        : "text-foreground hover:bg-muted/50",
+                    )}
+                  >
+                    <ChevronRight
+                      className={cn(
+                        "h-4 w-4 shrink-0",
+                        active ? "text-gold" : "text-muted-foreground",
+                      )}
+                      aria-hidden="true"
+                    />
+                    <span className="text-sm">{item.label}</span>
+                  </Link>
+                );
+              })}
+            </div>
           </div>
-        </div>
+        ))}
       </div>
     </nav>
   );

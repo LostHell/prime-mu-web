@@ -156,7 +156,7 @@ export function SellItemForm({ warehouseItems }: SellItemFormProps) {
               </HoverCard>
             ) : (
               <div className="flex items-center gap-4">
-                <div className="bg-muted/50 flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-lg">
+                <div className="bg-muted/50 flex h-16 w-16 shrink-0 items-center justify-center rounded-lg">
                   <Package className="text-muted-foreground/50 size-8" />
                 </div>
                 <div className="flex-1">

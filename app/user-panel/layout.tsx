@@ -1,8 +1,7 @@
 import { auth } from "@/auth";
-import PageLayout from "@/components/page-layout";
 import { getCharacters } from "@/lib/queries/get-characters";
 import { redirect } from "next/navigation";
-import { UserPanelNav } from "./_components/user-panel-nav";
+import { UserPanelShell } from "./_components/user-panel-shell";
 import { UserPanelProvider } from "./_context/user-panel-context";
 
 interface UserPanelLayoutProps {
@@ -20,10 +19,7 @@ const UserPanelLayout = async ({ children }: UserPanelLayoutProps) => {
 
   return (
     <UserPanelProvider characters={characters}>
-      <UserPanelNav />
-      <PageLayout as="main" variant="panel">
-        {children}
-      </PageLayout>
+      <UserPanelShell>{children}</UserPanelShell>
     </UserPanelProvider>
   );
 };
