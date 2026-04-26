@@ -1,11 +1,17 @@
 "use client";
 
-import { ItemHoverCard } from "@/components/item-hover-card";
+import { ItemCard } from "@/components/item-card";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
 import { Input } from "@/components/ui/input";
 import { listMarketItemAction } from "@/lib/actions/list-market-item";
 import { WarehouseItem } from "@/lib/queries/get-warehouse-items";
-import { ArrowRight, CircleDollarSign, Loader2, Package } from "lucide-react";
+import { CircleDollarSign, Loader2, Package } from "lucide-react";
 import { useActionState, useState } from "react";
 
 interface SellItemFormProps {
@@ -54,35 +60,37 @@ function WarehouseGrid({
         const isSelected = selectedSlot === item.slot;
 
         return (
-          <ItemHoverCard
-            key={item.slot}
-            item={item}
-            style={{
-              gridRowStart: startRow + 1,
-              gridRowEnd: startRow + 1 + item.height,
-              gridColumnStart: startCol + 1,
-              gridColumnEnd: startCol + 1 + item.width,
-              position: "relative",
-              zIndex: isSelected ? 10 : 5,
-            }}
-          >
-            <button
-              type="button"
-              onClick={() => onSelectSlot(item.slot)}
-              className={`flex h-full w-full items-center justify-center overflow-hidden rounded border p-0.5 transition-all ${
-                isSelected
-                  ? "border-gold bg-gold/30 ring-gold z-10 ring-2"
-                  : "border-gold-dim/50 bg-card hover:border-gold/50 hover:bg-gold/10 cursor-pointer"
-              } ${item.excellent > 0 ? "text-sky-400" : "text-gold/90"} `}
-              title={`${item.name} +${item.level}`}
-            >
-              <span className="line-clamp-2 text-center text-[9px] leading-tight font-medium">
-                {item.name.length > 12
-                  ? item.name.split(" ").slice(0, 2).join(" ")
-                  : item.name}
-              </span>
-            </button>
-          </ItemHoverCard>
+          <HoverCard key={item.slot}>
+            <HoverCardTrigger asChild>
+              {/* design-system exception: warehouse cell mimics the in-game grid slot, not a generic <Button>. Keep the raw <button>. */}
+              <button
+                type="button"
+                onClick={() => onSelectSlot(item.slot)}
+                style={{
+                  gridRowStart: startRow + 1,
+                  gridRowEnd: startRow + 1 + item.height,
+                  gridColumnStart: startCol + 1,
+                  gridColumnEnd: startCol + 1 + item.width,
+                  zIndex: isSelected ? 10 : 5,
+                }}
+                className={`relative flex h-full w-full items-center justify-center overflow-hidden rounded border p-0.5 transition-all ${
+                  isSelected
+                    ? "border-gold bg-gold/30 ring-gold z-10 ring-2"
+                    : "border-gold-dim/50 bg-card hover:border-gold/50 hover:bg-gold/10 cursor-pointer"
+                } ${item.excellent > 0 ? "text-sky-400" : "text-gold/90"} `}
+                title={`${item.name} +${item.level}`}
+              >
+                <span className="line-clamp-2 text-center text-[9px] leading-tight font-medium">
+                  {item.name.length > 12
+                    ? item.name.split(" ").slice(0, 2).join(" ")
+                    : item.name}
+                </span>
+              </button>
+            </HoverCardTrigger>
+            <HoverCardContent>
+              <ItemCard item={item} />
+            </HoverCardContent>
+          </HoverCard>
         );
       })}
     </div>
@@ -124,23 +132,28 @@ export function SellItemForm({ warehouseItems }: SellItemFormProps) {
           {/* Selected Item Info */}
           <div className="border-border/50 bg-muted/20 overflow-visible rounded-xl border p-4">
             {selectedItem ? (
-              <ItemHoverCard item={selectedItem}>
-                <div className="-mx-1 cursor-default rounded-lg px-1 py-0.5">
-                  <p className="text-muted-foreground mb-1 text-sm">
-                    Selected item
-                  </p>
-                  <p
-                    className={`font-semibold ${selectedItem.excellent > 0 ? "text-sky-400" : "text-gold"}`}
-                  >
-                    {selectedItem.excellent > 0 ? "Excellent " : ""}
-                    {selectedItem.name} +{selectedItem.level}
-                  </p>
-                  <p className="text-muted-foreground mt-2 text-xs">
-                    Size: {selectedItem.width}x{selectedItem.height} • Slot #
-                    {selectedItem.slot}
-                  </p>
-                </div>
-              </ItemHoverCard>
+              <HoverCard>
+                <HoverCardTrigger asChild>
+                  <div className="-mx-1 cursor-default rounded-lg px-1 py-0.5">
+                    <p className="text-muted-foreground mb-1 text-sm">
+                      Selected item
+                    </p>
+                    <p
+                      className={`font-semibold ${selectedItem.excellent > 0 ? "text-sky-400" : "text-gold"}`}
+                    >
+                      {selectedItem.excellent > 0 ? "Excellent " : ""}
+                      {selectedItem.name} +{selectedItem.level}
+                    </p>
+                    <p className="text-muted-foreground mt-2 text-xs">
+                      Size: {selectedItem.width}x{selectedItem.height} • Slot #
+                      {selectedItem.slot}
+                    </p>
+                  </div>
+                </HoverCardTrigger>
+                <HoverCardContent>
+                  <ItemCard item={selectedItem} />
+                </HoverCardContent>
+              </HoverCard>
             ) : (
               <div className="flex items-center gap-4">
                 <div className="bg-muted/50 flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-lg">
@@ -182,15 +195,9 @@ export function SellItemForm({ warehouseItems }: SellItemFormProps) {
 
           {/* Status Messages */}
           {state.message && (
-            <div
-              className={`rounded-lg p-3 text-sm ${
-                state.success
-                  ? "border border-green-500/20 bg-green-500/10 text-green-400"
-                  : "border border-red-500/20 bg-red-500/10 text-red-400"
-              }`}
-            >
-              {state.message}
-            </div>
+            <Alert variant={state.success ? "success" : "destructive"}>
+              <AlertDescription>{state.message}</AlertDescription>
+            </Alert>
           )}
 
           {/* Submit Form */}

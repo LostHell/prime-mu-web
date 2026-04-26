@@ -1,10 +1,10 @@
-import { Character, MU_CLASS_BY_ID } from "@/lib/types/character";
+import { CHARACTER_CLASS_BY_ID } from "@/lib/game/constants/game";
 import { prisma } from "@/prisma/prisma";
 
 export async function getCharacter(
   accountId: string,
   characterName: string,
-): Promise<Character | null> {
+) {
   const character = await prisma.character.findFirst({
     where: {
       Name: characterName,
@@ -31,7 +31,7 @@ export async function getCharacter(
 
   return {
     name: character.Name,
-    class: MU_CLASS_BY_ID[character.Class ?? 0] ?? "Dark Wizard",
+    class: CHARACTER_CLASS_BY_ID[character.Class ?? 0],
     level: character.cLevel ?? 1,
     resets: character.ResetCount ?? 0,
     guild: undefined,

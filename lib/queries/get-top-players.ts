@@ -1,10 +1,11 @@
-import { MU_CLASS_BY_ID, MuClass } from "@/lib/types/character";
+import { CHARACTER_CLASS_BY_ID } from "@/lib/game/constants/game";
+import { CharacterClass } from "@/lib/types/character";
 import { prisma } from "@/prisma/prisma";
 
 export interface TopPlayerEntry {
   rank: number;
   name: string;
-  class: MuClass;
+  class: CharacterClass;
   level: number;
   resets: number;
   guild?: string;
@@ -32,7 +33,7 @@ export async function getTopPlayers(): Promise<TopPlayerEntry[]> {
   return characters.map((c, i) => ({
     rank: i + 1,
     name: c.Name,
-    class: MU_CLASS_BY_ID[c.Class ?? 0] ?? "Dark Wizard",
+    class: CHARACTER_CLASS_BY_ID[c.Class ?? 0],
     level: c.cLevel ?? 1,
     resets: c.ResetCount ?? 0,
     guild: guildMap.get(c.Name),

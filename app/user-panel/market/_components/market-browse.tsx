@@ -1,6 +1,15 @@
 "use client";
 
-import { ItemHoverCard } from "@/components/item-hover-card";
+import EmptyState from "@/components/empty-state";
+import { ItemCard } from "@/components/item-card";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
 import { Input } from "@/components/ui/input";
 import { buyMarketItemAction } from "@/lib/actions/buy-market-item";
 import { MarketListing } from "@/lib/queries/get-marketplace-listings";
@@ -39,61 +48,62 @@ function BuyableListingCard({
   }).format(listing.listedAt);
 
   return (
-    <div className="border-border/50 bg-card overflow-visible rounded-xl border">
-      <ItemHoverCard item={listing.item}>
-        <div className="hover:bg-muted/20 flex w-full cursor-default items-center gap-4 p-4 text-left transition-colors">
-          <div className="bg-muted/30 flex h-12 w-12 shrink-0 items-center justify-center rounded-lg">
-            <div
-              className={`text-xs font-medium ${listing.item.excellent > 0 ? "text-sky-400" : "text-gold"}`}
-            >
-              +{listing.item.level}
+    <Card>
+      <HoverCard>
+        <HoverCardTrigger asChild>
+          <div className="hover:bg-muted/20 flex w-full cursor-default items-center gap-4 p-4 text-left transition-colors">
+            <div className="bg-muted/30 flex h-12 w-12 shrink-0 items-center justify-center rounded-lg">
+              <div
+                className={`text-xs font-medium ${listing.item.excellent > 0 ? "text-sky-400" : "text-gold"}`}
+              >
+                +{listing.item.level}
+              </div>
             </div>
-          </div>
 
-          <div className="min-w-0 flex-1">
-            <p
-              className={`truncate font-semibold ${listing.item.excellent > 0 ? "text-sky-400" : "text-gold"}`}
-            >
-              {listing.item.excellent > 0 ? "Exc " : ""}
-              {listing.item.name}
-            </p>
-            <p className="text-muted-foreground mt-0.5 text-xs">
-              by{" "}
-              <span className="text-foreground">{listing.sellerCharacter}</span>{" "}
-              • {formattedDate}
-              {isOwnListing && (
-                <span className="bg-gold/20 text-gold ml-2 rounded px-1.5 py-0.5 text-[10px] tracking-wider uppercase">
-                  Your listing
+            <div className="min-w-0 flex-1">
+              <p
+                className={`truncate font-semibold ${listing.item.excellent > 0 ? "text-sky-400" : "text-gold"}`}
+              >
+                {listing.item.excellent > 0 ? "Exc " : ""}
+                {listing.item.name}
+              </p>
+              <p className="text-muted-foreground mt-0.5 text-xs">
+                by{" "}
+                <span className="text-foreground">
+                  {listing.sellerCharacter}
+                </span>{" "}
+                • {formattedDate}
+                {isOwnListing && (
+                  <span className="bg-gold/20 text-gold ml-2 rounded px-1.5 py-0.5 text-[10px] tracking-wider uppercase">
+                    Your listing
+                  </span>
+                )}
+              </p>
+            </div>
+
+            <div className="shrink-0 text-right">
+              <div className="text-gold flex items-center gap-1">
+                <CircleDollarSign className="size-4" />
+                <span className="font-bold tabular-nums">
+                  {listing.zenPrice?.toLocaleString() ?? "—"}
                 </span>
-              )}
-            </p>
-          </div>
-
-          <div className="flex-shrink-0 text-right">
-            <div className="text-gold flex items-center gap-1">
-              <CircleDollarSign className="size-4" />
-              <span className="font-bold tabular-nums">
-                {listing.zenPrice?.toLocaleString() ?? "—"}
-              </span>
+              </div>
+              <p className="text-muted-foreground mt-0.5 text-[10px] tracking-wider uppercase">
+                Zen
+              </p>
             </div>
-            <p className="text-muted-foreground mt-0.5 text-[10px] tracking-wider uppercase">
-              Zen
-            </p>
           </div>
-        </div>
-      </ItemHoverCard>
+        </HoverCardTrigger>
+        <HoverCardContent>
+          <ItemCard item={listing.item} />
+        </HoverCardContent>
+      </HoverCard>
 
       <div className="border-border/50 space-y-4 border-t p-4">
         {state.message && (
-          <div
-            className={`rounded-lg p-3 text-sm ${
-              state.success
-                ? "border border-green-500/20 bg-green-500/10 text-green-400"
-                : "border border-red-500/20 bg-red-500/10 text-red-400"
-            }`}
-          >
-            {state.message}
-          </div>
+          <Alert variant={state.success ? "success" : "destructive"}>
+            <AlertDescription>{state.message}</AlertDescription>
+          </Alert>
         )}
 
         {isOwnListing ? (
@@ -106,11 +116,7 @@ function BuyableListingCard({
           <form action={formAction}>
             <input type="hidden" name="listingId" value={listing.id} />
 
-            <button
-              type="submit"
-              disabled={isPending}
-              className="bg-gold text-background hover:bg-gold/90 flex w-full items-center justify-center gap-2 rounded-lg py-3 text-sm font-medium transition-all disabled:opacity-50"
-            >
+            <Button type="submit" disabled={isPending} className="w-full">
               {isPending ? (
                 <>
                   <Loader2 className="size-4 animate-spin" />
@@ -122,7 +128,7 @@ function BuyableListingCard({
                   <span>Buy item</span>
                 </>
               )}
-            </button>
+            </Button>
 
             <p className="text-muted-foreground mt-3 text-center text-xs">
               Paid from your website zen balance once deposits are enabled.
@@ -130,7 +136,7 @@ function BuyableListingCard({
           </form>
         )}
       </div>
-    </div>
+    </Card>
   );
 }
 
@@ -149,17 +155,17 @@ export function MarketBrowse({
 
   if (listings.length === 0) {
     return (
-      <div className="py-12 text-center">
-        <div className="bg-muted/30 mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full">
-          <Store className="text-muted-foreground size-8" />
-        </div>
-        <h3 className="mb-2 text-lg font-medium">No Items Listed</h3>
-        <p className="text-muted-foreground mx-auto max-w-sm text-sm">
-          The marketplace is empty.
-          <br />
-          Be the first to list an item!
-        </p>
-      </div>
+      <EmptyState
+        icon={Store}
+        title="No Items Listed"
+        description={
+          <>
+            The marketplace is empty.
+            <br />
+            Be the first to list an item!
+          </>
+        }
+      />
     );
   }
 
@@ -187,13 +193,12 @@ export function MarketBrowse({
             />
           ))
         ) : (
-          <div className="py-12 text-center">
-            <Filter className="text-muted-foreground/50 mx-auto mb-3 size-12" />
-            <p className="text-muted-foreground">No items found</p>
-            <p className="text-muted-foreground/70 mt-1 text-sm">
-              Try adjusting your search
-            </p>
-          </div>
+          <EmptyState
+            icon={Filter}
+            variant="compact"
+            title="No items found"
+            description="Try adjusting your search"
+          />
         )}
       </div>
 

@@ -1,11 +1,5 @@
+import { CharacterClass } from "@/lib/types/character";
 import { type SVGProps } from "react";
-
-type MuClass =
-  | "Dark Knight"
-  | "Dark Wizard"
-  | "Fairy Elf"
-  | "Magic Gladiator"
-  | "Dark Lord";
 
 /* shared wrapper */
 function AvatarSvg({ children, ...props }: SVGProps<SVGSVGElement>) {
@@ -564,24 +558,28 @@ function DarkLordAvatar({ color }: { color: string }) {
   );
 }
 
-const AVATARS: Record<MuClass, React.ComponentType<{ color: string }>> = {
+const AVATARS: Record<CharacterClass, React.ComponentType<{ color: string }>> = {
   "Dark Knight": DarkKnightAvatar,
+  "Blade Knight": DarkKnightAvatar,
   "Dark Wizard": DarkWizardAvatar,
+  "Soul Master": DarkWizardAvatar,
   "Fairy Elf": FairyElfAvatar,
+  "Muse Elf": FairyElfAvatar,
   "Magic Gladiator": MagicGladiatorAvatar,
   "Dark Lord": DarkLordAvatar,
 };
 
 const ClassAvatar = ({
-  muClass,
+  characterClass,
   color,
   className,
 }: {
-  muClass: MuClass;
+  characterClass: CharacterClass;
   color: string;
   className?: string;
 }) => {
-  const Avatar = AVATARS[muClass];
+  const Avatar = AVATARS[characterClass];
+
   return (
     <div
       className={className}

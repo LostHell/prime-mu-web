@@ -1,6 +1,15 @@
 "use client";
 
-import { ItemHoverCard } from "@/components/item-hover-card";
+import EmptyState from "@/components/empty-state";
+import { ItemCard } from "@/components/item-card";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
 import { cancelMarketplaceListingAction } from "@/lib/actions/cancel-market-listing";
 import { MarketListing } from "@/lib/queries/get-marketplace-listings";
 import { CircleDollarSign, Loader2, ShoppingBag, X } from "lucide-react";
@@ -27,63 +36,63 @@ function ListingCard({ listing }: { listing: MarketListing }) {
   }).format(listing.listedAt);
 
   return (
-    <div className="border-border/50 bg-card overflow-visible rounded-xl border">
-      <ItemHoverCard item={listing.item}>
-        <div className="hover:bg-muted/20 flex w-full cursor-default items-center gap-4 p-4 text-left transition-colors">
-          <div className="bg-muted/30 flex h-12 w-12 shrink-0 items-center justify-center rounded-lg">
-            <div
-              className={`text-xs font-medium ${listing.item.excellent > 0 ? "text-sky-400" : "text-gold"}`}
-            >
-              +{listing.item.level}
+    <Card>
+      <HoverCard>
+        <HoverCardTrigger asChild>
+          <div className="hover:bg-muted/20 flex w-full cursor-default items-center gap-4 p-4 text-left transition-colors">
+            <div className="bg-muted/30 flex h-12 w-12 shrink-0 items-center justify-center rounded-lg">
+              <div
+                className={`text-xs font-medium ${listing.item.excellent > 0 ? "text-sky-400" : "text-gold"}`}
+              >
+                +{listing.item.level}
+              </div>
+            </div>
+
+            <div className="min-w-0 flex-1">
+              <p
+                className={`truncate font-semibold ${listing.item.excellent > 0 ? "text-sky-400" : "text-gold"}`}
+              >
+                {listing.item.excellent > 0 ? "Exc " : ""}
+                {listing.item.name}
+              </p>
+              <p className="text-muted-foreground mt-0.5 text-xs">
+                Listed {formattedDate}
+              </p>
+            </div>
+
+            <div className="shrink-0 text-right">
+              <div className="text-gold flex items-center gap-1">
+                <CircleDollarSign className="size-4" />
+                <span className="font-bold tabular-nums">
+                  {listing.zenPrice?.toLocaleString() ?? "—"}
+                </span>
+              </div>
+              <p className="text-muted-foreground mt-0.5 text-[10px] tracking-wider uppercase">
+                Zen
+              </p>
             </div>
           </div>
-
-          <div className="min-w-0 flex-1">
-            <p
-              className={`truncate font-semibold ${listing.item.excellent > 0 ? "text-sky-400" : "text-gold"}`}
-            >
-              {listing.item.excellent > 0 ? "Exc " : ""}
-              {listing.item.name}
-            </p>
-            <p className="text-muted-foreground mt-0.5 text-xs">
-              Listed {formattedDate}
-            </p>
-          </div>
-
-          <div className="flex-shrink-0 text-right">
-            <div className="text-gold flex items-center gap-1">
-              <CircleDollarSign className="size-4" />
-              <span className="font-bold tabular-nums">
-                {listing.zenPrice?.toLocaleString() ?? "—"}
-              </span>
-            </div>
-            <p className="text-muted-foreground mt-0.5 text-[10px] tracking-wider uppercase">
-              Zen
-            </p>
-          </div>
-        </div>
-      </ItemHoverCard>
+        </HoverCardTrigger>
+        <HoverCardContent>
+          <ItemCard item={listing.item} />
+        </HoverCardContent>
+      </HoverCard>
 
       <div className="border-border/50 space-y-4 border-t p-4">
         {state.message && (
-          <div
-            className={`rounded-lg p-3 text-sm ${
-              state.success
-                ? "border border-green-500/20 bg-green-500/10 text-green-400"
-                : "border border-red-500/20 bg-red-500/10 text-red-400"
-            }`}
-          >
-            {state.message}
-          </div>
+          <Alert variant={state.success ? "success" : "destructive"}>
+            <AlertDescription>{state.message}</AlertDescription>
+          </Alert>
         )}
 
         <form action={formAction}>
           <input type="hidden" name="listingId" value={listing.id} />
 
-          <button
+          <Button
             type="submit"
+            variant="destructive"
             disabled={isPending}
-            className="flex w-full items-center justify-center gap-2 rounded-lg border border-red-500/50 py-3 text-sm font-medium text-red-400 transition-all hover:bg-red-500/10 disabled:opacity-50"
+            className="w-full"
           >
             {isPending ? (
               <>
@@ -96,27 +105,27 @@ function ListingCard({ listing }: { listing: MarketListing }) {
                 <span>Cancel Listing</span>
               </>
             )}
-          </button>
+          </Button>
         </form>
       </div>
-    </div>
+    </Card>
   );
 }
 
 export function MyListings({ listings }: MyListingsProps) {
   if (listings.length === 0) {
     return (
-      <div className="py-12 text-center">
-        <div className="bg-muted/30 mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full">
-          <ShoppingBag className="text-muted-foreground size-8" />
-        </div>
-        <h3 className="mb-2 text-lg font-medium">No Active Listings</h3>
-        <p className="text-muted-foreground mx-auto max-w-sm text-sm">
-          You don&apos;t have any items listed for sale.
-          <br />
-          Go to &quot;Sell Item&quot; to list your first item.
-        </p>
-      </div>
+      <EmptyState
+        icon={ShoppingBag}
+        title="No Active Listings"
+        description={
+          <>
+            You don&apos;t have any items listed for sale.
+            <br />
+            Go to &quot;Sell Item&quot; to list your first item.
+          </>
+        }
+      />
     );
   }
 

@@ -1,11 +1,12 @@
 import Divider from "@/components/divider";
 import PageLayout from "@/components/page-layout";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import Headline from "@/components/ui/headline";
 import OrnamentLine from "@/components/ui/ornament-line";
 import Text from "@/components/ui/text";
 import { BRAND } from "@/constants/app";
-import { CheckCircle, Download, Monitor, Shield } from "lucide-react";
+import { CheckCircle, Download } from "lucide-react";
 
 const requirements = [
   { label: "OS", value: "Windows 7 / 8 / 10 / 11" },
@@ -27,21 +28,19 @@ const steps = [
 const DownloadPage = () => {
   return (
     <PageLayout>
-      <div className="mx-auto max-w-5xl px-4">
-        {/* Header */}
-        <Headline className="text-center">
-          <Text variant="h1" className="text-center">
-            Download Client
-          </Text>
-          <Text variant="p">Get started in minutes</Text>
-        </Headline>
+      <Headline className="text-center">
+        <Text variant="h1">
+          Download Client
+        </Text>
+        <Text variant="p">Get started in minutes</Text>
+      </Headline>
 
-        {/* Download Button */}
-        <div className="card-dark card-hover animate-glow mb-8 p-8 text-center">
+      <Card className="mb-8 text-center">
+        <CardContent>
           <Download className="text-gold mx-auto mb-6 h-16 w-16" />
-          <h2 className="text-foreground mb-2 font-serif text-2xl font-bold">
+          <Text variant="h3" as="h2" className="mb-2">
             {BRAND} Full Client
-          </h2>
+          </Text>
           <p className="text-muted-foreground mb-1">Version 0.97d - 1.8 GB</p>
           <p className="text-muted-foreground mb-6 text-sm">
             Last updated: March 2024
@@ -51,18 +50,18 @@ const DownloadPage = () => {
               <span>Download Now</span>
             </a>
           </Button>
-        </div>
+        </CardContent>
+      </Card>
 
-        <Divider />
+      <Divider />
 
-        <div className="grid gap-8 md:grid-cols-2">
-          {/* System Requirements */}
-          <div className="card-dark card-hover p-6">
-            <div className="mb-6 flex items-center gap-3">
-              <Monitor className="text-gold h-6 w-6" />
-              <h3 className="section-title">System Requirements</h3>
-            </div>
-            <OrnamentLine className="mb-4" />
+      <div className="grid gap-6 md:grid-cols-2">
+        <Card>
+          <CardContent>
+            <Text variant="h3" className="mb-2">
+              System Requirements
+            </Text>
+            <OrnamentLine className="my-4" />
             <div className="space-y-3">
               {requirements.map((req) => (
                 <div
@@ -74,15 +73,13 @@ const DownloadPage = () => {
                 </div>
               ))}
             </div>
-          </div>
+          </CardContent>
+        </Card>
 
-          {/* Installation Guide */}
-          <div className="card-dark card-hover p-6">
-            <div className="mb-6 flex items-center gap-3">
-              <Shield className="text-gold h-6 w-6" />
-              <h3 className="section-title">Installation Guide</h3>
-            </div>
-            <OrnamentLine className="mb-4" />
+        <Card>
+          <CardContent>
+            <Text variant="h3" className="mb-2">Installation Guide</Text>
+            <OrnamentLine className="my-4" />
             <div className="space-y-3">
               {steps.map((step, i) => (
                 <div key={i} className="flex items-start gap-3">
@@ -91,8 +88,8 @@ const DownloadPage = () => {
                 </div>
               ))}
             </div>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
       </div>
     </PageLayout>
   );

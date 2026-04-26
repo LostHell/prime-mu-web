@@ -33,6 +33,21 @@
   --online: 130 85% 50%;
   --dark-purple: 270 40% 15%;
   --surface-elevated: 230 20% 14%;
+
+  /* Class colors — single source of truth */
+  --class-dk: 0 70% 55%;
+  --class-bk: 0 70% 55%;
+  --class-dw: 220 80% 65%;
+  --class-sm: 220 80% 65%;
+  --class-fe: 130 60% 50%;
+  --class-me: 130 60% 50%;
+  --class-mg: 270 70% 65%;
+  --class-dl: 45 90% 55%;
+
+  /* Item tooltip palette (legacy MU / web shop tooltip look). Used by components/item-card.tsx. */
+  --mu-tooltip-exc: 145 89% 57%; /* excellent item title (#2FF387) */
+  --mu-tooltip-text: 222 38% 72%; /* core stat lines (#9aadd5) */
+  --mu-tooltip-line: 219 67% 73%; /* excellent option rows (#8CB0EA) */
 }
 
 @theme inline {
@@ -64,10 +79,26 @@
   --color-crimson: hsl(var(--crimson));
   --color-online: hsl(var(--online));
   --color-surface-elevated: hsl(var(--surface-elevated));
+  --color-class-dk: hsl(var(--class-dk));
+  --color-class-dw: hsl(var(--class-dw));
+  --color-class-fe: hsl(var(--class-fe));
+  --color-class-mg: hsl(var(--class-mg));
+  --color-class-dl: hsl(var(--class-dl));
+  --color-mu-tooltip-exc: hsl(var(--mu-tooltip-exc));
+  --color-mu-tooltip-text: hsl(var(--mu-tooltip-text));
+  --color-mu-tooltip-line: hsl(var(--mu-tooltip-line));
   --radius-sm: calc(var(--radius) - 2px);
   --radius-md: var(--radius);
   --radius-lg: calc(var(--radius) + 2px);
   --radius-xl: calc(var(--radius) + 4px);
+
+  /* Icon sizes — pairs with text scale. See agents/docs/design-system.md.
+     Use as `size-icon-xs`, `size-icon-md`, etc. on lucide-react / svg icons. */
+  --spacing-icon-xs: 0.75rem; /* 12px — pairs with text-xs */
+  --spacing-icon-sm: 1rem; /* 16px — pairs with text-sm / text-base */
+  --spacing-icon-md: 1.25rem; /* 20px — pairs with text-base / text-lg */
+  --spacing-icon-lg: 1.5rem; /* 24px — pairs with text-lg / text-xl */
+  --spacing-icon-xl: 2rem; /* 32px — pairs with text-2xl+ */
 }
 
 @layer base {
@@ -105,76 +136,6 @@
   box-shadow:
     0 0 20px hsl(var(--gold) / 0.3),
     0 0 40px hsl(var(--gold) / 0.1);
-}
-
-.card-dark {
-  background-color: hsl(var(--card));
-  border-radius: var(--radius);
-  border: 1px solid hsl(var(--gold-dim));
-  box-shadow:
-    inset 0 0 20px hsl(var(--gold) / 0.05),
-    0 0 15px hsl(var(--gold) / 0.1);
-  backdrop-filter: blur(10px);
-}
-
-.section-title {
-  font-family: var(--font-serif);
-  font-size: 1.5rem;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  background-clip: text;
-  -webkit-background-clip: text;
-  color: transparent;
-  background-image: linear-gradient(
-    135deg,
-    hsl(var(--gold)),
-    hsl(var(--gold-glow)),
-    hsl(var(--gold))
-  );
-}
-
-.table-header-cell {
-  padding: 0.75rem 1rem;
-  text-align: left;
-  font-size: 0.75rem;
-  font-family: var(--font-serif);
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: hsl(var(--gold));
-}
-
-.table-body-cell {
-  padding: 0.75rem 1rem;
-  font-size: 0.875rem;
-  color: hsl(var(--foreground));
-}
-
-.stat-card {
-  background-color: hsl(var(--card));
-  border-radius: var(--radius);
-  border: 1px solid hsl(var(--gold-dim));
-  box-shadow:
-    inset 0 0 20px hsl(var(--gold) / 0.05),
-    0 0 15px hsl(var(--gold) / 0.1);
-  backdrop-filter: blur(10px);
-  text-align: center;
-}
-
-.class-badge-dk {
-  color: hsl(0 70% 55%);
-}
-.class-badge-dw {
-  color: hsl(220 80% 65%);
-}
-.class-badge-fe {
-  color: hsl(130 60% 50%);
-}
-.class-badge-mg {
-  color: hsl(270 70% 65%);
-}
-.class-badge-dl {
-  color: hsl(45 90% 55%);
 }
 
 /* Page background with hero image */
@@ -313,17 +274,6 @@
 }
 .delay-500 {
   animation-delay: 0.5s;
-}
-
-/* Table row hover effect */
-.table-row-hover {
-  transition:
-    background-color 0.2s ease,
-    transform 0.2s ease;
-}
-
-.table-row-hover:hover {
-  background-color: hsl(var(--gold) / 0.05);
 }
 
 /* Card hover effect */

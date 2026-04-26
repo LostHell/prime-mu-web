@@ -1,13 +1,13 @@
 "use client";
 
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import Feedback from "@/components/ui/feedback";
-import FieldLabel from "@/components/ui/field-label";
+import { Card, CardContent } from "@/components/ui/card";
+import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import Headline from "@/components/ui/headline";
 import { Input } from "@/components/ui/input";
 import Text from "@/components/ui/text";
 import { changeEmailAction } from "@/lib/actions/change-email";
-import { Lock, Mail } from "lucide-react";
 import { useActionState } from "react";
 
 export default function ChangeEmailPage() {
@@ -15,7 +15,6 @@ export default function ChangeEmailPage() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <Headline>
         <Text as="h1" variant="h4">
           Change Email
@@ -23,60 +22,51 @@ export default function ChangeEmailPage() {
         <Text variant="small">Update your account email address</Text>
       </Headline>
 
-      <div className="card-dark max-w-md p-6">
-        <form action={action} className="space-y-4">
-          <div>
-            <FieldLabel htmlFor="newEmail">New Email Address</FieldLabel>
-            <div className="relative">
-              <Mail className="text-muted-foreground absolute top-1/2 left-3 size-4 -translate-y-1/2" />
+      <Card>
+        <CardContent>
+          <form action={action} className="space-y-4">
+            <Field>
+              <FieldLabel htmlFor="newEmail">New Email Address</FieldLabel>
               <Input
                 type="email"
                 id="newEmail"
                 name="newEmail"
                 placeholder="Enter new email"
-                className="pl-10"
                 disabled={isPending}
               />
-            </div>
-            {state.errors?.newEmail && (
-              <p className="text-crimson mt-1 text-xs">
-                {state.errors.newEmail[0]}
-              </p>
-            )}
-          </div>
+              {state.errors?.newEmail && (
+                <FieldError>{state.errors.newEmail[0]}</FieldError>
+              )}
+            </Field>
 
-          <div>
-            <FieldLabel htmlFor="currentPassword">Current Password</FieldLabel>
-            <div className="relative">
-              <Lock className="text-muted-foreground absolute top-1/2 left-3 size-4 -translate-y-1/2" />
+            <Field>
+              <FieldLabel htmlFor="currentPassword">
+                Current Password
+              </FieldLabel>
               <Input
                 type="password"
                 id="currentPassword"
                 name="currentPassword"
                 placeholder="Confirm with your password"
-                className="pl-10"
                 disabled={isPending}
               />
-            </div>
-            {state.errors?.currentPassword && (
-              <p className="text-crimson mt-1 text-xs">
-                {state.errors.currentPassword[0]}
-              </p>
+              {state.errors?.currentPassword && (
+                <FieldError>{state.errors.currentPassword[0]}</FieldError>
+              )}
+            </Field>
+
+            {state.message && (
+              <Alert variant={state.success ? "success" : "destructive"}>
+                <AlertDescription>{state.message}</AlertDescription>
+              </Alert>
             )}
-          </div>
 
-          {state.message && (
-            <Feedback
-              type={state.success ? "success" : "error"}
-              message={state.message}
-            />
-          )}
-
-          <Button type="submit" className="w-full" disabled={isPending}>
-            {isPending ? "Saving..." : "Save"}
-          </Button>
-        </form>
-      </div>
+            <Button type="submit" className="w-full" disabled={isPending}>
+              {isPending ? "Saving..." : "Save"}
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
     </div>
   );
 }

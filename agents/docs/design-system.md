@@ -138,6 +138,46 @@ export function LoginCTA() {
 }
 ```
 
+## Radius
+
+Radius is driven by a single token: `--radius` in `app/globals.css` (currently `0.5rem`). Tailwind exposes it as `--radius-sm/md/lg/xl`.
+
+- **Do** use `rounded-sm`, `rounded-md`, `rounded-lg`, `rounded-xl`, or `rounded-full`.
+- **Avoid** `rounded-[Npx]` literals in app code outside `components/ui/`. If you reach for one, fix the token instead.
+
+## Typography weight scale
+
+Two webfonts are loaded in `app/layout.tsx` via `next/font/google`:
+
+- **Cinzel** (serif, `--font-cinzel`) — drives `font-serif` headings produced by the `Text` component (`hero`, `h1`, `h2`, `h3`, `h4` variants and `gold-gradient-text`).
+- **Raleway** (sans, `--font-raleway`) — drives the body / UI font (`font-sans`, the default).
+
+Only the weights actually used in JSX are pre-loaded. Add a weight here _before_ using it in a class.
+
+| Font    | Loaded weights | Allowed Tailwind classes                                  |
+| ------- | -------------- | --------------------------------------------------------- |
+| Cinzel  | `600`, `700`   | `font-semibold`, `font-bold` (only on serif headings)     |
+| Raleway | `400`–`700`    | `font-normal`, `font-medium`, `font-semibold`, `font-bold` |
+
+- **Do** stick to `font-medium`, `font-semibold`, `font-bold` for emphasis on body copy.
+- **Avoid** `font-extrabold`, `font-black`, `font-light`, `font-thin` — those weights are not loaded and the browser will fake them, which looks blurry on Cinzel.
+
+## Icon size scale
+
+Icon sizes are tokenized in `app/globals.css` (`--spacing-icon-{xs,sm,md,lg,xl}`) and surfaced as Tailwind utilities `size-icon-xs`, `size-icon-sm`, `size-icon-md`, `size-icon-lg`, `size-icon-xl`. Use them on `lucide-react` icons and inline SVGs to keep them visually paired with the text they sit next to.
+
+| Token              | Value      | Pair with text class           | Typical use                                            |
+| ------------------ | ---------- | ------------------------------ | ------------------------------------------------------ |
+| `size-icon-xs`     | `0.75rem`  | `text-xs`                      | Inline icons inside chips, badges, tabular labels.     |
+| `size-icon-sm`     | `1rem`     | `text-sm`, `text-base`         | Buttons, form fields, body copy.                       |
+| `size-icon-md`     | `1.25rem`  | `text-base`, `text-lg`         | Card actions, alerts, table-row affordances.           |
+| `size-icon-lg`     | `1.5rem`   | `text-lg`, `text-xl`           | Section headers (e.g. blood-castle / devil-square h3). |
+| `size-icon-xl`     | `2rem`     | `text-2xl` and above           | Empty-state and large hero icons.                      |
+
+- **Do** prefer a token (`size-icon-md`) over arbitrary `size-5` / `h-5 w-5` literals.
+- **Avoid** mixing icon size with text size that doesn't pair (e.g. `size-icon-xl` next to `text-xs`). Pick the row in the table above and stay on it.
+- **Exception:** primitives in `components/ui/*` may use `size-{n}` literals to match shadcn defaults; app code should prefer the token.
+
 ## Tailwind class ordering
 
 Prettier is configured with `prettier-plugin-tailwindcss`, so Tailwind classes will be **sorted automatically** on format.

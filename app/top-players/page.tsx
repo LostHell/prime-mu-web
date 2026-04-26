@@ -7,14 +7,12 @@ import { BRAND } from "@/constants/app";
 const TopPlayers = () => {
   return (
     <PageLayout>
-      <div className="mx-auto max-w-5xl px-4">
-        <Headline className="text-center">
-          <Text variant="h1">Top Players</Text>
-          <Text variant="p">The mightiest warriors of {BRAND}</Text>
-        </Headline>
+      <Headline className="text-center">
+        <Text variant="h1">Top Players</Text>
+        <Text variant="p">The mightiest warriors of {BRAND}</Text>
+      </Headline>
 
-        <TopPlayersRankings />
-      </div>
+      <TopPlayersRankings />
     </PageLayout>
   );
 };

@@ -1,10 +1,11 @@
-import { MU_CLASS_BY_ID, MuClass } from "@/lib/types/character";
+import { CHARACTER_CLASS_BY_ID } from "@/lib/game/constants/game";
+import { CharacterClass } from "@/lib/types/character";
 import { prisma } from "@/prisma/prisma";
 
 export interface BloodCastleRankingEntry {
   rank: number;
   name: string;
-  class: MuClass;
+  class: CharacterClass;
   score: number;
 }
 
@@ -31,7 +32,8 @@ export async function getBloodCastleRanking(): Promise<
   return rankings.map((entry, i) => ({
     rank: i + 1,
     name: entry.Name,
-    class: MU_CLASS_BY_ID[classMap.get(entry.Name) ?? 0] ?? "Dark Knight",
+    class:
+      CHARACTER_CLASS_BY_ID[classMap.get(entry.Name) ?? 0],
     score: entry.Score ?? 0,
   }));
 }

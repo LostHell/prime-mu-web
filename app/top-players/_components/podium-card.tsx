@@ -1,5 +1,5 @@
+import { Card, CardContent } from "@/components/ui/card";
 import { TopPlayerEntry } from "@/lib/queries/get-top-players";
-import { CLASS_TEXT_COLOR } from "@/lib/types/character";
 import { cn } from "@/lib/utils";
 import { Medal, Trophy } from "lucide-react";
 
@@ -33,48 +33,46 @@ const PodiumCard = ({ player, position, className }: PodiumCardProps) => {
   const config = PODIUM_CONFIG[position];
 
   return (
-    <div
-      className={cn(
-        "card-dark card-hover p-6 text-center",
-        config.className,
-        className,
-      )}
-    >
-      <div className="mb-4 flex items-center justify-center">{config.icon}</div>
-
-      <div className="text-gold mb-2 font-serif text-lg">#{position}</div>
-      <h3 className="text-foreground mb-1 font-serif text-xl font-bold">
-        {player.name}
-      </h3>
-      <p className={cn("text-sm", CLASS_TEXT_COLOR[player.class])}>
-        {player.class}
-      </p>
-
-      <div className="mt-4 grid grid-cols-2 gap-4">
-        <div>
-          <div className="text-muted-foreground text-xs tracking-widest uppercase">
-            Level
-          </div>
-          <div className="gold-gradient-text text-lg font-bold">
-            {player.level}
-          </div>
+    <Card className={cn("card-hover text-center", config.className, className)}>
+      <CardContent>
+        <div className="mb-4 flex items-center justify-center">
+          {config.icon}
         </div>
-        <div>
-          <div className="text-muted-foreground text-xs tracking-widest uppercase">
-            Resets
-          </div>
-          <div className="gold-gradient-text text-lg font-bold">
-            {player.resets}
-          </div>
-        </div>
-      </div>
 
-      {player.guild && (
-        <p className="text-muted-foreground mt-3 text-xs">
-          Guild: <span className="text-gold">{player.guild}</span>
+        <div className="text-gold mb-2 font-serif text-lg">#{position}</div>
+        <h3 className="text-foreground mb-1 font-serif text-xl font-bold">
+          {player.name}
+        </h3>
+        <p className="text-sm">
+          {player.class}
         </p>
-      )}
-    </div>
+
+        <div className="mt-4 grid grid-cols-2 gap-4">
+          <div>
+            <div className="text-muted-foreground text-xs tracking-widest uppercase">
+              Level
+            </div>
+            <div className="gold-gradient-text text-lg font-bold">
+              {player.level}
+            </div>
+          </div>
+          <div>
+            <div className="text-muted-foreground text-xs tracking-widest uppercase">
+              Resets
+            </div>
+            <div className="gold-gradient-text text-lg font-bold">
+              {player.resets}
+            </div>
+          </div>
+        </div>
+
+        {player.guild && (
+          <p className="text-muted-foreground mt-3 text-xs">
+            Guild: <span className="text-gold">{player.guild}</span>
+          </p>
+        )}
+      </CardContent>
+    </Card>
   );
 };
 

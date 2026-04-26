@@ -1,32 +1,13 @@
-import { MU_CLASS_BY_ID, MuClass } from "@/lib/types/character";
+import { CHARACTER_CLASS_BY_ID, MAP_NAME_BY_ID } from "@/lib/game/constants/game";
+import { CharacterClass } from "@/lib/types/character";
 import { prisma } from "@/prisma/prisma";
 
 export interface LastDisconnectedEntry {
   name: string;
   map: string;
-  class: MuClass;
+  class: CharacterClass;
   time: string;
 }
-
-const MU_MAP_BY_ID: Record<number, string> = {
-  0: "Lorencia",
-  1: "Dungeon",
-  2: "Devias",
-  3: "Noria",
-  4: "Lost Tower",
-  5: "Dare Devil",
-  6: "Arena",
-  7: "Atlans",
-  8: "Tarkan",
-  9: "Devil Square 1",
-  10: "Icarus",
-  11: "Blood Castle 1",
-  12: "Blood Castle 2",
-  13: "Blood Castle 3",
-  14: "Blood Castle 4",
-  15: "Blood Castle 5",
-  16: "Blood Castle 6",
-};
 
 function formatRelativeTime(date: Date): string {
   const diffMs = Date.now() - date.getTime();
@@ -84,8 +65,8 @@ export async function getLastDisconnected(): Promise<LastDisconnectedEntry[]> {
     return [
       {
         name: charName,
-        map: MU_MAP_BY_ID[character.MapNumber ?? 0] ?? "Lorencia",
-        class: MU_CLASS_BY_ID[character.Class ?? 0] ?? "Dark Wizard",
+        map: MAP_NAME_BY_ID[character.MapNumber ?? 0],
+        class: CHARACTER_CLASS_BY_ID[character.Class ?? 0],
         time: stat.DisConnectTM ? formatRelativeTime(stat.DisConnectTM) : "—",
       },
     ];

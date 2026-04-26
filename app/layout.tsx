@@ -8,13 +8,13 @@ import "./globals.css";
 const cinzel = Cinzel({
   subsets: ["latin"],
   variable: "--font-cinzel",
-  weight: ["400", "500", "600", "700", "800", "900"],
+  weight: ["600", "700"],
 });
 
 const raleway = Raleway({
   subsets: ["latin"],
   variable: "--font-raleway",
-  weight: ["300", "400", "500", "600", "700"],
+  weight: ["400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {

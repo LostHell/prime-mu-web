@@ -1,7 +1,8 @@
 "use client";
 
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import FieldLabel from "@/components/ui/field-label";
+import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { registerAction } from "@/lib/actions/register";
 import { AuthFormState } from "@/lib/validation/types";
@@ -17,7 +18,7 @@ const RegisterForm = () => {
 
   return (
     <form action={formAction} className="space-y-4">
-      <div>
+      <Field>
         <FieldLabel htmlFor="username">Username</FieldLabel>
         <Input
           id="username"
@@ -25,21 +26,19 @@ const RegisterForm = () => {
           placeholder="Choose username (4-10 chars)"
         />
         {state.errors?.username && (
-          <p className="mt-1 text-sm text-red-400">
-            {state.errors.username[0]}
-          </p>
+          <FieldError>{state.errors.username[0]}</FieldError>
         )}
-      </div>
+      </Field>
 
-      <div>
+      <Field>
         <FieldLabel htmlFor="email">Email</FieldLabel>
         <Input id="email" name="email" type="email" placeholder="Enter email" />
         {state.errors?.email && (
-          <p className="mt-1 text-sm text-red-400">{state.errors.email[0]}</p>
+          <FieldError>{state.errors.email[0]}</FieldError>
         )}
-      </div>
+      </Field>
 
-      <div>
+      <Field>
         <FieldLabel htmlFor="password">Password</FieldLabel>
         <Input
           id="password"
@@ -48,13 +47,11 @@ const RegisterForm = () => {
           placeholder="Choose password"
         />
         {state.errors?.password && (
-          <p className="mt-1 text-sm text-red-400">
-            {state.errors.password[0]}
-          </p>
+          <FieldError>{state.errors.password[0]}</FieldError>
         )}
-      </div>
+      </Field>
 
-      <div>
+      <Field>
         <FieldLabel htmlFor="confirmPassword">Confirm Password</FieldLabel>
         <Input
           id="confirmPassword"
@@ -63,13 +60,15 @@ const RegisterForm = () => {
           placeholder="Confirm password"
         />
         {state.errors?.confirmPassword && (
-          <p className="mt-1 text-sm text-red-400">
-            {state.errors.confirmPassword[0]}
-          </p>
+          <FieldError>{state.errors.confirmPassword[0]}</FieldError>
         )}
-      </div>
+      </Field>
 
-      {state.message && <p className="text-sm text-red-400">{state.message}</p>}
+      {state.message && (
+        <Alert variant="destructive">
+          <AlertDescription>{state.message}</AlertDescription>
+        </Alert>
+      )}
 
       <Button type="submit" className="w-full" disabled={isPending}>
         {isPending ? "Creating account..." : "Create account"}

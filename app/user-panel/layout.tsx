@@ -21,7 +21,9 @@ const UserPanelLayout = async ({ children }: UserPanelLayoutProps) => {
   return (
     <UserPanelProvider characters={characters}>
       <UserPanelNav />
-      <main className="mx-auto max-w-5xl px-4 py-8">{children}</main>
+      <PageLayout as="main" variant="panel">
+        {children}
+      </PageLayout>
     </UserPanelProvider>
   );
 };

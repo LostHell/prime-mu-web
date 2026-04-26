@@ -1,9 +1,21 @@
 "use client";
 
-import ConfirmAction from "@/components/ui/confirm-action";
-import Feedback from "@/components/ui/feedback";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
 import { clearPkAction } from "@/lib/actions/clear-pk";
 import { type Character } from "@/lib/types/character";
+import { cn } from "@/lib/utils";
 import { ShieldCheck, Skull } from "lucide-react";
 import { useActionState } from "react";
 
@@ -26,12 +38,10 @@ export function ClearPkForm({ character }: ClearPkFormProps) {
     <div className="space-y-6">
       <div className="py-4 text-center">
         <div
-          className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full"
-          style={{
-            background: hasPk
-              ? "hsl(var(--crimson) / 0.1)"
-              : "hsl(var(--online) / 0.1)",
-          }}
+          className={cn(
+            "mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full",
+            hasPk ? "bg-crimson/10" : "bg-online/10",
+          )}
         >
           {hasPk ? (
             <Skull className="text-crimson size-8" />
@@ -44,10 +54,10 @@ export function ClearPkForm({ character }: ClearPkFormProps) {
             Current PK Count:
           </span>
           <span
-            className="text-2xl font-bold tabular-nums"
-            style={{
-              color: hasPk ? "hsl(var(--crimson))" : "hsl(var(--online))",
-            }}
+            className={cn(
+              "text-2xl font-bold tabular-nums",
+              hasPk ? "text-crimson" : "text-online",
+            )}
           >
             {character.pkCount}
           </span>
@@ -55,10 +65,9 @@ export function ClearPkForm({ character }: ClearPkFormProps) {
       </div>
 
       {state.message && (
-        <Feedback
-          type={state.success ? "success" : "error"}
-          message={state.message}
-        />
+        <Alert variant={state.success ? "success" : "destructive"}>
+          <AlertDescription>{state.message}</AlertDescription>
+        </Alert>
       )}
 
       {!hasPk ? (
@@ -69,13 +78,38 @@ export function ClearPkForm({ character }: ClearPkFormProps) {
           </p>
         </div>
       ) : (
-        <ConfirmAction
-          label="Clear PK Status"
-          description="This will remove all Player Killer marks from your character, allowing you to enter towns and interact with NPCs freely."
-          buttonLabel="Confirm Clear"
-          onConfirm={handleConfirm}
-          disabled={isPending}
-        />
+        <div className="space-y-4">
+          <p className="text-muted-foreground text-sm leading-relaxed">
+            This will remove all Player Killer marks from your character,
+            allowing you to enter towns and interact with NPCs freely.
+          </p>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button disabled={isPending}>Clear PK Status</Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Clear PK Status?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This will reset your PK count to zero on{" "}
+                  <span className="text-foreground font-medium">
+                    {character.name}
+                  </span>{" "}
+                  and remove the Player Killer mark. This cannot be undone.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction
+                  variant="destructive"
+                  onClick={handleConfirm}
+                >
+                  Confirm Clear
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        </div>
       )}
     </div>
   );

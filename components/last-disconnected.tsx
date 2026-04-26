@@ -1,67 +1,72 @@
+import { Card, CardContent } from "@/components/ui/card";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import Text from "@/components/ui/text";
 import { getLastDisconnected } from "@/lib/queries/get-last-disconnected";
-import { CLASS_TEXT_COLOR } from "@/lib/types/character";
-import { cn } from "@/lib/utils";
 import { Suspense } from "react";
 
 const LastDisconnectedRows = async () => {
   const lastDisconnected = await getLastDisconnected();
   return (
-    <tbody>
+    <TableBody>
       {lastDisconnected.map((user) => (
-        <tr
-          key={user.name}
-          className="border-border/50 table-row-hover border-b"
-        >
-          <td
-            className={cn(
-              "table-body-cell font-medium",
-              CLASS_TEXT_COLOR[user.class],
-            )}
-          >
+        <TableRow key={user.name}>
+          <TableCell className="font-medium">
             {user.name}
-          </td>
-          <td className="table-body-cell">{user.map}</td>
-          <td className="table-body-cell text-muted-foreground">{user.time}</td>
-        </tr>
+          </TableCell>
+          <TableCell>{user.map}</TableCell>
+          <TableCell className="text-muted-foreground">{user.time}</TableCell>
+        </TableRow>
       ))}
-    </tbody>
+    </TableBody>
   );
 };
 
 const RowsSkeleton = () => (
-  <tbody>
+  <TableBody>
     {Array.from({ length: 5 }).map((_, i) => (
-      <tr key={i} className="border-border/50 border-b">
-        <td className="table-body-cell">
+      <TableRow key={i}>
+        <TableCell>
           <div className="bg-muted h-4 w-28 animate-pulse rounded" />
-        </td>
-        <td className="table-body-cell">
+        </TableCell>
+        <TableCell>
           <div className="bg-muted h-4 w-24 animate-pulse rounded" />
-        </td>
-        <td className="table-body-cell">
+        </TableCell>
+        <TableCell>
           <div className="bg-muted ml-auto h-4 w-16 animate-pulse rounded" />
-        </td>
-      </tr>
+        </TableCell>
+      </TableRow>
     ))}
-  </tbody>
+  </TableBody>
 );
 
 const LastDisconnected = () => {
   return (
-    <div className="card-dark card-hover p-6">
-      <table className="w-full">
-        <thead>
-          <tr className="border-border border-b">
-            <th className="table-header-cell">Name</th>
-            <th className="table-header-cell">Map</th>
-            <th className="table-header-cell">Time</th>
-          </tr>
-        </thead>
-        <Suspense fallback={<RowsSkeleton />}>
-          <LastDisconnectedRows />
-        </Suspense>
-      </table>
-    </div>
+    <Card>
+      <CardContent>
+        <Text variant="h2" className="mb-8 text-center">
+          Last Disconnected Players
+        </Text>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Name</TableHead>
+              <TableHead>Map</TableHead>
+              <TableHead>Time</TableHead>
+            </TableRow>
+          </TableHeader>
+          <Suspense fallback={<RowsSkeleton />}>
+            <LastDisconnectedRows />
+          </Suspense>
+        </Table>
+      </CardContent>
+    </Card>
   );
 };
 

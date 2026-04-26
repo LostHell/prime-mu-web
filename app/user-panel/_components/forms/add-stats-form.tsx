@@ -1,8 +1,12 @@
 "use client";
 
-import Feedback from "@/components/ui/feedback";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import { addStatsAction } from "@/lib/actions/add-stats";
-import { type Character, CLASS_COLOR, CMD_CLASSES } from "@/lib/types/character";
+import { type Character, CMD_CLASSES } from "@/lib/types/character";
+import { cn } from "@/lib/utils";
 import { useActionState, useState } from "react";
 
 interface AddStatsFormProps {
@@ -33,7 +37,6 @@ export function AddStatsForm({ character }: AddStatsFormProps) {
   const hasCmd = CMD_CLASSES.includes(character.class);
   const ptsTotal = Object.values(pts).reduce((a, b) => a + b, 0);
   const remaining = character.freePoints - ptsTotal;
-  const classColor = CLASS_COLOR[character.class];
 
   const updateStat = (stat: keyof typeof pts, value: string) => {
     const num = parseInt(value) || 0;
@@ -58,21 +61,15 @@ export function AddStatsForm({ character }: AddStatsFormProps) {
   return (
     <div className="space-y-6">
       {/* Header with available points */}
-      <div
-        className="rounded-xl p-5 text-center"
-        style={{
-          background: `linear-gradient(135deg, ${classColor}15 0%, transparent 60%), hsl(var(--muted) / 0.3)`,
-          border: `1px solid ${classColor}20`,
-        }}
-      >
+      <Card className="gap-0 p-5 text-center">
         <p className="text-muted-foreground mb-1 text-xs tracking-wider uppercase">
           Available Points
         </p>
         <p
-          className="text-4xl font-bold tabular-nums"
-          style={{
-            color: remaining > 0 ? classColor : "hsl(var(--muted-foreground))",
-          }}
+          className={cn(
+            "text-4xl font-bold tabular-nums",
+            remaining > 0 ? "text-gold" : "text-muted-foreground",
+          )}
         >
           {remaining.toLocaleString()}
         </p>
@@ -83,7 +80,7 @@ export function AddStatsForm({ character }: AddStatsFormProps) {
             points
           </p>
         )}
-      </div>
+      </Card>
 
       <form action={handleSubmit} className="space-y-3">
         {(["str", "agi", "vit", "ene", "cmd"] as const)
@@ -91,17 +88,15 @@ export function AddStatsForm({ character }: AddStatsFormProps) {
           .map((stat) => {
             const hasChange = pts[stat] > 0;
             return (
-              <div
+              <Card
                 key={stat}
-                className="flex items-center gap-4 rounded-xl p-4 transition-colors"
-                style={{
-                  background: hasChange
-                    ? `${classColor}08`
-                    : "hsl(var(--muted) / 0.3)",
-                  border: `1px solid ${hasChange ? `${classColor}30` : "hsl(var(--border) / 0.5)"}`,
-                }}
+                className={cn(
+                  "flex flex-row items-center gap-4 p-4 shadow-none backdrop-blur-none transition-colors",
+                  hasChange
+                    ? "border-gold/30 bg-gold/5"
+                    : "border-border/50 bg-muted/30",
+                )}
               >
-                {/* Stat info */}
                 <div className="min-w-0 flex-1">
                   <div className="flex items-baseline gap-2">
                     <span className="text-muted-foreground text-[10px] font-bold tracking-widest uppercase">
@@ -116,18 +111,14 @@ export function AddStatsForm({ character }: AddStatsFormProps) {
                       {character.stats[stat].toLocaleString()}
                     </span>
                     {hasChange && (
-                      <span
-                        className="text-sm font-semibold tabular-nums"
-                        style={{ color: classColor }}
-                      >
+                      <span className="text-gold text-sm font-semibold tabular-nums">
                         → {(character.stats[stat] + pts[stat]).toLocaleString()}
                       </span>
                     )}
                   </div>
                 </div>
 
-                {/* Input */}
-                <input
+                <Input
                   type="number"
                   inputMode="numeric"
                   min={0}
@@ -136,49 +127,35 @@ export function AddStatsForm({ character }: AddStatsFormProps) {
                   onChange={(e) => updateStat(stat, e.target.value)}
                   placeholder="0"
                   disabled={isPending}
-                  className="bg-background/50 h-12 w-20 rounded-xl border-0 text-center text-lg font-bold tabular-nums focus:ring-2 focus:outline-none disabled:opacity-50"
-                  style={{
-                    color: hasChange
-                      ? classColor
-                      : "hsl(var(--muted-foreground))",
-                    boxShadow: hasChange
-                      ? `0 0 0 2px ${classColor}40`
-                      : "0 0 0 1px hsl(var(--border) / 0.5)",
-                  }}
+                  className={cn(
+                    "h-12 w-20 text-center text-lg font-bold tabular-nums",
+                    hasChange ? "text-gold" : "text-muted-foreground",
+                  )}
                 />
-              </div>
+              </Card>
             );
           })}
 
-        {/* Feedback */}
         {state.message && (
           <div className="pt-2">
-            <Feedback
-              type={state.success ? "success" : "error"}
-              message={state.message}
-            />
+            <Alert variant={state.success ? "success" : "destructive"}>
+              <AlertDescription>{state.message}</AlertDescription>
+            </Alert>
           </div>
         )}
 
-        {/* Submit */}
-        <button
+        <Button
           type="submit"
           disabled={ptsTotal === 0 || isPending}
-          className="mt-4 w-full rounded-xl py-4 text-sm font-semibold transition-all disabled:cursor-not-allowed disabled:opacity-40"
-          style={{
-            background: ptsTotal > 0 ? classColor : "hsl(var(--muted))",
-            color:
-              ptsTotal > 0
-                ? "hsl(var(--background))"
-                : "hsl(var(--muted-foreground))",
-          }}
+          className="mt-4 w-full"
+          size="lg"
         >
           {isPending
             ? "Applying..."
             : ptsTotal > 0
               ? `Apply ${ptsTotal} Points`
               : "Enter points to allocate"}
-        </button>
+        </Button>
       </form>
     </div>
   );

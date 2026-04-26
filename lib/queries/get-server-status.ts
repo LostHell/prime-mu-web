@@ -11,7 +11,7 @@ type CachedStatus = {
 
 let cachedStatus: CachedStatus | null = null;
 
-export async function checkServerStatus(): Promise<CachedStatus> {
+export async function getServerStatus(): Promise<CachedStatus> {
   const now = Date.now();
 
   if (cachedStatus && now - cachedStatus.lastCheck < CACHE_DURATION) {
@@ -34,5 +34,6 @@ export async function checkServerStatus(): Promise<CachedStatus> {
   });
 
   cachedStatus = { status, lastCheck: now };
+
   return cachedStatus;
 }

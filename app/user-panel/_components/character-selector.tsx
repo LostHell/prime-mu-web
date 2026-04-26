@@ -7,7 +7,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Character, CLASS_COLOR } from "@/lib/types/character";
+import { Character } from "@/lib/types/character";
 import { User } from "lucide-react";
 import { useUserPanel } from "../_context/user-panel-context";
 
@@ -77,7 +77,6 @@ export function CharacterSelector({
   }
 
   const selected = selectedCharacter;
-  const selectedColor = selected ? CLASS_COLOR[selected.class] : undefined;
 
   return (
     <Select value={selected?.name ?? ""} onValueChange={handleSelect}>
@@ -88,10 +87,7 @@ export function CharacterSelector({
               <div className="min-w-0 text-left">
                 <div className="flex flex-wrap items-center gap-2">
                   <span className="font-semibold">{selected.name}</span>
-                  <span
-                    className="text-[10px] tracking-wide uppercase"
-                    style={{ color: selectedColor }}
-                  >
+                  <span className="text-[10px] tracking-wide uppercase">
                     {selected.class}
                   </span>
                 </div>
@@ -127,7 +123,6 @@ export function CharacterSelector({
 
       <SelectContent className="min-w-(--radix-select-trigger-width) p-2">
         {characters.map((character) => {
-          const classColor = CLASS_COLOR[character.class];
           return (
             <SelectItem
               key={character.name}
@@ -138,10 +133,7 @@ export function CharacterSelector({
                 <div className="min-w-0">
                   <div className="flex items-center gap-2">
                     <span className="font-medium">{character.name}</span>
-                    <span
-                      className="text-[10px] tracking-wide uppercase"
-                      style={{ color: classColor }}
-                    >
+                    <span className="text-[10px] tracking-wide uppercase">
                       {character.class}
                     </span>
                   </div>

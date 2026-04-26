@@ -1,7 +1,13 @@
 "use client";
 
 import ClassAvatar from "@/components/class-avatar";
-import { Character, CLASS_COLOR } from "@/lib/types/character";
+import EmptyState from "@/components/empty-state";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import {
+  Character,
+} from "@/lib/types/character";
+import { cn } from "@/lib/utils";
 import { ChevronRight, User } from "lucide-react";
 import { useState } from "react";
 
@@ -14,38 +20,39 @@ export function CharacterList({ characters }: CharacterListProps) {
 
   if (characters.length === 0) {
     return (
-      <div className="card-dark p-8 text-center">
-        <User className="text-muted-foreground/50 mx-auto mb-3 size-12" />
-        <h3 className="mb-2 text-lg font-medium">No Characters</h3>
-        <p className="text-muted-foreground text-sm">
-          Create a character in-game to get started
-        </p>
-      </div>
+      <Card className="gap-0 p-0">
+        <EmptyState
+          icon={User}
+          variant="compact"
+          title="No Characters"
+          description="Create a character in-game to get started"
+          className="py-8"
+        />
+      </Card>
     );
   }
 
   return (
     <div className="space-y-3">
       {characters.map((character, index) => {
-        const classColor = CLASS_COLOR[character.class];
         const isExpanded = expandedIndex === index;
 
         return (
-          <div
+          <Card
             key={character.name}
-            className="card-dark overflow-hidden transition-all"
-            style={{
-              borderColor: isExpanded ? `${classColor}50` : undefined,
-            }}
+            className={cn("gap-0 overflow-hidden p-0 transition-all")}
           >
             {/* Main Row */}
-            <button
+            <Button
+              type="button"
+              variant="ghost"
+              size="lg"
+              aria-expanded={isExpanded}
               onClick={() => setExpandedIndex(isExpanded ? null : index)}
-              className="hover:bg-muted/20 flex w-full items-center gap-4 p-4 transition-colors"
+              className="hover:bg-muted/20 flex h-auto w-full items-center justify-start gap-4 rounded-none border-0 p-4 font-sans font-normal tracking-normal whitespace-normal"
             >
               <ClassAvatar
-                muClass={character.class}
-                color={classColor}
+                characterClass={character.class}
                 className="h-14 w-12 shrink-0"
               />
 
@@ -56,7 +63,6 @@ export function CharacterList({ characters }: CharacterListProps) {
                   </span>
                   <span
                     className="shrink-0 text-xs tracking-wide uppercase"
-                    style={{ color: classColor }}
                   >
                     {character.class}
                   </span>
@@ -78,11 +84,10 @@ export function CharacterList({ characters }: CharacterListProps) {
               </div>
 
               <ChevronRight
-                className={`text-muted-foreground size-5 transition-transform ${
-                  isExpanded ? "rotate-90" : ""
-                }`}
+                className={`text-muted-foreground size-5 transition-transform ${isExpanded ? "rotate-90" : ""
+                  }`}
               />
-            </button>
+            </Button>
 
             {/* Expanded Details */}
             {isExpanded && (
@@ -96,23 +101,23 @@ export function CharacterList({ characters }: CharacterListProps) {
                       {
                         label: "PK Count",
                         value: character.pkCount,
-                        color:
-                          character.pkCount > 0
-                            ? "hsl(var(--crimson))"
-                            : undefined,
+                        colorClass:
+                          character.pkCount > 0 ? "text-crimson" : undefined,
                       },
                       { label: "Strength", value: character.stats.str },
                       { label: "Agility", value: character.stats.agi },
                       { label: "Vitality", value: character.stats.vit },
                       { label: "Energy", value: character.stats.ene },
-                    ].map(({ label, value, color }) => (
+                    ].map(({ label, value, colorClass }) => (
                       <div key={label}>
                         <p className="text-muted-foreground mb-0.5 text-xs">
                           {label}
                         </p>
                         <p
-                          className="font-semibold tabular-nums"
-                          style={{ color: color ?? classColor }}
+                          className={cn(
+                            "font-semibold tabular-nums",
+                            colorClass,
+                          )}
                         >
                           {value.toLocaleString()}
                         </p>
@@ -131,7 +136,7 @@ export function CharacterList({ characters }: CharacterListProps) {
                 </div>
               </div>
             )}
-          </div>
+          </Card>
         );
       })}
     </div>

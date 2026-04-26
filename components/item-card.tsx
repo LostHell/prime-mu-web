@@ -1,15 +1,15 @@
 import { DecodedItem, ItemClassFlags, ItemDefinition } from "@/lib/types/item";
 import { cn } from "@/lib/utils";
 
-/** Tooltip palette (legacy MU / web shop style). */
+/** Tooltip palette (legacy MU / web shop style). Backed by `--mu-tooltip-*` and `--crimson` tokens. */
 const C = {
-  titleExc: "text-[#2FF387]",
+  titleExc: "text-mu-tooltip-exc",
   titleNorm: "text-gold",
   /** Luck, additional, skill, core stat lines */
-  muted: "text-[#9aadd5]",
+  muted: "text-mu-tooltip-text",
   /** Excellent option rows (armor/weapon bits) */
-  excellent: "text-[#8CB0EA]",
-  classReq: "text-red-500",
+  excellent: "text-mu-tooltip-line",
+  classReq: "text-crimson",
 } as const;
 
 const ARMOR_EXCELLENT: { bit: number; label: string }[] = [

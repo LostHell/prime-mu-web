@@ -1,10 +1,11 @@
-import { MU_CLASS_BY_ID, MuClass } from "@/lib/types/character";
+import { CHARACTER_CLASS_BY_ID } from "@/lib/game/constants/game";
+import { CharacterClass } from "@/lib/types/character";
 import { prisma } from "@/prisma/prisma";
 
 export interface DevilSquareRankingEntry {
   rank: number;
   name: string;
-  class: MuClass;
+  class: CharacterClass;
   score: number;
 }
 
@@ -31,7 +32,7 @@ export async function getDevilSquareRanking(): Promise<
   return rankings.map((entry, i) => ({
     rank: i + 1,
     name: entry.Name,
-    class: MU_CLASS_BY_ID[classMap.get(entry.Name) ?? 0] ?? "Dark Wizard",
+    class: CHARACTER_CLASS_BY_ID[classMap.get(entry.Name) ?? 0] ?? "Dark Wizard",
     score: entry.Score ?? 0,
   }));
 }

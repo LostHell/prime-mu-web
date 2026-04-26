@@ -3,7 +3,7 @@ import { BRAND } from "@/constants/app";
 
 const Footer = () => {
   return (
-    <footer className="border-border mt-auto border-t py-8">
+    <footer className="mt-auto py-8">
       <div className="mx-auto max-w-5xl px-4 text-center">
         <OrnamentLine className="mb-6" />
         <p className="text-muted-foreground text-sm">

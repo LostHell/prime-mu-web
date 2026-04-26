@@ -1,6 +1,7 @@
 import PlayersTable from "@/app/top-players/_components/players-table";
 import PodiumCard from "@/app/top-players/_components/podium-card";
 import Divider from "@/components/divider";
+import { Card, CardContent } from "@/components/ui/card";
 import { getTopPlayers } from "@/lib/queries/get-top-players";
 
 const TopPlayersContent = async () => {
@@ -29,9 +30,11 @@ const TopPlayersContent = async () => {
 
       <Divider />
 
-      <div className="card-dark card-hover p-6">
-        <PlayersTable players={allPlayers} />
-      </div>
+      <Card>
+        <CardContent>
+          <PlayersTable players={allPlayers} />
+        </CardContent>
+      </Card>
     </>
   );
 };

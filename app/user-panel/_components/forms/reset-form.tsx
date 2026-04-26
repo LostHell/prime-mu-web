@@ -1,7 +1,18 @@
 "use client";
 
-import ConfirmAction from "@/components/ui/confirm-action";
-import Feedback from "@/components/ui/feedback";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
 import {
   MAX_RESETS,
   MIN_RESET_LEVEL,
@@ -55,21 +66,15 @@ export function ResetForm({ character }: ResetFormProps) {
             className="border-border/50 flex justify-between border-b pb-2"
           >
             <span className="text-muted-foreground text-sm">{label}</span>
-            <span
-              className="text-sm font-semibold"
-              style={{ color: "hsl(var(--gold))" }}
-            >
-              {value}
-            </span>
+            <span className="text-gold text-sm font-semibold">{value}</span>
           </div>
         ))}
       </div>
 
       {state.message && (
-        <Feedback
-          type={state.success ? "success" : "error"}
-          message={state.message}
-        />
+        <Alert variant={state.success ? "success" : "destructive"}>
+          <AlertDescription>{state.message}</AlertDescription>
+        </Alert>
       )}
 
       {!hasRequiredLevel ? (
@@ -98,13 +103,38 @@ export function ResetForm({ character }: ResetFormProps) {
           </p>
         </div>
       ) : (
-        <ConfirmAction
-          label="Reset Character"
-          description={`Resetting will set your level back to 1, restore base stats from your class defaults, grant +${POINTS_PER_RESET} points, and cost ${resetCost.toLocaleString()} Zen.`}
-          buttonLabel="Confirm Reset"
-          onConfirm={handleConfirm}
-          disabled={isPending}
-        />
+        <div className="space-y-4">
+          <p className="text-muted-foreground text-sm leading-relaxed">
+            Resetting will set your level back to 1, restore base stats from
+            your class defaults, grant +{POINTS_PER_RESET} points, and cost{" "}
+            {resetCost.toLocaleString()} Zen.
+          </p>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button disabled={isPending}>Reset Character</Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Reset Character?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This cannot be undone. Your character will return to level 1,
+                  base stats will be restored, and {resetCost.toLocaleString()}{" "}
+                  Zen will be deducted from your balance. You will be granted +
+                  {POINTS_PER_RESET} stat points.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction
+                  variant="destructive"
+                  onClick={handleConfirm}
+                >
+                  Confirm Reset
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        </div>
       )}
     </div>
   );

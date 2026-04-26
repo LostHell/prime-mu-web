@@ -1,4 +1,5 @@
-import { Character, MU_CLASS_BY_ID } from "@/lib/types/character";
+import { CHARACTER_CLASS_BY_ID } from "@/lib/game/constants/game";
+import { Character } from "@/lib/types/character";
 import { prisma } from "@/prisma/prisma";
 
 export async function getCharacters(accountId: string): Promise<Character[]> {
@@ -22,7 +23,7 @@ export async function getCharacters(accountId: string): Promise<Character[]> {
 
   return characters.map((character) => ({
     name: character.Name,
-    class: MU_CLASS_BY_ID[character.Class ?? 0] ?? "Dark Wizard",
+    class: CHARACTER_CLASS_BY_ID[character.Class ?? 0],
     level: character.cLevel ?? 1,
     resets: character.ResetCount ?? 0,
     guild: undefined,

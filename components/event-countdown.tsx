@@ -1,11 +1,9 @@
 "use client";
 
-import { Clock } from "lucide-react";
 import { useEffect, useState } from "react";
 
 function getNextOccurrence(scheduleHours: number[]): {
   countdown: string;
-  nextAt: string;
 } {
   const safeTimes = scheduleHours
     .filter((time) => Number.isFinite(time) && time >= 0 && time < 24)
@@ -32,7 +30,7 @@ function getNextOccurrence(scheduleHours: number[]): {
     );
 
   if (safeTimes.length === 0) {
-    return { countdown: "00:00:00", nextAt: "--:--" };
+    return { countdown: "00:00:00" };
   }
 
   const now = new Date();
@@ -61,7 +59,6 @@ function getNextOccurrence(scheduleHours: number[]): {
   const pad = (n: number) => String(n).padStart(2, "0");
   return {
     countdown: `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`,
-    nextAt: `${pad(next.getHours())}:${pad(next.getMinutes())}`,
   };
 }
 
@@ -74,7 +71,6 @@ const EventCountdown = ({
 }) => {
   const [state, setState] = useState<{
     countdown: string;
-    nextAt: string;
   } | null>(null);
 
   useEffect(() => {
@@ -104,23 +100,15 @@ const EventCountdown = ({
 
   return (
     <div className="text-muted-foreground flex items-center gap-2">
-      <Clock className={`h-3.5 w-3.5 shrink-0 ${colorClass}`} />
-      <span className="text-xs tracking-widest uppercase">
+      <span className="font-serif font-semibold tracking-widest uppercase">
         {state === null ? (
-          <span className={`font-mono font-semibold ${colorClass}`}>
+          <span className={colorClass}>
             --:--:--
           </span>
         ) : (
-          <>
-            {"Next in "}
-            <span className={`font-mono font-semibold ${colorClass}`}>
-              {state.countdown}
-            </span>
-            {" · at "}
-            <span className={`font-semibold ${colorClass}`}>
-              {state.nextAt}
-            </span>
-          </>
+          <span className={colorClass}>
+            {state.countdown}
+          </span>
         )}
       </span>
     </div>

@@ -1,6 +1,7 @@
 "use client";
 
-import FieldLabel from "@/components/ui/field-label";
+import { Card, CardContent } from "@/components/ui/card";
+import { Field, FieldLabel } from "@/components/ui/field";
 import Headline from "@/components/ui/headline";
 import Text from "@/components/ui/text";
 import { type Character } from "@/lib/types/character";
@@ -31,11 +32,17 @@ export function ActionPageLayout({
         {description && <Text variant="small">{description}</Text>}
       </Headline>
 
-      <div className="card-dark p-6">
-        <FieldLabel htmlFor="characterSelector">Select Character</FieldLabel>
-        <CharacterSelector relevantFields={relevantFields} />
-        {selectedCharacter && children(selectedCharacter)}
-      </div>
+      <Card>
+        <CardContent>
+          <Field className="mb-2">
+            <FieldLabel htmlFor="characterSelector">
+              Select Character
+            </FieldLabel>
+          </Field>
+          <CharacterSelector relevantFields={relevantFields} />
+          {selectedCharacter && children(selectedCharacter)}
+        </CardContent>
+      </Card>
     </>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import Feedback from "@/components/ui/feedback";
 import { unstuckAction } from "@/lib/actions/unstuck";
 import { type Character } from "@/lib/types/character";
 import { MapPin } from "lucide-react";
@@ -43,21 +43,15 @@ export function UnstuckForm({ character }: UnstuckFormProps) {
             className="border-border/50 flex justify-between border-b pb-2"
           >
             <span className="text-muted-foreground text-sm">{label}</span>
-            <span
-              className="text-sm font-semibold"
-              style={{ color: "hsl(var(--gold))" }}
-            >
-              {value}
-            </span>
+            <span className="text-gold text-sm font-semibold">{value}</span>
           </div>
         ))}
       </div>
 
       {state.message && (
-        <Feedback
-          type={state.success ? "success" : "error"}
-          message={state.message}
-        />
+        <Alert variant={state.success ? "success" : "destructive"}>
+          <AlertDescription>{state.message}</AlertDescription>
+        </Alert>
       )}
 
       <Button className="w-full" onClick={handleClick} disabled={isPending}>
