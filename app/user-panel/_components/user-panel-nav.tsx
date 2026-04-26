@@ -22,7 +22,6 @@ const NAV_GROUPS: NavGroup[] = [
       { label: "Overview", href: "/user-panel" },
       { label: "Add Stats", href: "/user-panel/add-stats" },
       { label: "Reset", href: "/user-panel/reset" },
-      { label: "Unstuck", href: "/user-panel/unstuck" },
       { label: "Clear PK", href: "/user-panel/clear-pk" },
     ],
   },
