@@ -4,12 +4,13 @@ import PageLayout from "@/components/page-layout";
 import { Button } from "@/components/ui/button";
 import {
   Drawer,
+  DrawerClose,
   DrawerContent,
   DrawerHeader,
   DrawerTitle,
 } from "@/components/ui/drawer";
 import { cn } from "@/lib/utils";
-import { Menu } from "lucide-react";
+import { Menu, XIcon } from "lucide-react";
 import * as React from "react";
 import { UserPanelNav } from "./user-panel-nav";
 
@@ -25,9 +26,9 @@ export function UserPanelShell({ children }: UserPanelShellProps) {
       <PageLayout
         as="div"
         variant="panel"
-        className="bg-card/80 border-border relative border-x backdrop-blur-md"
+        className="bg-card/80 border-border relative border-x px-6 backdrop-blur-md"
       >
-        <div className="grid grid-cols-1 md:grid-cols-12">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-12">
           <aside className="hidden md:col-span-4 md:block">
             <div className="sticky top-6">
               <UserPanelNav />
@@ -38,16 +39,19 @@ export function UserPanelShell({ children }: UserPanelShellProps) {
         </div>
       </PageLayout>
 
-      <Drawer open={open} onOpenChange={setOpen} direction="left">
-        <DrawerContent className="p-0">
-          <DrawerHeader className="sr-only">
-            <DrawerTitle className="sr-only">User panel navigation</DrawerTitle>
+      <Drawer open={open} onOpenChange={setOpen} direction="right">
+        <DrawerContent>
+          <DrawerHeader className="flex-row items-center justify-between">
+            <DrawerTitle>User panel</DrawerTitle>
+            <DrawerClose>
+              <span className="sr-only">Close</span>
+              <XIcon className="size-6" aria-hidden="true" />
+            </DrawerClose>
           </DrawerHeader>
 
-          <UserPanelNav
-            className="border-r-0"
-            onNavigate={() => setOpen(false)}
-          />
+          <div className="overflow-y-auto p-6">
+            <UserPanelNav onNavigate={() => setOpen(false)} />
+          </div>
         </DrawerContent>
       </Drawer>
 

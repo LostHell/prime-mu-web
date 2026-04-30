@@ -20,8 +20,8 @@ const NAV_GROUPS: NavGroup[] = [
     label: "Characters",
     items: [
       { label: "Overview", href: "/user-panel" },
-      { label: "Add Stats", href: "/user-panel/add-stats" },
-      { label: "Reset", href: "/user-panel/reset" },
+      { label: "Add stats", href: "/user-panel/add-stats" },
+      { label: "Reset character", href: "/user-panel/reset" },
       { label: "Clear PK", href: "/user-panel/clear-pk" },
     ],
   },
@@ -30,7 +30,7 @@ const NAV_GROUPS: NavGroup[] = [
     items: [
       { label: "Browse", href: "/user-panel/market" },
       { label: "Sell an item", href: "/user-panel/market/sell" },
-      { label: "My Listings", href: "/user-panel/market/listed" },
+      { label: "My listings", href: "/user-panel/market/listed" },
       { label: "Sold items", href: "/user-panel/market/sold" },
       { label: "Purchased items", href: "/user-panel/market/bought" },
     ],
@@ -42,8 +42,8 @@ const NAV_GROUPS: NavGroup[] = [
   {
     label: "Account",
     items: [
-      { label: "Change Password", href: "/user-panel/change-password" },
-      { label: "Change Email", href: "/user-panel/change-email" },
+      { label: "Change password", href: "/user-panel/account/change-password" },
+      { label: "Change email", href: "/user-panel/account/change-email" },
     ],
   },
 ];
@@ -63,7 +63,7 @@ export function UserPanelNav({ onNavigate, className }: UserPanelNavProps) {
   };
 
   return (
-    <nav className={cn("animate-fade-in h-full px-4", className)}>
+    <nav className={cn("animate-fade-in h-full", className)}>
       <div className="grid grid-cols-1 gap-6">
         {NAV_GROUPS.map((group) => (
           <div key={group.label}>

@@ -129,10 +129,6 @@ function BuyableListingCard({
                 </>
               )}
             </Button>
-
-            <p className="text-muted-foreground mt-3 text-center text-xs">
-              Paid from your website zen balance once deposits are enabled.
-            </p>
           </form>
         )}
       </div>

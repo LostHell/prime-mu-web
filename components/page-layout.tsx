@@ -2,15 +2,15 @@ import { cn } from "@/lib/utils";
 import { cva, type VariantProps } from "class-variance-authority";
 import { HTMLAttributes } from "react";
 
-const pageLayoutVariants = cva("mx-auto px-4", {
+const pageLayoutVariants = cva("mx-auto", {
   variants: {
     variant: {
       /** Public marketing / content pages (top-players, download, home sections). */
-      public: "max-w-5xl py-28",
+      public: "max-w-5xl py-28  px-4",
       /** Narrow auth flows (login, register). */
-      auth: "max-w-md py-28",
+      auth: "max-w-md py-28 px-4",
       /** User-panel pages — used inside `app/user-panel/layout.tsx`'s `<main>`. */
-      panel: "max-w-5xl py-8",
+      panel: "max-w-5xl py-8 px-6",
     },
   },
   defaultVariants: {
