@@ -1,115 +1,12 @@
 "use client";
 
 import EmptyState from "@/components/empty-state";
-import { ItemCard } from "@/components/item-card";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { cancelMarketplaceListingAction } from "@/lib/actions/cancel-market-listing";
-import { MarketListing } from "@/lib/queries/get-marketplace-listings";
-import { CircleDollarSign, Loader2, ShoppingBag, X } from "lucide-react";
-import { useActionState } from "react";
+import type { MarketListing as Listing } from "@/lib/queries/get-marketplace-listings";
+import { ShoppingBag } from "lucide-react";
+import MarketListing from "../../_components/market-listing";
 
 interface MyListingsProps {
-  listings: MarketListing[];
-}
-
-function ListingCard({ listing }: { listing: MarketListing }) {
-  const [state, formAction, isPending] = useActionState(
-    cancelMarketplaceListingAction,
-    {
-      success: false,
-      message: "",
-    },
-  );
-
-  const formattedDate = new Intl.DateTimeFormat("en-US", {
-    month: "short",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  }).format(listing.listedAt);
-
-  return (
-    <Card>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <div className="hover:bg-muted/20 flex w-full cursor-default items-center gap-4 p-4 text-left transition-colors">
-            <div className="bg-muted/30 flex h-12 w-12 shrink-0 items-center justify-center rounded-lg">
-              <div
-                className={`text-xs font-medium ${listing.item.excellent > 0 ? "text-sky-400" : "text-gold"}`}
-              >
-                +{listing.item.level}
-              </div>
-            </div>
-
-            <div className="min-w-0 flex-1">
-              <p
-                className={`truncate font-semibold ${listing.item.excellent > 0 ? "text-sky-400" : "text-gold"}`}
-              >
-                {listing.item.excellent > 0 ? "Exc " : ""}
-                {listing.item.name}
-              </p>
-              <p className="text-muted-foreground mt-0.5 text-xs">
-                Listed {formattedDate}
-              </p>
-            </div>
-
-            <div className="shrink-0 text-right">
-              <div className="text-gold flex items-center gap-1">
-                <CircleDollarSign className="size-4" />
-                <span className="font-bold tabular-nums">
-                  {listing.zenPrice?.toLocaleString() ?? "—"}
-                </span>
-              </div>
-              <p className="text-muted-foreground mt-0.5 text-[10px] tracking-wider uppercase">
-                Zen
-              </p>
-            </div>
-          </div>
-        </TooltipTrigger>
-        <TooltipContent className="bg-transparent p-0 shadow-none">
-          <ItemCard item={listing.item} />
-        </TooltipContent>
-      </Tooltip>
-
-      <div className="border-border/50 space-y-4 border-t p-4">
-        {state.message && (
-          <Alert variant={state.success ? "success" : "destructive"}>
-            <AlertDescription>{state.message}</AlertDescription>
-          </Alert>
-        )}
-
-        <form action={formAction}>
-          <input type="hidden" name="listingId" value={listing.id} />
-
-          <Button
-            type="submit"
-            variant="destructive"
-            disabled={isPending}
-            className="w-full"
-          >
-            {isPending ? (
-              <>
-                <Loader2 className="size-4 animate-spin" />
-                <span>Cancelling...</span>
-              </>
-            ) : (
-              <>
-                <X className="size-4" />
-                <span>Cancel Listing</span>
-              </>
-            )}
-          </Button>
-        </form>
-      </div>
-    </Card>
-  );
+  listings: Listing[];
 }
 
 export function MyListings({ listings }: MyListingsProps) {
@@ -137,9 +34,14 @@ export function MyListings({ listings }: MyListingsProps) {
         </h3>
       </div>
 
-      <div className="space-y-3">
+      <div className="flex flex-col gap-4">
         {listings.map((listing) => (
-          <ListingCard key={listing.id} listing={listing} />
+          <MarketListing
+            key={listing.id}
+            variant="listed"
+            listing={listing}
+            actions={<MarketListing.Cancel listing={listing} />}
+          />
         ))}
       </div>
 

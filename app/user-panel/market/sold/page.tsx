@@ -10,11 +10,11 @@ export default async function SoldItemsPage() {
     redirect("/login");
   }
 
-  const listings = await getMyListings(session.user.id, "sold");
+  const sales = await getMyListings(session.user.id, "sold");
 
   return (
     <MarketLayout>
-      <SoldItems listings={listings} />
+      <SoldItems sales={sales} />
     </MarketLayout>
   );
 }

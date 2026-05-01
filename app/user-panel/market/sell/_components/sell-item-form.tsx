@@ -1,14 +1,14 @@
 "use client";
 
 import { ItemCard } from "@/components/item-card";
+import {
+  ItemTooltip,
+  ItemTooltipContent,
+  ItemTooltipTrigger,
+} from "@/components/item-tooltip";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import { WarehouseGrid } from "@/components/warehouse";
 import { listMarketItemAction } from "@/lib/actions/list-market-item";
 import { WarehouseItem } from "@/lib/queries/get-warehouse-items";
@@ -54,30 +54,24 @@ export function SellItemForm({ warehouseItems }: SellItemFormProps) {
           {/* Selected Item Info */}
           <div className="border-border/50 bg-muted/20 overflow-visible rounded-xl border p-4">
             {selectedItem ? (
-              <Tooltip>
-                <TooltipTrigger asChild>
+              <ItemTooltip>
+                <ItemTooltipTrigger asChild>
                   <div className="-mx-1 cursor-default rounded-lg px-1 py-0.5">
                     <p className="text-muted-foreground mb-1 text-sm">
                       Selected item
                     </p>
                     <p
-                      className={`font-semibold ${selectedItem.excellent > 0 ? "text-sky-400" : "text-gold"}`}
+                      className={`font-semibold ${selectedItem.excellent > 0 ? "text-mu-tooltip-exc" : "text-gold"}`}
                     >
                       {selectedItem.excellent > 0 ? "Excellent " : ""}
                       {selectedItem.name} +{selectedItem.level}
                     </p>
-                    <p className="text-muted-foreground mt-2 text-xs">
-                      Size: {selectedItem.width}x{selectedItem.height} • Slot #
-                      {selectedItem.slot}
-                    </p>
                   </div>
-                </TooltipTrigger>
-                <TooltipContent
-                  className="bg-transparent p-0 shadow-none"
-                >
+                </ItemTooltipTrigger>
+                <ItemTooltipContent>
                   <ItemCard item={selectedItem} />
-                </TooltipContent>
-              </Tooltip>
+                </ItemTooltipContent>
+              </ItemTooltip>
             ) : (
               <div className="flex items-center gap-4">
                 <div className="bg-muted/50 flex h-16 w-16 shrink-0 items-center justify-center rounded-lg">

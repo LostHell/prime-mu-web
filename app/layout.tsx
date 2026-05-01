@@ -1,5 +1,6 @@
 import Footer from "@/components/footer";
 import Header from "@/components/header";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { BRAND } from "@/constants/app";
 import type { Metadata } from "next";
 import { Cinzel, Raleway } from "next/font/google";
@@ -34,12 +35,14 @@ const RootLayout = ({
       className={`${cinzel.variable} ${raleway.variable}`}
       suppressHydrationWarning
     >
-      <body className="bg-background text-foreground min-h-screen font-sans antialiased">
-        <div className="page-background" />
-        <Header />
-        {children}
-        <Footer />
-      </body>
+      <TooltipProvider>
+        <body className="bg-background text-foreground min-h-screen font-sans antialiased">
+          <div className="page-background" />
+          <Header />
+          {children}
+          <Footer />
+        </body>
+      </TooltipProvider>
     </html>
   );
 };

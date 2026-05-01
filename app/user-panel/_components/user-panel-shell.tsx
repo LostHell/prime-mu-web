@@ -29,13 +29,15 @@ export function UserPanelShell({ children }: UserPanelShellProps) {
         className="bg-card/80 border-border relative border-x px-6 backdrop-blur-md"
       >
         <div className="grid grid-cols-1 gap-6 md:grid-cols-12">
-          <aside className="hidden md:col-span-4 md:block">
+          <aside className="hidden md:col-span-4 md:block lg:col-span-3">
             <div className="sticky top-6">
               <UserPanelNav />
             </div>
           </aside>
 
-          <main className="min-w-0 md:col-span-8">{children}</main>
+          <main className="min-w-0 md:col-span-8 lg:col-span-9">
+            {children}
+          </main>
         </div>
       </PageLayout>
 

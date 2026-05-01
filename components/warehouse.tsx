@@ -1,6 +1,10 @@
 import { WarehouseItem } from "@/lib/queries/get-warehouse-items";
 import { ItemCard } from "./item-card";
-import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
+import {
+  ItemTooltip,
+  ItemTooltipContent,
+  ItemTooltipTrigger,
+} from "./item-tooltip";
 
 const WAREHOUSE_COLS = 8;
 const WAREHOUSE_ROWS = 15;
@@ -44,8 +48,8 @@ export function WarehouseGrid({
         const isSelected = selectedSlot === item.slot;
 
         return (
-          <Tooltip key={item.slot}>
-            <TooltipTrigger asChild>
+          <ItemTooltip key={item.slot}>
+            <ItemTooltipTrigger asChild>
               {/* design-system exception: warehouse cell mimics the in-game grid slot, not a generic <Button>. Keep the raw <button>. */}
               <button
                 type="button"
@@ -61,7 +65,7 @@ export function WarehouseGrid({
                   isSelected
                     ? "border-gold bg-gold/30 ring-gold z-10 ring-2"
                     : "border-gold-dim/50 bg-card hover:border-gold/50 hover:bg-gold/10 cursor-pointer"
-                } ${item.excellent > 0 ? "text-sky-400" : "text-gold/90"} `}
+                } ${item.excellent > 0 ? "text-mu-tooltip-exc" : "text-gold/90"} `}
                 title={`${item.name} +${item.level}`}
               >
                 <span className="line-clamp-2 text-center text-[9px] leading-tight font-medium">
@@ -70,13 +74,11 @@ export function WarehouseGrid({
                     : item.name}
                 </span>
               </button>
-            </TooltipTrigger>
-            <TooltipContent
-              className="bg-transparent p-0 shadow-none"
-            >
+            </ItemTooltipTrigger>
+            <ItemTooltipContent>
               <ItemCard item={item} />
-            </TooltipContent>
-          </Tooltip>
+            </ItemTooltipContent>
+          </ItemTooltip>
         );
       })}
     </div>
