@@ -1,5 +1,6 @@
 "use client";
 
+import { Field, FieldLabel } from "@/components/ui/field";
 import {
   Select,
   SelectContent,
@@ -79,78 +80,81 @@ export function CharacterSelector({
   const selected = selectedCharacter;
 
   return (
-    <Select value={selected?.name ?? ""} onValueChange={handleSelect}>
-      <SelectTrigger className="bg-card border-gold-dim/50 hover:border-gold/50 h-auto w-full p-4 transition-colors [&>span]:flex [&>span]:w-full [&>span]:items-center [&>span]:gap-3">
-        <SelectValue id="characterSelector" placeholder="Select a character">
-          {selected ? (
-            <>
-              <div className="min-w-0 text-left">
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="font-semibold">{selected.name}</span>
-                  <span className="text-[10px] tracking-wide uppercase">
-                    {selected.class}
-                  </span>
-                </div>
-                <div className="text-muted-foreground mt-0.5 flex gap-3 text-xs">
-                  {relevantFields.slice(0, 3).map((field) => (
-                    <span key={field}>
-                      {FIELD_LABELS[field]}:{" "}
-                      <span className="text-gold">
-                        {formatFieldValue(selected, field)}
-                      </span>
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </>
-          ) : (
-            <>
-              <div className="bg-muted/50 flex h-12 w-10 shrink-0 items-center justify-center rounded-lg">
-                <User className="text-muted-foreground size-5" />
-              </div>
-              <div className="text-left">
-                <div className="text-muted-foreground font-medium">
-                  Select a character
-                </div>
-                <div className="text-muted-foreground/70 text-xs">
-                  {characters.length} available
-                </div>
-              </div>
-            </>
-          )}
-        </SelectValue>
-      </SelectTrigger>
-
-      <SelectContent className="min-w-(--radix-select-trigger-width) p-2">
-        {characters.map((character) => {
-          return (
-            <SelectItem
-              key={character.name}
-              value={character.name}
-              className="cursor-pointer rounded-lg p-3 [&>span:first-child]:hidden"
-            >
-              <div className="flex items-center gap-3">
-                <div className="min-w-0">
-                  <div className="flex items-center gap-2">
-                    <span className="font-medium">{character.name}</span>
+    <Field>
+      <FieldLabel htmlFor="characterSelector">Select Character</FieldLabel>
+      <Select value={selected?.name ?? ""} onValueChange={handleSelect}>
+        <SelectTrigger className="bg-card border-gold-dim/50 hover:border-gold/50 h-auto w-full p-4 transition-colors [&>span]:flex [&>span]:w-full [&>span]:items-center [&>span]:gap-3">
+          <SelectValue id="characterSelector" placeholder="Select a character">
+            {selected ? (
+              <>
+                <div className="min-w-0 text-left">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="font-semibold">{selected.name}</span>
                     <span className="text-[10px] tracking-wide uppercase">
-                      {character.class}
+                      {selected.class}
                     </span>
                   </div>
                   <div className="text-muted-foreground mt-0.5 flex gap-3 text-xs">
-                    {relevantFields.slice(0, 5).map((field) => (
+                    {relevantFields.slice(0, 3).map((field) => (
                       <span key={field}>
                         {FIELD_LABELS[field]}:{" "}
-                        {formatFieldValue(character, field)}
+                        <span className="text-gold">
+                          {formatFieldValue(selected, field)}
+                        </span>
                       </span>
                     ))}
                   </div>
                 </div>
-              </div>
-            </SelectItem>
-          );
-        })}
-      </SelectContent>
-    </Select>
+              </>
+            ) : (
+              <>
+                <div className="bg-muted/50 flex h-12 w-10 shrink-0 items-center justify-center rounded-lg">
+                  <User className="text-muted-foreground size-5" />
+                </div>
+                <div className="text-left">
+                  <div className="text-muted-foreground font-medium">
+                    Select a character
+                  </div>
+                  <div className="text-muted-foreground/70 text-xs">
+                    {characters.length} available
+                  </div>
+                </div>
+              </>
+            )}
+          </SelectValue>
+        </SelectTrigger>
+
+        <SelectContent className="min-w-(--radix-select-trigger-width) p-2">
+          {characters.map((character) => {
+            return (
+              <SelectItem
+                key={character.name}
+                value={character.name}
+                className="cursor-pointer rounded-lg p-3 [&>span:first-child]:hidden"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2">
+                      <span className="font-medium">{character.name}</span>
+                      <span className="text-[10px] tracking-wide uppercase">
+                        {character.class}
+                      </span>
+                    </div>
+                    <div className="text-muted-foreground mt-0.5 flex gap-3 text-xs">
+                      {relevantFields.slice(0, 5).map((field) => (
+                        <span key={field}>
+                          {FIELD_LABELS[field]}:{" "}
+                          {formatFieldValue(character, field)}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </SelectItem>
+            );
+          })}
+        </SelectContent>
+      </Select>
+    </Field>
   );
 }

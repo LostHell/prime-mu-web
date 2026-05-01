@@ -4,10 +4,10 @@ import EmptyState from "@/components/empty-state";
 import { ItemCard } from "@/components/item-card";
 import { Card } from "@/components/ui/card";
 import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/ui/hover-card";
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { MarketListing } from "@/lib/queries/get-marketplace-listings";
 import { CircleDollarSign, Receipt } from "lucide-react";
 
@@ -27,8 +27,8 @@ function SoldItemCard({ listing }: { listing: MarketListing }) {
 
   return (
     <Card>
-      <HoverCard>
-        <HoverCardTrigger asChild>
+      <Tooltip>
+        <TooltipTrigger asChild>
           <div className="hover:bg-muted/20 flex w-full cursor-default items-center gap-4 p-4 text-left transition-colors">
             <div className="bg-online/10 flex h-12 w-12 shrink-0 items-center justify-center rounded-lg">
               <Receipt className="text-online size-5" />
@@ -72,11 +72,11 @@ function SoldItemCard({ listing }: { listing: MarketListing }) {
               </p>
             </div>
           </div>
-        </HoverCardTrigger>
-        <HoverCardContent>
+        </TooltipTrigger>
+        <TooltipContent className="bg-transparent p-0 shadow-none">
           <ItemCard item={listing.item} />
-        </HoverCardContent>
-      </HoverCard>
+        </TooltipContent>
+      </Tooltip>
     </Card>
   );
 }

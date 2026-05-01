@@ -1,12 +1,11 @@
 "use client";
 
-import { Card, CardContent } from "@/components/ui/card";
-import { Field, FieldLabel } from "@/components/ui/field";
 import Headline from "@/components/ui/headline";
 import Text from "@/components/ui/text";
 import { type Character } from "@/lib/types/character";
 import { useUserPanel } from "../_context/user-panel-context";
 import { CharacterSelector, RelevantField } from "./character-selector";
+import { LayoutCard } from "./layout-card";
 
 interface ActionPageLayoutProps {
   title: string;
@@ -32,17 +31,10 @@ export function ActionPageLayout({
         {description && <Text variant="small">{description}</Text>}
       </Headline>
 
-      <Card>
-        <CardContent>
-          <Field className="mb-2">
-            <FieldLabel htmlFor="characterSelector">
-              Select Character
-            </FieldLabel>
-          </Field>
-          <CharacterSelector relevantFields={relevantFields} />
-          {selectedCharacter && children(selectedCharacter)}
-        </CardContent>
-      </Card>
+      <LayoutCard>
+        <CharacterSelector relevantFields={relevantFields} />
+        {selectedCharacter && children(selectedCharacter)}
+      </LayoutCard>
     </>
   );
 }
