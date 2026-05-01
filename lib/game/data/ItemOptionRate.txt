@@ -1,3 +1,21 @@
+// =====================================================
+// ItemOptionRate usage guide
+// =====================================================
+// EventItemBag section 4 rows use these indexes:
+// - LevelRate     -> section 0 (Level option)
+// - SkillRate     -> section 1 (Skill option)
+// - LuckRate      -> section 2 (Luck option)
+// - OptionRate    -> section 3 (Additional/JoL option)
+// - ExcellentRate -> section 4 (Excellent option count)
+//
+// IMPORTANT:
+// - The number in EventItemBag is an INDEX, not a percent.
+// - Rate values are weights (usually sum close to 10000).
+// - Higher weight means higher chance for that result slot.
+
+// Section 0: Level option distribution
+// - Controls resulting item level (+0 ~ +11)
+// - In this section: Rate0 = +0, Rate1 = +1, ..., Rate11 = +11
 0
 //Index	Rate0	Rate1	Rate2	Rate3	Rate4	Rate5	Rate6	Rate7	Rate8	Rate9	Rate10	Rate11	Comment
 0	7000	1500	1000	500	0	0	0	0	0	0	0	0	//Level Option (Common)
@@ -35,8 +53,13 @@
 32	0	0	0	0	0	0	0	0	2500	2500	2500	2500	//Level Option (EventItemBag) (8~11)
 33	0	0	0	0	0	0	0	0	0	3334	3333	3333	//Level Option (EventItemBag) (9~11)
 34	834	834	834	834	833	833	833	833	833	833	833	833	//Level Option (Equitative)
+35	0	0	0	0	0	0	0	2000	2000	2000	2000	2000	//Level Option (EventItemBag) (7~11)
+36	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000	0	0	//Level Option (EventItemBag) (0~9)
 end
 
+// Section 1: Skill option distribution
+// - Controls skill flag on item (for items that can roll skill)
+// - In this section: Rate0 = no skill, Rate1 = skill
 1
 //Index	Rate0	Rate1	Comment
 0	9400	600	//Skill Option (Common)
@@ -48,6 +71,9 @@ end
 6	5000	5000	//Skill Option (Equitative)
 end
 
+// Section 2: Luck option distribution
+// - Controls luck flag on item
+// - In this section: Rate0 = no luck, Rate1 = luck
 2
 //Index	Rate0	Rate1	Comment
 0	9600	400	//Luck Option (Common)
@@ -61,6 +87,12 @@ end
 8	5000	5000	//Luck Option (Equitative)
 end
 
+// Section 3: Additional option (JoL/additional defense-damage)
+// - Controls additional option value
+// - In this section:
+//   Rate0 = +0, Rate1 = +4, Rate2 = +8, Rate3 = +12,
+//   Rate4 = +16, Rate5 = +20, Rate6 = +24, Rate7 = +28
+// - For normal S6 setup, commonly used range is up to +16
 3
 //Index	Rate0	Rate1	Rate2	Rate3	Rate4	Rate5	Rate6	Rate7	Comment
 0	9600	150	100	50	0	0	0	0	//JoL Option (Common)
@@ -90,8 +122,15 @@ end
 24	0	0	0	0	0	3334	3333	3333	//JoL Option (EventItemBag) (5~7)
 25	0	0	0	0	0	0	5000	5000	//JoL Option (EventItemBag) (6~7)
 26	1250	1250	1250	1250	1250	1250	1250	1250	//JoL Option (Equitative)
+27	2000	2000	2000	2000	2000	0	0	0	//JoL Option (EventItemBag) (0~4 => +0~+16)
 end
 
+// Section 4: Excellent option count distribution
+// - Controls how many excellent options are generated
+// - In this section:
+//   Rate0 = 0 excellent, Rate1 = 1, ..., Rate6 = 6
+// - Which exact excellent options appear is handled by item system,
+//   this table controls only the count.
 4
 //Index	Rate0	Rate1	Rate2	Rate3	Rate4	Rate5	Rate6	Comment
 0	10000	0	0	0	0	0	0	//Exc Option (Common)
@@ -118,4 +157,5 @@ end
 21	0	0	0	0	3334	3333	3333	//Exc Option (EventItemBag) (4~6)
 22	0	0	0	0	0	5000	5000	//Exc Option (EventItemBag) (5~6)
 23	1429	1429	1429	1429	1428	1428	1428	//Exc Option (Equitative)
+24	0	8000	2000	0	0	0	0	//Exc Option (EventItemBag) (1~2, lower 2-option chance)
 end
