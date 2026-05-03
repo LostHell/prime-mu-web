@@ -3,8 +3,9 @@ import {
   FILLED_SLOT_BG,
   WAREHOUSE_COLS,
   WAREHOUSE_ROWS,
-} from "@/lib/game/warehouse/constants";
-import { getOccupiedSlots } from "@/lib/game/warehouse/get-occupied-slots";
+  WAREHOUSE_SLOTS,
+} from "@/lib/game/constants/warehouse";
+import { getOccupiedSlots } from "@/lib/game/warehouse";
 import { WarehouseItem } from "@/lib/queries/get-warehouse-items";
 import { cn } from "@/lib/utils";
 import { ItemCard } from "./item-card";
@@ -36,7 +37,7 @@ export function WarehouseGrid({
       }}
     >
       {/* Empty grid cells as background */}
-      {Array.from({ length: WAREHOUSE_ROWS * WAREHOUSE_COLS }).map((_, i) => {
+      {Array.from({ length: WAREHOUSE_SLOTS }).map((_, i) => {
         const bgUrl = takenSlots.has(i) ? FILLED_SLOT_BG : EMPTY_SLOT_BG;
         return (
           <div

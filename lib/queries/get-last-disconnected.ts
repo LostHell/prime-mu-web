@@ -1,4 +1,5 @@
-import { CHARACTER_CLASS_BY_ID, MAP_NAME_BY_ID } from "@/lib/game/constants/game";
+import { CHARACTER_CLASS_BY_ID } from "@/lib/game/constants/characters";
+import { MAP_NAME_BY_ID } from "@/lib/game/constants/maps";
 import { CharacterClass } from "@/lib/types/character";
 import { prisma } from "@/prisma/prisma";
 
