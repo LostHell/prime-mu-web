@@ -1,6 +1,7 @@
-import { getItemDefinition, getItemName } from "@/lib/game/item-database";
+import { getItemDefinition } from "@/lib/game/item-database";
+import { type ItemDefinition } from "@/lib/game/item-database/types";
 import { decodeWarehouseItems } from "@/lib/game/item-decoder";
-import { DecodedItem, ItemDefinition } from "@/lib/types/item";
+import { DecodedItem } from "@/lib/types/item";
 import { prisma } from "@/prisma/prisma";
 
 export type ListingItem = DecodedItem &
@@ -41,7 +42,7 @@ function decodeItemFromHex(itemHex: Buffer): ListingItem | null {
   return {
     ...decoded,
     slot: 0,
-    name: def?.name ?? getItemName(decoded.group, decoded.index),
+    name: def?.name ?? "Unknown item",
     width: def?.width ?? 1,
     height: def?.height ?? 1,
     defense: def?.defense,
