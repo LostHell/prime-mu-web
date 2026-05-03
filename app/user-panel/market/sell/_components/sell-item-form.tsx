@@ -10,9 +10,9 @@ import {
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { WarehouseGrid } from "@/components/warehouse";
+import { WarehouseGrid } from "@/components/warehouse-grid";
 import { listMarketItemAction } from "@/lib/actions/list-market-item";
-import { WarehouseItem } from "@/lib/queries/get-warehouse-items";
+import { type WarehouseItem } from "@/lib/types/warehouse";
 import { CircleDollarSign, Loader2, Package } from "lucide-react";
 import { useActionState, useState } from "react";
 
@@ -20,7 +20,9 @@ interface SellItemFormProps {
   warehouseItems: WarehouseItem[];
 }
 
-export function SellItemForm({ warehouseItems }: SellItemFormProps) {
+export function SellItemForm({
+  warehouseItems,
+}: SellItemFormProps) {
   const [selectedSlot, setSelectedSlot] = useState<number | null>(null);
   const [zenPrice, setZenPrice] = useState("");
 
@@ -45,7 +47,7 @@ export function SellItemForm({ warehouseItems }: SellItemFormProps) {
         {/* Warehouse Grid */}
         <div>
           <WarehouseGrid
-            items={warehouseItems}
+            warehouseItems={warehouseItems}
             selectedSlot={selectedSlot}
             onSelectSlot={setSelectedSlot}
           />

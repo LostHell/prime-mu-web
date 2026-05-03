@@ -2,7 +2,7 @@ import {
   type ItemClassFlags,
   type ItemDefinition,
 } from "@/lib/game/item-database/types";
-import { DecodedItem } from "@/lib/types/item";
+import { type DecodedItem } from "@/lib/game/item-decoder/types";
 import { cn } from "@/lib/utils";
 import { ItemIcon } from "./item-icon";
 

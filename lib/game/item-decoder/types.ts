@@ -1,3 +1,5 @@
+export type BinaryItemData = Buffer | Uint8Array;
+
 export type DecodedItem = {
   slot: number;
   group: number;

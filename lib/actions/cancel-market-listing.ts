@@ -2,7 +2,7 @@
 
 import { getItemDefinition } from "@/lib/game/item-database";
 import {
-  decodeWarehouseItems,
+  decodeItem,
   findFreeArea,
   writeItemToSlot,
 } from "@/lib/game/item-decoder";
@@ -46,13 +46,10 @@ export async function cancelMarketplaceListingAction(
     return { success: false, message: "You do not own this listing." };
   }
 
-  const itemHex = Buffer.from(listing.itemHex);
-  const decodedItems = decodeWarehouseItems(itemHex);
-  if (decodedItems.length === 0) {
+  const decodedItem = decodeItem(Buffer.from(listing.itemHex));
+  if (!decodedItem) {
     return { success: false, message: "Could not decode item data." };
   }
-
-  const decodedItem = decodedItems[0];
   const itemDef = getItemDefinition(decodedItem.group, decodedItem.index);
   const itemWidth = itemDef?.width ?? 1;
   const itemHeight = itemDef?.height ?? 1;
@@ -76,8 +73,11 @@ export async function cancelMarketplaceListingAction(
     };
   }
 
-  const itemBytes = Array.from(listing.itemHex as Buffer);
-  const updatedBuffer = writeItemToSlot(warehouseBuffer, freeSlot, itemBytes);
+  const updatedBuffer = writeItemToSlot(
+    warehouseBuffer,
+    freeSlot,
+    listing.itemHex,
+  );
 
   await prisma.$transaction(async (tx) => {
     await tx.warehouse.update({

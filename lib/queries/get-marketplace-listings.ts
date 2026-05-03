@@ -1,7 +1,7 @@
 import { getItemDefinition } from "@/lib/game/item-database";
 import { type ItemDefinition } from "@/lib/game/item-database/types";
-import { decodeWarehouseItems } from "@/lib/game/item-decoder";
-import { DecodedItem } from "@/lib/types/item";
+import { decodeItem } from "@/lib/game/item-decoder";
+import { type DecodedItem } from "@/lib/game/item-decoder/types";
 import { prisma } from "@/prisma/prisma";
 
 export type ListingItem = DecodedItem &
@@ -33,14 +33,12 @@ export type MarketListing = {
 };
 
 function decodeItemFromHex(itemHex: Buffer): ListingItem | null {
-  const items = decodeWarehouseItems(itemHex);
-  if (items.length === 0) return null;
-
-  const decoded = items[0];
-  const def = getItemDefinition(decoded.group, decoded.index);
+  const decodedItem = decodeItem(itemHex);
+  if (!decodedItem) return null;
+  const def = getItemDefinition(decodedItem.group, decodedItem.index);
 
   return {
-    ...decoded,
+    ...decodedItem,
     slot: 0,
     name: def?.name ?? "Unknown item",
     width: def?.width ?? 1,

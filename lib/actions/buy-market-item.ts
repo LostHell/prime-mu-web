@@ -2,7 +2,7 @@
 
 import { getItemDefinition } from "@/lib/game/item-database";
 import {
-  decodeWarehouseItems,
+  decodeItem,
   findFreeArea,
   writeItemToSlot,
 } from "@/lib/game/item-decoder";
@@ -61,13 +61,11 @@ export async function buyMarketItemAction(
 
   const price = listing.zenPrice;
 
-  const itemHexBuf = Buffer.from(listing.itemHex);
-  const decodedItems = decodeWarehouseItems(itemHexBuf);
-  if (decodedItems.length === 0) {
+  const decodedItem = decodeItem(Buffer.from(listing.itemHex));
+  if (!decodedItem) {
     return { success: false, message: "Could not decode item data." };
   }
-  const decoded = decodedItems[0];
-  const itemDef = getItemDefinition(decoded.group, decoded.index);
+  const itemDef = getItemDefinition(decodedItem.group, decodedItem.index);
   const itemWidth = itemDef?.width ?? 1;
   const itemHeight = itemDef?.height ?? 1;
 
@@ -90,8 +88,11 @@ export async function buyMarketItemAction(
     };
   }
 
-  const itemBytes = Array.from(listing.itemHex as Buffer);
-  const updatedBuyerBuffer = writeItemToSlot(buyerBuffer, freeSlot, itemBytes);
+  const updatedBuyerBuffer = writeItemToSlot(
+    buyerBuffer,
+    freeSlot,
+    listing.itemHex,
+  );
 
   await prisma.$transaction(async (tx) => {
     // TODO(deposits): Withdraw `price` zen from the buyer's website / deposit balance (account-level),

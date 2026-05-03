@@ -1,24 +1,7 @@
 import { getItemDefinition } from "@/lib/game/item-database";
-import { type ItemDefinition } from "@/lib/game/item-database/types";
-import { decodeWarehouseItems } from "@/lib/game/item-decoder";
-import { DecodedItem } from "@/lib/types/item";
+import { decodeItems } from "@/lib/game/item-decoder";
 import { prisma } from "@/prisma/prisma";
-
-export type WarehouseItem = DecodedItem &
-  Pick<
-    ItemDefinition,
-    | "defense"
-    | "defRate"
-    | "dmgMin"
-    | "dmgMax"
-    | "reqStr"
-    | "reqAgi"
-    | "classFlags"
-  > & {
-    name: string;
-    width: number;
-    height: number;
-  };
+import { type WarehouseItem } from "../types/warehouse";
 
 export async function getWarehouseItems(
   accountId: string,
@@ -28,11 +11,12 @@ export async function getWarehouseItems(
     select: { Items: true },
   });
 
-  if (!warehouse?.Items) return [];
+  if (!warehouse?.Items)
+    return [];
 
-  const decoded = decodeWarehouseItems(Buffer.from(warehouse.Items));
+  const decodedItems = decodeItems(Buffer.from(warehouse.Items));
 
-  return decoded.map((item) => {
+  const warehouseItems = decodedItems.map((item) => {
     const def = getItemDefinition(item.group, item.index);
     return {
       ...item,
@@ -48,4 +32,6 @@ export async function getWarehouseItems(
       classFlags: def?.classFlags,
     };
   });
+
+  return warehouseItems;
 }

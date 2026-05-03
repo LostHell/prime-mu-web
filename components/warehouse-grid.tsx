@@ -6,7 +6,7 @@ import {
   WAREHOUSE_SLOTS,
 } from "@/lib/game/constants/warehouse";
 import { getOccupiedSlots } from "@/lib/game/warehouse";
-import { WarehouseItem } from "@/lib/queries/get-warehouse-items";
+import { type WarehouseItem } from "@/lib/types/warehouse";
 import { cn } from "@/lib/utils";
 import { ItemCard } from "./item-card";
 import { ItemIcon } from "./item-icon";
@@ -17,15 +17,19 @@ import {
 } from "./item-tooltip";
 
 export function WarehouseGrid({
-  items,
+  warehouseItems,
   selectedSlot,
   onSelectSlot,
 }: {
-  items: WarehouseItem[];
+  warehouseItems: WarehouseItem[];
   selectedSlot: number | null;
   onSelectSlot: (slot: number) => void;
 }) {
-  const takenSlots = getOccupiedSlots(items);
+  const occupiedSlots = getOccupiedSlots(warehouseItems.map((item) => ({
+    slot: item.slot,
+    width: item.width,
+    height: item.height,
+  })));
 
   return (
     <div
@@ -38,7 +42,7 @@ export function WarehouseGrid({
     >
       {/* Empty grid cells as background */}
       {Array.from({ length: WAREHOUSE_SLOTS }).map((_, i) => {
-        const bgUrl = takenSlots.has(i) ? FILLED_SLOT_BG : EMPTY_SLOT_BG;
+        const bgUrl = occupiedSlots.has(i) ? FILLED_SLOT_BG : EMPTY_SLOT_BG;
         return (
           <div
             key={`cell-${i}`}
@@ -55,7 +59,7 @@ export function WarehouseGrid({
       })}
 
       {/* Items overlaid on grid */}
-      {items.map((item) => {
+      {warehouseItems.map((item) => {
         const startRow = Math.floor(item.slot / WAREHOUSE_COLS);
         const startCol = item.slot % WAREHOUSE_COLS;
         const isSelected = selectedSlot === item.slot;

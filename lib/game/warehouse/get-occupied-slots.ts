@@ -1,8 +1,14 @@
-import { WarehouseItem } from "@/lib/queries/get-warehouse-items";
-import { WAREHOUSE_COLS } from "./constants";
+import { WAREHOUSE_COLS } from "@/lib/game/constants/warehouse";
 
-export const getOccupiedSlots = (items: WarehouseItem[]): Set<number> => {
+type OccupancyItem = {
+  slot: number;
+  width: number;
+  height: number;
+};
+
+export const getOccupiedSlots = (items: OccupancyItem[]): Set<number> => {
   const set = new Set<number>();
+
   for (const item of items) {
     const startRow = Math.floor(item.slot / WAREHOUSE_COLS);
     const startCol = item.slot % WAREHOUSE_COLS;
