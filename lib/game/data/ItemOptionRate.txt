@@ -157,5 +157,5 @@ end
 21	0	0	0	0	3334	3333	3333	//Exc Option (EventItemBag) (4~6)
 22	0	0	0	0	0	5000	5000	//Exc Option (EventItemBag) (5~6)
 23	1429	1429	1429	1429	1428	1428	1428	//Exc Option (Equitative)
-24	0	8000	2000	0	0	0	0	//Exc Option (EventItemBag) (1~2, lower 2-option chance)
+24	0	7000	3000	0	0	0	0	//Exc Option (EventItemBag) (1~2, lower 2-option chance)
 end

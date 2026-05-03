@@ -414,7 +414,6 @@ end
 24	-1	0	1	2	1	1	0	"Broken Sword"					0	0
 25	-1	0	1	1	1	1	0	"Tear of Elf"					0	0
 26	-1	0	1	1	1	1	0	"Soul Shard of Wizard"					0	0
-27	-1	0	1	1	1	1	0	"Box of Kundun"					0	0
 end
 
 //=====================================
