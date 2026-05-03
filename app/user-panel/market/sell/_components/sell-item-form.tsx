@@ -1,6 +1,7 @@
 "use client";
 
 import { ItemCard } from "@/components/item-card";
+import { ItemIcon } from "@/components/item-icon";
 import {
   ItemTooltip,
   ItemTooltipContent,
@@ -56,16 +57,26 @@ export function SellItemForm({ warehouseItems }: SellItemFormProps) {
             {selectedItem ? (
               <ItemTooltip>
                 <ItemTooltipTrigger asChild>
-                  <div className="-mx-1 cursor-default rounded-lg px-1 py-0.5">
-                    <p className="text-muted-foreground mb-1 text-sm">
-                      Selected item
-                    </p>
-                    <p
-                      className={`font-semibold ${selectedItem.excellent > 0 ? "text-mu-tooltip-exc" : "text-gold"}`}
-                    >
-                      {selectedItem.excellent > 0 ? "Excellent " : ""}
-                      {selectedItem.name} +{selectedItem.level}
-                    </p>
+                  <div className="-mx-1 flex cursor-default items-start gap-3 rounded-lg px-1 py-0.5">
+                    <div className="border-border/50 bg-muted/50 flex size-14 shrink-0 items-center justify-center overflow-hidden rounded-lg border">
+                      <ItemIcon
+                        group={selectedItem.group}
+                        index={selectedItem.index}
+                        level={selectedItem.level}
+                        className="size-full"
+                      />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-muted-foreground mb-1 text-sm">
+                        Selected item
+                      </p>
+                      <p
+                        className={`font-semibold ${selectedItem.excellent > 0 ? "text-mu-tooltip-exc" : "text-gold"}`}
+                      >
+                        {selectedItem.excellent > 0 ? "Excellent " : ""}
+                        {selectedItem.name} +{selectedItem.level}
+                      </p>
+                    </div>
                   </div>
                 </ItemTooltipTrigger>
                 <ItemTooltipContent>

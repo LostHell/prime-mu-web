@@ -1,13 +1,19 @@
+import {
+  EMPTY_SLOT_BG,
+  FILLED_SLOT_BG,
+  WAREHOUSE_COLS,
+  WAREHOUSE_ROWS,
+} from "@/lib/game/warehouse/constants";
+import { getOccupiedSlots } from "@/lib/game/warehouse/get-occupied-slots";
 import { WarehouseItem } from "@/lib/queries/get-warehouse-items";
+import { cn } from "@/lib/utils";
 import { ItemCard } from "./item-card";
+import { ItemIcon } from "./item-icon";
 import {
   ItemTooltip,
   ItemTooltipContent,
   ItemTooltipTrigger,
 } from "./item-tooltip";
-
-const WAREHOUSE_COLS = 8;
-const WAREHOUSE_ROWS = 15;
 
 export function WarehouseGrid({
   items,
@@ -18,28 +24,34 @@ export function WarehouseGrid({
   selectedSlot: number | null;
   onSelectSlot: (slot: number) => void;
 }) {
+  const takenSlots = getOccupiedSlots(items);
+
   return (
     <div
-      className="border-border/50 bg-muted/10 relative rounded-xl border p-2"
       style={{
         display: "grid",
         gridTemplateColumns: `repeat(${WAREHOUSE_COLS}, 1fr)`,
         gridTemplateRows: `repeat(${WAREHOUSE_ROWS}, 1fr)`,
-        gap: "2px",
         aspectRatio: `${WAREHOUSE_COLS} / ${WAREHOUSE_ROWS}`,
       }}
     >
       {/* Empty grid cells as background */}
-      {Array.from({ length: WAREHOUSE_ROWS * WAREHOUSE_COLS }).map((_, i) => (
-        <div
-          key={`bg-${i}`}
-          className="border-border/20 bg-muted/5 rounded-sm border"
-          style={{
-            gridRow: Math.floor(i / WAREHOUSE_COLS) + 1,
-            gridColumn: (i % WAREHOUSE_COLS) + 1,
-          }}
-        />
-      ))}
+      {Array.from({ length: WAREHOUSE_ROWS * WAREHOUSE_COLS }).map((_, i) => {
+        const bgUrl = takenSlots.has(i) ? FILLED_SLOT_BG : EMPTY_SLOT_BG;
+        return (
+          <div
+            key={`cell-${i}`}
+            aria-hidden
+            style={{
+              gridRow: Math.floor(i / WAREHOUSE_COLS) + 1,
+              gridColumn: (i % WAREHOUSE_COLS) + 1,
+              backgroundImage: `url(${bgUrl})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+            }}
+          />
+        );
+      })}
 
       {/* Items overlaid on grid */}
       {items.map((item) => {
@@ -59,20 +71,21 @@ export function WarehouseGrid({
                   gridRowEnd: startRow + 1 + item.height,
                   gridColumnStart: startCol + 1,
                   gridColumnEnd: startCol + 1 + item.width,
-                  zIndex: isSelected ? 10 : 5,
                 }}
-                className={`relative flex h-full w-full items-center justify-center overflow-hidden rounded border p-0.5 transition-all ${
+                className={cn(
+                  "focus-visible:ring-gold hover:bg-black/20 relative flex h-full w-full flex-col items-stretch justify-between overflow-hidden rounded-md border-0 transition-colors outline-none focus-visible:ring-2 focus-visible:ring-inset",
                   isSelected
-                    ? "border-gold bg-gold/30 ring-gold z-10 ring-2"
-                    : "border-gold-dim/50 bg-card hover:border-gold/50 hover:bg-gold/10 cursor-pointer"
-                } ${item.excellent > 0 ? "text-mu-tooltip-exc" : "text-gold/90"} `}
-                title={`${item.name} +${item.level}`}
+                    ? "bg-black/20 ring-gold z-10 ring-2 ring-inset"
+                    : "cursor-pointer",
+                )}
+                aria-label={`Select item ${item.name} +${item.level}`}
               >
-                <span className="line-clamp-2 text-center text-[9px] leading-tight font-medium">
-                  {item.name.length > 12
-                    ? item.name.split(" ").slice(0, 2).join(" ")
-                    : item.name}
-                </span>
+                <ItemIcon
+                  group={item.group}
+                  index={item.index}
+                  level={item.level}
+                  className="flex-1"
+                />
               </button>
             </ItemTooltipTrigger>
             <ItemTooltipContent>

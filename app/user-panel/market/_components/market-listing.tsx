@@ -1,6 +1,7 @@
 "use client";
 
 import { ItemCard } from "@/components/item-card";
+import { ItemIcon } from "@/components/item-icon";
 import {
   ItemTooltip,
   ItemTooltipContent,
@@ -291,7 +292,12 @@ function MarketListingCard(props: MarketListingCardProps) {
               <ItemTooltip>
                 <ItemTooltipTrigger asChild>
                   <div className="border-border/50 bg-muted relative flex size-24 shrink-0 cursor-default items-center justify-center overflow-hidden rounded-lg border md:size-30">
-                    Image
+                    <ItemIcon
+                      group={item.group}
+                      index={item.index}
+                      level={item.level}
+                      className="size-full"
+                    />
                   </div>
                 </ItemTooltipTrigger>
                 <ItemTooltipContent>

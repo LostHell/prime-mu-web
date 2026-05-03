@@ -1,5 +1,6 @@
 import { DecodedItem, ItemClassFlags, ItemDefinition } from "@/lib/types/item";
 import { cn } from "@/lib/utils";
+import { ItemIcon } from "./item-icon";
 
 /** Tooltip palette (legacy MU / web shop style). Backed by `--mu-tooltip-*` and `--crimson` tokens. */
 const C = {
@@ -160,10 +161,13 @@ export function ItemCard({ item, compact = false }: ItemCardProps) {
         <div>{title}</div>
 
         <div className="flex justify-center py-0.5">
-          <div className="bg-muted/30 flex h-12 w-12 items-center justify-center rounded">
-            <span className="text-muted-foreground text-[10px]">
-              {item.width ?? 1}×{item.height ?? 1}
-            </span>
+          <div className="bg-muted/30 flex h-12 w-12 items-center justify-center overflow-hidden rounded">
+            <ItemIcon
+              group={item.group}
+              index={item.index}
+              level={item.level}
+              className="h-full w-full"
+            />
           </div>
         </div>
 
