@@ -16,7 +16,7 @@ export default function ChangePasswordPage() {
       title="Change Password"
       description="Update your account password"
     >
-      <form action={action} className="space-y-6">
+      <form action={action} className="space-y-4">
         <Field>
           <FieldLabel htmlFor="currentPassword">Current Password</FieldLabel>
           <Input
@@ -37,7 +37,7 @@ export default function ChangePasswordPage() {
             type="password"
             id="newPassword"
             name="newPassword"
-            placeholder="6-10 characters"
+            placeholder="Enter new password"
             disabled={isPending}
           />
           {state.errors?.newPassword && (
@@ -53,7 +53,7 @@ export default function ChangePasswordPage() {
             type="password"
             id="confirmPassword"
             name="confirmPassword"
-            placeholder="Repeat new password"
+            placeholder="Confirm new password"
             disabled={isPending}
           />
           {state.errors?.confirmPassword && (
