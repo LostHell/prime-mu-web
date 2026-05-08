@@ -1,3 +1,4 @@
+import { HIDE_ITEM_DMG_DEF_AND_STATS } from "@/constants/items";
 import {
   type ItemClassFlags,
   type ItemDefinition,
@@ -175,23 +176,24 @@ export function ItemCard({ item, compact = false }: ItemCardProps) {
           </div>
         </div>
 
-        <div className={cn("space-y-0.5", C.muted)}>
-          {item.defense !== undefined && (
-            <p>Defense: {item.defense + item.addOption}</p>
-          )}
-          {isShield && item.defRate !== undefined && (
-            <p>Defense rate: {item.defRate}</p>
-          )}
-          {item.dmgMin !== undefined && item.dmgMax !== undefined && (
-            <p>
-              Damage: {item.dmgMin + item.addOption} ~{" "}
-              {item.dmgMax + item.addOption}
-            </p>
-          )}
-          {item.reqStr !== undefined && <p>Strength required {item.reqStr}</p>}
-          {item.reqAgi !== undefined && <p>Agility required {item.reqAgi}</p>}
-          <p>Durability: {item.durability}</p>
-        </div>
+        {!HIDE_ITEM_DMG_DEF_AND_STATS && (
+          <div className={cn("space-y-0.5", C.muted)}>
+            {isShield && item.defRate !== undefined && (
+              <p>Defense rate: {item.defRate}</p>
+            )}
+            {item.dmgMin !== undefined && item.dmgMax !== undefined && (
+              <p>
+                Damage: {item.dmgMin + item.addOption} ~{" "}
+                {item.dmgMax + item.addOption}
+              </p>
+            )}
+            {item.reqStr !== undefined && (
+              <p>Strength required {item.reqStr}</p>
+            )}
+            {item.reqAgi !== undefined && <p>Agility required {item.reqAgi}</p>}
+            <p>Durability: {item.durability}</p>
+          </div>
+        )}
 
         {classNames.length > 0 && (
           <div className="space-y-0.5">
