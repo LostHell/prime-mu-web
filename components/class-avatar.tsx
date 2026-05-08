@@ -558,7 +558,10 @@ function DarkLordAvatar({ color }: { color: string }) {
   );
 }
 
-const AVATARS: Record<CharacterClass, React.ComponentType<{ color: string }>> = {
+const AVATARS: Record<
+  CharacterClass,
+  React.ComponentType<{ color: string }>
+> = {
   "Dark Knight": DarkKnightAvatar,
   "Blade Knight": DarkKnightAvatar,
   "Dark Wizard": DarkWizardAvatar,
@@ -571,11 +574,9 @@ const AVATARS: Record<CharacterClass, React.ComponentType<{ color: string }>> = 
 
 const ClassAvatar = ({
   characterClass,
-  color,
   className,
 }: {
   characterClass: CharacterClass;
-  color: string;
   className?: string;
 }) => {
   const Avatar = AVATARS[characterClass];
@@ -583,9 +584,9 @@ const ClassAvatar = ({
   return (
     <div
       className={className}
-      style={{ filter: `drop-shadow(0 0 8px ${color}55)` }}
+      // style={{ filter: `drop-shadow(0 0 8px ${color}55)` }}
     >
-      <Avatar color={color} />
+      <Avatar color="" />
     </div>
   );
 };
