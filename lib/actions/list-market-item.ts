@@ -7,8 +7,6 @@ import { prisma } from "@/prisma/prisma";
 import { revalidatePath } from "next/cache";
 import { getAuthenticatedUser, isAccountOffline } from "./utils";
 
-const MAX_ACTIVE_LISTINGS = 10;
-
 export async function listMarketItemAction(
   _state: UserPanelActionState,
   formData: FormData,
@@ -74,17 +72,6 @@ export async function listMarketItemAction(
   }
 
   const itemHex = itemsBuffer.slice(offset, offset + BYTES_PER_SLOT);
-
-  const activeListings = await prisma.marketplaceListing.count({
-    where: { sellerAccountId: accountId, status: "active" },
-  });
-
-  if (activeListings >= MAX_ACTIVE_LISTINGS) {
-    return {
-      success: false,
-      message: `You can have at most ${MAX_ACTIVE_LISTINGS} active listings.`,
-    };
-  }
 
   const updatedBuffer = clearWarehouseSlot(itemsBuffer, slotIndex);
 
