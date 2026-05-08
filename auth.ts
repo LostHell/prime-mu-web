@@ -3,7 +3,13 @@ import { prisma } from "@/prisma/prisma";
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 
+const isTrustedHost =
+  process.env.NODE_ENV !== "production" ||
+  process.env.AUTH_TRUST_HOST === "true" ||
+  process.env.AUTH_TRUST_HOST === "1";
+
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  trustHost: isTrustedHost,
   session: { strategy: "jwt" },
   pages: {
     signIn: "/login",
