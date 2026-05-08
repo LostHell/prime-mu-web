@@ -17,7 +17,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { TopPlayerEntry } from "@/lib/queries/get-top-players";
+import { TopCharacterEntry } from "@/lib/queries/get-top-characters";
 import { type CharacterClass } from "@/lib/types/character";
 import { useState } from "react";
 
@@ -35,17 +35,17 @@ const CLASS_FILTERS: ("All" | CharacterClass)[] = [
 ];
 
 interface PlayersTableProps {
-  players: TopPlayerEntry[];
+  characters: TopCharacterEntry[];
 }
 
-const PlayersTable = ({ players }: PlayersTableProps) => {
+const PlayersTable = ({ characters }: PlayersTableProps) => {
   const [activeClass, setActiveClass] = useState<"All" | CharacterClass>("All");
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
 
-  const filtered = players
-    .filter((p) => activeClass === "All" || p.class === activeClass)
-    .filter((p) => p.name.toLowerCase().includes(search.toLowerCase()));
+  const filtered = characters
+    .filter((c) => activeClass === "All" || c.class === activeClass)
+    .filter((c) => c.name.toLowerCase().includes(search.toLowerCase()));
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const currentPage = Math.min(page, totalPages);
@@ -101,20 +101,22 @@ const PlayersTable = ({ players }: PlayersTableProps) => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {paginated.map((player) => (
-            <TableRow key={player.name}>
-              <TableCell className="text-gold">{player.rank}</TableCell>
+          {paginated.map((character) => (
+            <TableRow key={character.name}>
+              <TableCell className="text-gold">{character.rank}</TableCell>
               <TableCell className="font-medium">
-                <span>{player.name}</span>
-                <span className="block text-xs md:hidden">{player.class}</span>
+                <span>{character.name}</span>
+                <span className="block text-xs md:hidden">
+                  {character.class}
+                </span>
               </TableCell>
               <TableCell className="hidden md:table-cell">
-                {player.class}
+                {character.class}
               </TableCell>
-              <TableCell>{player.level}</TableCell>
-              <TableCell>{player.resets}</TableCell>
+              <TableCell>{character.level}</TableCell>
+              <TableCell>{character.resets}</TableCell>
               <TableCell className="text-muted-foreground hidden md:table-cell">
-                {player.guild || "—"}
+                {character.guild || "—"}
               </TableCell>
             </TableRow>
           ))}
@@ -123,7 +125,8 @@ const PlayersTable = ({ players }: PlayersTableProps) => {
 
       <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <span className="text-muted-foreground text-sm">
-          Page {currentPage} of {totalPages} &mdash; {filtered.length} players
+          Page {currentPage} of {totalPages} &mdash; {filtered.length}{" "}
+          characters
         </span>
         <Pagination className="mx-0 w-auto justify-end">
           <PaginationContent>

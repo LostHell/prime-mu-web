@@ -2,7 +2,7 @@ import { CHARACTER_CLASS_BY_ID } from "@/lib/game/constants/characters";
 import { CharacterClass } from "@/lib/types/character";
 import { prisma } from "@/prisma/prisma";
 
-export interface TopPlayerEntry {
+export interface TopCharacterEntry {
   rank: number;
   name: string;
   class: CharacterClass;
@@ -11,7 +11,7 @@ export interface TopPlayerEntry {
   guild?: string;
 }
 
-export async function getTopPlayers(): Promise<TopPlayerEntry[]> {
+export async function getTopCharacters(): Promise<TopCharacterEntry[]> {
   const characters = await prisma.character.findMany({
     orderBy: [{ ResetCount: "desc" }, { cLevel: "desc" }],
     select: {

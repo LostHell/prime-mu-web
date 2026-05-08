@@ -2,27 +2,27 @@ import PlayersTable from "@/app/top-players/_components/players-table";
 import PodiumCard from "@/app/top-players/_components/podium-card";
 import Divider from "@/components/divider";
 import { Card, CardContent } from "@/components/ui/card";
-import { getTopPlayers } from "@/lib/queries/get-top-players";
+import { getTopCharacters } from "@/lib/queries/get-top-characters";
 
-const TopPlayersContent = async () => {
-  const allPlayers = await getTopPlayers();
-  const top3 = allPlayers.slice(0, 3);
+const TopPlayersRankings = async () => {
+  const allCharacters = await getTopCharacters();
+  const [first, second, third] = allCharacters.slice(0, 3);
 
   return (
     <>
       <div className="my-3 grid grid-cols-1 gap-6 md:grid-cols-3">
         <PodiumCard
-          player={top3[1]}
+          character={second}
           position={2}
           className="order-2 md:order-1"
         />
         <PodiumCard
-          player={top3[0]}
+          character={first}
           position={1}
           className="order-1 md:order-2"
         />
         <PodiumCard
-          player={top3[2]}
+          character={third}
           position={3}
           className="order-3 md:order-3"
         />
@@ -32,13 +32,11 @@ const TopPlayersContent = async () => {
 
       <Card>
         <CardContent>
-          <PlayersTable players={allPlayers} />
+          <PlayersTable characters={allCharacters} />
         </CardContent>
       </Card>
     </>
   );
 };
-
-const TopPlayersRankings = () => <TopPlayersContent />;
 
 export default TopPlayersRankings;

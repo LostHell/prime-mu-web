@@ -1,5 +1,5 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { TopPlayerEntry } from "@/lib/queries/get-top-players";
+import { TopCharacterEntry } from "@/lib/queries/get-top-characters";
 import { cn } from "@/lib/utils";
 import { Medal, Trophy } from "lucide-react";
 
@@ -24,13 +24,18 @@ const PODIUM_CONFIG: Record<
 };
 
 interface PodiumCardProps {
-  player: TopPlayerEntry;
+  character?: TopCharacterEntry;
   position: PodiumPosition;
   className?: string;
 }
 
-const PodiumCard = ({ player, position, className }: PodiumCardProps) => {
+const PodiumCard = ({ character, position, className }: PodiumCardProps) => {
   const config = PODIUM_CONFIG[position];
+
+  const characterName = character?.name ?? "—";
+  const characterClass = character?.class ?? "—";
+  const characterLevel = character?.level ?? "—";
+  const characterResets = character?.resets ?? "—";
 
   return (
     <Card className={cn("card-hover text-center", config.className, className)}>
@@ -41,10 +46,10 @@ const PodiumCard = ({ player, position, className }: PodiumCardProps) => {
 
         <div className="text-gold mb-2 font-serif text-lg">#{position}</div>
         <h3 className="text-foreground mb-1 font-serif text-xl font-bold">
-          {player.name}
+          {characterName}
         </h3>
         <p className="text-sm">
-          {player.class}
+          {characterClass}
         </p>
 
         <div className="mt-4 grid grid-cols-2 gap-4">
@@ -53,7 +58,7 @@ const PodiumCard = ({ player, position, className }: PodiumCardProps) => {
               Level
             </div>
             <div className="gold-gradient-text text-lg font-bold">
-              {player.level}
+              {characterLevel}
             </div>
           </div>
           <div>
@@ -61,16 +66,10 @@ const PodiumCard = ({ player, position, className }: PodiumCardProps) => {
               Resets
             </div>
             <div className="gold-gradient-text text-lg font-bold">
-              {player.resets}
+              {characterResets}
             </div>
           </div>
         </div>
-
-        {player.guild && (
-          <p className="text-muted-foreground mt-3 text-xs">
-            Guild: <span className="text-gold">{player.guild}</span>
-          </p>
-        )}
       </CardContent>
     </Card>
   );
