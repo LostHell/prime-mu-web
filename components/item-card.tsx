@@ -1,4 +1,5 @@
 import { HIDE_ITEM_DMG_DEF_AND_STATS } from "@/constants/items";
+import { formatItemName } from "@/lib/game/item-database/formatters";
 import {
   type ItemClassFlags,
   type ItemDefinition,
@@ -86,11 +87,10 @@ export type ItemCardItem = DecodedItem &
 
 type ItemCardProps = {
   item: ItemCardItem;
-  compact?: boolean;
 };
 
 function additionalOptionLabel(item: ItemCardItem): string | null {
-  if (item.addOption <= 0) return null;
+  if (item.addOption === undefined || item.addOption <= 0) return null;
   if (item.group === 6) {
     const defenseRate = (item.addOption / 4) * 5;
     return `Additional Defense Rate +${defenseRate}%`;
@@ -104,7 +104,7 @@ function additionalOptionLabel(item: ItemCardItem): string | null {
   return `Additional Damage +${item.addOption}`;
 }
 
-export function ItemCard({ item, compact = false }: ItemCardProps) {
+export function ItemCard({ item }: ItemCardProps) {
   const isDefensive = item.group >= 6 && item.group <= 11;
   const isShield = item.group === 6;
   const isExcellent = item.excellent > 0;
@@ -124,41 +124,18 @@ export function ItemCard({ item, compact = false }: ItemCardProps) {
         isExcellent ? C.titleExc : C.titleNorm,
       )}
     >
-      {isExcellent ? "Excellent " : ""}
-      {item.name} +{item.level}
+      {formatItemName({
+        item: {
+          name: item.name,
+          group: item.group,
+          index: item.index,
+          level: item.level,
+          excellent: item.excellent,
+        },
+        options: { includeExcellent: true },
+      })}
     </span>
   );
-
-  if (compact) {
-    return (
-      <div className="text-center font-sans text-[10px] leading-snug">
-        <p>{title}</p>
-        <div
-          className={cn(
-            "mt-1 flex flex-wrap justify-center gap-x-2 gap-y-0.5",
-            C.muted,
-          )}
-        >
-          {item.skill && <span>Skill</span>}
-          {item.luck && (
-            <span className="flex w-full flex-col gap-0 text-[9px] leading-tight">
-              {LUCK_LINES.map((line) => (
-                <span key={line}>{line}</span>
-              ))}
-            </span>
-          )}
-          {item.defense !== undefined && (
-            <span>Def {item.defense + item.addOption}</span>
-          )}
-          {item.dmgMin !== undefined && (
-            <span>
-              Dmg {item.dmgMin + item.addOption}~{item.dmgMax! + item.addOption}
-            </span>
-          )}
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="w-56 overflow-hidden rounded-lg bg-[rgba(12,12,12,0.9)] font-sans text-[10px] leading-snug">

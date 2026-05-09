@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { WarehouseGrid } from "@/components/warehouse-grid";
 import { listMarketItemAction } from "@/lib/actions/list-market-item";
+import { formatItemName } from "@/lib/game/item-database/formatters";
 import { type WarehouseItem } from "@/lib/types/warehouse";
 import { CircleDollarSign, Loader2, Package } from "lucide-react";
 import { useActionState, useState } from "react";
@@ -20,9 +21,7 @@ interface SellItemFormProps {
   warehouseItems: WarehouseItem[];
 }
 
-export function SellItemForm({
-  warehouseItems,
-}: SellItemFormProps) {
+export function SellItemForm({ warehouseItems }: SellItemFormProps) {
   const [selectedSlot, setSelectedSlot] = useState<number | null>(null);
   const [zenPrice, setZenPrice] = useState("");
 
@@ -75,8 +74,15 @@ export function SellItemForm({
                       <p
                         className={`font-semibold ${selectedItem.excellent > 0 ? "text-mu-tooltip-exc" : "text-gold"}`}
                       >
-                        {selectedItem.excellent > 0 ? "Excellent " : ""}
-                        {selectedItem.name} +{selectedItem.level}
+                        {formatItemName({
+                          item: {
+                            name: selectedItem.name,
+                            group: selectedItem.group,
+                            index: selectedItem.index,
+                            level: selectedItem.level,
+                            excellent: selectedItem.excellent,
+                          },
+                        })}
                       </p>
                     </div>
                   </div>

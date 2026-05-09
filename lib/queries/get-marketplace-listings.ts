@@ -32,10 +32,14 @@ export type MarketListing = {
   soldAt: Date | null;
 };
 
-function decodeItemFromHex(itemHex: Buffer): ListingItem | null {
+const decodeItemFromHex = (itemHex: Buffer): ListingItem | null => {
   const decodedItem = decodeItem(itemHex);
   if (!decodedItem) return null;
-  const def = getItemDefinition(decodedItem.group, decodedItem.index);
+  const def = getItemDefinition(
+    decodedItem.group,
+    decodedItem.index,
+    decodedItem.level,
+  );
 
   return {
     ...decodedItem,
@@ -51,7 +55,7 @@ function decodeItemFromHex(itemHex: Buffer): ListingItem | null {
     reqAgi: def?.reqAgi,
     classFlags: def?.classFlags,
   };
-}
+};
 
 export async function getMyListings(
   accountId: string,

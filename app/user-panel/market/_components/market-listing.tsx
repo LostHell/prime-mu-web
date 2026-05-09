@@ -11,6 +11,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { buyMarketItemAction } from "@/lib/actions/buy-market-item";
 import { cancelMarketplaceListingAction } from "@/lib/actions/cancel-market-listing";
+import { formatItemName } from "@/lib/game/item-database/formatters";
 import type {
   ListingItem,
   MarketListing,
@@ -38,17 +39,24 @@ const PRICE_ICONS = {
 } as const;
 
 function ItemName({ item }: { item: ListingItem }) {
-  const isExc = item.excellent > 0;
-  const itemLevel = item.level > 0 ? `+${item.level}` : "";
+  const isExcellent = item.excellent > 0;
 
   return (
     <p
       className={cn(
         "font-semibold",
-        isExc ? "text-mu-tooltip-exc" : "text-gold",
+        isExcellent ? "text-mu-tooltip-exc" : "text-gold",
       )}
     >
-      {item.name} {itemLevel}
+      {formatItemName({
+        item: {
+          name: item.name,
+          group: item.group,
+          index: item.index,
+          level: item.level,
+          excellent: item.excellent,
+        },
+      })}
     </p>
   );
 }

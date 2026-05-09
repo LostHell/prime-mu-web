@@ -1,11 +1,6 @@
+import { isBoxOfLuckItem } from "../item-database/box-of-luck";
 import type { ItemIconPathOptions } from "./types";
 import { clampInt, parseTwoDigitCode } from "./utils";
-
-const isBoxOfLuckItem = (itemGroup: number, itemIndex: number): boolean => {
-  const BOX_OF_LUCK = { group: 14, index: 11 };
-
-  return itemGroup === BOX_OF_LUCK.group && itemIndex === BOX_OF_LUCK.index;
-};
 
 const getVariantDigitsFromItemLevel = (
   itemGroup: number,

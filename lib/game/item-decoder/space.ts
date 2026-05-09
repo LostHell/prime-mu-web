@@ -14,7 +14,11 @@ const buildOccupancyGrid = (data: BinaryItemData): boolean[][] => {
   const items = decodeItems(data);
 
   for (const item of items) {
-    const definition = getItemDefinition(item.group, item.index);
+    const definition = getItemDefinition(
+      item.group,
+      item.index,
+      item.level,
+    );
     const itemWidth = definition?.width ?? 1;
     const itemHeight = definition?.height ?? 1;
 

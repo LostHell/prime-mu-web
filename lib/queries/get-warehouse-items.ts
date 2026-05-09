@@ -11,13 +11,13 @@ export async function getWarehouseItems(
     select: { Items: true },
   });
 
-  if (!warehouse?.Items)
-    return [];
+  if (!warehouse?.Items) return [];
 
   const decodedItems = decodeItems(Buffer.from(warehouse.Items));
 
   const warehouseItems = decodedItems.map((item) => {
-    const def = getItemDefinition(item.group, item.index);
+    const def = getItemDefinition(item.group, item.index, item.level);
+
     return {
       ...item,
       name: def?.name ?? "Unknown item",
