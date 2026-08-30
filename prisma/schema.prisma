@@ -188,6 +188,18 @@ model warehouse {
   pw        Int?   @default(0) @db.SmallInt
 }
 
+model AccountDeposit {
+  AccountID       String @id @db.VarChar(10)
+  /// Wider than warehouse.Money (UnsignedInt) since deposits accumulate over the account's lifetime and can exceed a single warehouse's ~4.29B cap.
+  Zen             BigInt @default(0) @db.UnsignedBigInt
+  Rena            Int    @default(0) @db.UnsignedInt
+  JewelOfBless    Int    @default(0) @db.UnsignedInt
+  JewelOfSoul     Int    @default(0) @db.UnsignedInt
+  JewelOfLife     Int    @default(0) @db.UnsignedInt
+  JewelOfCreation Int    @default(0) @db.UnsignedInt
+  JewelOfChaos    Int    @default(0) @db.UnsignedInt
+}
+
 model MarketplaceListing {
   id              Int       @id @default(autoincrement())
   sellerAccountId String    @db.VarChar(10)
@@ -203,4 +215,3 @@ model MarketplaceListing {
   @@index([status], map: "IX_MarketplaceListing_Status")
   @@index([sellerAccountId], map: "IX_MarketplaceListing_Seller")
 }
-
