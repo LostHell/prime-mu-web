@@ -1,8 +1,8 @@
 "use client";
 
 import {
+  DEPOSIT_ITEM_TYPES,
   DEPOSITABLE_ITEMS,
-  type DepositItemType,
 } from "@/constants/depositable-items";
 import type { DepositData } from "@/lib/queries/get-deposit-data";
 import { DepositRow } from "./deposit-row";
@@ -11,22 +11,12 @@ type DepositsContentProps = {
   data: DepositData;
 };
 
-const ALL_ITEMS: DepositItemType[] = [
-  "zen",
-  "rena",
-  "jewelOfBless",
-  "jewelOfSoul",
-  "jewelOfLife",
-  "jewelOfCreation",
-  "jewelOfChaos",
-];
-
 export function DepositsContent({ data }: DepositsContentProps) {
   const { warehouseZen, warehouseCounts, balance } = data;
 
   return (
     <div>
-      {ALL_ITEMS.map((type) => {
+      {DEPOSIT_ITEM_TYPES.map((type) => {
         const config = DEPOSITABLE_ITEMS[type];
         const warehouseCount =
           type === "zen" ? warehouseZen : warehouseCounts[type];

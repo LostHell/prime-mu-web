@@ -1,60 +1,23 @@
-import { useState } from "react";
-import { useIsomorphicLayoutEffect } from "./use-isomorphic-layout-effect";
+import { useCallback, useSyncExternalStore } from "react";
 
-type UseMediaQueryOptions = {
-  defaultValue?: boolean;
-  initializeWithValue?: boolean;
-};
+/** SSR-safe media query hook. Uses `useSyncExternalStore` (the recommended way
+ * to subscribe to an external store like `matchMedia`) instead of an effect. */
+export function useMediaQuery(query: string, defaultValue = false): boolean {
+  const subscribe = useCallback(
+    (onStoreChange: () => void) => {
+      const mediaQueryList = window.matchMedia(query);
+      mediaQueryList.addEventListener("change", onStoreChange);
+      return () => mediaQueryList.removeEventListener("change", onStoreChange);
+    },
+    [query],
+  );
 
-const IS_SERVER = typeof window === "undefined";
+  const getSnapshot = useCallback(
+    () => window.matchMedia(query).matches,
+    [query],
+  );
 
-export const useMediaQuery = (
-  query: string,
-  {
-    defaultValue = false,
-    initializeWithValue = true,
-  }: UseMediaQueryOptions = {},
-): boolean => {
-  const getMatches = (query: string): boolean => {
-    if (IS_SERVER) {
-      return defaultValue;
-    }
-    return window.matchMedia(query).matches;
-  };
+  const getServerSnapshot = useCallback(() => defaultValue, [defaultValue]);
 
-  const [matches, setMatches] = useState<boolean>(() => {
-    if (initializeWithValue) {
-      return getMatches(query);
-    }
-    return defaultValue;
-  });
-
-  // Handles the change event of the media query.
-  const handleChange = () => {
-    setMatches(getMatches(query));
-  };
-
-  useIsomorphicLayoutEffect(() => {
-    const matchMedia = window.matchMedia(query);
-
-    // Triggered at the first client-side load and if query changes
-    handleChange();
-
-    // Use deprecated `addListener` and `removeListener` to support Safari < 14 (#135)
-    if (matchMedia.addListener) {
-      matchMedia.addListener(handleChange);
-    } else {
-      matchMedia.addEventListener("change", handleChange);
-    }
-
-    return () => {
-      if (matchMedia.removeListener) {
-        matchMedia.removeListener(handleChange);
-      } else {
-        matchMedia.removeEventListener("change", handleChange);
-      }
-    };
-  }, [query]);
-
-  return matches;
-};
+  return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+}

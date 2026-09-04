@@ -2,21 +2,15 @@
 
 import {
   DEPOSITABLE_ITEMS,
-  DEPOSIT_ITEM_TYPES,
-  type DepositItemType,
+  type AccountDepositItemFields,
 } from "@/constants/depositable-items";
-import { countItemType, removeItemsByType } from "@/lib/game/item-decoder";
+import { type ItemId } from "@/lib/game/item-database/types";
+import { countItemsByType, removeItemsByType } from "@/lib/game/warehouse";
+import { depositSchema } from "@/lib/validation/deposit";
 import { UserPanelActionState } from "@/lib/validation/types";
 import { prisma } from "@/prisma/prisma";
 import { revalidatePath } from "next/cache";
-import z from "zod";
 import { getAuthenticatedUser, isAccountOffline } from "./utils";
-
-const depositSchema = z.object({
-  type: z.enum(DEPOSIT_ITEM_TYPES as [DepositItemType, ...DepositItemType[]]),
-  amount: z.coerce.number().int().positive().optional(),
-  depositAll: z.enum(["true", "false"]).optional(),
-});
 
 export async function depositAction(
   _state: UserPanelActionState,
@@ -34,38 +28,27 @@ export async function depositAction(
   });
 
   if (!validated.success) {
-    return { success: false, message: "Invalid input." };
+    return {
+      success: false,
+      errors: validated.error.flatten().fieldErrors,
+      message: "Invalid input.",
+    };
   }
 
-  const { type, depositAll } = validated.data;
+  const { type, amount, depositAll } = validated.data;
   const config = DEPOSITABLE_ITEMS[type];
 
   const offline = await isAccountOffline(accountId);
   if (!offline) {
     return {
       success: false,
-      message: "Your account must be offline to deposit items.",
+      message: "Your account must be offline to deposit.",
     };
   }
 
-  if (type === "zen") {
-    return depositZen(accountId, validated.data.amount, depositAll === "true");
-  }
-
-  if (!config.itemId || !config.dbField) {
-    return { success: false, message: "Invalid item type." };
-  }
-
-  return depositItem(
-    accountId,
-    type,
-    config.itemId.group,
-    config.itemId.index,
-    config.dbField,
-    config.label,
-    validated.data.amount,
-    depositAll === "true",
-  );
+  return type === "zen"
+    ? depositZen(accountId, amount, depositAll === "true")
+    : depositItem(accountId, config, amount, depositAll === "true");
 }
 
 async function depositZen(
@@ -74,7 +57,7 @@ async function depositZen(
   depositAll: boolean,
 ): Promise<UserPanelActionState> {
   try {
-    await prisma.$transaction(async (tx) => {
+    const message = await prisma.$transaction(async (tx) => {
       const warehouse = await tx.warehouse.findUnique({
         where: { AccountID: accountId },
         select: { Money: true },
@@ -87,26 +70,28 @@ async function depositZen(
         throw new Error("Amount must be greater than zero.");
       }
 
-      if (available < depositAmount) {
+      const { count } = await tx.warehouse.updateMany({
+        where: { AccountID: accountId, Money: { gte: depositAmount } },
+        data: { Money: { decrement: depositAmount } },
+      });
+
+      if (count === 0) {
         throw new Error(
           `Not enough Zen in warehouse. Available: ${available.toLocaleString()}.`,
         );
       }
-
-      await tx.warehouse.update({
-        where: { AccountID: accountId },
-        data: { Money: { decrement: depositAmount } },
-      });
 
       await tx.accountDeposit.upsert({
         where: { AccountID: accountId },
         create: { AccountID: accountId, Zen: depositAmount },
         update: { Zen: { increment: depositAmount } },
       });
+
+      return "Zen deposited successfully.";
     });
 
     revalidatePath("/user-panel/deposits");
-    return { success: true, message: "Zen deposited successfully." };
+    return { success: true, message };
   } catch (err) {
     const message =
       err instanceof Error ? err.message : "Failed to deposit Zen.";
@@ -116,16 +101,22 @@ async function depositZen(
 
 async function depositItem(
   accountId: string,
-  _type: DepositItemType,
-  group: number,
-  index: number,
-  dbField: keyof import("@/constants/depositable-items").AccountDepositItemFields,
-  label: string,
+  config: {
+    itemId?: ItemId;
+    dbField?: keyof AccountDepositItemFields;
+    label: string;
+  },
   amount: number | undefined,
   depositAll: boolean,
 ): Promise<UserPanelActionState> {
+  const { itemId, dbField, label } = config;
+
+  if (!itemId || !dbField) {
+    return { success: false, message: "Invalid item type." };
+  }
+
   try {
-    await prisma.$transaction(async (tx) => {
+    const message = await prisma.$transaction(async (tx) => {
       const warehouse = await tx.warehouse.findUnique({
         where: { AccountID: accountId },
         select: { Items: true },
@@ -136,7 +127,7 @@ async function depositItem(
       }
 
       const buffer = Buffer.from(warehouse.Items);
-      const available = countItemType(buffer, group, index);
+      const available = countItemsByType(buffer, itemId);
       const depositAmount = depositAll ? available : (amount ?? 0);
 
       if (depositAmount <= 0) {
@@ -149,22 +140,32 @@ async function depositItem(
         );
       }
 
-      const newBuffer = removeItemsByType(buffer, group, index, depositAmount);
+      const newBuffer = removeItemsByType(buffer, itemId, depositAmount);
 
-      await tx.warehouse.update({
-        where: { AccountID: accountId },
+      // Optimistic lock on the raw buffer: only write if nothing else changed
+      // the warehouse contents since we read it.
+      const { count } = await tx.warehouse.updateMany({
+        where: { AccountID: accountId, Items: warehouse.Items },
         data: { Items: Uint8Array.from(newBuffer) },
       });
+
+      if (count === 0) {
+        throw new Error(
+          "Your warehouse changed while processing this request. Please try again.",
+        );
+      }
 
       await tx.accountDeposit.upsert({
         where: { AccountID: accountId },
         create: { AccountID: accountId, [dbField]: depositAmount },
         update: { [dbField]: { increment: depositAmount } },
       });
+
+      return `${label} deposited successfully.`;
     });
 
     revalidatePath("/user-panel/deposits");
-    return { success: true, message: `${label} deposited successfully.` };
+    return { success: true, message };
   } catch (err) {
     const message =
       err instanceof Error ? err.message : `Failed to deposit ${label}.`;

@@ -1,9 +1,11 @@
 import {
   DEPOSITABLE_ITEMS,
+  DEPOSIT_ITEM_TYPES,
   type AccountDepositItemFields,
   type DepositItemType,
 } from "@/constants/depositable-items";
-import { countItemType } from "@/lib/game/item-decoder";
+import { countItemsByType } from "@/lib/game/warehouse";
+import { bigIntToSafeNumber } from "@/lib/utils/numbers";
 import { prisma } from "@/prisma/prisma";
 
 export type DepositData = {
@@ -34,26 +36,24 @@ export async function getDepositData(accountId: string): Promise<DepositData> {
   ]);
 
   const warehouseZen = warehouse?.Money ?? 0;
+  const warehouseItems = warehouse?.Items
+    ? Buffer.from(warehouse.Items)
+    : null;
 
-  const warehouseCounts = {} as Record<DepositItemType, number>;
-  const itemBuffer = warehouse?.Items ? Buffer.from(warehouse.Items) : null;
-
-  for (const [type, config] of Object.entries(DEPOSITABLE_ITEMS) as [
-    DepositItemType,
-    (typeof DEPOSITABLE_ITEMS)[DepositItemType],
-  ][]) {
-    if (type === "zen" || !config.itemId) {
-      warehouseCounts[type] = 0;
-      continue;
-    }
-    warehouseCounts[type] = itemBuffer
-      ? countItemType(itemBuffer, config.itemId.group, config.itemId.index)
-      : 0;
-  }
+  const warehouseCounts = Object.fromEntries(
+    DEPOSIT_ITEM_TYPES.map((type) => {
+      const { itemId } = DEPOSITABLE_ITEMS[type];
+      const count =
+        warehouseItems && itemId
+          ? countItemsByType(warehouseItems, itemId)
+          : 0;
+      return [type, count];
+    }),
+  ) as Record<DepositItemType, number>;
 
   const balance: DepositData["balance"] = depositRow
     ? {
-        Zen: Number(depositRow.Zen),
+        Zen: bigIntToSafeNumber(depositRow.Zen),
         Rena: depositRow.Rena,
         JewelOfBless: depositRow.JewelOfBless,
         JewelOfSoul: depositRow.JewelOfSoul,

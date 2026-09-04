@@ -23,11 +23,11 @@ const Hero = async () => {
         <ServerStatus status={serverStatus.status} />
 
         <div className="mx-auto flex max-w-md justify-center gap-4">
-          <Button className="flex-1" variant="default" asChild>
+          <Button className="flex-1" variant="default" decorative asChild>
             <Link href="/download">Play Now</Link>
           </Button>
 
-          <Button className="flex-1" variant="outline" asChild>
+          <Button className="flex-1" variant="outline" decorative asChild>
             <Link href="/register">Register</Link>
           </Button>
         </div>

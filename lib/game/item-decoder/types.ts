@@ -1,10 +1,9 @@
+import { type ItemId } from "@/lib/game/item-database/types";
+
 export type BinaryItemData = Buffer | Uint8Array;
 
-export type DecodedItem = {
+export type DecodedItem = ItemId & {
   slot: number;
-  group: number;
-  index: number;
-  level: number;
   skill: boolean;
   luck: boolean;
   addOption: number;

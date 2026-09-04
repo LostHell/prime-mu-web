@@ -20,7 +20,7 @@ import { depositAction } from "@/lib/actions/deposit";
 import { withdrawAction } from "@/lib/actions/withdraw";
 import { cn } from "@/lib/utils";
 import { Minus, Plus } from "lucide-react";
-import { useState, useTransition } from "react";
+import { startTransition, useActionState, useEffect, useState } from "react";
 import { Stat } from "./stat";
 
 export type TransferMode = "deposit" | "withdraw";
@@ -33,6 +33,7 @@ export type TransferModalProps = {
   label: string;
   warehouseCount: number;
   depositedCount: number;
+  maxWithdrawAmount?: number;
   formatAmount: (n: number) => string;
 };
 
@@ -43,9 +44,7 @@ function clamp(value: number, min: number, max: number) {
 
 export function TransferModal(props: TransferModalProps) {
   const { open, onOpenChange, mode, label } = props;
-  const isDesktop = useMediaQuery("(min-width: 768px)", {
-    initializeWithValue: false,
-  });
+  const isDesktop = useMediaQuery("(min-width: 768px)");
 
   const title = `${mode === "deposit" ? "Deposit" : "Withdraw"} ${label}`;
 
@@ -79,14 +78,30 @@ function TransferForm({
   type,
   warehouseCount,
   depositedCount,
+  maxWithdrawAmount,
   formatAmount,
   onOpenChange,
   className,
 }: TransferModalProps & { className?: string }) {
-  const limit = mode === "deposit" ? warehouseCount : depositedCount;
+  const limit =
+    mode === "deposit" ? warehouseCount : (maxWithdrawAmount ?? depositedCount);
   const [amount, setAmount] = useState(() => clamp(1, 1, limit));
-  const [error, setError] = useState<string | null>(null);
-  const [isPending, startTransition] = useTransition();
+  // `mode` is fixed for the lifetime of this component (the parent remounts
+  // it fresh on every open), so binding one hook to the right action is safe.
+  const [state, formAction, isPending] = useActionState(
+    mode === "deposit" ? depositAction : withdrawAction,
+    { success: false, message: "" },
+  );
+
+  function adjustAmount(delta: number) {
+    setAmount((current) => clamp(current + delta, 1, limit));
+  }
+
+  useEffect(() => {
+    if (state.success) {
+      onOpenChange(false);
+    }
+  }, [state.success, onOpenChange]);
 
   const newWarehouse =
     mode === "deposit" ? warehouseCount - amount : warehouseCount + amount;
@@ -94,21 +109,13 @@ function TransferForm({
     mode === "deposit" ? depositedCount + amount : depositedCount - amount;
 
   function handleConfirm() {
-    setError(null);
-
     const formData = new FormData();
     formData.set("type", type);
     formData.set("amount", String(amount));
-
-    startTransition(async () => {
-      const action = mode === "deposit" ? depositAction : withdrawAction;
-      const result = await action({ success: false, message: "" }, formData);
-
-      if (result.success) {
-        onOpenChange(false);
-      } else {
-        setError(result.message ?? "Something went wrong.");
-      }
+    // `formAction` must run inside a transition when called outside a form
+    // submission (e.g. from a plain onClick), so `isPending` tracks it correctly.
+    startTransition(() => {
+      formAction(formData);
     });
   }
 
@@ -128,7 +135,7 @@ function TransferForm({
             type="button"
             variant="outline"
             size="icon-sm"
-            onClick={() => setAmount((a) => clamp(a - 1, 1, limit))}
+            onClick={() => adjustAmount(-1)}
             disabled={isPending || amount <= 1}
             aria-label="Decrease amount"
           >
@@ -147,7 +154,7 @@ function TransferForm({
             type="button"
             variant="outline"
             size="icon-sm"
-            onClick={() => setAmount((a) => clamp(a + 1, 1, limit))}
+            onClick={() => adjustAmount(1)}
             disabled={isPending || amount >= limit}
             aria-label="Increase amount"
           >
@@ -183,7 +190,9 @@ function TransferForm({
         </p>
       </div>
 
-      {error && <p className="text-destructive text-sm">{error}</p>}
+      {!state.success && state.message && (
+        <p className="text-destructive text-sm">{state.message}</p>
+      )}
 
       <div className="flex justify-end gap-2">
         <Button
@@ -201,7 +210,7 @@ function TransferForm({
         >
           {isPending
             ? "Processing…"
-            : `${mode === "deposit" ? "Deposit" : "Withdraw"} ${formatAmount(amount)}`}
+            : `${mode === "deposit" ? "Deposit" : "Withdraw"}`}
         </Button>
       </div>
     </div>

@@ -1,15 +1,17 @@
 "use client";
 
 import { ItemIcon } from "@/components/item-icon";
+import { Button } from "@/components/ui/button";
 import {
   type DepositItemType,
   type ItemIconId,
 } from "@/constants/depositable-items";
 import { depositAction } from "@/lib/actions/deposit";
 import { withdrawAction } from "@/lib/actions/withdraw";
+import { MAX_WAREHOUSE_MONEY } from "@/lib/game/constants/warehouse";
 import { cn } from "@/lib/utils";
-import { useState, useTransition } from "react";
-import { ActionLink } from "./action-link";
+import { formatNumber } from "@/lib/utils/numbers";
+import { startTransition, useActionState, useState } from "react";
 import { Stat } from "./stat";
 import { TransferModal, type TransferMode } from "./transfer-modal";
 
@@ -22,45 +24,101 @@ type DepositRowProps = {
   formatAmount?: (n: number) => string;
 };
 
+const INITIAL_STATE = { success: false, message: "" };
+
+/** Plain-text, underlined look for the inline row actions below (e.g. "Deposit
+ * / All"), layered onto `Button`'s non-decorative `link` variant. */
+const ROW_ACTION_CLASSNAME =
+  "text-muted-foreground decoration-muted-foreground hover:text-gold hover:decoration-gold disabled:text-muted-foreground h-auto p-0 text-sm font-medium underline underline-offset-4 disabled:no-underline disabled:opacity-60";
+
+type RowActionButtonProps = {
+  onClick: () => void;
+  disabled?: boolean;
+  ariaLabel?: string;
+  children: React.ReactNode;
+};
+
+/** One of the "Deposit / All" or "Withdraw / All" links in a row. Local to
+ * this file since it's just a shorthand for the repeated Button props below. */
+function RowActionButton({
+  onClick,
+  disabled,
+  ariaLabel,
+  children,
+}: RowActionButtonProps) {
+  return (
+    <Button
+      variant="link"
+      size="xs"
+      className={ROW_ACTION_CLASSNAME}
+      onClick={onClick}
+      disabled={disabled}
+      aria-label={ariaLabel}
+    >
+      {children}
+    </Button>
+  );
+}
+
 export function DepositRow({
   type,
   label,
   icon,
   warehouseCount,
   depositedCount,
-  formatAmount = (n) => n.toLocaleString(),
+  formatAmount = formatNumber,
 }: DepositRowProps) {
   const [modalMode, setModalMode] = useState<TransferMode>("deposit");
   const [modalOpen, setModalOpen] = useState(false);
-  const [isPending, startTransition] = useTransition();
-  const [feedback, setFeedback] = useState<{
-    success: boolean;
-    message: string;
-  } | null>(null);
+  // Tracks which of the two independent action states below to surface,
+  // since only one "All" action can be in flight/settled at a time.
+  const [lastAction, setLastAction] = useState<TransferMode | null>(null);
 
-  function openModal(mode: TransferMode) {
-    setFeedback(null);
+  const [depositState, depositFormAction, isDepositPending] = useActionState(
+    depositAction,
+    INITIAL_STATE,
+  );
+  const [withdrawState, withdrawFormAction, isWithdrawPending] = useActionState(
+    withdrawAction,
+    INITIAL_STATE,
+  );
+
+  const isPending = isDepositPending || isWithdrawPending;
+  const activeState = lastAction === "withdraw" ? withdrawState : depositState;
+
+  // Zen can't be withdrawn past warehouse.Money's UnsignedInt capacity, so cap
+  // what's offered here instead of letting the user hit that error below.
+  const maxWithdrawable =
+    type === "zen"
+      ? Math.max(
+          0,
+          Math.min(depositedCount, MAX_WAREHOUSE_MONEY - warehouseCount),
+        )
+      : depositedCount;
+
+  function handleOpenModal(mode: TransferMode) {
     setModalMode(mode);
     setModalOpen(true);
   }
 
-  function runAll(mode: TransferMode) {
-    setFeedback(null);
-
+  function handleDepositAll() {
+    setLastAction("deposit");
     const formData = new FormData();
     formData.set("type", type);
-    if (mode === "deposit") {
-      formData.set("depositAll", "true");
-    } else {
-      formData.set("amount", String(depositedCount));
-    }
+    formData.set("depositAll", "true");
 
-    startTransition(async () => {
-      const action = mode === "deposit" ? depositAction : withdrawAction;
-      const result = await action({ success: false, message: "" }, formData);
-      if (result.message) {
-        setFeedback({ success: !!result.success, message: result.message });
-      }
+    startTransition(() => {
+      depositFormAction(formData);
+    });
+  }
+
+  function handleWithdrawAll() {
+    setLastAction("withdraw");
+    const formData = new FormData();
+    formData.set("type", type);
+    formData.set("amount", String(maxWithdrawable));
+    startTransition(() => {
+      withdrawFormAction(formData);
     });
   }
 
@@ -86,45 +144,45 @@ export function DepositRow({
         />
 
         <div className="flex items-center gap-3">
-          <ActionLink
-            onClick={() => openModal("deposit")}
+          <RowActionButton
+            onClick={() => handleOpenModal("deposit")}
             disabled={warehouseCount === 0}
           >
             Deposit
-          </ActionLink>
-          <ActionLink
-            onClick={() => runAll("deposit")}
+          </RowActionButton>
+          <RowActionButton
+            onClick={handleDepositAll}
             disabled={isPending || warehouseCount === 0}
-            aria-label={`Deposit all ${label}`}
+            ariaLabel={`Deposit all ${label}`}
           >
             All
-          </ActionLink>
+          </RowActionButton>
         </div>
         <div className="flex items-center gap-3">
-          <ActionLink
-            onClick={() => openModal("withdraw")}
-            disabled={depositedCount === 0}
+          <RowActionButton
+            onClick={() => handleOpenModal("withdraw")}
+            disabled={maxWithdrawable === 0}
           >
             Withdraw
-          </ActionLink>
-          <ActionLink
-            onClick={() => runAll("withdraw")}
-            disabled={isPending || depositedCount === 0}
-            aria-label={`Withdraw all ${label}`}
+          </RowActionButton>
+          <RowActionButton
+            onClick={handleWithdrawAll}
+            disabled={isPending || maxWithdrawable === 0}
+            ariaLabel={`Withdraw all ${label}`}
           >
             All
-          </ActionLink>
+          </RowActionButton>
         </div>
       </div>
 
-      {feedback && (
+      {!modalOpen && lastAction && activeState.message && (
         <p
           className={cn(
             "mt-2 text-xs",
-            feedback.success ? "text-success" : "text-destructive",
+            activeState.success ? "text-success" : "text-destructive",
           )}
         >
-          {feedback.message}
+          {activeState.message}
         </p>
       )}
 
@@ -136,6 +194,7 @@ export function DepositRow({
         label={label}
         warehouseCount={warehouseCount}
         depositedCount={depositedCount}
+        maxWithdrawAmount={maxWithdrawable}
         formatAmount={formatAmount}
       />
     </div>

@@ -2,25 +2,26 @@
 
 import {
   DEPOSITABLE_ITEMS,
-  DEPOSIT_ITEM_TYPES,
   type AccountDepositItemFields,
-  type DepositItemType,
 } from "@/constants/depositable-items";
 import {
-  createFreshItemBytes,
-  findFreeArea,
+  MAX_WAREHOUSE_MONEY,
+  WAREHOUSE_SLOTS,
+} from "@/lib/game/constants/warehouse";
+import { getItemDefinition } from "@/lib/game/item-database";
+import { type ItemId } from "@/lib/game/item-database/types";
+import {
+  BYTES_PER_SLOT,
+  createItemBytes,
+  EMPTY_SLOT_BYTE,
+  findFreeAreas,
   writeItemToSlot,
 } from "@/lib/game/item-decoder";
 import { UserPanelActionState } from "@/lib/validation/types";
+import { withdrawSchema } from "@/lib/validation/withdraw";
 import { prisma } from "@/prisma/prisma";
 import { revalidatePath } from "next/cache";
-import z from "zod";
 import { getAuthenticatedUser, isAccountOffline } from "./utils";
-
-const withdrawSchema = z.object({
-  type: z.enum(DEPOSIT_ITEM_TYPES as [DepositItemType, ...DepositItemType[]]),
-  amount: z.coerce.number().int().positive(),
-});
 
 export async function withdrawAction(
   _state: UserPanelActionState,
@@ -37,7 +38,11 @@ export async function withdrawAction(
   });
 
   if (!validated.success) {
-    return { success: false, message: "Invalid input." };
+    return {
+      success: false,
+      errors: validated.error.flatten().fieldErrors,
+      message: "Invalid input.",
+    };
   }
 
   const { type, amount } = validated.data;
@@ -47,26 +52,13 @@ export async function withdrawAction(
   if (!offline) {
     return {
       success: false,
-      message: "Your account must be offline to withdraw items.",
+      message: "Your account must be offline to withdraw.",
     };
   }
 
-  if (type === "zen") {
-    return withdrawZen(accountId, amount);
-  }
-
-  if (!config.itemId || !config.dbField) {
-    return { success: false, message: "Invalid item type." };
-  }
-
-  return withdrawItem(
-    accountId,
-    config.itemId.group,
-    config.itemId.index,
-    config.dbField,
-    config.label,
-    amount,
-  );
+  return type === "zen"
+    ? withdrawZen(accountId, amount)
+    : withdrawItem(accountId, config, amount);
 }
 
 async function withdrawZen(
@@ -74,33 +66,66 @@ async function withdrawZen(
   amount: number,
 ): Promise<UserPanelActionState> {
   try {
-    await prisma.$transaction(async (tx) => {
-      const deposit = await tx.accountDeposit.findUnique({
-        where: { AccountID: accountId },
-        select: { Zen: true },
-      });
+    const message = await prisma.$transaction(async (tx) => {
+      const [deposit, warehouse] = await Promise.all([
+        tx.accountDeposit.findUnique({
+          where: { AccountID: accountId },
+          select: { Zen: true },
+        }),
+        tx.warehouse.findUnique({
+          where: { AccountID: accountId },
+          select: { Money: true },
+        }),
+      ]);
 
-      const deposited = deposit?.Zen ?? 0;
+      const deposited = deposit?.Zen ?? 0n;
       if (deposited < amount) {
         throw new Error(
           `Not enough Zen deposited. Available: ${deposited.toLocaleString()}.`,
         );
       }
 
-      await tx.accountDeposit.update({
-        where: { AccountID: accountId },
+      // Guard the decrement with `gte` so a concurrent withdrawal can't push the
+      // balance negative between this read and the write (lost-update race).
+      const { count: withdrawCount } = await tx.accountDeposit.updateMany({
+        where: { AccountID: accountId, Zen: { gte: amount } },
         data: { Zen: { decrement: amount } },
       });
 
-      await tx.warehouse.upsert({
-        where: { AccountID: accountId },
-        create: { AccountID: accountId, Money: amount },
-        update: { Money: { increment: amount } },
+      if (withdrawCount === 0) {
+        throw new Error(
+          `Not enough Zen deposited. Available: ${deposited.toLocaleString()}.`,
+        );
+      }
+
+      if (!warehouse) {
+        await tx.warehouse.create({
+          data: { AccountID: accountId, Money: amount },
+        });
+        return "Zen withdrawn successfully.";
+      }
+
+      // Guard the increment so the total can never exceed warehouse.Money's
+      // UnsignedInt capacity, atomically at the DB level.
+      const { count: creditCount } = await tx.warehouse.updateMany({
+        where: {
+          AccountID: accountId,
+          Money: { lte: MAX_WAREHOUSE_MONEY - amount },
+        },
+        data: { Money: { increment: amount } },
       });
+
+      if (creditCount === 0) {
+        throw new Error(
+          "Withdrawing this amount would exceed your warehouse's Zen capacity. Try a smaller amount.",
+        );
+      }
+
+      return "Zen withdrawn successfully.";
     });
 
     revalidatePath("/user-panel/deposits");
-    return { success: true, message: "Zen withdrawn successfully." };
+    return { success: true, message };
   } catch (err) {
     const message =
       err instanceof Error ? err.message : "Failed to withdraw Zen.";
@@ -110,17 +135,24 @@ async function withdrawZen(
 
 async function withdrawItem(
   accountId: string,
-  group: number,
-  index: number,
-  dbField: keyof AccountDepositItemFields,
-  label: string,
+  config: {
+    itemId?: ItemId;
+    dbField?: keyof AccountDepositItemFields;
+    label: string;
+  },
   amount: number,
 ): Promise<UserPanelActionState> {
+  const { itemId, dbField, label } = config;
+  if (!itemId || !dbField) {
+    return { success: false, message: "Invalid item type." };
+  }
+
   try {
-    await prisma.$transaction(async (tx) => {
+    const message = await prisma.$transaction(async (tx) => {
       const [deposit, warehouse] = await Promise.all([
         tx.accountDeposit.findUnique({
           where: { AccountID: accountId },
+          select: { [dbField]: true },
         }),
         tx.warehouse.findUnique({
           where: { AccountID: accountId },
@@ -128,45 +160,74 @@ async function withdrawItem(
         }),
       ]);
 
-      const deposited = deposit?.[dbField] ?? 0;
+      const deposited = (deposit?.[dbField] as number | undefined) ?? 0;
       if (deposited < amount) {
         throw new Error(
           `Not enough ${label} deposited. Available: ${deposited}.`,
         );
       }
 
-      const itemBytes = Uint8Array.from(createFreshItemBytes(group, index));
-      let buffer: Buffer = warehouse?.Items
-        ? Buffer.from(warehouse.Items)
-        : Buffer.alloc(1200, 0xff);
+      const originalItems = warehouse?.Items ?? null;
+      const buffer = originalItems
+        ? Buffer.from(originalItems)
+        : Buffer.alloc(WAREHOUSE_SLOTS * BYTES_PER_SLOT, EMPTY_SLOT_BYTE);
 
-      for (let i = 0; i < amount; i++) {
-        const slot = findFreeArea(buffer, 1, 1);
-        if (slot === -1) {
-          throw new Error(
-            `Not enough space in warehouse to withdraw ${amount} ${label}. Free up some space and try again.`,
-          );
-        }
-        buffer = writeItemToSlot(buffer, slot, itemBytes);
+      const itemDef = getItemDefinition(itemId);
+      const itemWidth = itemDef?.width ?? 1;
+      const itemHeight = itemDef?.height ?? 1;
+
+      const freeSlots = findFreeAreas(buffer, itemWidth, itemHeight, amount);
+      if (freeSlots.length < amount) {
+        throw new Error(
+          `Not enough space in warehouse to withdraw ${amount} ${label} (${itemWidth}x${itemHeight} each). Free up some space and try again.`,
+        );
       }
 
-      await tx.warehouse.upsert({
-        where: { AccountID: accountId },
-        create: {
-          AccountID: accountId,
-          Items: Uint8Array.from(buffer),
-        },
-        update: { Items: Uint8Array.from(buffer) },
-      });
+      const itemBytes = Uint8Array.from(
+        createItemBytes(itemId.group, itemId.index, itemId.level),
+      );
+      const newBuffer = freeSlots.reduce<Buffer>(
+        (buf, slot) => writeItemToSlot(buf, slot, itemBytes),
+        buffer,
+      );
 
-      await tx.accountDeposit.update({
-        where: { AccountID: accountId },
+      if (!warehouse) {
+        await tx.warehouse.create({
+          data: { AccountID: accountId, Items: Uint8Array.from(newBuffer) },
+        });
+      } else {
+        // Optimistic lock: only write if nothing else changed the warehouse
+        // contents since we read it.
+        const { count } = await tx.warehouse.updateMany({
+          where: { AccountID: accountId, Items: originalItems },
+          data: { Items: Uint8Array.from(newBuffer) },
+        });
+
+        if (count === 0) {
+          throw new Error(
+            "Your warehouse changed while processing this request. Please try again.",
+          );
+        }
+      }
+
+      // Guard the decrement with `gte` so a concurrent withdrawal can't push
+      // the deposited balance negative (lost-update race).
+      const { count: depositCount } = await tx.accountDeposit.updateMany({
+        where: { AccountID: accountId, [dbField]: { gte: amount } },
         data: { [dbField]: { decrement: amount } },
       });
+
+      if (depositCount === 0) {
+        throw new Error(
+          `Not enough ${label} deposited. Available: ${deposited}.`,
+        );
+      }
+
+      return `${label} withdrawn successfully.`;
     });
 
     revalidatePath("/user-panel/deposits");
-    return { success: true, message: `${label} withdrawn successfully.` };
+    return { success: true, message };
   } catch (err) {
     const message =
       err instanceof Error ? err.message : `Failed to withdraw ${label}.`;

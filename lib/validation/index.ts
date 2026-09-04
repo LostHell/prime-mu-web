@@ -7,12 +7,13 @@ export { addStatsSchema, type AddStatsInput } from "./add-stats";
 export { changeEmailSchema, type ChangeEmailInput } from "./change-email";
 export {
   changePasswordSchema,
-  type ChangePasswordInput
+  type ChangePasswordInput,
 } from "./change-password";
 export { clearPkSchema, type ClearPkInput } from "./clear-pk";
+export { depositSchema, type DepositInput } from "./deposit";
 export {
   resetCharacterSchema,
-  type ResetCharacterInput
+  type ResetCharacterInput,
 } from "./reset-character";
+export { withdrawSchema, type WithdrawInput } from "./withdraw";
 export { type UserPanelActionState } from "./types";
-
