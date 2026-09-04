@@ -3,3 +3,4 @@ export const WAREHOUSE_ROWS = 15;
 export const WAREHOUSE_SLOTS = WAREHOUSE_COLS * WAREHOUSE_ROWS;
 export const EMPTY_SLOT_BG = "/images/warehouse/emptyslotbg.jpg";
 export const FILLED_SLOT_BG = "/images/warehouse/filledslotbg.jpg";
+export const MAX_WAREHOUSE_MONEY = 2 ** 32 - 1;

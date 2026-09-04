@@ -1,15 +1,24 @@
-"use client";
-
+import { auth } from "@/auth";
 import { UserPanelPageLayout } from "../_components/user-panel-page-layout";
-import { DepositsForm } from "./_components/deposits-form";
+import { getDepositData } from "@/lib/queries/get-deposit-data";
+import { redirect } from "next/navigation";
+import { DepositsContent } from "./_components/deposits-content";
 
-export default function DepositsPage() {
+export default async function DepositsPage() {
+  const session = await auth();
+
+  if (!session?.user?.id) {
+    redirect("/login");
+  }
+
+  const data = await getDepositData(session.user.id);
+
   return (
     <UserPanelPageLayout
       title="Deposits"
-      description="Deposit items and zen from your warehouse"
+      description="Deposit and withdraw zen and items from your warehouse"
     >
-      <DepositsForm />
+      <DepositsContent data={data} />
     </UserPanelPageLayout>
   );
 }

@@ -45,7 +45,7 @@ const DownloadPage = () => {
           <p className="text-muted-foreground mb-6 text-sm">
             Last updated: March 2024
           </p>
-          <Button className="flex-1" variant="default" asChild>
+          <Button className="flex-1" variant="default" decorative asChild>
             <a href="#">
               <span>Download Now</span>
             </a>

@@ -65,6 +65,7 @@ export const ModelName = {
   RankingDevilSquare: 'RankingDevilSquare',
   ResetInfo: 'ResetInfo',
   warehouse: 'warehouse',
+  AccountDeposit: 'AccountDeposit',
   MarketplaceListing: 'MarketplaceListing'
 } as const
 
@@ -287,6 +288,20 @@ export const WarehouseScalarFieldEnum = {
 export type WarehouseScalarFieldEnum = (typeof WarehouseScalarFieldEnum)[keyof typeof WarehouseScalarFieldEnum]
 
 
+export const AccountDepositScalarFieldEnum = {
+  AccountID: 'AccountID',
+  Zen: 'Zen',
+  Rena: 'Rena',
+  JewelOfBless: 'JewelOfBless',
+  JewelOfSoul: 'JewelOfSoul',
+  JewelOfLife: 'JewelOfLife',
+  JewelOfCreation: 'JewelOfCreation',
+  JewelOfChaos: 'JewelOfChaos'
+} as const
+
+export type AccountDepositScalarFieldEnum = (typeof AccountDepositScalarFieldEnum)[keyof typeof AccountDepositScalarFieldEnum]
+
+
 export const MarketplaceListingScalarFieldEnum = {
   id: 'id',
   sellerAccountId: 'sellerAccountId',
@@ -419,6 +434,13 @@ export const warehouseOrderByRelevanceFieldEnum = {
 } as const
 
 export type warehouseOrderByRelevanceFieldEnum = (typeof warehouseOrderByRelevanceFieldEnum)[keyof typeof warehouseOrderByRelevanceFieldEnum]
+
+
+export const AccountDepositOrderByRelevanceFieldEnum = {
+  AccountID: 'AccountID'
+} as const
+
+export type AccountDepositOrderByRelevanceFieldEnum = (typeof AccountDepositOrderByRelevanceFieldEnum)[keyof typeof AccountDepositOrderByRelevanceFieldEnum]
 
 
 export const MarketplaceListingOrderByRelevanceFieldEnum = {
