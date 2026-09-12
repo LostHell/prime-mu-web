@@ -1,3 +1,5 @@
+import "server-only";
+
 import { type ItemId } from "@/lib/game/item-database/types";
 import { decodeItems } from "@/lib/game/item-decoder/decode";
 import { clearWarehouseSlot } from "@/lib/game/item-decoder/slots";

@@ -4,19 +4,15 @@ import {
   DEPOSITABLE_ITEMS,
   type AccountDepositItemFields,
 } from "@/constants/depositable-items";
-import {
-  MAX_WAREHOUSE_MONEY,
-  WAREHOUSE_SLOTS,
-} from "@/lib/game/constants/warehouse";
+import { MAX_WAREHOUSE_MONEY } from "@/lib/game/constants/warehouse";
 import { getItemDefinition } from "@/lib/game/item-database";
 import { type ItemId } from "@/lib/game/item-database/types";
 import {
-  BYTES_PER_SLOT,
   createItemBytes,
-  EMPTY_SLOT_BYTE,
   findFreeAreas,
   writeItemToSlot,
 } from "@/lib/game/item-decoder";
+import { getWarehouseItemsBuffer } from "@/lib/game/warehouse";
 import { UserPanelActionState } from "@/lib/validation/types";
 import { withdrawSchema } from "@/lib/validation/withdraw";
 import { prisma } from "@/prisma/prisma";
@@ -168,9 +164,7 @@ async function withdrawItem(
       }
 
       const originalItems = warehouse?.Items ?? null;
-      const buffer = originalItems
-        ? Buffer.from(originalItems)
-        : Buffer.alloc(WAREHOUSE_SLOTS * BYTES_PER_SLOT, EMPTY_SLOT_BYTE);
+      const buffer = getWarehouseItemsBuffer(originalItems);
 
       const itemDef = getItemDefinition(itemId);
       const itemWidth = itemDef?.width ?? 1;

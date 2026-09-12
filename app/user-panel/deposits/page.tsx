@@ -1,7 +1,7 @@
 import { auth } from "@/auth";
-import { UserPanelPageLayout } from "../_components/user-panel-page-layout";
-import { getDepositData } from "@/lib/queries/get-deposit-data";
+import { getDeposits } from "@/lib/queries/get-deposits";
 import { redirect } from "next/navigation";
+import { UserPanelPageLayout } from "../_components/user-panel-page-layout";
 import { DepositsContent } from "./_components/deposits-content";
 
 export default async function DepositsPage() {
@@ -11,14 +11,14 @@ export default async function DepositsPage() {
     redirect("/login");
   }
 
-  const data = await getDepositData(session.user.id);
+  const deposits = await getDeposits(session.user.id);
 
   return (
     <UserPanelPageLayout
       title="Deposits"
       description="Deposit and withdraw zen and items from your warehouse"
     >
-      <DepositsContent data={data} />
+      <DepositsContent deposits={deposits} />
     </UserPanelPageLayout>
   );
 }

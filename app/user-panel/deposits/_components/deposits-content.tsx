@@ -1,47 +1,97 @@
 "use client";
 
-import {
-  DEPOSIT_ITEM_TYPES,
-  DEPOSITABLE_ITEMS,
-} from "@/constants/depositable-items";
-import type { DepositData } from "@/lib/queries/get-deposit-data";
-import { DepositRow } from "./deposit-row";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import type { DepositData } from "@/lib/queries/get-deposits";
+import { useDeposits } from "../_hooks/use-deposits";
+import { ConfirmAllDialog } from "./confirm-all-dialog";
+import { ItemBalance } from "./item-balance";
+import { TransferForm } from "./transfer-form";
+import { TransferModal } from "./transfer-modal";
 
 type DepositsContentProps = {
-  data: DepositData;
+  deposits: DepositData;
 };
 
-export function DepositsContent({ data }: DepositsContentProps) {
-  const { warehouseZen, warehouseCounts, balance } = data;
+export function DepositsContent({ deposits }: DepositsContentProps) {
+  const {
+    items,
+    isOffline,
+    actionsLocked,
+    isPending,
+    pageMessage,
+    transfer,
+    confirmAll,
+  } = useDeposits(deposits);
 
   return (
     <div>
-      {DEPOSIT_ITEM_TYPES.map((type) => {
-        const config = DEPOSITABLE_ITEMS[type];
-        const warehouseCount =
-          type === "zen" ? warehouseZen : warehouseCounts[type];
-        const depositedCount =
-          type === "zen"
-            ? balance.Zen
-            : config.dbField
-              ? balance[config.dbField]
-              : 0;
+      {!isOffline && (
+        <Alert variant="destructive" className="mb-4">
+          <AlertDescription>
+            Your account must be offline to deposit or withdraw.
+          </AlertDescription>
+        </Alert>
+      )}
 
-        return (
-          <DepositRow
-            key={type}
-            type={type}
-            label={config.label}
-            icon={config.icon}
-            warehouseCount={warehouseCount}
-            depositedCount={depositedCount}
+      {items.map((item) => (
+        <ItemBalance
+          key={item.type}
+          item={item}
+          actionsLocked={actionsLocked}
+          onDeposit={() => transfer.open("deposit", item.type)}
+          onDepositAll={() => confirmAll.request("deposit", item.type)}
+          onWithdraw={() => transfer.open("withdraw", item.type)}
+          onWithdrawAll={() => confirmAll.request("withdraw", item.type)}
+        />
+      ))}
+
+      {pageMessage && (
+        <div className="mt-4">
+          <Alert variant={pageMessage.success ? "success" : "destructive"}>
+            <AlertDescription>{pageMessage.text}</AlertDescription>
+          </Alert>
+        </div>
+      )}
+
+      {transfer.item && transfer.mode && (
+        <TransferModal
+          open={transfer.isOpen}
+          onOpenChange={transfer.onOpenChange}
+          title={`${transfer.mode === "deposit" ? "Deposit" : "Withdraw"} ${transfer.item.label}`}
+          description={`Enter how much ${transfer.item.label} to ${transfer.mode} between your warehouse and website balance.`}
+          isPending={isPending}
+        >
+          <TransferForm
+            key={`${transfer.item.type}-${transfer.mode}`}
+            mode={transfer.mode}
+            type={transfer.item.type}
+            warehouseCount={transfer.item.warehouseCount}
+            depositedCount={transfer.item.depositedCount}
+            limit={
+              transfer.mode === "deposit"
+                ? transfer.item.warehouseCount
+                : transfer.item.maxWithdrawable
+            }
+            isPending={isPending}
+            errorMessage={transfer.errorMessage}
+            formAction={transfer.submit}
+            onCancel={() => transfer.onOpenChange(false)}
           />
-        );
-      })}
+        </TransferModal>
+      )}
 
-      <p className="text-muted-foreground mt-4 text-xs">
-        Your account must be offline to deposit or withdraw.
-      </p>
+      {confirmAll.item && confirmAll.mode && (
+        <ConfirmAllDialog
+          open={confirmAll.isOpen}
+          mode={confirmAll.mode}
+          item={confirmAll.item}
+          amount={confirmAll.amount}
+          isCapped={confirmAll.isCapped}
+          isPending={isPending}
+          onOpenChange={confirmAll.onOpenChange}
+          onConfirm={confirmAll.confirm}
+        />
+      )}
     </div>
   );
 }

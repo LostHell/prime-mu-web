@@ -1,3 +1,5 @@
+import "server-only";
+
 import { WAREHOUSE_COLS, WAREHOUSE_ROWS } from "@/lib/game/constants/warehouse";
 import { getItemDefinition } from "@/lib/game/item-database";
 import { decodeItems } from "./decode";

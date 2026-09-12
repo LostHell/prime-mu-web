@@ -118,9 +118,7 @@
     @apply font-serif;
   }
 
-  /* Drop the browser's default up/down spinner on number inputs everywhere;
-   * components that need steppers (e.g. the amount input in the deposits
-   * transfer modal) render their own +/- buttons instead. */
+  /* Drop the browser's default up/down spinner on number inputs everywhere. */
   input[type="number"] {
     appearance: textfield;
   }

@@ -13,3 +13,15 @@ export const bigIntToSafeNumber = (value: bigint): number => {
  * rendered directly (e.g. "10.000.000" vs "10,000,000" for the same value). */
 export const formatNumber = (value: number): string =>
   value.toLocaleString("en-US");
+
+/** Parses a user-typed amount. Empty → 0 so the field can be cleared while
+ * typing. Commas are stripped so pasted formatted values like "1,000" work.
+ * Returns `null` for non-integers so the caller can ignore the keystroke. */
+export const parseAmountInput = (value: string): number | null => {
+  const cleaned = value.replace(/,/g, "").trim();
+  if (cleaned === "") return 0;
+  if (!/^\d+$/.test(cleaned)) return null;
+  const parsed = Number(cleaned);
+  if (!Number.isSafeInteger(parsed)) return null;
+  return parsed;
+};

@@ -1,3 +1,5 @@
+import "server-only";
+
 export { BYTES_PER_SLOT, EMPTY_SLOT_BYTE } from "./constants";
 export { decodeItem, decodeItems } from "./decode";
 export { createItemBytes } from "./encode";

@@ -1,3 +1,5 @@
+import "server-only";
+
 import { BOX_OF_LUCK_ITEM_LEVEL_MAP, isBoxOfLuckItem } from "./box-of-luck";
 import { getItemDatabase, getItemKey } from "./database";
 import { type ItemDefinition, type ItemId } from "./types";
