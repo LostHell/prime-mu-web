@@ -1,6 +1,7 @@
 "use server";
 
 import {
+  DEPOSITABLE_ITEM_DURABILITY,
   DEPOSITABLE_ITEMS,
   type AccountDepositItemFields,
 } from "@/constants/depositable-items";
@@ -182,10 +183,9 @@ async function withdrawItem(
       for (const slot of freeSlots) {
         const itemBytes = Uint8Array.from(
           createItemBytes(
-            itemId.group,
-            itemId.index,
-            itemId.level,
+            itemId,
             await getNextItemSerial(),
+            DEPOSITABLE_ITEM_DURABILITY,
           ),
         );
         newBuffer = writeItemToSlot(newBuffer, slot, itemBytes);
