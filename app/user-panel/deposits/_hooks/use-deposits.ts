@@ -50,7 +50,7 @@ export function useDeposits(deposits: DepositData) {
 
   const isPending = isDepositPending || isWithdrawPending;
   const activeState = lastAction === "withdraw" ? withdrawState : depositState;
-  const actionsLocked = isPending || !deposits.isOffline;
+  const actionsLocked = !deposits.isOffline || isPending;
 
   const transferItem = findItem(deposits.items, transferTarget?.type);
   const confirmAllItem = findItem(deposits.items, confirmAllTarget?.type);

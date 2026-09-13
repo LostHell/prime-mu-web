@@ -13,8 +13,8 @@ export type ItemIconId = { group: number; index: number };
 
 export type DepositItemConfig = {
   label: string;
-  /** Icon used to render this item (all depositable items map to a real in-game item). */
-  icon: ItemIconId;
+  /** In-game item icon. Omit for zen — it isn't a warehouse item. */
+  icon?: ItemIconId;
   /** Field name on AccountDeposit model. Undefined for zen (handled separately). */
   dbField?: keyof AccountDepositItemFields;
   /** Exact warehouse binary representation (group+index+level) to match/create.
@@ -38,7 +38,6 @@ export type AccountDepositItemFields = {
 export const DEPOSITABLE_ITEMS: Record<DepositItemType, DepositItemConfig> = {
   zen: {
     label: "Zen",
-    icon: { group: 14, index: 15 },
   },
   rena: {
     label: "Rena",

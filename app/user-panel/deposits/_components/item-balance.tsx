@@ -28,13 +28,15 @@ export function ItemBalance({
   return (
     <div className="border-border/50 border-b py-4 last:border-b-0">
       <div className="mb-3 flex items-center gap-3">
-        <div className="flex size-9 shrink-0 items-center justify-center overflow-hidden">
-          <ItemIcon
-            group={icon.group}
-            index={icon.index}
-            className="size-full"
-          />
-        </div>
+        {icon && (
+          <div className="flex size-9 shrink-0 items-center justify-center overflow-hidden">
+            <ItemIcon
+              group={icon.group}
+              index={icon.index}
+              className="size-full"
+            />
+          </div>
+        )}
         <span className="text-sm font-semibold">{label}</span>
       </div>
 
@@ -46,7 +48,7 @@ export function ItemBalance({
           highlight={depositedCount > 0}
         />
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-start gap-3">
           <Button
             variant="link"
             onClick={onDeposit}

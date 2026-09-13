@@ -26,7 +26,9 @@ const buttonVariants = cva(
           "hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50",
         destructive:
           "bg-destructive/10 border border-destructive/40 text-destructive hover:bg-destructive/20 focus-visible:border-destructive focus-visible:ring-destructive/20 dark:bg-destructive/20 dark:hover:bg-destructive/30 dark:focus-visible:ring-destructive/40",
-        link: "text-primary underline-offset-4 hover:underline",
+        /** Inline text action. Size is reset in compoundVariants — CVA applies
+         * `size` after `variant`, so padding/height cannot live on `link` itself. */
+        link: "text-foreground decoration-muted-foreground underline underline-offset-4 hover:text-gold hover:decoration-gold disabled:text-muted-foreground disabled:no-underline disabled:opacity-60",
       },
       size: {
         default:
@@ -47,6 +49,12 @@ const buttonVariants = cva(
       size: "default",
       decorative: false,
     },
+    compoundVariants: [
+      {
+        variant: "link",
+        class: "h-auto rounded-none p-0",
+      },
+    ],
   },
 );
 

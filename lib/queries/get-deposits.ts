@@ -17,7 +17,7 @@ import { prisma } from "@/prisma/prisma";
 export type ItemBalance = {
   type: DepositItemType;
   label: string;
-  icon: ItemIconId;
+  icon?: ItemIconId;
   warehouseCount: number;
   depositedCount: number;
   maxWithdrawable: number;
