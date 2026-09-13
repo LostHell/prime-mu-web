@@ -29,7 +29,7 @@ describe("countPlaceableItems", () => {
 
   test("returns 0 when the warehouse has no free space", () => {
     const itemBytes = Uint8Array.from(
-      createItemBytes(blessId.group, blessId.index, blessId.level),
+      createItemBytes(blessId.group, blessId.index, blessId.level, 1),
     );
     const items = Array.from(
       { length: WAREHOUSE_SLOTS },

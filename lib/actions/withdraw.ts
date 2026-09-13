@@ -13,6 +13,7 @@ import {
   writeItemToSlot,
 } from "@/lib/game/item-decoder";
 import { getWarehouseItemsBuffer } from "@/lib/game/warehouse";
+import { getNextItemSerial } from "@/lib/queries/get-next-item-serial";
 import { UserPanelActionState } from "@/lib/validation/types";
 import { withdrawSchema } from "@/lib/validation/withdraw";
 import { prisma } from "@/prisma/prisma";
@@ -177,13 +178,18 @@ async function withdrawItem(
         );
       }
 
-      const itemBytes = Uint8Array.from(
-        createItemBytes(itemId.group, itemId.index, itemId.level),
-      );
-      const newBuffer = freeSlots.reduce<Buffer>(
-        (buf, slot) => writeItemToSlot(buf, slot, itemBytes),
-        buffer,
-      );
+      let newBuffer = buffer;
+      for (const slot of freeSlots) {
+        const itemBytes = Uint8Array.from(
+          createItemBytes(
+            itemId.group,
+            itemId.index,
+            itemId.level,
+            await getNextItemSerial(),
+          ),
+        );
+        newBuffer = writeItemToSlot(newBuffer, slot, itemBytes);
+      }
 
       if (!warehouse) {
         await tx.warehouse.create({
