@@ -35,6 +35,9 @@ export type AccountDepositItemFields = {
   JewelOfChaos: number;
 };
 
+/** Fresh jewel/Rena durability (item byte 2). */
+export const DEPOSITABLE_ITEM_DURABILITY = 1;
+
 export const DEPOSITABLE_ITEMS: Record<DepositItemType, DepositItemConfig> = {
   zen: {
     label: "Zen",

@@ -1,4 +1,7 @@
-import { DEPOSITABLE_ITEMS } from "@/constants/depositable-items";
+import {
+  DEPOSITABLE_ITEM_DURABILITY,
+  DEPOSITABLE_ITEMS,
+} from "@/constants/depositable-items";
 import { WAREHOUSE_SLOTS } from "@/lib/game/constants/warehouse";
 import {
   BYTES_PER_SLOT,
@@ -29,7 +32,7 @@ describe("countPlaceableItems", () => {
 
   test("returns 0 when the warehouse has no free space", () => {
     const itemBytes = Uint8Array.from(
-      createItemBytes(blessId.group, blessId.index, blessId.level, 1),
+      createItemBytes(blessId, 1, DEPOSITABLE_ITEM_DURABILITY),
     );
     const items = Array.from(
       { length: WAREHOUSE_SLOTS },
