@@ -15,8 +15,6 @@ export const createItemBytes = (
   const itemType = group * ITEM_TYPE_GROUP_SIZE + index;
   const extended = itemType > 255;
 
-  const extendedFlag = extended ? ITEM_TYPE_EXTENDED_FLAG_MASK : 0x00;
-
   return [
     extended ? itemType - 256 : itemType,
     (level & ITEM_LEVEL_MASK) << ITEM_LEVEL_SHIFT,
@@ -25,8 +23,8 @@ export const createItemBytes = (
     (serial >>> 16) & 0xff,
     (serial >>> 8) & 0xff,
     serial & 0xff,
-    extendedFlag,
+    extended ? ITEM_TYPE_EXTENDED_FLAG_MASK : 0x00,
     0x00,
-    extendedFlag,
+    extended ? group : 0x00,
   ];
 };
