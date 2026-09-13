@@ -7,6 +7,7 @@ import {
   ITEM_LEVEL_SHIFT,
   ITEM_LUCK_MASK,
   ITEM_SKILL_MASK,
+  ITEM_TYPE_EXTENDED_FLAG_LEGACY_MASK,
   ITEM_TYPE_EXTENDED_FLAG_MASK,
   ITEM_TYPE_GROUP_SIZE,
 } from "./constants";
@@ -28,7 +29,13 @@ const parseItemAtSlot = (
   const b7 = data[offset + 7];
   const b9 = data[offset + 9];
 
-  const itemType = b0 + ((b9 & ITEM_TYPE_EXTENDED_FLAG_MASK) !== 0 ? 256 : 0);
+  const itemType =
+    b0 +
+    ((b7 & ITEM_TYPE_EXTENDED_FLAG_MASK) !== 0 ||
+    (b9 & ITEM_TYPE_EXTENDED_FLAG_MASK) !== 0 ||
+    (b9 & ITEM_TYPE_EXTENDED_FLAG_LEGACY_MASK) !== 0
+      ? 256
+      : 0);
   const group = Math.floor(itemType / ITEM_TYPE_GROUP_SIZE);
   const index = itemType % ITEM_TYPE_GROUP_SIZE;
   const skill = (b1 & ITEM_SKILL_MASK) !== 0;
