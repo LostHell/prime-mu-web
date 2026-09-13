@@ -5,6 +5,12 @@ export type ItemClassFlags = {
   mg: number;
 };
 
+export type ItemId = {
+  group: number;
+  index: number;
+  level: number;
+};
+
 export type ItemDefinition = {
   name: string;
   width: number;

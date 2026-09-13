@@ -17,7 +17,7 @@ import { clearPkAction } from "@/lib/actions/clear-pk";
 import { type Character } from "@/lib/types/character";
 import { cn } from "@/lib/utils";
 import { ShieldCheck, Skull } from "lucide-react";
-import { useActionState } from "react";
+import { startTransition, useActionState } from "react";
 
 interface ClearPkFormProps {
   character: Character;
@@ -29,7 +29,9 @@ export function ClearPkForm({ character }: ClearPkFormProps) {
   const handleConfirm = () => {
     const formData = new FormData();
     formData.set("characterName", character.name);
-    formAction(formData);
+    startTransition(() => {
+      formAction(formData);
+    });
   };
 
   const hasPk = character.pkCount > 0;

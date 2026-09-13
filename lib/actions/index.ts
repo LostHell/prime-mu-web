@@ -2,8 +2,9 @@ export { addStatsAction } from "./add-stats";
 export { changeEmailAction } from "./change-email";
 export { changePasswordAction } from "./change-password";
 export { clearPkAction } from "./clear-pk";
+export { depositAction } from "./deposit";
 export { loginAction } from "./login";
 export { logoutAction } from "./logout";
 export { registerAction } from "./register";
 export { resetCharacterAction } from "./reset-character";
-
+export { withdrawAction } from "./withdraw";

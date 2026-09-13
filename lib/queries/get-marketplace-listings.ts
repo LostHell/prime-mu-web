@@ -35,25 +35,25 @@ export type MarketListing = {
 const decodeItemFromHex = (itemHex: Buffer): ListingItem | null => {
   const decodedItem = decodeItem(itemHex);
   if (!decodedItem) return null;
-  const def = getItemDefinition(
-    decodedItem.group,
-    decodedItem.index,
-    decodedItem.level,
-  );
+  const itemDef = getItemDefinition({
+    group: decodedItem.group,
+    index: decodedItem.index,
+    level: decodedItem.level,
+  });
 
   return {
     ...decodedItem,
     slot: 0,
-    name: def?.name ?? "Unknown item",
-    width: def?.width ?? 1,
-    height: def?.height ?? 1,
-    defense: def?.defense,
-    defRate: def?.defRate,
-    dmgMin: def?.dmgMin,
-    dmgMax: def?.dmgMax,
-    reqStr: def?.reqStr,
-    reqAgi: def?.reqAgi,
-    classFlags: def?.classFlags,
+    name: itemDef?.name ?? "Unknown item",
+    width: itemDef?.width ?? 1,
+    height: itemDef?.height ?? 1,
+    defense: itemDef?.defense,
+    defRate: itemDef?.defRate,
+    dmgMin: itemDef?.dmgMin,
+    dmgMax: itemDef?.dmgMax,
+    reqStr: itemDef?.reqStr,
+    reqAgi: itemDef?.reqAgi,
+    classFlags: itemDef?.classFlags,
   };
 };
 

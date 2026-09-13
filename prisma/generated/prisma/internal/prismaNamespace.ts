@@ -398,6 +398,7 @@ export const ModelName = {
   RankingDevilSquare: 'RankingDevilSquare',
   ResetInfo: 'ResetInfo',
   warehouse: 'warehouse',
+  AccountDeposit: 'AccountDeposit',
   MarketplaceListing: 'MarketplaceListing'
 } as const
 
@@ -414,7 +415,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "accountCharacter" | "character" | "defaultClassType" | "gameServerInfo" | "goldenArcherCoin" | "guild" | "guildMember" | "mEMB_INFO" | "mEMB_STAT" | "optionData" | "rankingBloodCastle" | "rankingDevilSquare" | "resetInfo" | "warehouse" | "marketplaceListing"
+    modelProps: "accountCharacter" | "character" | "defaultClassType" | "gameServerInfo" | "goldenArcherCoin" | "guild" | "guildMember" | "mEMB_INFO" | "mEMB_STAT" | "optionData" | "rankingBloodCastle" | "rankingDevilSquare" | "resetInfo" | "warehouse" | "accountDeposit" | "marketplaceListing"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1342,6 +1343,72 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    AccountDeposit: {
+      payload: Prisma.$AccountDepositPayload<ExtArgs>
+      fields: Prisma.AccountDepositFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AccountDepositFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccountDepositPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AccountDepositFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccountDepositPayload>
+        }
+        findFirst: {
+          args: Prisma.AccountDepositFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccountDepositPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AccountDepositFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccountDepositPayload>
+        }
+        findMany: {
+          args: Prisma.AccountDepositFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccountDepositPayload>[]
+        }
+        create: {
+          args: Prisma.AccountDepositCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccountDepositPayload>
+        }
+        createMany: {
+          args: Prisma.AccountDepositCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.AccountDepositDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccountDepositPayload>
+        }
+        update: {
+          args: Prisma.AccountDepositUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccountDepositPayload>
+        }
+        deleteMany: {
+          args: Prisma.AccountDepositDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AccountDepositUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.AccountDepositUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccountDepositPayload>
+        }
+        aggregate: {
+          args: Prisma.AccountDepositAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAccountDeposit>
+        }
+        groupBy: {
+          args: Prisma.AccountDepositGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AccountDepositGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AccountDepositCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AccountDepositCountAggregateOutputType> | number
+        }
+      }
+    }
     MarketplaceListing: {
       payload: Prisma.$MarketplaceListingPayload<ExtArgs>
       fields: Prisma.MarketplaceListingFieldRefs
@@ -1650,6 +1717,20 @@ export const WarehouseScalarFieldEnum = {
 export type WarehouseScalarFieldEnum = (typeof WarehouseScalarFieldEnum)[keyof typeof WarehouseScalarFieldEnum]
 
 
+export const AccountDepositScalarFieldEnum = {
+  AccountID: 'AccountID',
+  Zen: 'Zen',
+  Rena: 'Rena',
+  JewelOfBless: 'JewelOfBless',
+  JewelOfSoul: 'JewelOfSoul',
+  JewelOfLife: 'JewelOfLife',
+  JewelOfCreation: 'JewelOfCreation',
+  JewelOfChaos: 'JewelOfChaos'
+} as const
+
+export type AccountDepositScalarFieldEnum = (typeof AccountDepositScalarFieldEnum)[keyof typeof AccountDepositScalarFieldEnum]
+
+
 export const MarketplaceListingScalarFieldEnum = {
   id: 'id',
   sellerAccountId: 'sellerAccountId',
@@ -1784,6 +1865,13 @@ export const warehouseOrderByRelevanceFieldEnum = {
 export type warehouseOrderByRelevanceFieldEnum = (typeof warehouseOrderByRelevanceFieldEnum)[keyof typeof warehouseOrderByRelevanceFieldEnum]
 
 
+export const AccountDepositOrderByRelevanceFieldEnum = {
+  AccountID: 'AccountID'
+} as const
+
+export type AccountDepositOrderByRelevanceFieldEnum = (typeof AccountDepositOrderByRelevanceFieldEnum)[keyof typeof AccountDepositOrderByRelevanceFieldEnum]
+
+
 export const MarketplaceListingOrderByRelevanceFieldEnum = {
   sellerAccountId: 'sellerAccountId',
   sellerCharacter: 'sellerCharacter',
@@ -1826,6 +1914,13 @@ export type BytesFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, '
  * Reference to a field of type 'DateTime'
  */
 export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
+    
+
+
+/**
+ * Reference to a field of type 'BigInt'
+ */
+export type BigIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BigInt'>
     
 
 
@@ -1944,6 +2039,7 @@ export type GlobalOmitConfig = {
   rankingDevilSquare?: Prisma.RankingDevilSquareOmit
   resetInfo?: Prisma.ResetInfoOmit
   warehouse?: Prisma.warehouseOmit
+  accountDeposit?: Prisma.AccountDepositOmit
   marketplaceListing?: Prisma.MarketplaceListingOmit
 }
 

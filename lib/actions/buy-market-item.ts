@@ -65,11 +65,11 @@ export async function buyMarketItemAction(
   if (!decodedItem) {
     return { success: false, message: "Could not decode item data." };
   }
-  const itemDef = getItemDefinition(
-    decodedItem.group,
-    decodedItem.index,
-    decodedItem.level,
-  );
+  const itemDef = getItemDefinition({
+    group: decodedItem.group,
+    index: decodedItem.index,
+    level: decodedItem.level,
+  });
   const itemWidth = itemDef?.width ?? 1;
   const itemHeight = itemDef?.height ?? 1;
 

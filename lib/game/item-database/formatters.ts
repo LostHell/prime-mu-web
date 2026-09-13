@@ -1,11 +1,9 @@
 import { BOX_OF_LUCK_ITEM_LEVEL_MAP, isBoxOfLuckItem } from "./box-of-luck";
+import { type ItemId } from "./types";
 
 type FormatItemNameInput = {
-  item: {
+  item: ItemId & {
     name: string;
-    group: number;
-    index: number;
-    level: number;
     excellent?: number;
   };
   options?: {

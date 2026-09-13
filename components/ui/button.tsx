@@ -5,9 +5,16 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "cursor-pointer group/button inline-flex shrink-0 items-center justify-center rounded-md border border-transparent text-sm bg-clip-padding font-serif font-semibold tracking-wider whitespace-nowrap transition-all duration-300 outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+  "cursor-pointer group/button inline-flex shrink-0 items-center justify-center rounded-md border border-transparent text-sm bg-clip-padding whitespace-nowrap transition-all duration-300 outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
   {
     variants: {
+      /** The serif heading font used for real CTAs. Defaults on to keep every
+       * existing call site's look unchanged; opt out for non-CTA uses, like
+       * small inline text links, that shouldn't carry decorative styling. */
+      decorative: {
+        true: "font-serif font-semibold tracking-wider",
+        false: "font-sans font-medium tracking-normal",
+      },
       variant: {
         default:
           "bg-[linear-gradient(135deg,_hsl(var(--gold)),_hsl(var(--gold-dim)))] border-gold-dim hover:border-gold text-primary-foreground hover:shadow-[0_0_12px_hsl(var(--gold)/0.5),0_0_12px_hsl(var(--gold)/0.2)]",
@@ -19,7 +26,9 @@ const buttonVariants = cva(
           "hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50",
         destructive:
           "bg-destructive/10 border border-destructive/40 text-destructive hover:bg-destructive/20 focus-visible:border-destructive focus-visible:ring-destructive/20 dark:bg-destructive/20 dark:hover:bg-destructive/30 dark:focus-visible:ring-destructive/40",
-        link: "text-primary underline-offset-4 hover:underline",
+        /** Inline text action. Size is reset in compoundVariants — CVA applies
+         * `size` after `variant`, so padding/height cannot live on `link` itself. */
+        link: "text-foreground decoration-muted-foreground underline underline-offset-4 hover:text-gold hover:decoration-gold disabled:text-muted-foreground disabled:no-underline disabled:opacity-60",
       },
       size: {
         default:
@@ -38,7 +47,14 @@ const buttonVariants = cva(
     defaultVariants: {
       variant: "default",
       size: "default",
+      decorative: false,
     },
+    compoundVariants: [
+      {
+        variant: "link",
+        class: "h-auto rounded-none p-0",
+      },
+    ],
   },
 );
 
@@ -46,6 +62,7 @@ function Button({
   className,
   variant = "default",
   size = "default",
+  decorative = false,
   asChild = false,
   ...props
 }: React.ComponentProps<"button"> &
@@ -59,7 +76,7 @@ function Button({
       data-slot="button"
       data-variant={variant}
       data-size={size}
-      className={cn(buttonVariants({ variant, size }), className)}
+      className={cn(buttonVariants({ variant, size, decorative }), className)}
       {...props}
     />
   );

@@ -112,6 +112,11 @@ export type ResetInfo = Prisma.ResetInfoModel
  */
 export type warehouse = Prisma.warehouseModel
 /**
+ * Model AccountDeposit
+ * 
+ */
+export type AccountDeposit = Prisma.AccountDepositModel
+/**
  * Model MarketplaceListing
  * 
  */

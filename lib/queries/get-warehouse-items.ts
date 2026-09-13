@@ -16,20 +16,24 @@ export async function getWarehouseItems(
   const decodedItems = decodeItems(Buffer.from(warehouse.Items));
 
   const warehouseItems = decodedItems.map((item) => {
-    const def = getItemDefinition(item.group, item.index, item.level);
+    const itemDef = getItemDefinition({
+      group: item.group,
+      index: item.index,
+      level: item.level,
+    });
 
     return {
       ...item,
-      name: def?.name ?? "Unknown item",
-      width: def?.width ?? 1,
-      height: def?.height ?? 1,
-      defense: def?.defense,
-      defRate: def?.defRate,
-      dmgMin: def?.dmgMin,
-      dmgMax: def?.dmgMax,
-      reqStr: def?.reqStr,
-      reqAgi: def?.reqAgi,
-      classFlags: def?.classFlags,
+      name: itemDef?.name ?? "Unknown item",
+      width: itemDef?.width ?? 1,
+      height: itemDef?.height ?? 1,
+      defense: itemDef?.defense,
+      defRate: itemDef?.defRate,
+      dmgMin: itemDef?.dmgMin,
+      dmgMax: itemDef?.dmgMax,
+      reqStr: itemDef?.reqStr,
+      reqAgi: itemDef?.reqAgi,
+      classFlags: itemDef?.classFlags,
     };
   });
 

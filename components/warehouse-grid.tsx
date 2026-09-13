@@ -5,7 +5,7 @@ import {
   WAREHOUSE_ROWS,
   WAREHOUSE_SLOTS,
 } from "@/lib/game/constants/warehouse";
-import { getOccupiedSlots } from "@/lib/game/warehouse";
+import { getOccupiedSlots } from "@/lib/game/warehouse/get-occupied-slots";
 import { type WarehouseItem } from "@/lib/types/warehouse";
 import { cn } from "@/lib/utils";
 import { ItemCard } from "./item-card";
@@ -25,11 +25,13 @@ export function WarehouseGrid({
   selectedSlot: number | null;
   onSelectSlot: (slot: number) => void;
 }) {
-  const occupiedSlots = getOccupiedSlots(warehouseItems.map((item) => ({
-    slot: item.slot,
-    width: item.width,
-    height: item.height,
-  })));
+  const occupiedSlots = getOccupiedSlots(
+    warehouseItems.map((item) => ({
+      slot: item.slot,
+      width: item.width,
+      height: item.height,
+    })),
+  );
 
   return (
     <div
@@ -78,9 +80,9 @@ export function WarehouseGrid({
                   gridColumnEnd: startCol + 1 + item.width,
                 }}
                 className={cn(
-                  "focus-visible:ring-gold hover:bg-black/20 relative flex h-full w-full flex-col items-stretch justify-between overflow-hidden rounded-md border-0 transition-colors outline-none focus-visible:ring-2 focus-visible:ring-inset",
+                  "focus-visible:ring-gold relative flex h-full w-full flex-col items-stretch justify-between overflow-hidden rounded-md border-0 transition-colors outline-none hover:bg-black/20 focus-visible:ring-2 focus-visible:ring-inset",
                   isSelected
-                    ? "bg-black/20 ring-gold z-10 ring-2 ring-inset"
+                    ? "ring-gold z-10 bg-black/20 ring-2 ring-inset"
                     : "cursor-pointer",
                 )}
                 aria-label={`Select item ${item.name} +${item.level}`}

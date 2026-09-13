@@ -1,3 +1,5 @@
+import "server-only";
+
 import { BYTES_PER_SLOT, EMPTY_SLOT_BYTE } from "./constants";
 import { type BinaryItemData } from "./types";
 
