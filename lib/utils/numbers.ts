@@ -25,3 +25,15 @@ export const parseAmountInput = (value: string): number | null => {
   if (!Number.isSafeInteger(parsed)) return null;
   return parsed;
 };
+
+/** Clamps an already-parsed amount to `[min, max]`. Shared by every
+ * currency-input control (deposit/withdraw transfer amount, market listing
+ * prices) so they all round/bound values the same way. */
+export const clampAmount = (
+  value: number,
+  min: number,
+  max: number,
+): number => {
+  if (!Number.isFinite(value)) return min;
+  return Math.min(Math.max(Math.trunc(value), min), max);
+};

@@ -28,12 +28,24 @@ export type AggregateMarketplaceListing = {
 
 export type MarketplaceListingAvgAggregateOutputType = {
   id: number | null
-  zenPrice: number | null
+  Zen: number | null
+  Rena: number | null
+  JewelOfBless: number | null
+  JewelOfSoul: number | null
+  JewelOfLife: number | null
+  JewelOfCreation: number | null
+  JewelOfChaos: number | null
 }
 
 export type MarketplaceListingSumAggregateOutputType = {
   id: number | null
-  zenPrice: number | null
+  Zen: number | null
+  Rena: number | null
+  JewelOfBless: number | null
+  JewelOfSoul: number | null
+  JewelOfLife: number | null
+  JewelOfCreation: number | null
+  JewelOfChaos: number | null
 }
 
 export type MarketplaceListingMinAggregateOutputType = {
@@ -41,7 +53,13 @@ export type MarketplaceListingMinAggregateOutputType = {
   sellerAccountId: string | null
   sellerCharacter: string | null
   itemHex: runtime.Bytes | null
-  zenPrice: number | null
+  Zen: number | null
+  Rena: number | null
+  JewelOfBless: number | null
+  JewelOfSoul: number | null
+  JewelOfLife: number | null
+  JewelOfCreation: number | null
+  JewelOfChaos: number | null
   listedAt: Date | null
   status: string | null
   buyerAccountId: string | null
@@ -54,7 +72,13 @@ export type MarketplaceListingMaxAggregateOutputType = {
   sellerAccountId: string | null
   sellerCharacter: string | null
   itemHex: runtime.Bytes | null
-  zenPrice: number | null
+  Zen: number | null
+  Rena: number | null
+  JewelOfBless: number | null
+  JewelOfSoul: number | null
+  JewelOfLife: number | null
+  JewelOfCreation: number | null
+  JewelOfChaos: number | null
   listedAt: Date | null
   status: string | null
   buyerAccountId: string | null
@@ -67,7 +91,13 @@ export type MarketplaceListingCountAggregateOutputType = {
   sellerAccountId: number
   sellerCharacter: number
   itemHex: number
-  zenPrice: number
+  Zen: number
+  Rena: number
+  JewelOfBless: number
+  JewelOfSoul: number
+  JewelOfLife: number
+  JewelOfCreation: number
+  JewelOfChaos: number
   listedAt: number
   status: number
   buyerAccountId: number
@@ -79,12 +109,24 @@ export type MarketplaceListingCountAggregateOutputType = {
 
 export type MarketplaceListingAvgAggregateInputType = {
   id?: true
-  zenPrice?: true
+  Zen?: true
+  Rena?: true
+  JewelOfBless?: true
+  JewelOfSoul?: true
+  JewelOfLife?: true
+  JewelOfCreation?: true
+  JewelOfChaos?: true
 }
 
 export type MarketplaceListingSumAggregateInputType = {
   id?: true
-  zenPrice?: true
+  Zen?: true
+  Rena?: true
+  JewelOfBless?: true
+  JewelOfSoul?: true
+  JewelOfLife?: true
+  JewelOfCreation?: true
+  JewelOfChaos?: true
 }
 
 export type MarketplaceListingMinAggregateInputType = {
@@ -92,7 +134,13 @@ export type MarketplaceListingMinAggregateInputType = {
   sellerAccountId?: true
   sellerCharacter?: true
   itemHex?: true
-  zenPrice?: true
+  Zen?: true
+  Rena?: true
+  JewelOfBless?: true
+  JewelOfSoul?: true
+  JewelOfLife?: true
+  JewelOfCreation?: true
+  JewelOfChaos?: true
   listedAt?: true
   status?: true
   buyerAccountId?: true
@@ -105,7 +153,13 @@ export type MarketplaceListingMaxAggregateInputType = {
   sellerAccountId?: true
   sellerCharacter?: true
   itemHex?: true
-  zenPrice?: true
+  Zen?: true
+  Rena?: true
+  JewelOfBless?: true
+  JewelOfSoul?: true
+  JewelOfLife?: true
+  JewelOfCreation?: true
+  JewelOfChaos?: true
   listedAt?: true
   status?: true
   buyerAccountId?: true
@@ -118,7 +172,13 @@ export type MarketplaceListingCountAggregateInputType = {
   sellerAccountId?: true
   sellerCharacter?: true
   itemHex?: true
-  zenPrice?: true
+  Zen?: true
+  Rena?: true
+  JewelOfBless?: true
+  JewelOfSoul?: true
+  JewelOfLife?: true
+  JewelOfCreation?: true
+  JewelOfChaos?: true
   listedAt?: true
   status?: true
   buyerAccountId?: true
@@ -218,7 +278,13 @@ export type MarketplaceListingGroupByOutputType = {
   sellerAccountId: string
   sellerCharacter: string
   itemHex: runtime.Bytes
-  zenPrice: number | null
+  Zen: number
+  Rena: number
+  JewelOfBless: number
+  JewelOfSoul: number
+  JewelOfLife: number
+  JewelOfCreation: number
+  JewelOfChaos: number
   listedAt: Date
   status: string
   buyerAccountId: string | null
@@ -254,7 +320,13 @@ export type MarketplaceListingWhereInput = {
   sellerAccountId?: Prisma.StringFilter<"MarketplaceListing"> | string
   sellerCharacter?: Prisma.StringFilter<"MarketplaceListing"> | string
   itemHex?: Prisma.BytesFilter<"MarketplaceListing"> | runtime.Bytes
-  zenPrice?: Prisma.IntNullableFilter<"MarketplaceListing"> | number | null
+  Zen?: Prisma.IntFilter<"MarketplaceListing"> | number
+  Rena?: Prisma.IntFilter<"MarketplaceListing"> | number
+  JewelOfBless?: Prisma.IntFilter<"MarketplaceListing"> | number
+  JewelOfSoul?: Prisma.IntFilter<"MarketplaceListing"> | number
+  JewelOfLife?: Prisma.IntFilter<"MarketplaceListing"> | number
+  JewelOfCreation?: Prisma.IntFilter<"MarketplaceListing"> | number
+  JewelOfChaos?: Prisma.IntFilter<"MarketplaceListing"> | number
   listedAt?: Prisma.DateTimeFilter<"MarketplaceListing"> | Date | string
   status?: Prisma.StringFilter<"MarketplaceListing"> | string
   buyerAccountId?: Prisma.StringNullableFilter<"MarketplaceListing"> | string | null
@@ -267,7 +339,13 @@ export type MarketplaceListingOrderByWithRelationInput = {
   sellerAccountId?: Prisma.SortOrder
   sellerCharacter?: Prisma.SortOrder
   itemHex?: Prisma.SortOrder
-  zenPrice?: Prisma.SortOrderInput | Prisma.SortOrder
+  Zen?: Prisma.SortOrder
+  Rena?: Prisma.SortOrder
+  JewelOfBless?: Prisma.SortOrder
+  JewelOfSoul?: Prisma.SortOrder
+  JewelOfLife?: Prisma.SortOrder
+  JewelOfCreation?: Prisma.SortOrder
+  JewelOfChaos?: Prisma.SortOrder
   listedAt?: Prisma.SortOrder
   status?: Prisma.SortOrder
   buyerAccountId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -284,7 +362,13 @@ export type MarketplaceListingWhereUniqueInput = Prisma.AtLeast<{
   sellerAccountId?: Prisma.StringFilter<"MarketplaceListing"> | string
   sellerCharacter?: Prisma.StringFilter<"MarketplaceListing"> | string
   itemHex?: Prisma.BytesFilter<"MarketplaceListing"> | runtime.Bytes
-  zenPrice?: Prisma.IntNullableFilter<"MarketplaceListing"> | number | null
+  Zen?: Prisma.IntFilter<"MarketplaceListing"> | number
+  Rena?: Prisma.IntFilter<"MarketplaceListing"> | number
+  JewelOfBless?: Prisma.IntFilter<"MarketplaceListing"> | number
+  JewelOfSoul?: Prisma.IntFilter<"MarketplaceListing"> | number
+  JewelOfLife?: Prisma.IntFilter<"MarketplaceListing"> | number
+  JewelOfCreation?: Prisma.IntFilter<"MarketplaceListing"> | number
+  JewelOfChaos?: Prisma.IntFilter<"MarketplaceListing"> | number
   listedAt?: Prisma.DateTimeFilter<"MarketplaceListing"> | Date | string
   status?: Prisma.StringFilter<"MarketplaceListing"> | string
   buyerAccountId?: Prisma.StringNullableFilter<"MarketplaceListing"> | string | null
@@ -297,7 +381,13 @@ export type MarketplaceListingOrderByWithAggregationInput = {
   sellerAccountId?: Prisma.SortOrder
   sellerCharacter?: Prisma.SortOrder
   itemHex?: Prisma.SortOrder
-  zenPrice?: Prisma.SortOrderInput | Prisma.SortOrder
+  Zen?: Prisma.SortOrder
+  Rena?: Prisma.SortOrder
+  JewelOfBless?: Prisma.SortOrder
+  JewelOfSoul?: Prisma.SortOrder
+  JewelOfLife?: Prisma.SortOrder
+  JewelOfCreation?: Prisma.SortOrder
+  JewelOfChaos?: Prisma.SortOrder
   listedAt?: Prisma.SortOrder
   status?: Prisma.SortOrder
   buyerAccountId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -318,7 +408,13 @@ export type MarketplaceListingScalarWhereWithAggregatesInput = {
   sellerAccountId?: Prisma.StringWithAggregatesFilter<"MarketplaceListing"> | string
   sellerCharacter?: Prisma.StringWithAggregatesFilter<"MarketplaceListing"> | string
   itemHex?: Prisma.BytesWithAggregatesFilter<"MarketplaceListing"> | runtime.Bytes
-  zenPrice?: Prisma.IntNullableWithAggregatesFilter<"MarketplaceListing"> | number | null
+  Zen?: Prisma.IntWithAggregatesFilter<"MarketplaceListing"> | number
+  Rena?: Prisma.IntWithAggregatesFilter<"MarketplaceListing"> | number
+  JewelOfBless?: Prisma.IntWithAggregatesFilter<"MarketplaceListing"> | number
+  JewelOfSoul?: Prisma.IntWithAggregatesFilter<"MarketplaceListing"> | number
+  JewelOfLife?: Prisma.IntWithAggregatesFilter<"MarketplaceListing"> | number
+  JewelOfCreation?: Prisma.IntWithAggregatesFilter<"MarketplaceListing"> | number
+  JewelOfChaos?: Prisma.IntWithAggregatesFilter<"MarketplaceListing"> | number
   listedAt?: Prisma.DateTimeWithAggregatesFilter<"MarketplaceListing"> | Date | string
   status?: Prisma.StringWithAggregatesFilter<"MarketplaceListing"> | string
   buyerAccountId?: Prisma.StringNullableWithAggregatesFilter<"MarketplaceListing"> | string | null
@@ -330,7 +426,13 @@ export type MarketplaceListingCreateInput = {
   sellerAccountId: string
   sellerCharacter: string
   itemHex: runtime.Bytes
-  zenPrice?: number | null
+  Zen?: number
+  Rena?: number
+  JewelOfBless?: number
+  JewelOfSoul?: number
+  JewelOfLife?: number
+  JewelOfCreation?: number
+  JewelOfChaos?: number
   listedAt?: Date | string
   status?: string
   buyerAccountId?: string | null
@@ -343,7 +445,13 @@ export type MarketplaceListingUncheckedCreateInput = {
   sellerAccountId: string
   sellerCharacter: string
   itemHex: runtime.Bytes
-  zenPrice?: number | null
+  Zen?: number
+  Rena?: number
+  JewelOfBless?: number
+  JewelOfSoul?: number
+  JewelOfLife?: number
+  JewelOfCreation?: number
+  JewelOfChaos?: number
   listedAt?: Date | string
   status?: string
   buyerAccountId?: string | null
@@ -355,7 +463,13 @@ export type MarketplaceListingUpdateInput = {
   sellerAccountId?: Prisma.StringFieldUpdateOperationsInput | string
   sellerCharacter?: Prisma.StringFieldUpdateOperationsInput | string
   itemHex?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
-  zenPrice?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  Zen?: Prisma.IntFieldUpdateOperationsInput | number
+  Rena?: Prisma.IntFieldUpdateOperationsInput | number
+  JewelOfBless?: Prisma.IntFieldUpdateOperationsInput | number
+  JewelOfSoul?: Prisma.IntFieldUpdateOperationsInput | number
+  JewelOfLife?: Prisma.IntFieldUpdateOperationsInput | number
+  JewelOfCreation?: Prisma.IntFieldUpdateOperationsInput | number
+  JewelOfChaos?: Prisma.IntFieldUpdateOperationsInput | number
   listedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   buyerAccountId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -368,7 +482,13 @@ export type MarketplaceListingUncheckedUpdateInput = {
   sellerAccountId?: Prisma.StringFieldUpdateOperationsInput | string
   sellerCharacter?: Prisma.StringFieldUpdateOperationsInput | string
   itemHex?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
-  zenPrice?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  Zen?: Prisma.IntFieldUpdateOperationsInput | number
+  Rena?: Prisma.IntFieldUpdateOperationsInput | number
+  JewelOfBless?: Prisma.IntFieldUpdateOperationsInput | number
+  JewelOfSoul?: Prisma.IntFieldUpdateOperationsInput | number
+  JewelOfLife?: Prisma.IntFieldUpdateOperationsInput | number
+  JewelOfCreation?: Prisma.IntFieldUpdateOperationsInput | number
+  JewelOfChaos?: Prisma.IntFieldUpdateOperationsInput | number
   listedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   buyerAccountId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -381,7 +501,13 @@ export type MarketplaceListingCreateManyInput = {
   sellerAccountId: string
   sellerCharacter: string
   itemHex: runtime.Bytes
-  zenPrice?: number | null
+  Zen?: number
+  Rena?: number
+  JewelOfBless?: number
+  JewelOfSoul?: number
+  JewelOfLife?: number
+  JewelOfCreation?: number
+  JewelOfChaos?: number
   listedAt?: Date | string
   status?: string
   buyerAccountId?: string | null
@@ -393,7 +519,13 @@ export type MarketplaceListingUpdateManyMutationInput = {
   sellerAccountId?: Prisma.StringFieldUpdateOperationsInput | string
   sellerCharacter?: Prisma.StringFieldUpdateOperationsInput | string
   itemHex?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
-  zenPrice?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  Zen?: Prisma.IntFieldUpdateOperationsInput | number
+  Rena?: Prisma.IntFieldUpdateOperationsInput | number
+  JewelOfBless?: Prisma.IntFieldUpdateOperationsInput | number
+  JewelOfSoul?: Prisma.IntFieldUpdateOperationsInput | number
+  JewelOfLife?: Prisma.IntFieldUpdateOperationsInput | number
+  JewelOfCreation?: Prisma.IntFieldUpdateOperationsInput | number
+  JewelOfChaos?: Prisma.IntFieldUpdateOperationsInput | number
   listedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   buyerAccountId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -406,7 +538,13 @@ export type MarketplaceListingUncheckedUpdateManyInput = {
   sellerAccountId?: Prisma.StringFieldUpdateOperationsInput | string
   sellerCharacter?: Prisma.StringFieldUpdateOperationsInput | string
   itemHex?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
-  zenPrice?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  Zen?: Prisma.IntFieldUpdateOperationsInput | number
+  Rena?: Prisma.IntFieldUpdateOperationsInput | number
+  JewelOfBless?: Prisma.IntFieldUpdateOperationsInput | number
+  JewelOfSoul?: Prisma.IntFieldUpdateOperationsInput | number
+  JewelOfLife?: Prisma.IntFieldUpdateOperationsInput | number
+  JewelOfCreation?: Prisma.IntFieldUpdateOperationsInput | number
+  JewelOfChaos?: Prisma.IntFieldUpdateOperationsInput | number
   listedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   buyerAccountId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -425,7 +563,13 @@ export type MarketplaceListingCountOrderByAggregateInput = {
   sellerAccountId?: Prisma.SortOrder
   sellerCharacter?: Prisma.SortOrder
   itemHex?: Prisma.SortOrder
-  zenPrice?: Prisma.SortOrder
+  Zen?: Prisma.SortOrder
+  Rena?: Prisma.SortOrder
+  JewelOfBless?: Prisma.SortOrder
+  JewelOfSoul?: Prisma.SortOrder
+  JewelOfLife?: Prisma.SortOrder
+  JewelOfCreation?: Prisma.SortOrder
+  JewelOfChaos?: Prisma.SortOrder
   listedAt?: Prisma.SortOrder
   status?: Prisma.SortOrder
   buyerAccountId?: Prisma.SortOrder
@@ -435,7 +579,13 @@ export type MarketplaceListingCountOrderByAggregateInput = {
 
 export type MarketplaceListingAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  zenPrice?: Prisma.SortOrder
+  Zen?: Prisma.SortOrder
+  Rena?: Prisma.SortOrder
+  JewelOfBless?: Prisma.SortOrder
+  JewelOfSoul?: Prisma.SortOrder
+  JewelOfLife?: Prisma.SortOrder
+  JewelOfCreation?: Prisma.SortOrder
+  JewelOfChaos?: Prisma.SortOrder
 }
 
 export type MarketplaceListingMaxOrderByAggregateInput = {
@@ -443,7 +593,13 @@ export type MarketplaceListingMaxOrderByAggregateInput = {
   sellerAccountId?: Prisma.SortOrder
   sellerCharacter?: Prisma.SortOrder
   itemHex?: Prisma.SortOrder
-  zenPrice?: Prisma.SortOrder
+  Zen?: Prisma.SortOrder
+  Rena?: Prisma.SortOrder
+  JewelOfBless?: Prisma.SortOrder
+  JewelOfSoul?: Prisma.SortOrder
+  JewelOfLife?: Prisma.SortOrder
+  JewelOfCreation?: Prisma.SortOrder
+  JewelOfChaos?: Prisma.SortOrder
   listedAt?: Prisma.SortOrder
   status?: Prisma.SortOrder
   buyerAccountId?: Prisma.SortOrder
@@ -456,7 +612,13 @@ export type MarketplaceListingMinOrderByAggregateInput = {
   sellerAccountId?: Prisma.SortOrder
   sellerCharacter?: Prisma.SortOrder
   itemHex?: Prisma.SortOrder
-  zenPrice?: Prisma.SortOrder
+  Zen?: Prisma.SortOrder
+  Rena?: Prisma.SortOrder
+  JewelOfBless?: Prisma.SortOrder
+  JewelOfSoul?: Prisma.SortOrder
+  JewelOfLife?: Prisma.SortOrder
+  JewelOfCreation?: Prisma.SortOrder
+  JewelOfChaos?: Prisma.SortOrder
   listedAt?: Prisma.SortOrder
   status?: Prisma.SortOrder
   buyerAccountId?: Prisma.SortOrder
@@ -466,7 +628,13 @@ export type MarketplaceListingMinOrderByAggregateInput = {
 
 export type MarketplaceListingSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  zenPrice?: Prisma.SortOrder
+  Zen?: Prisma.SortOrder
+  Rena?: Prisma.SortOrder
+  JewelOfBless?: Prisma.SortOrder
+  JewelOfSoul?: Prisma.SortOrder
+  JewelOfLife?: Prisma.SortOrder
+  JewelOfCreation?: Prisma.SortOrder
+  JewelOfChaos?: Prisma.SortOrder
 }
 
 export type BytesFieldUpdateOperationsInput = {
@@ -480,7 +648,13 @@ export type MarketplaceListingSelect<ExtArgs extends runtime.Types.Extensions.In
   sellerAccountId?: boolean
   sellerCharacter?: boolean
   itemHex?: boolean
-  zenPrice?: boolean
+  Zen?: boolean
+  Rena?: boolean
+  JewelOfBless?: boolean
+  JewelOfSoul?: boolean
+  JewelOfLife?: boolean
+  JewelOfCreation?: boolean
+  JewelOfChaos?: boolean
   listedAt?: boolean
   status?: boolean
   buyerAccountId?: boolean
@@ -495,7 +669,13 @@ export type MarketplaceListingSelectScalar = {
   sellerAccountId?: boolean
   sellerCharacter?: boolean
   itemHex?: boolean
-  zenPrice?: boolean
+  Zen?: boolean
+  Rena?: boolean
+  JewelOfBless?: boolean
+  JewelOfSoul?: boolean
+  JewelOfLife?: boolean
+  JewelOfCreation?: boolean
+  JewelOfChaos?: boolean
   listedAt?: boolean
   status?: boolean
   buyerAccountId?: boolean
@@ -503,7 +683,7 @@ export type MarketplaceListingSelectScalar = {
   soldAt?: boolean
 }
 
-export type MarketplaceListingOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "sellerAccountId" | "sellerCharacter" | "itemHex" | "zenPrice" | "listedAt" | "status" | "buyerAccountId" | "buyerCharacter" | "soldAt", ExtArgs["result"]["marketplaceListing"]>
+export type MarketplaceListingOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "sellerAccountId" | "sellerCharacter" | "itemHex" | "Zen" | "Rena" | "JewelOfBless" | "JewelOfSoul" | "JewelOfLife" | "JewelOfCreation" | "JewelOfChaos" | "listedAt" | "status" | "buyerAccountId" | "buyerCharacter" | "soldAt", ExtArgs["result"]["marketplaceListing"]>
 
 export type $MarketplaceListingPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "MarketplaceListing"
@@ -513,7 +693,13 @@ export type $MarketplaceListingPayload<ExtArgs extends runtime.Types.Extensions.
     sellerAccountId: string
     sellerCharacter: string
     itemHex: runtime.Bytes
-    zenPrice: number | null
+    Zen: number
+    Rena: number
+    JewelOfBless: number
+    JewelOfSoul: number
+    JewelOfLife: number
+    JewelOfCreation: number
+    JewelOfChaos: number
     listedAt: Date
     status: string
     buyerAccountId: string | null
@@ -892,7 +1078,13 @@ export interface MarketplaceListingFieldRefs {
   readonly sellerAccountId: Prisma.FieldRef<"MarketplaceListing", 'String'>
   readonly sellerCharacter: Prisma.FieldRef<"MarketplaceListing", 'String'>
   readonly itemHex: Prisma.FieldRef<"MarketplaceListing", 'Bytes'>
-  readonly zenPrice: Prisma.FieldRef<"MarketplaceListing", 'Int'>
+  readonly Zen: Prisma.FieldRef<"MarketplaceListing", 'Int'>
+  readonly Rena: Prisma.FieldRef<"MarketplaceListing", 'Int'>
+  readonly JewelOfBless: Prisma.FieldRef<"MarketplaceListing", 'Int'>
+  readonly JewelOfSoul: Prisma.FieldRef<"MarketplaceListing", 'Int'>
+  readonly JewelOfLife: Prisma.FieldRef<"MarketplaceListing", 'Int'>
+  readonly JewelOfCreation: Prisma.FieldRef<"MarketplaceListing", 'Int'>
+  readonly JewelOfChaos: Prisma.FieldRef<"MarketplaceListing", 'Int'>
   readonly listedAt: Prisma.FieldRef<"MarketplaceListing", 'DateTime'>
   readonly status: Prisma.FieldRef<"MarketplaceListing", 'String'>
   readonly buyerAccountId: Prisma.FieldRef<"MarketplaceListing", 'String'>

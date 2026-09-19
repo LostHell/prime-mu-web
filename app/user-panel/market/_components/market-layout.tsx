@@ -10,7 +10,7 @@ export function MarketLayout({ children }: MarketLayoutProps) {
   return (
     <UserPanelPageLayout
       title="Market"
-      description="Buy and sell items with other players"
+      description="Buy and sell warehouse items. Prices are paid from deposits."
     >
       {children}
     </UserPanelPageLayout>

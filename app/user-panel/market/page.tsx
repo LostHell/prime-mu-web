@@ -1,4 +1,5 @@
 import { auth } from "@/auth";
+import { getAccountDepositAmounts } from "@/lib/queries/get-deposits";
 import { getAllActiveListings } from "@/lib/queries/get-marketplace-listings";
 import { redirect } from "next/navigation";
 import { MarketBrowse } from "./_components/market-browse";
@@ -10,11 +11,18 @@ export default async function MarketPage() {
     redirect("/login");
   }
 
-  const listings = await getAllActiveListings();
+  const [listings, buyerDeposits] = await Promise.all([
+    getAllActiveListings(),
+    getAccountDepositAmounts(session.user.id),
+  ]);
 
   return (
     <MarketLayout>
-      <MarketBrowse listings={listings} currentAccountId={session.user.id} />
+      <MarketBrowse
+        listings={listings}
+        currentAccountId={session.user.id}
+        buyerDeposits={buyerDeposits}
+      />
     </MarketLayout>
   );
 }

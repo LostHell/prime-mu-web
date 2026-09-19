@@ -1,12 +1,7 @@
 "use client";
 
-import { parseAmountInput } from "@/lib/utils/numbers";
+import { clampAmount, parseAmountInput } from "@/lib/utils/numbers";
 import { useState } from "react";
-
-function clamp(value: number, min: number, max: number) {
-  if (!Number.isFinite(value)) return min;
-  return Math.min(Math.max(Math.trunc(value), min), max);
-}
 
 function initialAmount(limit: number) {
   return limit > 0 ? 1 : 0;
@@ -14,7 +9,7 @@ function initialAmount(limit: number) {
 
 export function useTransferAmount(limit: number) {
   const [amount, setAmount] = useState(() => initialAmount(limit));
-  const safeAmount = amount === 0 ? 0 : clamp(amount, 1, limit);
+  const safeAmount = amount === 0 ? 0 : clampAmount(amount, 1, limit);
 
   if (amount !== 0 && amount !== safeAmount) {
     setAmount(safeAmount);
@@ -27,7 +22,7 @@ export function useTransferAmount(limit: number) {
       setAmount(0);
       return;
     }
-    setAmount(clamp(parsed, 1, limit));
+    setAmount(clampAmount(parsed, 1, limit));
   }
 
   return {

@@ -205,7 +205,13 @@ model MarketplaceListing {
   sellerAccountId String    @db.VarChar(10)
   sellerCharacter String    @db.VarChar(10)
   itemHex         Bytes     @db.VarBinary(32)
-  zenPrice        Int?      @db.UnsignedInt
+  Zen             Int       @default(0) @db.UnsignedInt
+  Rena            Int       @default(0) @db.UnsignedInt
+  JewelOfBless    Int       @default(0) @db.UnsignedInt
+  JewelOfSoul     Int       @default(0) @db.UnsignedInt
+  JewelOfLife     Int       @default(0) @db.UnsignedInt
+  JewelOfCreation Int       @default(0) @db.UnsignedInt
+  JewelOfChaos    Int       @default(0) @db.UnsignedInt
   listedAt        DateTime  @default(now()) @db.DateTime(0)
   status          String    @default("active") @db.VarChar(10)
   buyerAccountId  String?   @db.VarChar(10)

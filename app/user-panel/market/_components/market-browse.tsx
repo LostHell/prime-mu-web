@@ -2,6 +2,7 @@
 
 import EmptyState from "@/components/empty-state";
 import { Input } from "@/components/ui/input";
+import { type DepositAmounts } from "@/constants/depositable-items";
 import { MarketListing as ListingRow } from "@/lib/queries/get-marketplace-listings";
 import { Filter, Search, Store } from "lucide-react";
 import { useState } from "react";
@@ -10,11 +11,13 @@ import MarketListing from "./market-listing";
 interface MarketBrowseProps {
   listings: ListingRow[];
   currentAccountId: string;
+  buyerDeposits: DepositAmounts;
 }
 
 export function MarketBrowse({
   listings,
   currentAccountId,
+  buyerDeposits,
 }: MarketBrowseProps) {
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -64,7 +67,10 @@ export function MarketBrowse({
                       <MarketListing.Cancel listing={listing} />
                     )}
                     {listing.sellerAccountId !== currentAccountId && (
-                      <MarketListing.Buy listing={listing} />
+                      <MarketListing.Buy
+                        listing={listing}
+                        buyerDeposits={buyerDeposits}
+                      />
                     )}
                   </>
                 }
@@ -87,6 +93,8 @@ export function MarketBrowse({
           {filteredListings.length !== 1 ? "s" : ""} listed
           <br />
           You must be disconnected from the game to buy items.
+          <br />
+          Prices are paid from your deposits.
         </p>
       </div>
     </div>

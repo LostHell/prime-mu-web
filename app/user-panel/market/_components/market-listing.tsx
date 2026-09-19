@@ -9,6 +9,12 @@ import {
 } from "@/components/item-tooltip";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
+import {
+  DEPOSIT_ITEM_TYPES,
+  DEPOSITABLE_ITEMS,
+  type DepositAmounts,
+  type DepositItemType,
+} from "@/constants/depositable-items";
 import { buyMarketItemAction } from "@/lib/actions/buy-market-item";
 import { cancelMarketplaceListingAction } from "@/lib/actions/cancel-market-listing";
 import { formatItemName } from "@/lib/game/item-database/formatters";
@@ -17,7 +23,10 @@ import type {
   MarketListing,
 } from "@/lib/queries/get-marketplace-listings";
 import { cn } from "@/lib/utils";
-import { Coins, Gem, WalletCards } from "lucide-react";
+import { hasAnyPositiveDepositAmounts } from "@/lib/utils/deposits";
+import { formatNumber } from "@/lib/utils/numbers";
+import { Coins } from "lucide-react";
+import Link from "next/link";
 import * as React from "react";
 import { useActionState } from "react";
 
@@ -29,14 +38,6 @@ function formatDate(date: Date) {
     minute: "2-digit",
   }).format(date);
 }
-
-type PriceCurrency = "zen" | "stone" | "credits";
-
-const PRICE_ICONS = {
-  zen: Coins,
-  stone: Gem,
-  credits: WalletCards,
-} as const;
 
 function ItemName({ item }: { item: ListingItem }) {
   const isExcellent = item.excellent > 0;
@@ -73,60 +74,74 @@ function DateText({ date }: { date: Date | null }) {
 }
 
 function PriceLine({
-  currency,
-  price,
+  type,
+  amount,
   variant = "default",
 }: {
-  currency: PriceCurrency;
-  price: number | null;
+  type: DepositItemType;
+  amount: number;
   variant?: "default" | "spent" | "earned";
 }) {
-  const Icon = PRICE_ICONS[currency];
+  const config = DEPOSITABLE_ITEMS[type];
   const amountClass =
     variant === "spent"
       ? "text-destructive"
       : variant === "earned"
         ? "text-online"
         : "text-gold";
+  const prefix = variant === "spent" ? "-" : variant === "earned" ? "+" : "";
 
   return (
     <div className="flex min-w-0 items-center gap-2">
       <span
         className={cn("min-w-0 flex-1 font-bold tabular-nums", amountClass)}
       >
-        {variant === "spent" && price != null ? "-" : null}
-        {variant === "earned" && price != null ? "+" : null}
-        {price?.toLocaleString() ?? "—"}
+        {prefix}
+        {formatNumber(amount)}
       </span>
       <span className="text-muted-foreground shrink-0 text-xs tracking-wider uppercase">
-        {currency}
+        {config.label}
       </span>
-      <Icon
-        className={cn(
-          "size-icon-sm shrink-0",
-          currency === "stone" && "text-sky-400",
-          currency === "zen" && variant === "default" && "text-gold-dim",
-          currency === "credits" && "text-muted-foreground",
-        )}
-      />
+      {config.icon ? (
+        <div className="flex size-4 shrink-0 items-center justify-center overflow-hidden">
+          <ItemIcon
+            group={config.icon.group}
+            index={config.icon.index}
+            className="size-full"
+          />
+        </div>
+      ) : (
+        <Coins className="text-gold-dim size-icon-sm shrink-0" />
+      )}
     </div>
   );
 }
 
-function PriceLines({
-  lines,
+function ListingPrices({
+  listing,
   variant = "default",
 }: {
-  lines: Array<{ currency: PriceCurrency; amount: number | null }>;
+  listing: MarketListing;
   variant?: "default" | "spent" | "earned";
 }) {
+  const lines = DEPOSIT_ITEM_TYPES.filter(
+    (type) => listing.prices[type] > 0,
+  ).map((type) => ({
+    type,
+    amount: listing.prices[type],
+  }));
+
+  if (lines.length === 0) {
+    return <span className="text-muted-foreground">—</span>;
+  }
+
   return (
     <div className="flex flex-col gap-2">
-      {lines.map((line, i) => (
+      {lines.map((line) => (
         <PriceLine
-          key={`${line.currency}-${i}`}
-          currency={line.currency}
-          price={line.amount}
+          key={line.type}
+          type={line.type}
+          amount={line.amount}
           variant={variant}
         />
       ))}
@@ -134,11 +149,23 @@ function PriceLines({
   );
 }
 
-function Buy({ listing }: { listing: MarketListing }) {
+function Buy({
+  listing,
+  buyerDeposits,
+}: {
+  listing: MarketListing;
+  buyerDeposits: DepositAmounts;
+}) {
   const [state, formAction, isPending] = useActionState(buyMarketItemAction, {
     success: false,
     message: "",
   });
+  const hasPrice = hasAnyPositiveDepositAmounts(listing.prices);
+  const canAfford =
+    hasPrice &&
+    DEPOSIT_ITEM_TYPES.every(
+      (type) => buyerDeposits[type] >= listing.prices[type],
+    );
 
   return (
     <div className="flex w-full flex-col gap-2 md:max-w-xs">
@@ -151,12 +178,25 @@ function Buy({ listing }: { listing: MarketListing }) {
         </Alert>
       ) : null}
 
+      {hasPrice && !canAfford && (
+        <p className="text-muted-foreground text-xs">
+          Not enough deposited funds.{" "}
+          <Link
+            href="/user-panel/deposits"
+            className="text-gold hover:underline"
+          >
+            Deposit
+          </Link>{" "}
+          the required currencies first.
+        </p>
+      )}
+
       <form action={formAction} className="w-full">
         <input type="hidden" name="listingId" value={listing.id} />
         <Button
           type="submit"
           className="w-full"
-          disabled={isPending}
+          disabled={!hasPrice || !canAfford || isPending}
           aria-label="Buy item"
         >
           {isPending ? "Buying…" : "Buy item"}
@@ -259,7 +299,7 @@ function ListingMeta({
   }
 }
 
-function ListingPrices({
+function ListingPricesForVariant({
   variant,
   listing,
 }: {
@@ -268,19 +308,12 @@ function ListingPrices({
 }) {
   switch (variant) {
     case "browse":
-      return (
-        <PriceLines lines={[{ currency: "zen", amount: listing.zenPrice }]} />
-      );
-    case "bought":
-      return (
-        <PriceLine currency="zen" price={listing.zenPrice} variant="spent" />
-      );
     case "listed":
-      return <PriceLine currency="zen" price={listing.zenPrice} />;
+      return <ListingPrices listing={listing} />;
+    case "bought":
+      return <ListingPrices listing={listing} variant="spent" />;
     case "sold":
-      return (
-        <PriceLine currency="zen" price={listing.zenPrice} variant="earned" />
-      );
+      return <ListingPrices listing={listing} variant="earned" />;
   }
 }
 
@@ -293,7 +326,6 @@ function MarketListingCard(props: MarketListingCardProps) {
       className={cn("bg-card border-border rounded-xl border p-4", className)}
     >
       <div className="flex flex-col gap-4">
-        {/* Row 1: item preview + title, meta line, skill/luck tags */}
         <div className="grid grid-cols-1 gap-3 md:gap-4 lg:grid-cols-2">
           <div className="flex flex-1 gap-3 md:gap-4">
             <div className="shrink-0">
@@ -319,13 +351,11 @@ function MarketListingCard(props: MarketListingCardProps) {
             </div>
           </div>
 
-          {/* Row 2: price column(s) */}
           <div className="flex shrink-0 flex-col items-start gap-2 lg:items-end">
-            <ListingPrices variant={variant} listing={listing} />
+            <ListingPricesForVariant variant={variant} listing={listing} />
           </div>
         </div>
 
-        {/* Row 3 (optional): market actions — Buy, Cancel, etc. */}
         {actions && (
           <div className="border-border flex flex-col justify-end gap-2 border-t pt-4 md:shrink-0 md:flex-row md:justify-end md:border-t-0 md:pt-0">
             {actions}

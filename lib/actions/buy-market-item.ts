@@ -1,16 +1,123 @@
 "use server";
 
+import {
+  DEPOSIT_ITEM_TYPES,
+  DEPOSITABLE_ITEMS,
+  type AccountDepositItemFields,
+  type DepositAmounts,
+} from "@/constants/depositable-items";
+import { ActionError, actionErrorMessage } from "@/lib/errors/action-error";
 import { getItemDefinition } from "@/lib/game/item-database";
 import {
   decodeItem,
   findFreeArea,
   writeItemToSlot,
 } from "@/lib/game/item-decoder";
+import { getWarehouseItemsBuffer } from "@/lib/game/warehouse";
+import {
+  depositAmountsFromColumns,
+  depositColumnsFromAmounts,
+  hasAnyPositiveDepositAmounts,
+} from "@/lib/utils/deposits";
 import { buyMarketItemSchema } from "@/lib/validation/buy-market-item";
+import { isListingPriceInRange } from "@/lib/validation/listing-price-limits";
 import { UserPanelActionState } from "@/lib/validation/types";
+import { Prisma } from "@/prisma/generated/prisma/client";
 import { prisma } from "@/prisma/prisma";
 import { revalidatePath } from "next/cache";
 import { getAuthenticatedUser, isAccountOffline } from "./utils";
+
+const isUniqueConflict = (err: unknown) =>
+  err instanceof Prisma.PrismaClientKnownRequestError && err.code === "P2002";
+
+const isOutOfRange = (err: unknown) =>
+  err instanceof Error && /out of range/i.test(err.message);
+
+const applyItemAmounts = (
+  amounts: DepositAmounts,
+  apply: (field: keyof AccountDepositItemFields, amount: number) => void,
+) => {
+  for (const type of DEPOSIT_ITEM_TYPES) {
+    if (type === "zen") continue;
+    const amount = amounts[type];
+    const field = DEPOSITABLE_ITEMS[type].dbField;
+    if (!field || amount <= 0) continue;
+    apply(field, amount);
+  }
+};
+
+const debitDepositAmounts = async (
+  tx: Prisma.TransactionClient,
+  accountId: string,
+  amounts: DepositAmounts,
+) => {
+  const where: Prisma.AccountDepositWhereInput = { AccountID: accountId };
+  const data: Prisma.AccountDepositUpdateManyMutationInput = {};
+
+  if (amounts.zen > 0) {
+    where.Zen = { gte: BigInt(amounts.zen) };
+    data.Zen = { decrement: BigInt(amounts.zen) };
+  }
+
+  applyItemAmounts(amounts, (field, amount) => {
+    where[field] = { gte: amount };
+    data[field] = { decrement: amount };
+  });
+
+  const { count } = await tx.accountDeposit.updateMany({ where, data });
+  if (count === 0) {
+    throw new ActionError("Not enough deposited funds to buy this item.");
+  }
+};
+
+const creditDepositAmounts = async (
+  tx: Prisma.TransactionClient,
+  accountId: string,
+  amounts: DepositAmounts,
+) => {
+  const fields = depositColumnsFromAmounts(amounts);
+  const update: Prisma.AccountDepositUpdateInput = {};
+
+  if (amounts.zen > 0) {
+    update.Zen = { increment: BigInt(amounts.zen) };
+  }
+
+  applyItemAmounts(amounts, (field, amount) => {
+    update[field] = { increment: amount };
+  });
+
+  try {
+    try {
+      await tx.accountDeposit.upsert({
+        where: { AccountID: accountId },
+        create: {
+          AccountID: accountId,
+          ...fields,
+          Zen: BigInt(fields.Zen),
+        },
+        update,
+      });
+    } catch (err) {
+      if (!isUniqueConflict(err)) throw err;
+      // Someone else created the seller's deposit row between our upsert's
+      // existence check and its insert attempt (e.g. a second concurrent
+      // sale to the same seller). Fall back to a plain update now that the
+      // row exists.
+      await tx.accountDeposit.update({
+        where: { AccountID: accountId },
+        data: update,
+      });
+    }
+  } catch (err) {
+    // Covers both the upsert above and the fallback update: either can
+    // overflow the unsigned column if a seller's balance is pushed past its
+    // max, and both should surface the same friendly message.
+    if (isOutOfRange(err)) {
+      throw new ActionError("Seller cannot receive this payment.");
+    }
+    throw err;
+  }
+};
 
 export async function buyMarketItemAction(
   _state: UserPanelActionState,
@@ -43,92 +150,127 @@ export async function buyMarketItemAction(
     };
   }
 
-  const listing = await prisma.marketplaceListing.findUnique({
-    where: { id: listingId },
-  });
+  try {
+    await prisma.$transaction(async (tx) => {
+      const listing = await tx.marketplaceListing.findUnique({
+        where: { id: listingId },
+      });
 
-  if (!listing || listing.status !== "active") {
-    return { success: false, message: "Listing not found or already sold." };
-  }
+      if (!listing || listing.status !== "active") {
+        throw new ActionError("Listing not found or already sold.");
+      }
 
-  if (listing.sellerAccountId === accountId) {
-    return { success: false, message: "You cannot buy your own listing." };
-  }
+      if (listing.sellerAccountId === accountId) {
+        throw new ActionError("You cannot buy your own listing.");
+      }
 
-  if (listing.zenPrice === null) {
-    return { success: false, message: "This listing has no zen price set." };
-  }
+      const prices = depositAmountsFromColumns(listing);
+      if (!hasAnyPositiveDepositAmounts(prices)) {
+        throw new ActionError("This listing has no price set.");
+      }
+      if (!isListingPriceInRange(prices)) {
+        throw new ActionError("This listing has an invalid price.");
+      }
+      const decodedItem = decodeItem(Buffer.from(listing.itemHex));
+      if (!decodedItem) {
+        throw new ActionError("Could not decode item data.");
+      }
 
-  const price = listing.zenPrice;
+      const itemDef = getItemDefinition({
+        group: decodedItem.group,
+        index: decodedItem.index,
+        level: decodedItem.level,
+      });
+      const itemWidth = itemDef?.width ?? 1;
+      const itemHeight = itemDef?.height ?? 1;
 
-  const decodedItem = decodeItem(Buffer.from(listing.itemHex));
-  if (!decodedItem) {
-    return { success: false, message: "Could not decode item data." };
-  }
-  const itemDef = getItemDefinition({
-    group: decodedItem.group,
-    index: decodedItem.index,
-    level: decodedItem.level,
-  });
-  const itemWidth = itemDef?.width ?? 1;
-  const itemHeight = itemDef?.height ?? 1;
+      const buyerWarehouse = await tx.warehouse.findUnique({
+        where: { AccountID: accountId },
+        select: { Items: true },
+      });
+      const originalItems = buyerWarehouse?.Items ?? null;
+      const buyerBuffer = getWarehouseItemsBuffer(originalItems);
+      const freeSlot = findFreeArea(buyerBuffer, itemWidth, itemHeight);
 
-  const buyerWarehouse = await prisma.warehouse.findUnique({
-    where: { AccountID: accountId },
-    select: { Items: true },
-  });
+      if (freeSlot === -1) {
+        throw new ActionError(
+          `Not enough space in your warehouse for this item (${itemWidth}x${itemHeight}).`,
+        );
+      }
 
-  if (!buyerWarehouse?.Items) {
-    return { success: false, message: "Your warehouse was not found." };
-  }
+      const updatedBuyerBuffer = writeItemToSlot(
+        buyerBuffer,
+        freeSlot,
+        listing.itemHex,
+      );
 
-  const buyerBuffer = Buffer.from(buyerWarehouse.Items);
-  const freeSlot = findFreeArea(buyerBuffer, itemWidth, itemHeight);
+      const buyerCharacter = await tx.character.findFirst({
+        where: { AccountID: accountId },
+        select: { Name: true },
+      });
 
-  if (freeSlot === -1) {
+      const { count: claimed } = await tx.marketplaceListing.updateMany({
+        where: { id: listingId, status: "active" },
+        data: {
+          status: "sold",
+          buyerAccountId: accountId,
+          buyerCharacter: buyerCharacter?.Name ?? null,
+          soldAt: new Date(),
+        },
+      });
+
+      if (claimed === 0) {
+        throw new ActionError("Listing not found or already sold.");
+      }
+
+      // Note: debiting the buyer then crediting the seller locks two
+      // AccountDeposit rows in a fixed order. If two players buy from each
+      // other at the same moment, the transactions can lock those rows in
+      // opposite orders and deadlock; MySQL aborts one of them and it fails
+      // safely (no partial transfer), but the buyer sees a generic error and
+      // must retry.
+      await debitDepositAmounts(tx, accountId, prices);
+      await creditDepositAmounts(tx, listing.sellerAccountId, prices);
+
+      if (!buyerWarehouse) {
+        try {
+          await tx.warehouse.create({
+            data: {
+              AccountID: accountId,
+              Items: Uint8Array.from(updatedBuyerBuffer),
+            },
+          });
+          return;
+        } catch (err) {
+          if (isUniqueConflict(err)) {
+            throw new ActionError(
+              "Your warehouse changed while processing this request. Please try again.",
+            );
+          }
+          throw err;
+        }
+      }
+
+      const { count } = await tx.warehouse.updateMany({
+        where: { AccountID: accountId, Items: originalItems },
+        data: { Items: Uint8Array.from(updatedBuyerBuffer) },
+      });
+
+      if (count === 0) {
+        throw new ActionError(
+          "Your warehouse changed while processing this request. Please try again.",
+        );
+      }
+    });
+  } catch (err) {
     return {
       success: false,
-      message: `Not enough space in your warehouse for this item (${itemWidth}x${itemHeight}).`,
+      message: actionErrorMessage(err, "Failed to buy item."),
     };
   }
 
-  const updatedBuyerBuffer = writeItemToSlot(
-    buyerBuffer,
-    freeSlot,
-    listing.itemHex,
-  );
-
-  await prisma.$transaction(async (tx) => {
-    // TODO(deposits): Withdraw `price` zen from the buyer's website / deposit balance (account-level),
-    // e.g. after adding a model such as `AccountWebsiteZen { accountId, zen }`:
-    //   const balance = await tx.accountWebsiteZen.findUnique({ where: { accountId } });
-    //   if (!balance || balance.zen < price) throw ...
-    //   await tx.accountWebsiteZen.update({ where: { accountId }, data: { zen: { decrement: price } } });
-    // Until deposits are implemented, do not deduct character inventory zen for purchases.
-
-    await tx.warehouse.update({
-      where: { AccountID: accountId },
-      data: { Items: Uint8Array.from(updatedBuyerBuffer) },
-    });
-
-    // TODO(deposits): Align seller payout with website balance if you move zen off characters.
-    await tx.character.update({
-      where: { Name: listing.sellerCharacter },
-      data: { Money: { increment: price } },
-    });
-
-    await tx.marketplaceListing.update({
-      where: { id: listingId },
-      data: {
-        status: "sold",
-        buyerAccountId: accountId,
-        buyerCharacter: null,
-        soldAt: new Date(),
-      },
-    });
-  });
-
-  revalidatePath("/user-panel/market");
+  revalidatePath("/user-panel/market", "layout");
+  revalidatePath("/user-panel/deposits");
 
   return {
     success: true,
