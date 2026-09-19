@@ -6,6 +6,7 @@ import {
   type AccountDepositItemFields,
   type DepositAmounts,
 } from "@/constants/depositable-items";
+import { ActionError, actionErrorMessage } from "@/lib/errors/action-error";
 import { getItemDefinition } from "@/lib/game/item-database";
 import {
   decodeItem,
@@ -24,7 +25,6 @@ import { UserPanelActionState } from "@/lib/validation/types";
 import { Prisma } from "@/prisma/generated/prisma/client";
 import { prisma } from "@/prisma/prisma";
 import { revalidatePath } from "next/cache";
-import { ActionError, actionErrorMessage } from "../errors/action-error";
 import { getAuthenticatedUser, isAccountOffline } from "./utils";
 
 const isUniqueConflict = (err: unknown) =>
@@ -87,23 +87,31 @@ const creditDepositAmounts = async (
   });
 
   try {
-    await tx.accountDeposit.upsert({
-      where: { AccountID: accountId },
-      create: {
-        AccountID: accountId,
-        ...fields,
-        Zen: BigInt(fields.Zen),
-      },
-      update,
-    });
-  } catch (err) {
-    if (isUniqueConflict(err)) {
+    try {
+      await tx.accountDeposit.upsert({
+        where: { AccountID: accountId },
+        create: {
+          AccountID: accountId,
+          ...fields,
+          Zen: BigInt(fields.Zen),
+        },
+        update,
+      });
+    } catch (err) {
+      if (!isUniqueConflict(err)) throw err;
+      // Someone else created the seller's deposit row between our upsert's
+      // existence check and its insert attempt (e.g. a second concurrent
+      // sale to the same seller). Fall back to a plain update now that the
+      // row exists.
       await tx.accountDeposit.update({
         where: { AccountID: accountId },
         data: update,
       });
-      return;
     }
+  } catch (err) {
+    // Covers both the upsert above and the fallback update: either can
+    // overflow the unsigned column if a seller's balance is pushed past its
+    // max, and both should surface the same friendly message.
     if (isOutOfRange(err)) {
       throw new ActionError("Seller cannot receive this payment.");
     }
@@ -215,6 +223,12 @@ export async function buyMarketItemAction(
         throw new ActionError("Listing not found or already sold.");
       }
 
+      // Note: debiting the buyer then crediting the seller locks two
+      // AccountDeposit rows in a fixed order. If two players buy from each
+      // other at the same moment, the transactions can lock those rows in
+      // opposite orders and deadlock; MySQL aborts one of them and it fails
+      // safely (no partial transfer), but the buyer sees a generic error and
+      // must retry.
       await debitDepositAmounts(tx, accountId, prices);
       await creditDepositAmounts(tx, listing.sellerAccountId, prices);
 

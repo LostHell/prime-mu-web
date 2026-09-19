@@ -1,4 +1,9 @@
-import { bigIntToSafeNumber, formatNumber, parseAmountInput } from "./numbers";
+import {
+  bigIntToSafeNumber,
+  clampAmount,
+  formatNumber,
+  parseAmountInput,
+} from "./numbers";
 
 describe("bigIntToSafeNumber", () => {
   test("converts a normal BigInt to a Number", () => {
@@ -37,5 +42,22 @@ describe("parseAmountInput", () => {
     expect(parseAmountInput("1e3")).toBeNull();
     expect(parseAmountInput("-1")).toBeNull();
     expect(parseAmountInput("abc")).toBeNull();
+  });
+});
+
+describe("clampAmount", () => {
+  test("bounds a value between min and max", () => {
+    expect(clampAmount(5, 0, 10)).toBe(5);
+    expect(clampAmount(-5, 0, 10)).toBe(0);
+    expect(clampAmount(50, 0, 10)).toBe(10);
+  });
+
+  test("truncates fractional values", () => {
+    expect(clampAmount(5.9, 0, 10)).toBe(5);
+  });
+
+  test("falls back to min for non-finite values", () => {
+    expect(clampAmount(Infinity, 1, 10)).toBe(1);
+    expect(clampAmount(NaN, 1, 10)).toBe(1);
   });
 });
