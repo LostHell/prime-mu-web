@@ -7,10 +7,16 @@ import {
   writeItemToSlot,
 } from "@/lib/game/item-decoder";
 import { getWarehouseItemsBuffer } from "@/lib/game/warehouse";
+import { buyMarketItemSchema } from "@/lib/validation/buy-market-item";
 import { UserPanelActionState } from "@/lib/validation/types";
+import { Prisma } from "@/prisma/generated/prisma/client";
 import { prisma } from "@/prisma/prisma";
 import { revalidatePath } from "next/cache";
+import { ActionError, actionErrorMessage } from "../errors/action-error";
 import { getAuthenticatedUser, isAccountOffline } from "./utils";
+
+const isUniqueConflict = (err: unknown) =>
+  err instanceof Prisma.PrismaClientKnownRequestError && err.code === "P2002";
 
 export async function cancelMarketplaceListingAction(
   _state: UserPanelActionState,
@@ -21,11 +27,15 @@ export async function cancelMarketplaceListingAction(
     return { success: false, message: "You must be logged in." };
   }
 
-  const listingId = parseInt(formData.get("listingId") as string);
+  const validated = buyMarketItemSchema.safeParse({
+    listingId: formData.get("listingId"),
+  });
 
-  if (isNaN(listingId)) {
+  if (!validated.success) {
     return { success: false, message: "Invalid input." };
   }
+
+  const { listingId } = validated.data;
 
   const offline = await isAccountOffline(accountId);
   if (!offline) {
@@ -42,16 +52,16 @@ export async function cancelMarketplaceListingAction(
       });
 
       if (!listing || listing.status !== "active") {
-        throw new Error("Listing not found or already sold.");
+        throw new ActionError("Listing not found or already sold.");
       }
 
       if (listing.sellerAccountId !== accountId) {
-        throw new Error("You do not own this listing.");
+        throw new ActionError("You do not own this listing.");
       }
 
       const decodedItem = decodeItem(Buffer.from(listing.itemHex));
       if (!decodedItem) {
-        throw new Error("Could not decode item data.");
+        throw new ActionError("Could not decode item data.");
       }
       const itemDef = getItemDefinition({
         group: decodedItem.group,
@@ -70,8 +80,8 @@ export async function cancelMarketplaceListingAction(
       const freeSlot = findFreeArea(warehouseBuffer, itemWidth, itemHeight);
 
       if (freeSlot === -1) {
-        throw new Error(
-          `Not enough space in warehouse for this item (${itemWidth}x${itemHeight}).`,
+        throw new ActionError(
+          `Not enough space in your warehouse for this item (${itemWidth}x${itemHeight}).`,
         );
       }
 
@@ -87,17 +97,26 @@ export async function cancelMarketplaceListingAction(
       });
 
       if (cancelled === 0) {
-        throw new Error("Listing not found or already sold.");
+        throw new ActionError("Listing not found or already sold.");
       }
 
       if (!warehouse) {
-        await tx.warehouse.create({
-          data: {
-            AccountID: accountId,
-            Items: Uint8Array.from(updatedBuffer),
-          },
-        });
-        return;
+        try {
+          await tx.warehouse.create({
+            data: {
+              AccountID: accountId,
+              Items: Uint8Array.from(updatedBuffer),
+            },
+          });
+          return;
+        } catch (err) {
+          if (isUniqueConflict(err)) {
+            throw new ActionError(
+              "Your warehouse changed while processing this request. Please try again.",
+            );
+          }
+          throw err;
+        }
       }
 
       const { count } = await tx.warehouse.updateMany({
@@ -106,15 +125,16 @@ export async function cancelMarketplaceListingAction(
       });
 
       if (count === 0) {
-        throw new Error(
+        throw new ActionError(
           "Your warehouse changed while processing this request. Please try again.",
         );
       }
     });
   } catch (err) {
-    const message =
-      err instanceof Error ? err.message : "Failed to cancel listing.";
-    return { success: false, message };
+    return {
+      success: false,
+      message: actionErrorMessage(err, "Failed to cancel listing."),
+    };
   }
 
   revalidatePath("/user-panel/market", "layout");

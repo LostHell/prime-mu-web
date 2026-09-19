@@ -3,30 +3,30 @@ import {
   type DepositAmounts,
 } from "@/constants/depositable-items";
 import { hasAnyPositiveDepositAmounts } from "@/lib/utils/deposits";
+import { formatNumber } from "@/lib/utils/numbers";
+import { listingPriceLimit } from "@/lib/validation/listing-price-limits";
 import { z } from "zod";
-
-export const MAX_LISTING_ZEN_PRICE = 2_000_000_000;
-export const MAX_LISTING_ITEM_PRICE = 10_000;
 
 const listingPriceSchema = (max: number) =>
   z.preprocess(
     (value) => (value === "" || value == null ? 0 : value),
-    z.coerce.number().int().min(0).max(max),
+    z.coerce
+      .number()
+      .int()
+      .min(0)
+      .max(max, `Must be at most ${formatNumber(max)}.`),
   );
-
-const zenPriceSchema = listingPriceSchema(MAX_LISTING_ZEN_PRICE);
-const itemPriceSchema = listingPriceSchema(MAX_LISTING_ITEM_PRICE);
 
 export const listMarketItemSchema = z
   .object({
     slotIndex: z.coerce.number().int().min(0).max(119),
-    zen: zenPriceSchema,
-    rena: itemPriceSchema,
-    jewelOfBless: itemPriceSchema,
-    jewelOfSoul: itemPriceSchema,
-    jewelOfLife: itemPriceSchema,
-    jewelOfCreation: itemPriceSchema,
-    jewelOfChaos: itemPriceSchema,
+    zen: listingPriceSchema(listingPriceLimit("zen")),
+    rena: listingPriceSchema(listingPriceLimit("rena")),
+    jewelOfBless: listingPriceSchema(listingPriceLimit("jewelOfBless")),
+    jewelOfSoul: listingPriceSchema(listingPriceLimit("jewelOfSoul")),
+    jewelOfLife: listingPriceSchema(listingPriceLimit("jewelOfLife")),
+    jewelOfCreation: listingPriceSchema(listingPriceLimit("jewelOfCreation")),
+    jewelOfChaos: listingPriceSchema(listingPriceLimit("jewelOfChaos")),
   })
   .transform((data) => {
     const { slotIndex, ...priceFields } = data;
@@ -38,3 +38,14 @@ export const listMarketItemSchema = z
   });
 
 export type ListMarketItemInput = z.infer<typeof listMarketItemSchema>;
+
+export const listMarketItemErrorMessage = (error: z.ZodError): string => {
+  const { formErrors, fieldErrors } = error.flatten();
+  return (
+    formErrors[0] ??
+    Object.values(fieldErrors)
+      .flat()
+      .find((message) => Boolean(message)) ??
+    "Invalid input."
+  );
+};

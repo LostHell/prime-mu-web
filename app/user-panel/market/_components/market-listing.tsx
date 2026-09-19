@@ -23,6 +23,7 @@ import type {
   MarketListing,
 } from "@/lib/queries/get-marketplace-listings";
 import { cn } from "@/lib/utils";
+import { hasAnyPositiveDepositAmounts } from "@/lib/utils/deposits";
 import { formatNumber } from "@/lib/utils/numbers";
 import { Coins } from "lucide-react";
 import Link from "next/link";
@@ -159,9 +160,12 @@ function Buy({
     success: false,
     message: "",
   });
-  const canAfford = DEPOSIT_ITEM_TYPES.every(
-    (type) => buyerDeposits[type] >= listing.prices[type],
-  );
+  const hasPrice = hasAnyPositiveDepositAmounts(listing.prices);
+  const canAfford =
+    hasPrice &&
+    DEPOSIT_ITEM_TYPES.every(
+      (type) => buyerDeposits[type] >= listing.prices[type],
+    );
 
   return (
     <div className="flex w-full flex-col gap-2 md:max-w-xs">
@@ -174,7 +178,7 @@ function Buy({
         </Alert>
       ) : null}
 
-      {!canAfford && (
+      {hasPrice && !canAfford && (
         <p className="text-muted-foreground text-xs">
           Not enough deposited funds.{" "}
           <Link
@@ -192,7 +196,7 @@ function Buy({
         <Button
           type="submit"
           className="w-full"
-          disabled={isPending || !canAfford}
+          disabled={!hasPrice || !canAfford || isPending}
           aria-label="Buy item"
         >
           {isPending ? "Buying…" : "Buy item"}

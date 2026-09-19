@@ -3,6 +3,7 @@
 import {
   DEPOSIT_ITEM_TYPES,
   DEPOSITABLE_ITEMS,
+  type AccountDepositItemFields,
   type DepositAmounts,
 } from "@/constants/depositable-items";
 import { getItemDefinition } from "@/lib/game/item-database";
@@ -18,21 +19,38 @@ import {
   hasAnyPositiveDepositAmounts,
 } from "@/lib/utils/deposits";
 import { buyMarketItemSchema } from "@/lib/validation/buy-market-item";
+import { isListingPriceInRange } from "@/lib/validation/listing-price-limits";
 import { UserPanelActionState } from "@/lib/validation/types";
 import { Prisma } from "@/prisma/generated/prisma/client";
 import { prisma } from "@/prisma/prisma";
 import { revalidatePath } from "next/cache";
+import { ActionError, actionErrorMessage } from "../errors/action-error";
 import { getAuthenticatedUser, isAccountOffline } from "./utils";
+
+const isUniqueConflict = (err: unknown) =>
+  err instanceof Prisma.PrismaClientKnownRequestError && err.code === "P2002";
+
+const isOutOfRange = (err: unknown) =>
+  err instanceof Error && /out of range/i.test(err.message);
+
+const applyItemAmounts = (
+  amounts: DepositAmounts,
+  apply: (field: keyof AccountDepositItemFields, amount: number) => void,
+) => {
+  for (const type of DEPOSIT_ITEM_TYPES) {
+    if (type === "zen") continue;
+    const amount = amounts[type];
+    const field = DEPOSITABLE_ITEMS[type].dbField;
+    if (!field || amount <= 0) continue;
+    apply(field, amount);
+  }
+};
 
 const debitDepositAmounts = async (
   tx: Prisma.TransactionClient,
   accountId: string,
   amounts: DepositAmounts,
 ) => {
-  if (!hasAnyPositiveDepositAmounts(amounts)) {
-    throw new Error("This listing has no price set.");
-  }
-
   const where: Prisma.AccountDepositWhereInput = { AccountID: accountId };
   const data: Prisma.AccountDepositUpdateManyMutationInput = {};
 
@@ -41,18 +59,14 @@ const debitDepositAmounts = async (
     data.Zen = { decrement: BigInt(amounts.zen) };
   }
 
-  for (const type of DEPOSIT_ITEM_TYPES) {
-    if (type === "zen") continue;
-    const amount = amounts[type];
-    const field = DEPOSITABLE_ITEMS[type].dbField;
-    if (!field || amount <= 0) continue;
+  applyItemAmounts(amounts, (field, amount) => {
     where[field] = { gte: amount };
     data[field] = { decrement: amount };
-  }
+  });
 
   const { count } = await tx.accountDeposit.updateMany({ where, data });
   if (count === 0) {
-    throw new Error("Not enough deposited funds to buy this item.");
+    throw new ActionError("Not enough deposited funds to buy this item.");
   }
 };
 
@@ -61,10 +75,6 @@ const creditDepositAmounts = async (
   accountId: string,
   amounts: DepositAmounts,
 ) => {
-  if (!hasAnyPositiveDepositAmounts(amounts)) {
-    throw new Error("This listing has no price set.");
-  }
-
   const fields = depositColumnsFromAmounts(amounts);
   const update: Prisma.AccountDepositUpdateInput = {};
 
@@ -72,23 +82,33 @@ const creditDepositAmounts = async (
     update.Zen = { increment: BigInt(amounts.zen) };
   }
 
-  for (const type of DEPOSIT_ITEM_TYPES) {
-    if (type === "zen") continue;
-    const amount = amounts[type];
-    const field = DEPOSITABLE_ITEMS[type].dbField;
-    if (!field || amount <= 0) continue;
+  applyItemAmounts(amounts, (field, amount) => {
     update[field] = { increment: amount };
-  }
-
-  await tx.accountDeposit.upsert({
-    where: { AccountID: accountId },
-    create: {
-      AccountID: accountId,
-      ...fields,
-      Zen: BigInt(fields.Zen),
-    },
-    update,
   });
+
+  try {
+    await tx.accountDeposit.upsert({
+      where: { AccountID: accountId },
+      create: {
+        AccountID: accountId,
+        ...fields,
+        Zen: BigInt(fields.Zen),
+      },
+      update,
+    });
+  } catch (err) {
+    if (isUniqueConflict(err)) {
+      await tx.accountDeposit.update({
+        where: { AccountID: accountId },
+        data: update,
+      });
+      return;
+    }
+    if (isOutOfRange(err)) {
+      throw new ActionError("Seller cannot receive this payment.");
+    }
+    throw err;
+  }
 };
 
 export async function buyMarketItemAction(
@@ -129,20 +149,23 @@ export async function buyMarketItemAction(
       });
 
       if (!listing || listing.status !== "active") {
-        throw new Error("Listing not found or already sold.");
+        throw new ActionError("Listing not found or already sold.");
       }
 
       if (listing.sellerAccountId === accountId) {
-        throw new Error("You cannot buy your own listing.");
+        throw new ActionError("You cannot buy your own listing.");
       }
 
       const prices = depositAmountsFromColumns(listing);
       if (!hasAnyPositiveDepositAmounts(prices)) {
-        throw new Error("This listing has no price set.");
+        throw new ActionError("This listing has no price set.");
+      }
+      if (!isListingPriceInRange(prices)) {
+        throw new ActionError("This listing has an invalid price.");
       }
       const decodedItem = decodeItem(Buffer.from(listing.itemHex));
       if (!decodedItem) {
-        throw new Error("Could not decode item data.");
+        throw new ActionError("Could not decode item data.");
       }
 
       const itemDef = getItemDefinition({
@@ -162,7 +185,7 @@ export async function buyMarketItemAction(
       const freeSlot = findFreeArea(buyerBuffer, itemWidth, itemHeight);
 
       if (freeSlot === -1) {
-        throw new Error(
+        throw new ActionError(
           `Not enough space in your warehouse for this item (${itemWidth}x${itemHeight}).`,
         );
       }
@@ -189,20 +212,29 @@ export async function buyMarketItemAction(
       });
 
       if (claimed === 0) {
-        throw new Error("Listing not found or already sold.");
+        throw new ActionError("Listing not found or already sold.");
       }
 
       await debitDepositAmounts(tx, accountId, prices);
       await creditDepositAmounts(tx, listing.sellerAccountId, prices);
 
       if (!buyerWarehouse) {
-        await tx.warehouse.create({
-          data: {
-            AccountID: accountId,
-            Items: Uint8Array.from(updatedBuyerBuffer),
-          },
-        });
-        return;
+        try {
+          await tx.warehouse.create({
+            data: {
+              AccountID: accountId,
+              Items: Uint8Array.from(updatedBuyerBuffer),
+            },
+          });
+          return;
+        } catch (err) {
+          if (isUniqueConflict(err)) {
+            throw new ActionError(
+              "Your warehouse changed while processing this request. Please try again.",
+            );
+          }
+          throw err;
+        }
       }
 
       const { count } = await tx.warehouse.updateMany({
@@ -211,14 +243,16 @@ export async function buyMarketItemAction(
       });
 
       if (count === 0) {
-        throw new Error(
+        throw new ActionError(
           "Your warehouse changed while processing this request. Please try again.",
         );
       }
     });
   } catch (err) {
-    const message = err instanceof Error ? err.message : "Failed to buy item.";
-    return { success: false, message };
+    return {
+      success: false,
+      message: actionErrorMessage(err, "Failed to buy item."),
+    };
   }
 
   revalidatePath("/user-panel/market", "layout");

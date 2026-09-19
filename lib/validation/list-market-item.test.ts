@@ -1,8 +1,12 @@
 import { EMPTY_DEPOSIT_AMOUNTS } from "@/constants/depositable-items";
+import { formatNumber } from "@/lib/utils/numbers";
 import {
-  listMarketItemSchema,
   MAX_LISTING_ITEM_PRICE,
   MAX_LISTING_ZEN_PRICE,
+} from "@/lib/validation/listing-price-limits";
+import {
+  listMarketItemErrorMessage,
+  listMarketItemSchema,
 } from "./list-market-item";
 
 describe("listMarketItemSchema", () => {
@@ -57,17 +61,26 @@ describe("listMarketItemSchema", () => {
   });
 
   test("rejects zen above the zen cap and jewels above the item cap", () => {
-    expect(
-      listMarketItemSchema.safeParse({
-        slotIndex: 0,
-        zen: String(MAX_LISTING_ZEN_PRICE + 1),
-      }).success,
-    ).toBe(false);
-    expect(
-      listMarketItemSchema.safeParse({
-        slotIndex: 0,
-        jewelOfBless: String(MAX_LISTING_ITEM_PRICE + 1),
-      }).success,
-    ).toBe(false);
+    const zen = listMarketItemSchema.safeParse({
+      slotIndex: 0,
+      zen: String(MAX_LISTING_ZEN_PRICE + 1),
+    });
+    expect(zen.success).toBe(false);
+    if (!zen.success) {
+      expect(listMarketItemErrorMessage(zen.error)).toBe(
+        `Must be at most ${formatNumber(MAX_LISTING_ZEN_PRICE)}.`,
+      );
+    }
+
+    const jewel = listMarketItemSchema.safeParse({
+      slotIndex: 0,
+      jewelOfBless: String(MAX_LISTING_ITEM_PRICE + 1),
+    });
+    expect(jewel.success).toBe(false);
+    if (!jewel.success) {
+      expect(listMarketItemErrorMessage(jewel.error)).toBe(
+        `Must be at most ${formatNumber(MAX_LISTING_ITEM_PRICE)}.`,
+      );
+    }
   });
 });

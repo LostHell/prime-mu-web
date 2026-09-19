@@ -23,6 +23,7 @@ import { formatItemName } from "@/lib/game/item-database/formatters";
 import { type WarehouseItem } from "@/lib/types/warehouse";
 import { hasAnyPositiveDepositAmounts } from "@/lib/utils/deposits";
 import { parseAmountInput } from "@/lib/utils/numbers";
+import { listingPriceLimit } from "@/lib/validation/listing-price-limits";
 import { Coins, Loader2, Package } from "lucide-react";
 import { useActionState, useState } from "react";
 
@@ -67,9 +68,10 @@ export function SellItemForm({ warehouseItems }: SellItemFormProps) {
   const setPrice = (type: DepositItemType, value: string) => {
     const parsed = parseAmountInput(value);
     if (parsed === null) return;
+    const amount = Math.min(parsed, listingPriceLimit(type));
     setPriceInputs((current) => ({
       ...current,
-      [type]: parsed === 0 ? "" : String(parsed),
+      [type]: amount === 0 ? "" : String(amount),
     }));
   };
 

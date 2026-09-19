@@ -1,11 +1,21 @@
 "use server";
 
-import { BYTES_PER_SLOT, clearWarehouseSlot } from "@/lib/game/item-decoder";
+import {
+  BYTES_PER_SLOT,
+  EMPTY_SLOT_BYTE,
+  clearWarehouseSlot,
+  decodeItem,
+} from "@/lib/game/item-decoder";
+import { getWarehouseItemsBuffer } from "@/lib/game/warehouse";
 import { depositColumnsFromAmounts } from "@/lib/utils/deposits";
-import { listMarketItemSchema } from "@/lib/validation/list-market-item";
+import {
+  listMarketItemErrorMessage,
+  listMarketItemSchema,
+} from "@/lib/validation/list-market-item";
 import { UserPanelActionState } from "@/lib/validation/types";
 import { prisma } from "@/prisma/prisma";
 import { revalidatePath } from "next/cache";
+import { ActionError, actionErrorMessage } from "../errors/action-error";
 import { getAuthenticatedUser, isAccountOffline } from "./utils";
 
 export async function listMarketItemAction(
@@ -32,7 +42,7 @@ export async function listMarketItemAction(
     return {
       success: false,
       errors: validated.error.flatten().fieldErrors,
-      message: validated.error.flatten().formErrors[0] ?? "Invalid input.",
+      message: listMarketItemErrorMessage(validated.error),
     };
   }
 
@@ -65,22 +75,26 @@ export async function listMarketItemAction(
         select: { Items: true },
       });
 
-      if (!warehouse?.Items) {
-        throw new Error("Warehouse not found.");
+      if (!warehouse) {
+        throw new ActionError("Warehouse not found.");
       }
 
-      const itemsBuffer = Buffer.from(warehouse.Items);
+      const itemsBuffer = getWarehouseItemsBuffer(warehouse.Items);
       const offset = slotIndex * BYTES_PER_SLOT;
 
       if (offset + BYTES_PER_SLOT > itemsBuffer.length) {
-        throw new Error("Invalid slot index.");
+        throw new ActionError("Invalid slot index.");
       }
 
-      if (itemsBuffer[offset] === 0xff) {
-        throw new Error("No item in that slot.");
+      if (itemsBuffer[offset] === EMPTY_SLOT_BYTE) {
+        throw new ActionError("No item in that slot.");
       }
 
       const itemHex = itemsBuffer.slice(offset, offset + BYTES_PER_SLOT);
+      if (!decodeItem(itemHex)) {
+        throw new ActionError("Could not decode item data.");
+      }
+
       const updatedBuffer = clearWarehouseSlot(itemsBuffer, slotIndex);
 
       const { count } = await tx.warehouse.updateMany({
@@ -89,7 +103,7 @@ export async function listMarketItemAction(
       });
 
       if (count === 0) {
-        throw new Error(
+        throw new ActionError(
           "Your warehouse changed while processing this request. Please try again.",
         );
       }
@@ -104,8 +118,10 @@ export async function listMarketItemAction(
       });
     });
   } catch (err) {
-    const message = err instanceof Error ? err.message : "Failed to list item.";
-    return { success: false, message };
+    return {
+      success: false,
+      message: actionErrorMessage(err, "Failed to list item."),
+    };
   }
 
   revalidatePath("/user-panel/market", "layout");
