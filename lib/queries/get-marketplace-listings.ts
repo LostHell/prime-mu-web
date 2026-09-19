@@ -1,7 +1,10 @@
+import { type DepositAmounts } from "@/constants/depositable-items";
 import { getItemDefinition } from "@/lib/game/item-database";
 import { type ItemDefinition } from "@/lib/game/item-database/types";
 import { decodeItem } from "@/lib/game/item-decoder";
 import { type DecodedItem } from "@/lib/game/item-decoder/types";
+import { depositAmountsFromColumns } from "@/lib/utils/deposits";
+import type { MarketplaceListing as MarketplaceListingRow } from "@/prisma/generated/prisma/client";
 import { prisma } from "@/prisma/prisma";
 
 export type ListingItem = DecodedItem &
@@ -25,7 +28,7 @@ export type MarketListing = {
   sellerAccountId: string;
   sellerCharacter: string;
   item: ListingItem;
-  zenPrice: number | null;
+  prices: DepositAmounts;
   listedAt: Date;
   status: string;
   buyerCharacter: string | null;
@@ -57,6 +60,25 @@ const decodeItemFromHex = (itemHex: Buffer): ListingItem | null => {
   };
 };
 
+const toMarketListing = (
+  listing: MarketplaceListingRow,
+): MarketListing | null => {
+  const item = decodeItemFromHex(Buffer.from(listing.itemHex));
+  if (!item) return null;
+
+  return {
+    id: listing.id,
+    sellerAccountId: listing.sellerAccountId,
+    sellerCharacter: listing.sellerCharacter,
+    item,
+    prices: depositAmountsFromColumns(listing),
+    listedAt: listing.listedAt,
+    status: listing.status,
+    buyerCharacter: listing.buyerCharacter,
+    soldAt: listing.soldAt,
+  };
+};
+
 export async function getMyListings(
   accountId: string,
   status?: string,
@@ -70,22 +92,7 @@ export async function getMyListings(
   });
 
   return listings
-    .map((listing) => {
-      const item = decodeItemFromHex(Buffer.from(listing.itemHex));
-      if (!item) return null;
-
-      return {
-        id: listing.id,
-        sellerAccountId: listing.sellerAccountId,
-        sellerCharacter: listing.sellerCharacter,
-        item,
-        zenPrice: listing.zenPrice,
-        listedAt: listing.listedAt,
-        status: listing.status,
-        buyerCharacter: listing.buyerCharacter,
-        soldAt: listing.soldAt,
-      };
-    })
+    .map(toMarketListing)
     .filter((l): l is MarketListing => l !== null);
 }
 
@@ -97,22 +104,7 @@ export async function getAllActiveListings(): Promise<MarketListing[]> {
   });
 
   return listings
-    .map((listing) => {
-      const item = decodeItemFromHex(Buffer.from(listing.itemHex));
-      if (!item) return null;
-
-      return {
-        id: listing.id,
-        sellerAccountId: listing.sellerAccountId,
-        sellerCharacter: listing.sellerCharacter,
-        item,
-        zenPrice: listing.zenPrice,
-        listedAt: listing.listedAt,
-        status: listing.status,
-        buyerCharacter: listing.buyerCharacter,
-        soldAt: listing.soldAt,
-      };
-    })
+    .map(toMarketListing)
     .filter((l): l is MarketListing => l !== null);
 }
 
@@ -128,21 +120,6 @@ export async function getMyPurchases(
   });
 
   return listings
-    .map((listing) => {
-      const item = decodeItemFromHex(Buffer.from(listing.itemHex));
-      if (!item) return null;
-
-      return {
-        id: listing.id,
-        sellerAccountId: listing.sellerAccountId,
-        sellerCharacter: listing.sellerCharacter,
-        item,
-        zenPrice: listing.zenPrice,
-        listedAt: listing.listedAt,
-        status: listing.status,
-        buyerCharacter: listing.buyerCharacter,
-        soldAt: listing.soldAt,
-      };
-    })
+    .map(toMarketListing)
     .filter((l): l is MarketListing => l !== null);
 }

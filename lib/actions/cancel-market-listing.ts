@@ -6,6 +6,7 @@ import {
   findFreeArea,
   writeItemToSlot,
 } from "@/lib/game/item-decoder";
+import { getWarehouseItemsBuffer } from "@/lib/game/warehouse";
 import { UserPanelActionState } from "@/lib/validation/types";
 import { prisma } from "@/prisma/prisma";
 import { revalidatePath } from "next/cache";
@@ -34,69 +35,89 @@ export async function cancelMarketplaceListingAction(
     };
   }
 
-  const listing = await prisma.marketplaceListing.findUnique({
-    where: { id: listingId },
-  });
+  try {
+    await prisma.$transaction(async (tx) => {
+      const listing = await tx.marketplaceListing.findUnique({
+        where: { id: listingId },
+      });
 
-  if (!listing || listing.status !== "active") {
-    return { success: false, message: "Listing not found or already sold." };
-  }
+      if (!listing || listing.status !== "active") {
+        throw new Error("Listing not found or already sold.");
+      }
 
-  if (listing.sellerAccountId !== accountId) {
-    return { success: false, message: "You do not own this listing." };
-  }
+      if (listing.sellerAccountId !== accountId) {
+        throw new Error("You do not own this listing.");
+      }
 
-  const decodedItem = decodeItem(Buffer.from(listing.itemHex));
-  if (!decodedItem) {
-    return { success: false, message: "Could not decode item data." };
-  }
-  const itemDef = getItemDefinition({
-    group: decodedItem.group,
-    index: decodedItem.index,
-    level: decodedItem.level,
-  });
-  const itemWidth = itemDef?.width ?? 1;
-  const itemHeight = itemDef?.height ?? 1;
+      const decodedItem = decodeItem(Buffer.from(listing.itemHex));
+      if (!decodedItem) {
+        throw new Error("Could not decode item data.");
+      }
+      const itemDef = getItemDefinition({
+        group: decodedItem.group,
+        index: decodedItem.index,
+        level: decodedItem.level,
+      });
+      const itemWidth = itemDef?.width ?? 1;
+      const itemHeight = itemDef?.height ?? 1;
 
-  const warehouse = await prisma.warehouse.findUnique({
-    where: { AccountID: accountId },
-    select: { Items: true },
-  });
+      const warehouse = await tx.warehouse.findUnique({
+        where: { AccountID: accountId },
+        select: { Items: true },
+      });
+      const originalItems = warehouse?.Items ?? null;
+      const warehouseBuffer = getWarehouseItemsBuffer(originalItems);
+      const freeSlot = findFreeArea(warehouseBuffer, itemWidth, itemHeight);
 
-  if (!warehouse?.Items) {
-    return { success: false, message: "Warehouse not found." };
-  }
+      if (freeSlot === -1) {
+        throw new Error(
+          `Not enough space in warehouse for this item (${itemWidth}x${itemHeight}).`,
+        );
+      }
 
-  const warehouseBuffer = Buffer.from(warehouse.Items);
-  const freeSlot = findFreeArea(warehouseBuffer, itemWidth, itemHeight);
+      const updatedBuffer = writeItemToSlot(
+        warehouseBuffer,
+        freeSlot,
+        listing.itemHex,
+      );
 
-  if (freeSlot === -1) {
-    return {
-      success: false,
-      message: `Not enough space in warehouse for this item (${itemWidth}x${itemHeight}).`,
-    };
-  }
+      const { count: cancelled } = await tx.marketplaceListing.updateMany({
+        where: { id: listingId, status: "active", sellerAccountId: accountId },
+        data: { status: "cancelled" },
+      });
 
-  const updatedBuffer = writeItemToSlot(
-    warehouseBuffer,
-    freeSlot,
-    listing.itemHex,
-  );
+      if (cancelled === 0) {
+        throw new Error("Listing not found or already sold.");
+      }
 
-  await prisma.$transaction(async (tx) => {
-    await tx.warehouse.update({
-      where: { AccountID: accountId },
-      data: { Items: Uint8Array.from(updatedBuffer) },
+      if (!warehouse) {
+        await tx.warehouse.create({
+          data: {
+            AccountID: accountId,
+            Items: Uint8Array.from(updatedBuffer),
+          },
+        });
+        return;
+      }
+
+      const { count } = await tx.warehouse.updateMany({
+        where: { AccountID: accountId, Items: originalItems },
+        data: { Items: Uint8Array.from(updatedBuffer) },
+      });
+
+      if (count === 0) {
+        throw new Error(
+          "Your warehouse changed while processing this request. Please try again.",
+        );
+      }
     });
+  } catch (err) {
+    const message =
+      err instanceof Error ? err.message : "Failed to cancel listing.";
+    return { success: false, message };
+  }
 
-    await tx.marketplaceListing.update({
-      where: { id: listingId },
-      data: { status: "cancelled" },
-    });
-  });
-
-  revalidatePath("/user-panel/market");
-  revalidatePath("/user-panel/market/listed");
+  revalidatePath("/user-panel/market", "layout");
 
   return {
     success: true,

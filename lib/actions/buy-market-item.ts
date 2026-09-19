@@ -1,16 +1,95 @@
 "use server";
 
+import {
+  DEPOSIT_ITEM_TYPES,
+  DEPOSITABLE_ITEMS,
+  type DepositAmounts,
+} from "@/constants/depositable-items";
 import { getItemDefinition } from "@/lib/game/item-database";
 import {
   decodeItem,
   findFreeArea,
   writeItemToSlot,
 } from "@/lib/game/item-decoder";
+import { getWarehouseItemsBuffer } from "@/lib/game/warehouse";
+import {
+  depositAmountsFromColumns,
+  depositColumnsFromAmounts,
+  hasAnyPositiveDepositAmounts,
+} from "@/lib/utils/deposits";
 import { buyMarketItemSchema } from "@/lib/validation/buy-market-item";
 import { UserPanelActionState } from "@/lib/validation/types";
+import { Prisma } from "@/prisma/generated/prisma/client";
 import { prisma } from "@/prisma/prisma";
 import { revalidatePath } from "next/cache";
 import { getAuthenticatedUser, isAccountOffline } from "./utils";
+
+const debitDepositAmounts = async (
+  tx: Prisma.TransactionClient,
+  accountId: string,
+  amounts: DepositAmounts,
+) => {
+  if (!hasAnyPositiveDepositAmounts(amounts)) {
+    throw new Error("This listing has no price set.");
+  }
+
+  const where: Prisma.AccountDepositWhereInput = { AccountID: accountId };
+  const data: Prisma.AccountDepositUpdateManyMutationInput = {};
+
+  if (amounts.zen > 0) {
+    where.Zen = { gte: BigInt(amounts.zen) };
+    data.Zen = { decrement: BigInt(amounts.zen) };
+  }
+
+  for (const type of DEPOSIT_ITEM_TYPES) {
+    if (type === "zen") continue;
+    const amount = amounts[type];
+    const field = DEPOSITABLE_ITEMS[type].dbField;
+    if (!field || amount <= 0) continue;
+    where[field] = { gte: amount };
+    data[field] = { decrement: amount };
+  }
+
+  const { count } = await tx.accountDeposit.updateMany({ where, data });
+  if (count === 0) {
+    throw new Error("Not enough deposited funds to buy this item.");
+  }
+};
+
+const creditDepositAmounts = async (
+  tx: Prisma.TransactionClient,
+  accountId: string,
+  amounts: DepositAmounts,
+) => {
+  if (!hasAnyPositiveDepositAmounts(amounts)) {
+    throw new Error("This listing has no price set.");
+  }
+
+  const fields = depositColumnsFromAmounts(amounts);
+  const update: Prisma.AccountDepositUpdateInput = {};
+
+  if (amounts.zen > 0) {
+    update.Zen = { increment: BigInt(amounts.zen) };
+  }
+
+  for (const type of DEPOSIT_ITEM_TYPES) {
+    if (type === "zen") continue;
+    const amount = amounts[type];
+    const field = DEPOSITABLE_ITEMS[type].dbField;
+    if (!field || amount <= 0) continue;
+    update[field] = { increment: amount };
+  }
+
+  await tx.accountDeposit.upsert({
+    where: { AccountID: accountId },
+    create: {
+      AccountID: accountId,
+      ...fields,
+      Zen: BigInt(fields.Zen),
+    },
+    update,
+  });
+};
 
 export async function buyMarketItemAction(
   _state: UserPanelActionState,
@@ -43,92 +122,107 @@ export async function buyMarketItemAction(
     };
   }
 
-  const listing = await prisma.marketplaceListing.findUnique({
-    where: { id: listingId },
-  });
+  try {
+    await prisma.$transaction(async (tx) => {
+      const listing = await tx.marketplaceListing.findUnique({
+        where: { id: listingId },
+      });
 
-  if (!listing || listing.status !== "active") {
-    return { success: false, message: "Listing not found or already sold." };
-  }
+      if (!listing || listing.status !== "active") {
+        throw new Error("Listing not found or already sold.");
+      }
 
-  if (listing.sellerAccountId === accountId) {
-    return { success: false, message: "You cannot buy your own listing." };
-  }
+      if (listing.sellerAccountId === accountId) {
+        throw new Error("You cannot buy your own listing.");
+      }
 
-  if (listing.zenPrice === null) {
-    return { success: false, message: "This listing has no zen price set." };
-  }
+      const prices = depositAmountsFromColumns(listing);
+      if (!hasAnyPositiveDepositAmounts(prices)) {
+        throw new Error("This listing has no price set.");
+      }
+      const decodedItem = decodeItem(Buffer.from(listing.itemHex));
+      if (!decodedItem) {
+        throw new Error("Could not decode item data.");
+      }
 
-  const price = listing.zenPrice;
+      const itemDef = getItemDefinition({
+        group: decodedItem.group,
+        index: decodedItem.index,
+        level: decodedItem.level,
+      });
+      const itemWidth = itemDef?.width ?? 1;
+      const itemHeight = itemDef?.height ?? 1;
 
-  const decodedItem = decodeItem(Buffer.from(listing.itemHex));
-  if (!decodedItem) {
-    return { success: false, message: "Could not decode item data." };
-  }
-  const itemDef = getItemDefinition({
-    group: decodedItem.group,
-    index: decodedItem.index,
-    level: decodedItem.level,
-  });
-  const itemWidth = itemDef?.width ?? 1;
-  const itemHeight = itemDef?.height ?? 1;
+      const buyerWarehouse = await tx.warehouse.findUnique({
+        where: { AccountID: accountId },
+        select: { Items: true },
+      });
+      const originalItems = buyerWarehouse?.Items ?? null;
+      const buyerBuffer = getWarehouseItemsBuffer(originalItems);
+      const freeSlot = findFreeArea(buyerBuffer, itemWidth, itemHeight);
 
-  const buyerWarehouse = await prisma.warehouse.findUnique({
-    where: { AccountID: accountId },
-    select: { Items: true },
-  });
+      if (freeSlot === -1) {
+        throw new Error(
+          `Not enough space in your warehouse for this item (${itemWidth}x${itemHeight}).`,
+        );
+      }
 
-  if (!buyerWarehouse?.Items) {
-    return { success: false, message: "Your warehouse was not found." };
-  }
+      const updatedBuyerBuffer = writeItemToSlot(
+        buyerBuffer,
+        freeSlot,
+        listing.itemHex,
+      );
 
-  const buyerBuffer = Buffer.from(buyerWarehouse.Items);
-  const freeSlot = findFreeArea(buyerBuffer, itemWidth, itemHeight);
+      const buyerCharacter = await tx.character.findFirst({
+        where: { AccountID: accountId },
+        select: { Name: true },
+      });
 
-  if (freeSlot === -1) {
-    return {
-      success: false,
-      message: `Not enough space in your warehouse for this item (${itemWidth}x${itemHeight}).`,
-    };
-  }
+      const { count: claimed } = await tx.marketplaceListing.updateMany({
+        where: { id: listingId, status: "active" },
+        data: {
+          status: "sold",
+          buyerAccountId: accountId,
+          buyerCharacter: buyerCharacter?.Name ?? null,
+          soldAt: new Date(),
+        },
+      });
 
-  const updatedBuyerBuffer = writeItemToSlot(
-    buyerBuffer,
-    freeSlot,
-    listing.itemHex,
-  );
+      if (claimed === 0) {
+        throw new Error("Listing not found or already sold.");
+      }
 
-  await prisma.$transaction(async (tx) => {
-    // TODO(deposits): Withdraw `price` zen from the buyer's website / deposit balance (account-level),
-    // e.g. after adding a model such as `AccountWebsiteZen { accountId, zen }`:
-    //   const balance = await tx.accountWebsiteZen.findUnique({ where: { accountId } });
-    //   if (!balance || balance.zen < price) throw ...
-    //   await tx.accountWebsiteZen.update({ where: { accountId }, data: { zen: { decrement: price } } });
-    // Until deposits are implemented, do not deduct character inventory zen for purchases.
+      await debitDepositAmounts(tx, accountId, prices);
+      await creditDepositAmounts(tx, listing.sellerAccountId, prices);
 
-    await tx.warehouse.update({
-      where: { AccountID: accountId },
-      data: { Items: Uint8Array.from(updatedBuyerBuffer) },
+      if (!buyerWarehouse) {
+        await tx.warehouse.create({
+          data: {
+            AccountID: accountId,
+            Items: Uint8Array.from(updatedBuyerBuffer),
+          },
+        });
+        return;
+      }
+
+      const { count } = await tx.warehouse.updateMany({
+        where: { AccountID: accountId, Items: originalItems },
+        data: { Items: Uint8Array.from(updatedBuyerBuffer) },
+      });
+
+      if (count === 0) {
+        throw new Error(
+          "Your warehouse changed while processing this request. Please try again.",
+        );
+      }
     });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : "Failed to buy item.";
+    return { success: false, message };
+  }
 
-    // TODO(deposits): Align seller payout with website balance if you move zen off characters.
-    await tx.character.update({
-      where: { Name: listing.sellerCharacter },
-      data: { Money: { increment: price } },
-    });
-
-    await tx.marketplaceListing.update({
-      where: { id: listingId },
-      data: {
-        status: "sold",
-        buyerAccountId: accountId,
-        buyerCharacter: null,
-        soldAt: new Date(),
-      },
-    });
-  });
-
-  revalidatePath("/user-panel/market");
+  revalidatePath("/user-panel/market", "layout");
+  revalidatePath("/user-panel/deposits");
 
   return {
     success: true,

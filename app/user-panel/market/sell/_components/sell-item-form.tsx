@@ -11,19 +11,44 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { WarehouseGrid } from "@/components/warehouse-grid";
+import {
+  DEPOSIT_ITEM_TYPES,
+  DEPOSITABLE_ITEMS,
+  EMPTY_DEPOSIT_AMOUNTS,
+  type DepositAmounts,
+  type DepositItemType,
+} from "@/constants/depositable-items";
 import { listMarketItemAction } from "@/lib/actions/list-market-item";
 import { formatItemName } from "@/lib/game/item-database/formatters";
 import { type WarehouseItem } from "@/lib/types/warehouse";
-import { CircleDollarSign, Loader2, Package } from "lucide-react";
+import { hasAnyPositiveDepositAmounts } from "@/lib/utils/deposits";
+import { parseAmountInput } from "@/lib/utils/numbers";
+import { Coins, Loader2, Package } from "lucide-react";
 import { useActionState, useState } from "react";
 
 interface SellItemFormProps {
   warehouseItems: WarehouseItem[];
 }
 
+const emptyPriceInputs = (): Record<DepositItemType, string> =>
+  Object.fromEntries(DEPOSIT_ITEM_TYPES.map((type) => [type, ""])) as Record<
+    DepositItemType,
+    string
+  >;
+
+const toListingPrices = (
+  inputs: Record<DepositItemType, string>,
+): DepositAmounts => {
+  const prices = { ...EMPTY_DEPOSIT_AMOUNTS };
+  for (const type of DEPOSIT_ITEM_TYPES) {
+    prices[type] = Number(inputs[type] || 0);
+  }
+  return prices;
+};
+
 export function SellItemForm({ warehouseItems }: SellItemFormProps) {
   const [selectedSlot, setSelectedSlot] = useState<number | null>(null);
-  const [zenPrice, setZenPrice] = useState("");
+  const [priceInputs, setPriceInputs] = useState(emptyPriceInputs);
 
   const [state, formAction, isPending] = useActionState(listMarketItemAction, {
     success: false,
@@ -32,10 +57,21 @@ export function SellItemForm({ warehouseItems }: SellItemFormProps) {
 
   const selectedItem =
     selectedSlot !== null
-      ? warehouseItems.find((item) => item.slot === selectedSlot)
+      ? (warehouseItems.find((item) => item.slot === selectedSlot) ?? null)
       : null;
 
-  const canSubmit = selectedItem && zenPrice && parseInt(zenPrice) > 0;
+  const canSubmit =
+    Boolean(selectedItem) &&
+    hasAnyPositiveDepositAmounts(toListingPrices(priceInputs));
+
+  const setPrice = (type: DepositItemType, value: string) => {
+    const parsed = parseAmountInput(value);
+    if (parsed === null) return;
+    setPriceInputs((current) => ({
+      ...current,
+      [type]: parsed === 0 ? "" : String(parsed),
+    }));
+  };
 
   return (
     <div>
@@ -43,17 +79,15 @@ export function SellItemForm({ warehouseItems }: SellItemFormProps) {
         Select Item from Warehouse ({warehouseItems.length} items)
       </h3>
       <div className="grid gap-4 md:grid-cols-2">
-        {/* Warehouse Grid */}
         <div>
           <WarehouseGrid
             warehouseItems={warehouseItems}
-            selectedSlot={selectedSlot}
+            selectedSlot={selectedItem?.slot ?? null}
             onSelectSlot={setSelectedSlot}
           />
         </div>
 
         <div className="space-y-6">
-          {/* Selected Item Info */}
           <div className="border-border/50 bg-muted/20 overflow-visible rounded-xl border p-4">
             {selectedItem ? (
               <ItemTooltip>
@@ -108,39 +142,74 @@ export function SellItemForm({ warehouseItems }: SellItemFormProps) {
             )}
           </div>
 
-          {/* Price Input */}
           <div>
             <h3 className="text-muted-foreground mb-3 text-sm font-medium tracking-wider uppercase">
               Set Price
             </h3>
-            <div className="border-border/50 rounded-xl border p-4">
-              <div className="mb-3 flex items-center gap-2">
-                <CircleDollarSign className="text-gold size-4" />
-                <span className="text-sm font-medium">Zen</span>
-              </div>
-              <Input
-                type="number"
-                placeholder="0"
-                value={zenPrice}
-                onChange={(e) => setZenPrice(e.target.value)}
-                min={1}
-                max={2000000000}
-                inputMode="numeric"
-              />
+            <p className="text-muted-foreground mb-3 text-xs">
+              Paid from the buyer&apos;s deposits. You can mix currencies.
+            </p>
+            <div className="border-border/50 flex flex-col gap-3 rounded-xl border p-4">
+              {DEPOSIT_ITEM_TYPES.map((type) => {
+                const config = DEPOSITABLE_ITEMS[type];
+                return (
+                  <label
+                    key={type}
+                    className="flex items-center gap-3"
+                    htmlFor={`price-${type}`}
+                  >
+                    {config.icon ? (
+                      <div className="flex size-8 shrink-0 items-center justify-center overflow-hidden">
+                        <ItemIcon
+                          group={config.icon.group}
+                          index={config.icon.index}
+                          className="size-full"
+                        />
+                      </div>
+                    ) : (
+                      <div className="flex size-8 shrink-0 items-center justify-center">
+                        <Coins className="text-gold-dim size-5" />
+                      </div>
+                    )}
+                    <span className="w-32 shrink-0 text-sm font-medium">
+                      {config.label}
+                    </span>
+                    <Input
+                      id={`price-${type}`}
+                      type="text"
+                      inputMode="numeric"
+                      autoComplete="off"
+                      placeholder="0"
+                      value={priceInputs[type]}
+                      onChange={(event) => setPrice(type, event.target.value)}
+                      className="h-10 text-right tabular-nums"
+                    />
+                  </label>
+                );
+              })}
             </div>
           </div>
 
-          {/* Status Messages */}
           {state.message && (
             <Alert variant={state.success ? "success" : "destructive"}>
               <AlertDescription>{state.message}</AlertDescription>
             </Alert>
           )}
 
-          {/* Submit Form */}
           <form action={formAction}>
-            <input type="hidden" name="slotIndex" value={selectedSlot ?? ""} />
-            <input type="hidden" name="zenPrice" value={zenPrice} />
+            <input
+              type="hidden"
+              name="slotIndex"
+              value={selectedItem?.slot ?? ""}
+            />
+            {DEPOSIT_ITEM_TYPES.map((type) => (
+              <input
+                key={type}
+                type="hidden"
+                name={type}
+                value={priceInputs[type]}
+              />
+            ))}
 
             <Button
               disabled={!canSubmit || isPending}
@@ -152,14 +221,11 @@ export function SellItemForm({ warehouseItems }: SellItemFormProps) {
                   <span>Listing...</span>
                 </>
               ) : (
-                <>
-                  <span>List for Sale</span>
-                </>
+                <span>List for Sale</span>
               )}
             </Button>
           </form>
 
-          {/* Info */}
           <div className="text-center">
             <p className="text-muted-foreground text-xs">
               Items are listed from your account warehouse.

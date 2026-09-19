@@ -35,6 +35,13 @@ export type AccountDepositItemFields = {
   JewelOfChaos: number;
 };
 
+/** PascalCase amount columns shared by AccountDeposit and MarketplaceListing. */
+export type AccountDepositAmountFields = {
+  Zen: number;
+} & AccountDepositItemFields;
+
+export type DepositAmounts = Record<DepositItemType, number>;
+
 /** Fresh jewel/Rena durability (item byte 2). */
 export const DEPOSITABLE_ITEM_DURABILITY = 1;
 
@@ -83,3 +90,13 @@ export const DEPOSITABLE_ITEMS: Record<DepositItemType, DepositItemConfig> = {
 export const DEPOSIT_ITEM_TYPES = Object.keys(
   DEPOSITABLE_ITEMS,
 ) as DepositItemType[];
+
+export const EMPTY_DEPOSIT_AMOUNTS: DepositAmounts = {
+  zen: 0,
+  rena: 0,
+  jewelOfBless: 0,
+  jewelOfSoul: 0,
+  jewelOfLife: 0,
+  jewelOfCreation: 0,
+  jewelOfChaos: 0,
+};
