@@ -31,6 +31,8 @@ import * as React from "react";
 import { useActionState } from "react";
 import { toast } from "sonner";
 
+export type ListingVariant = "browse" | "bought" | "listed" | "sold";
+
 function formatDate(date: Date) {
   return new Intl.DateTimeFormat("en-US", {
     month: "short",
@@ -120,9 +122,14 @@ function PriceLine({
   );
 }
 
-/** Renders one chip per positive currency. The caller wraps this in a
- * `flex flex-wrap` container so multiple currencies flow onto as few rows
- * as the available width allows, instead of one full-width row each. */
+function listingPriceVariant(
+  variant: ListingVariant,
+): "default" | "spent" | "earned" {
+  if (variant === "bought") return "spent";
+  if (variant === "sold") return "earned";
+  return "default";
+}
+
 function ListingPrices({
   listing,
   variant = "default",
@@ -141,33 +148,20 @@ function ListingPrices({
     return <span className="text-muted-foreground text-sm">—</span>;
   }
 
-  // Zen amounts can run into the tens of millions, much wider than a jewel
-  // count. Always give it its own row instead of letting it wrap in with
-  // (and misalign) the other currency chips.
-  const zenLine = lines.find((line) => line.type === "zen");
-  const itemLines = lines.filter((line) => line.type !== "zen");
-
   return (
-    <div className="flex flex-col items-stretch gap-1 sm:items-end">
-      <div className="flex flex-wrap items-center gap-1.5">
-        {itemLines.map((line) => (
+    <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
+      {lines.map((line) => (
+        <div
+          key={line.type}
+          className={cn(line.type === "zen" && "basis-full")}
+        >
           <PriceLine
-            key={line.type}
             type={line.type}
             amount={line.amount}
             variant={variant}
           />
-        ))}
-      </div>
-      {zenLine && (
-        <div className="flex w-full sm:justify-end">
-          <PriceLine
-            type={zenLine.type}
-            amount={zenLine.amount}
-            variant={variant}
-          />
         </div>
-      )}
+      ))}
     </div>
   );
 }
@@ -246,8 +240,6 @@ function Cancel({ listing }: { listing: MarketListing }) {
   );
 }
 
-export type ListingVariant = "browse" | "bought" | "listed" | "sold";
-
 export type MarketListingCardProps = {
   listing: MarketListing;
   variant: ListingVariant;
@@ -296,63 +288,60 @@ function ListingMeta({
   }
 }
 
-function ListingPricesForVariant({
-  variant,
-  listing,
-}: {
-  variant: ListingVariant;
-  listing: MarketListing;
-}) {
-  switch (variant) {
-    case "browse":
-    case "listed":
-      return <ListingPrices listing={listing} />;
-    case "bought":
-      return <ListingPrices listing={listing} variant="spent" />;
-    case "sold":
-      return <ListingPrices listing={listing} variant="earned" />;
-  }
-}
-
 function MarketListingCard(props: MarketListingCardProps) {
   const { listing, variant, className, actions } = props;
   const item = listing.item;
 
   return (
-    <div
+    <article
       className={cn(
-        "bg-card border-border flex flex-col gap-3 rounded-xl border p-4 sm:flex-row sm:items-center sm:gap-4",
+        "@container/market-listing bg-card border-border rounded-xl border p-4",
         className,
       )}
     >
-      <div className="flex min-w-0 flex-1 items-center gap-3">
-        <ItemTooltip>
-          <ItemTooltipTrigger asChild>
-            <div className="border-border/50 bg-muted relative flex size-14 shrink-0 cursor-default items-center justify-center overflow-hidden rounded-lg border sm:size-16">
-              <ItemIcon
-                group={item.group}
-                index={item.index}
-                level={item.level}
-                className="size-full"
-              />
-            </div>
-          </ItemTooltipTrigger>
-          <ItemTooltipContent>
-            <ItemCard item={item} />
-          </ItemTooltipContent>
-        </ItemTooltip>
-        <div className="flex flex-col items-stretch gap-1">
+      {/*
+        Layout follows card width (sidebar narrows the list, not the viewport).
+        Narrow: icon + title, then prices, then action.
+        Wide (@md container): icon | title + prices | action.
+      */}
+      <div className="grid grid-cols-[auto_minmax(0,1fr)] gap-x-3 gap-y-3 @md/market-listing:grid-cols-[auto_minmax(0,1fr)_auto]">
+        <div className="col-start-1 row-start-1 @md/market-listing:row-span-2">
+          <ItemTooltip>
+            <ItemTooltipTrigger asChild>
+              <div className="border-border/50 bg-muted relative flex size-14 cursor-default items-center justify-center overflow-hidden rounded-lg border @md/market-listing:size-16">
+                <ItemIcon
+                  group={item.group}
+                  index={item.index}
+                  level={item.level}
+                  className="size-full"
+                />
+              </div>
+            </ItemTooltipTrigger>
+            <ItemTooltipContent>
+              <ItemCard item={item} />
+            </ItemTooltipContent>
+          </ItemTooltip>
+        </div>
+
+        <div className="col-start-2 row-start-1 flex min-w-0 flex-col gap-1">
           <ItemName item={item} />
           <ListingMeta variant={variant} listing={listing} />
         </div>
-      </div>
 
-      <div className="flex shrink-0 flex-wrap items-center gap-x-3 gap-y-1.5 sm:max-w-64 sm:justify-end">
-        <ListingPricesForVariant variant={variant} listing={listing} />
-      </div>
+        <div className="col-span-2 col-start-1 row-start-2 min-w-0 @md/market-listing:col-span-1 @md/market-listing:col-start-2 @md/market-listing:row-start-2">
+          <ListingPrices
+            listing={listing}
+            variant={listingPriceVariant(variant)}
+          />
+        </div>
 
-      {actions && <div className="flex shrink-0 justify-end">{actions}</div>}
-    </div>
+        {actions ? (
+          <div className="col-span-2 col-start-1 row-start-3 @md/market-listing:col-span-1 @md/market-listing:col-start-3 @md/market-listing:row-start-1 @md/market-listing:row-span-2 @md/market-listing:self-center @md/market-listing:justify-self-end [&_form]:w-full @md/market-listing:[&_form]:w-auto">
+            {actions}
+          </div>
+        ) : null}
+      </div>
+    </article>
   );
 }
 
