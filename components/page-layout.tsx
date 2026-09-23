@@ -10,7 +10,7 @@ const pageLayoutVariants = cva("mx-auto", {
       /** Narrow auth flows (login, register). */
       auth: "max-w-md py-28 px-4",
       /** User-panel pages — used inside `app/user-panel/layout.tsx`'s `<main>`. */
-      panel: "max-w-5xl py-8 px-6",
+      panel: "max-w-5xl py-8 px-4",
     },
   },
   defaultVariants: {

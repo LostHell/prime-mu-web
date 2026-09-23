@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils"
 import { cva, type VariantProps } from "class-variance-authority"
 
 const cardVariants = cva(
-  "flex flex-col gap-6 rounded-xl border bg-card py-6 text-card-foreground backdrop-blur-md",
+  "flex flex-col gap-5 rounded-xl border bg-card py-5 text-card-foreground backdrop-blur-md",
   {
     variants: {
       enableGlow: {

@@ -104,7 +104,7 @@ export function SellItemForm({ warehouseItems }: SellItemFormProps) {
 
       <div className="flex flex-col gap-4">
         <h3 className={sectionHeadingClass}>Set Price</h3>
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-5">
           <div className="border-border/50 bg-muted/20 relative overflow-visible rounded-xl border p-4">
             <div
               className={cn(
