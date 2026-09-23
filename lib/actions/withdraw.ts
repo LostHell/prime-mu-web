@@ -15,16 +15,16 @@ import {
 } from "@/lib/game/item-decoder";
 import { getWarehouseItemsBuffer } from "@/lib/game/warehouse";
 import { getNextItemSerial } from "@/lib/queries/get-next-item-serial";
-import { UserPanelActionState } from "@/lib/validation/types";
+import { ActionState } from "@/lib/types/action-state";
 import { withdrawSchema } from "@/lib/validation/withdraw";
 import { prisma } from "@/prisma/prisma";
 import { revalidatePath } from "next/cache";
 import { getAuthenticatedUser, isAccountOffline } from "./utils";
 
 export async function withdrawAction(
-  _state: UserPanelActionState,
+  _state: ActionState,
   formData: FormData,
-): Promise<UserPanelActionState> {
+): Promise<ActionState> {
   const accountId = await getAuthenticatedUser();
   if (!accountId) {
     return { success: false, message: "You must be logged in." };
@@ -62,7 +62,7 @@ export async function withdrawAction(
 async function withdrawZen(
   accountId: string,
   amount: number,
-): Promise<UserPanelActionState> {
+): Promise<ActionState> {
   try {
     const message = await prisma.$transaction(async (tx) => {
       const [deposit, warehouse] = await Promise.all([
@@ -139,7 +139,7 @@ async function withdrawItem(
     label: string;
   },
   amount: number,
-): Promise<UserPanelActionState> {
+): Promise<ActionState> {
   const { itemId, dbField, label } = config;
   if (!itemId || !dbField) {
     return { success: false, message: "Invalid item type." };

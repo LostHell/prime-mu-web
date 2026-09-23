@@ -44,12 +44,6 @@ export function MyListings({ listings }: MyListingsProps) {
           />
         ))}
       </div>
-
-      <div className="pt-4 text-center">
-        <p className="text-muted-foreground text-xs">
-          You must be disconnected from the game to cancel listings.
-        </p>
-      </div>
     </div>
   );
 }

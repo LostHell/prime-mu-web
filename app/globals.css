@@ -156,7 +156,8 @@
   background-image: url("/hero-banner.jpg");
   background-size: cover;
   background-position: center top;
-  background-attachment: fixed;
+  /* `fixed` caused scroll compositing flicker (hero briefly painting above content). */
+  background-attachment: scroll;
 }
 
 .page-background::after {

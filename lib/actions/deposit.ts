@@ -7,15 +7,15 @@ import {
 import { type ItemId } from "@/lib/game/item-database/types";
 import { countItemsByType, removeItemsByType } from "@/lib/game/warehouse";
 import { depositSchema } from "@/lib/validation/deposit";
-import { UserPanelActionState } from "@/lib/validation/types";
+import { ActionState } from "@/lib/types/action-state";
 import { prisma } from "@/prisma/prisma";
 import { revalidatePath } from "next/cache";
 import { getAuthenticatedUser, isAccountOffline } from "./utils";
 
 export async function depositAction(
-  _state: UserPanelActionState,
+  _state: ActionState,
   formData: FormData,
-): Promise<UserPanelActionState> {
+): Promise<ActionState> {
   const accountId = await getAuthenticatedUser();
   if (!accountId) {
     return { success: false, message: "You must be logged in." };
@@ -55,7 +55,7 @@ async function depositZen(
   accountId: string,
   amount: number | undefined,
   depositAll: boolean,
-): Promise<UserPanelActionState> {
+): Promise<ActionState> {
   try {
     const message = await prisma.$transaction(async (tx) => {
       const warehouse = await tx.warehouse.findUnique({
@@ -108,7 +108,7 @@ async function depositItem(
   },
   amount: number | undefined,
   depositAll: boolean,
-): Promise<UserPanelActionState> {
+): Promise<ActionState> {
   const { itemId, dbField, label } = config;
 
   if (!itemId || !dbField) {

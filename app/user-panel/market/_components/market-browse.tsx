@@ -53,6 +53,11 @@ export function MarketBrowse({
         />
       </div>
 
+      <p className="text-muted-foreground -mt-2 text-xs">
+        {filteredListings.length} item
+        {filteredListings.length !== 1 ? "s" : ""} listed
+      </p>
+
       {filteredListings.length > 0 ? (
         <div className="flex flex-col gap-4">
           {filteredListings.map((listing) => {
@@ -86,17 +91,6 @@ export function MarketBrowse({
           description="Try adjusting your search"
         />
       )}
-
-      <div className="pt-2 text-center">
-        <p className="text-muted-foreground text-xs">
-          {filteredListings.length} item
-          {filteredListings.length !== 1 ? "s" : ""} listed
-          <br />
-          You must be disconnected from the game to buy items.
-          <br />
-          Prices are paid from your deposits.
-        </p>
-      </div>
     </div>
   );
 }

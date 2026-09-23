@@ -7,7 +7,7 @@ import {
   RESET_COST_PER_RESET,
 } from "@/constants/resets";
 import { resetCharacterSchema } from "@/lib/validation/reset-character";
-import { UserPanelActionState } from "@/lib/validation/types";
+import { ActionState } from "@/lib/types/action-state";
 import { prisma } from "@/prisma/prisma";
 import { revalidatePath } from "next/cache";
 import { getAuthenticatedUser, verifyCharacterOwnership } from "./utils";
@@ -46,9 +46,9 @@ function hasEquippedItems(inventory: Uint8Array | null | undefined): boolean {
 }
 
 export async function resetCharacterAction(
-  _state: UserPanelActionState,
+  _state: ActionState,
   formData: FormData,
-): Promise<UserPanelActionState> {
+): Promise<ActionState> {
   const accountId = await getAuthenticatedUser();
   if (!accountId) {
     return { success: false, message: "You must be logged in." };
