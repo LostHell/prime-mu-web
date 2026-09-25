@@ -8,7 +8,6 @@ export default function ClearPkPage() {
     <ActionPageLayout
       title="Clear PK"
       description="Remove your Player Killer status"
-      relevantFields={["pkCount", "level", "resets"]}
     >
       {(character) => <ClearPkForm character={character} />}
     </ActionPageLayout>

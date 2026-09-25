@@ -12,6 +12,8 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { CharacterSection, CharacterValues } from "../character-info";
+import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import {
   MAX_RESETS,
@@ -46,72 +48,73 @@ export function ResetForm({ character }: ResetFormProps) {
     });
   };
 
-  const statsData = [
-    { label: "Current Resets", value: character.resets },
-    { label: "Max Resets", value: MAX_RESETS },
-    { label: "Current Level", value: character.level },
-    { label: "Required Level", value: MIN_RESET_LEVEL },
-    { label: "Current Zen", value: character.zen.toLocaleString() },
-    { label: "Reset Cost", value: resetCost.toLocaleString() },
-    { label: "Points per Reset", value: `+${POINTS_PER_RESET}` },
-    { label: "Level after Reset", value: 1 },
+  const requirements = [
+    {
+      label: "Level",
+      value: `${character.level} / ${MIN_RESET_LEVEL} required`,
+    },
+    { label: "Resets", value: `${character.resets} / ${MAX_RESETS} maximum` },
+    { label: "Zen balance", value: character.zen.toLocaleString() },
+    { label: "Reset cost", value: resetCost.toLocaleString() },
   ];
+  const canReset = hasRequiredLevel && isUnderResetLimit && hasEnoughZen;
 
   return (
-    <div className="space-y-6">
-      <div className="grid grid-cols-2 gap-3">
-        {statsData.map(({ label, value }) => (
-          <div
-            key={label}
-            className="border-border/50 flex justify-between border-b pb-2"
-          >
-            <span className="text-muted-foreground text-sm">{label}</span>
-            <span className="text-gold text-sm font-semibold">{value}</span>
-          </div>
-        ))}
-      </div>
-
+    <div className="flex flex-col gap-6">
+      <CharacterSection title="Reset requirements">
+        <CharacterValues items={requirements} />
+      </CharacterSection>
+      <Separator />
+      <CharacterSection title="After this reset">
+        <CharacterValues
+          items={[
+            { label: "Level", value: 1 },
+            { label: "Total resets", value: character.resets + 1 },
+            { label: "Bonus stat points", value: `+${POINTS_PER_RESET}` },
+            { label: "Attributes", value: "Class defaults" },
+          ]}
+        />
+      </CharacterSection>
       {state.message && (
         <Alert variant={state.success ? "success" : "destructive"}>
           <AlertDescription>{state.message}</AlertDescription>
         </Alert>
       )}
 
-      {!hasRequiredLevel ? (
-        <div className="bg-muted/30 rounded-lg py-4 text-center">
+      {!canReset && (
+        <Alert>
+          <AlertDescription>
+            <ul className="flex list-inside list-disc flex-col gap-2">
+              {!hasRequiredLevel && (
+                <li>Reach level {MIN_RESET_LEVEL} to reset.</li>
+              )}
+              {!isUnderResetLimit && (
+                <li>You have reached the maximum of {MAX_RESETS} resets.</li>
+              )}
+              {!hasEnoughZen && (
+                <li>
+                  You need {(resetCost - character.zen).toLocaleString()} more
+                  Zen.
+                </li>
+              )}
+            </ul>
+          </AlertDescription>
+        </Alert>
+      )}
+      {canReset && (
+        <div className="flex flex-col gap-4">
           <p className="text-muted-foreground text-sm">
-            Your character must be at least level{" "}
-            <span className="text-gold font-semibold">{MIN_RESET_LEVEL}</span>{" "}
-            to reset.
-          </p>
-        </div>
-      ) : !isUnderResetLimit ? (
-        <div className="bg-muted/30 rounded-lg py-4 text-center">
-          <p className="text-muted-foreground text-sm">
-            Your character reached the reset limit (
-            <span className="text-gold font-semibold">{MAX_RESETS}</span>).
-          </p>
-        </div>
-      ) : !hasEnoughZen ? (
-        <div className="bg-muted/30 rounded-lg py-4 text-center">
-          <p className="text-muted-foreground text-sm">
-            You need{" "}
-            <span className="text-gold font-semibold">
-              {resetCost.toLocaleString()}
-            </span>{" "}
-            Zen to reset.
-          </p>
-        </div>
-      ) : (
-        <div className="space-y-4">
-          <p className="text-muted-foreground text-sm leading-relaxed">
-            Resetting will set your level back to 1, restore base stats from
-            your class defaults, grant +{POINTS_PER_RESET} points, and cost{" "}
-            {resetCost.toLocaleString()} Zen.
+            Resetting restores your class’s base attributes and deducts the
+            reset cost from your Zen balance.
           </p>
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <Button disabled={isPending}>Reset Character</Button>
+              <Button
+                disabled={isPending}
+                className="w-full sm:w-auto sm:self-start"
+              >
+                Reset Character
+              </Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>

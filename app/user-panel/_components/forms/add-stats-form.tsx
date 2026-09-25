@@ -2,11 +2,17 @@
 
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import {
+  Field,
+  FieldContent,
+  FieldDescription,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field";
+import { CharacterSection, CharacterValues } from "../character-info";
 import { Input } from "@/components/ui/input";
 import { addStatsAction } from "@/lib/actions/add-stats";
 import { type Character, CMD_CLASSES } from "@/lib/types/character";
-import { cn } from "@/lib/utils";
 import type { ActionState } from "@/lib/types/action-state";
 import { useActionState, useState } from "react";
 
@@ -54,101 +60,88 @@ export function AddStatsForm({ character }: AddStatsFormProps) {
   };
 
   return (
-    <div className="space-y-6">
-      {/* Header with available points */}
-      <Card className="gap-0 p-5 text-center">
-        <p className="text-muted-foreground mb-1 text-xs tracking-wider uppercase">
-          Available Points
-        </p>
-        <p
-          className={cn(
-            "text-4xl font-bold tabular-nums",
-            remaining > 0 ? "text-gold" : "text-muted-foreground",
-          )}
-        >
-          {remaining.toLocaleString()}
-        </p>
-        {ptsTotal > 0 && (
-          <p className="text-muted-foreground mt-2 text-xs">
-            Allocating{" "}
-            <span className="text-foreground font-medium">{ptsTotal}</span>{" "}
-            points
-          </p>
-        )}
-      </Card>
-
-      <form action={handleSubmit} className="space-y-3">
-        {(["str", "agi", "vit", "ene", "cmd"] as const)
-          .filter((s) => s !== "cmd" || hasCmd)
-          .map((stat) => {
-            const hasChange = pts[stat] > 0;
-            return (
-              <Card
+    <div className="flex flex-col gap-6">
+      <CharacterSection title="Stat points">
+        <CharacterValues
+          items={[
+            {
+              label: "Available",
+              value: character.freePoints.toLocaleString(),
+            },
+            {
+              label: "Remaining after allocation",
+              value: remaining.toLocaleString(),
+            },
+          ]}
+        />
+      </CharacterSection>
+      <form action={handleSubmit} className="flex flex-col gap-6">
+        <FieldGroup>
+          {(["str", "agi", "vit", "ene", "cmd"] as const)
+            .filter((stat) => stat !== "cmd" || hasCmd)
+            .map((stat) => (
+              <Field
                 key={stat}
-                className={cn(
-                  "flex flex-row items-center gap-4 p-4 shadow-none backdrop-blur-none transition-colors",
-                  hasChange
-                    ? "border-gold/30 bg-gold/5"
-                    : "border-border/50 bg-muted/30",
-                )}
+                orientation="horizontal"
+                className="grid grid-cols-2 items-center gap-4 has-[>[data-slot=field-content]]:items-center"
+                data-disabled={isPending}
+                data-invalid={Boolean(state.errors?.[stat])}
               >
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-muted-foreground text-[10px] font-bold tracking-widest uppercase">
-                      {STAT_CONFIG[stat].short}
-                    </span>
-                    <span className="text-muted-foreground/60 hidden text-xs sm:inline">
-                      {STAT_CONFIG[stat].label}
-                    </span>
-                  </div>
-                  <div className="mt-1 flex items-baseline gap-2">
-                    <span className="text-foreground text-2xl font-bold tabular-nums">
-                      {character.stats[stat].toLocaleString()}
-                    </span>
-                    {hasChange && (
-                      <span className="text-gold text-sm font-semibold tabular-nums">
+                <FieldContent className="min-w-0">
+                  <FieldLabel htmlFor={`stat-${stat}`}>
+                    {STAT_CONFIG[stat].label}
+                  </FieldLabel>
+                  <FieldDescription id={`stat-${stat}-description`}>
+                    {character.stats[stat].toLocaleString()}
+                    {pts[stat] > 0 && (
+                      <>
+                        {" "}
                         → {(character.stats[stat] + pts[stat]).toLocaleString()}
-                      </span>
+                      </>
                     )}
-                  </div>
-                </div>
-
+                  </FieldDescription>
+                  {state.errors?.[stat] && (
+                    <p className="text-destructive text-sm">
+                      {state.errors[stat]}
+                    </p>
+                  )}
+                </FieldContent>
                 <Input
+                  id={`stat-${stat}`}
+                  aria-label={`Points to add to ${STAT_CONFIG[stat].label.toLowerCase()}`}
+                  aria-describedby={`stat-${stat}-description`}
+                  aria-invalid={Boolean(state.errors?.[stat])}
                   type="number"
                   inputMode="numeric"
                   min={0}
                   max={remaining + pts[stat]}
+                  step={1}
                   value={pts[stat] || ""}
-                  onChange={(e) => updateStat(stat, e.target.value)}
+                  onChange={(event) => updateStat(stat, event.target.value)}
                   placeholder="0"
                   disabled={isPending}
-                  className={cn(
-                    "h-12 w-20 text-center text-lg font-bold tabular-nums",
-                    hasChange ? "text-gold" : "text-muted-foreground",
-                  )}
+                  className="w-full"
                 />
-              </Card>
-            );
-          })}
-
+              </Field>
+            ))}
+        </FieldGroup>
+        <p className="text-muted-foreground text-sm">
+          Your account must be offline to apply stat points.
+        </p>
         {state.message && (
-          <div className="pt-2">
-            <Alert variant={state.success ? "success" : "destructive"}>
-              <AlertDescription>{state.message}</AlertDescription>
-            </Alert>
-          </div>
+          <Alert variant={state.success ? "success" : "destructive"}>
+            <AlertDescription>{state.message}</AlertDescription>
+          </Alert>
         )}
-
         <Button
           type="submit"
           disabled={ptsTotal === 0 || isPending}
-          className="mt-4 w-full"
-          size="lg"
+          className="w-full sm:w-auto sm:self-start"
         >
           {isPending
             ? "Applying..."
             : ptsTotal > 0
-              ? `Apply ${ptsTotal} Points`
+              ? `Apply ${ptsTotal} points`
               : "Enter points to allocate"}
         </Button>
       </form>

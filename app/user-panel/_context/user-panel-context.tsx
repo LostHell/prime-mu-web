@@ -27,16 +27,21 @@ export function UserPanelProvider({
   children,
   characters,
 }: UserPanelProviderProps) {
-  const [selectedCharacter, setSelectedCharacter] = useState<Character | null>(
-    null,
-  );
+  const [selectedName, setSelectedName] = useState<string | null>(null);
+  const selectedCharacter =
+    characters.find((character) => character.name === selectedName) ??
+    characters[0] ??
+    null;
+  const setSelectedCharacter = useCallback((character: Character | null) => {
+    setSelectedName(character?.name ?? null);
+  }, []);
 
   const selectCharacterByName = useCallback(
     (name: string) => {
       const character = characters.find((c) => c.name === name) ?? null;
       setSelectedCharacter(character);
     },
-    [characters],
+    [characters, setSelectedCharacter],
   );
 
   return (
