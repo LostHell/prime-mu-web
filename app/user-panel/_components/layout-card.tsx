@@ -8,7 +8,7 @@ export function LayoutCard({ children, className }: LayoutCardProps) {
   return (
     <div
       className={cn(
-        "md:bg-card md:border-border md:rounded-xl md:border md:p-6 md:backdrop-blur-md",
+        "md:bg-card md:border-border md:rounded-xl md:border md:p-5 md:backdrop-blur-md",
         className,
       )}
     >

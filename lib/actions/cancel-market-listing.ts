@@ -9,7 +9,7 @@ import {
 } from "@/lib/game/item-decoder";
 import { getWarehouseItemsBuffer } from "@/lib/game/warehouse";
 import { buyMarketItemSchema } from "@/lib/validation/buy-market-item";
-import { UserPanelActionState } from "@/lib/validation/types";
+import { ActionState } from "@/lib/types/action-state";
 import { Prisma } from "@/prisma/generated/prisma/client";
 import { prisma } from "@/prisma/prisma";
 import { revalidatePath } from "next/cache";
@@ -19,9 +19,9 @@ const isUniqueConflict = (err: unknown) =>
   err instanceof Prisma.PrismaClientKnownRequestError && err.code === "P2002";
 
 export async function cancelMarketplaceListingAction(
-  _state: UserPanelActionState,
+  _state: ActionState,
   formData: FormData,
-): Promise<UserPanelActionState> {
+): Promise<ActionState> {
   const accountId = await getAuthenticatedUser();
   if (!accountId) {
     return { success: false, message: "You must be logged in." };

@@ -7,8 +7,8 @@ import {
   ItemTooltipContent,
   ItemTooltipTrigger,
 } from "@/components/item-tooltip";
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
+import { withActionToast } from "@/hooks/use-action-toast";
 import {
   DEPOSIT_ITEM_TYPES,
   DEPOSITABLE_ITEMS,
@@ -26,16 +26,17 @@ import { cn } from "@/lib/utils";
 import { hasAnyPositiveDepositAmounts } from "@/lib/utils/deposits";
 import { formatNumber } from "@/lib/utils/numbers";
 import { Coins } from "lucide-react";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import * as React from "react";
 import { useActionState } from "react";
+import { toast } from "sonner";
+
+export type ListingVariant = "browse" | "bought" | "listed" | "sold";
 
 function formatDate(date: Date) {
   return new Intl.DateTimeFormat("en-US", {
     month: "short",
     day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
   }).format(date);
 }
 
@@ -45,7 +46,7 @@ function ItemName({ item }: { item: ListingItem }) {
   return (
     <p
       className={cn(
-        "font-semibold",
+        "truncate text-base font-semibold",
         isExcellent ? "text-mu-tooltip-exc" : "text-gold",
       )}
     >
@@ -73,6 +74,9 @@ function DateText({ date }: { date: Date | null }) {
   return <span className="tabular-nums">{formatDate(date)}</span>;
 }
 
+/** Compact icon + amount chip. The currency label is visually hidden (icon
+ * carries the meaning) but stays available via `title` and `sr-only` text so
+ * the price is still identifiable on hover and to screen readers. */
 function PriceLine({
   type,
   amount,
@@ -92,18 +96,9 @@ function PriceLine({
   const prefix = variant === "spent" ? "-" : variant === "earned" ? "+" : "";
 
   return (
-    <div className="flex min-w-0 items-center gap-2">
-      <span
-        className={cn("min-w-0 flex-1 font-bold tabular-nums", amountClass)}
-      >
-        {prefix}
-        {formatNumber(amount)}
-      </span>
-      <span className="text-muted-foreground shrink-0 text-xs tracking-wider uppercase">
-        {config.label}
-      </span>
+    <div className="flex items-center gap-0.5" title={config.label}>
       {config.icon ? (
-        <div className="flex size-4 shrink-0 items-center justify-center overflow-hidden">
+        <div className="size-icon-sm flex shrink-0 items-center justify-center overflow-hidden">
           <ItemIcon
             group={config.icon.group}
             index={config.icon.index}
@@ -113,8 +108,26 @@ function PriceLine({
       ) : (
         <Coins className="text-gold-dim size-icon-sm shrink-0" />
       )}
+      <span
+        className={cn(
+          "text-sm font-bold whitespace-nowrap tabular-nums",
+          amountClass,
+        )}
+      >
+        {prefix}
+        {formatNumber(amount)}
+        <span className="sr-only"> {config.label}</span>
+      </span>
     </div>
   );
+}
+
+function listingPriceVariant(
+  variant: ListingVariant,
+): "default" | "spent" | "earned" {
+  if (variant === "bought") return "spent";
+  if (variant === "sold") return "earned";
+  return "default";
 }
 
 function ListingPrices({
@@ -132,18 +145,22 @@ function ListingPrices({
   }));
 
   if (lines.length === 0) {
-    return <span className="text-muted-foreground">—</span>;
+    return <span className="text-muted-foreground text-sm">—</span>;
   }
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
       {lines.map((line) => (
-        <PriceLine
+        <div
           key={line.type}
-          type={line.type}
-          amount={line.amount}
-          variant={variant}
-        />
+          className={cn(line.type === "zen" && "basis-full")}
+        >
+          <PriceLine
+            type={line.type}
+            amount={line.amount}
+            variant={variant}
+          />
+        </div>
       ))}
     </div>
   );
@@ -156,10 +173,14 @@ function Buy({
   listing: MarketListing;
   buyerDeposits: DepositAmounts;
 }) {
-  const [state, formAction, isPending] = useActionState(buyMarketItemAction, {
-    success: false,
-    message: "",
-  });
+  const [, formAction, isPending] = useActionState(
+    withActionToast(buyMarketItemAction),
+    {
+      success: false,
+      message: "",
+    },
+  );
+  const router = useRouter();
   const hasPrice = hasAnyPositiveDepositAmounts(listing.prices);
   const canAfford =
     hasPrice &&
@@ -168,47 +189,36 @@ function Buy({
     );
 
   return (
-    <div className="flex w-full flex-col gap-2 md:max-w-xs">
-      {state.message ? (
-        <Alert
-          variant={state.success ? "success" : "destructive"}
-          className="w-full"
-        >
-          <AlertDescription>{state.message}</AlertDescription>
-        </Alert>
-      ) : null}
-
-      {hasPrice && !canAfford && (
-        <p className="text-muted-foreground text-xs">
-          Not enough deposited funds.{" "}
-          <Link
-            href="/user-panel/deposits"
-            className="text-gold hover:underline"
-          >
-            Deposit
-          </Link>{" "}
-          the required currencies first.
-        </p>
-      )}
-
-      <form action={formAction} className="w-full">
-        <input type="hidden" name="listingId" value={listing.id} />
-        <Button
-          type="submit"
-          className="w-full"
-          disabled={!hasPrice || !canAfford || isPending}
-          aria-label="Buy item"
-        >
-          {isPending ? "Buying…" : "Buy item"}
-        </Button>
-      </form>
-    </div>
+    <form
+      action={formAction}
+      className="w-full sm:w-auto"
+      onSubmit={(event) => {
+        if (!hasPrice || canAfford) return;
+        event.preventDefault();
+        toast.error("Insufficient funds.", {
+          action: {
+            label: "Deposit",
+            onClick: () => router.push("/user-panel/deposits"),
+          },
+        });
+      }}
+    >
+      <input type="hidden" name="listingId" value={listing.id} />
+      <Button
+        type="submit"
+        className="w-full sm:w-auto"
+        disabled={!hasPrice || isPending}
+        aria-label="Buy item"
+      >
+        {isPending ? "Buying…" : "Buy item"}
+      </Button>
+    </form>
   );
 }
 
 function Cancel({ listing }: { listing: MarketListing }) {
-  const [state, formAction, isPending] = useActionState(
-    cancelMarketplaceListingAction,
+  const [, formAction, isPending] = useActionState(
+    withActionToast(cancelMarketplaceListingAction),
     {
       success: false,
       message: "",
@@ -216,33 +226,19 @@ function Cancel({ listing }: { listing: MarketListing }) {
   );
 
   return (
-    <div className="flex w-full flex-col gap-2 md:max-w-xs">
-      {state.message ? (
-        <Alert
-          variant={state.success ? "success" : "destructive"}
-          className="w-full"
-        >
-          <AlertDescription>{state.message}</AlertDescription>
-        </Alert>
-      ) : null}
-
-      <form action={formAction} className="w-full">
-        <input type="hidden" name="listingId" value={listing.id} />
-        <Button
-          type="submit"
-          variant="destructive"
-          className="w-full"
-          disabled={isPending}
-          aria-label="Cancel listing"
-        >
-          {isPending ? "Cancelling…" : "Cancel listing"}
-        </Button>
-      </form>
-    </div>
+    <form action={formAction} className="w-full sm:w-auto">
+      <input type="hidden" name="listingId" value={listing.id} />
+      <Button
+        type="submit"
+        variant="destructive"
+        className="w-full sm:w-auto"
+        disabled={isPending}
+      >
+        {isPending ? "Taking back…" : "Take back"}
+      </Button>
+    </form>
   );
 }
-
-export type ListingVariant = "browse" | "bought" | "listed" | "sold";
 
 export type MarketListingCardProps = {
   listing: MarketListing;
@@ -251,6 +247,9 @@ export type MarketListingCardProps = {
   actions?: React.ReactNode;
 };
 
+/** Single-line "who / when" summary. Combines what used to be two stacked
+ * lines (seller, then date) into one truncating line to keep the card row
+ * short regardless of variant. */
 function ListingMeta({
   variant,
   listing,
@@ -261,59 +260,31 @@ function ListingMeta({
   switch (variant) {
     case "browse":
       return (
-        <div className="flex flex-col gap-2">
-          <Seller>{listing.sellerCharacter}</Seller>
-          <span className="text-muted-foreground text-sm">
-            Listed <DateText date={listing.listedAt} />
-          </span>
-        </div>
+        <p className="text-muted-foreground truncate text-sm">
+          <Seller>{listing.sellerCharacter}</Seller> · Listed{" "}
+          <DateText date={listing.listedAt} />
+        </p>
       );
     case "bought":
       return (
-        <div className="flex flex-col gap-2">
-          <Seller>{listing.sellerCharacter}</Seller>
-          <span className="text-muted-foreground text-sm">
-            Bought <DateText date={listing.soldAt} />
-          </span>
-        </div>
+        <p className="text-muted-foreground truncate text-sm">
+          <Seller>{listing.sellerCharacter}</Seller> · Bought{" "}
+          <DateText date={listing.soldAt} />
+        </p>
       );
     case "listed":
       return (
-        <div className="flex flex-col gap-2">
-          <Seller>{listing.sellerCharacter}</Seller>
-          <span className="text-muted-foreground text-sm">
-            Active · Listed <DateText date={listing.listedAt} />
-          </span>
-        </div>
+        <p className="text-muted-foreground truncate text-sm">
+          Active · Listed <DateText date={listing.listedAt} />
+        </p>
       );
     case "sold":
       return (
-        <div className="flex flex-col gap-2">
-          <Seller>{listing.sellerCharacter}</Seller>
-          <span className="text-muted-foreground text-sm">
-            Sold <DateText date={listing.soldAt} /> to{" "}
-            <Seller>{listing.buyerCharacter ?? "another player"}</Seller>
-          </span>
-        </div>
+        <p className="text-muted-foreground truncate text-sm">
+          Sold <DateText date={listing.soldAt} /> to{" "}
+          <Seller>{listing.buyerCharacter ?? "another player"}</Seller>
+        </p>
       );
-  }
-}
-
-function ListingPricesForVariant({
-  variant,
-  listing,
-}: {
-  variant: ListingVariant;
-  listing: MarketListing;
-}) {
-  switch (variant) {
-    case "browse":
-    case "listed":
-      return <ListingPrices listing={listing} />;
-    case "bought":
-      return <ListingPrices listing={listing} variant="spent" />;
-    case "sold":
-      return <ListingPrices listing={listing} variant="earned" />;
   }
 }
 
@@ -322,47 +293,55 @@ function MarketListingCard(props: MarketListingCardProps) {
   const item = listing.item;
 
   return (
-    <div
-      className={cn("bg-card border-border rounded-xl border p-4", className)}
+    <article
+      className={cn(
+        "@container/market-listing bg-card border-border rounded-xl border p-4",
+        className,
+      )}
     >
-      <div className="flex flex-col gap-4">
-        <div className="grid grid-cols-1 gap-3 md:gap-4 lg:grid-cols-2">
-          <div className="flex flex-1 gap-3 md:gap-4">
-            <div className="shrink-0">
-              <ItemTooltip>
-                <ItemTooltipTrigger asChild>
-                  <div className="border-border/50 bg-muted relative flex size-24 shrink-0 cursor-default items-center justify-center overflow-hidden rounded-lg border md:size-30">
-                    <ItemIcon
-                      group={item.group}
-                      index={item.index}
-                      level={item.level}
-                      className="size-full"
-                    />
-                  </div>
-                </ItemTooltipTrigger>
-                <ItemTooltipContent>
-                  <ItemCard item={item} />
-                </ItemTooltipContent>
-              </ItemTooltip>
-            </div>
-            <div className="flex flex-1 flex-col gap-2">
-              <ItemName item={item} />
-              <ListingMeta variant={variant} listing={listing} />
-            </div>
-          </div>
-
-          <div className="flex shrink-0 flex-col items-start gap-2 lg:items-end">
-            <ListingPricesForVariant variant={variant} listing={listing} />
-          </div>
+      {/*
+        Layout follows card width (sidebar narrows the list, not the viewport).
+        Narrow: icon + title, then prices, then action.
+        Wide (@md container): icon | title + prices | action.
+      */}
+      <div className="grid grid-cols-[auto_minmax(0,1fr)] gap-x-3 gap-y-3 @md/market-listing:grid-cols-[auto_minmax(0,1fr)_auto]">
+        <div className="col-start-1 row-start-1 @md/market-listing:row-span-2">
+          <ItemTooltip>
+            <ItemTooltipTrigger asChild>
+              <div className="border-border/50 bg-muted relative flex size-14 cursor-default items-center justify-center overflow-hidden rounded-lg border @md/market-listing:size-16">
+                <ItemIcon
+                  group={item.group}
+                  index={item.index}
+                  level={item.level}
+                  className="size-full"
+                />
+              </div>
+            </ItemTooltipTrigger>
+            <ItemTooltipContent>
+              <ItemCard item={item} />
+            </ItemTooltipContent>
+          </ItemTooltip>
         </div>
 
-        {actions && (
-          <div className="border-border flex flex-col justify-end gap-2 border-t pt-4 md:shrink-0 md:flex-row md:justify-end md:border-t-0 md:pt-0">
+        <div className="col-start-2 row-start-1 flex min-w-0 flex-col gap-1">
+          <ItemName item={item} />
+          <ListingMeta variant={variant} listing={listing} />
+        </div>
+
+        <div className="col-span-2 col-start-1 row-start-2 min-w-0 @md/market-listing:col-span-1 @md/market-listing:col-start-2 @md/market-listing:row-start-2">
+          <ListingPrices
+            listing={listing}
+            variant={listingPriceVariant(variant)}
+          />
+        </div>
+
+        {actions ? (
+          <div className="col-span-2 col-start-1 row-start-3 @md/market-listing:col-span-1 @md/market-listing:col-start-3 @md/market-listing:row-start-1 @md/market-listing:row-span-2 @md/market-listing:self-center @md/market-listing:justify-self-end [&_form]:w-full @md/market-listing:[&_form]:w-auto">
             {actions}
           </div>
-        )}
+        ) : null}
       </div>
-    </div>
+    </article>
   );
 }
 

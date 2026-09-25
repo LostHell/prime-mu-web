@@ -7,17 +7,12 @@ import { Input } from "@/components/ui/input";
 import { addStatsAction } from "@/lib/actions/add-stats";
 import { type Character, CMD_CLASSES } from "@/lib/types/character";
 import { cn } from "@/lib/utils";
+import type { ActionState } from "@/lib/types/action-state";
 import { useActionState, useState } from "react";
 
 interface AddStatsFormProps {
   character: Character;
 }
-
-type ActionState = {
-  success?: boolean;
-  message?: string;
-  errors?: Record<string, string[]>;
-};
 
 const STAT_CONFIG: Record<string, { label: string; short: string }> = {
   str: { label: "Strength", short: "STR" },

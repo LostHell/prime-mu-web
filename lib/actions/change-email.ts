@@ -1,14 +1,14 @@
 "use server";
 
 import { changeEmailSchema } from "@/lib/validation/change-email";
-import { UserPanelActionState } from "@/lib/validation/types";
+import { ActionState } from "@/lib/types/action-state";
 import { prisma } from "@/prisma/prisma";
 import { getAuthenticatedUser } from "./utils";
 
 export async function changeEmailAction(
-  _state: UserPanelActionState,
+  _state: ActionState,
   formData: FormData,
-): Promise<UserPanelActionState> {
+): Promise<ActionState> {
   const accountId = await getAuthenticatedUser();
   if (!accountId) {
     return { success: false, message: "You must be logged in." };

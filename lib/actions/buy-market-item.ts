@@ -21,7 +21,7 @@ import {
 } from "@/lib/utils/deposits";
 import { buyMarketItemSchema } from "@/lib/validation/buy-market-item";
 import { isListingPriceInRange } from "@/lib/validation/listing-price-limits";
-import { UserPanelActionState } from "@/lib/validation/types";
+import { ActionState } from "@/lib/types/action-state";
 import { Prisma } from "@/prisma/generated/prisma/client";
 import { prisma } from "@/prisma/prisma";
 import { revalidatePath } from "next/cache";
@@ -120,9 +120,9 @@ const creditDepositAmounts = async (
 };
 
 export async function buyMarketItemAction(
-  _state: UserPanelActionState,
+  _state: ActionState,
   formData: FormData,
-): Promise<UserPanelActionState> {
+): Promise<ActionState> {
   const accountId = await getAuthenticatedUser();
   if (!accountId) {
     return { success: false, message: "You must be logged in." };

@@ -16,15 +16,18 @@ import {
   ItemTooltipTrigger,
 } from "./item-tooltip";
 
-export function WarehouseGrid({
-  warehouseItems,
-  selectedSlot,
-  onSelectSlot,
-}: {
+interface WarehouseGridProps {
+  className?: string;
   warehouseItems: WarehouseItem[];
   selectedSlot: number | null;
   onSelectSlot: (slot: number) => void;
-}) {
+}
+export function WarehouseGrid({
+  className,
+  warehouseItems,
+  selectedSlot,
+  onSelectSlot,
+}: WarehouseGridProps) {
   const occupiedSlots = getOccupiedSlots(
     warehouseItems.map((item) => ({
       slot: item.slot,
@@ -35,6 +38,7 @@ export function WarehouseGrid({
 
   return (
     <div
+      className={cn("overflow-hidden rounded-xl", className)}
       style={{
         display: "grid",
         gridTemplateColumns: `repeat(${WAREHOUSE_COLS}, 1fr)`,

@@ -1,5 +1,6 @@
 import Footer from "@/components/footer";
 import Header from "@/components/header";
+import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { BRAND } from "@/constants/app";
 import type { Metadata } from "next";
@@ -41,6 +42,7 @@ const RootLayout = ({
           <Header />
           {children}
           <Footer />
+          <Toaster />
         </body>
       </TooltipProvider>
     </html>
