@@ -8,7 +8,6 @@ export default function AddStatsPage() {
     <ActionPageLayout
       title="Add Stats"
       description="Allocate your free stat points"
-      relevantFields={["freePoints", "level", "resets"]}
     >
       {(character) => <AddStatsForm character={character} />}
     </ActionPageLayout>

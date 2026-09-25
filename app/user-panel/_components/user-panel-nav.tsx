@@ -1,5 +1,7 @@
 "use client";
 
+import EmptyState from "@/components/empty-state";
+import { useUserPanel } from "../_context/user-panel-context";
 import { cn } from "@/lib/utils";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
@@ -16,15 +18,6 @@ interface NavGroup {
 }
 
 const NAV_GROUPS: NavGroup[] = [
-  {
-    label: "Characters",
-    items: [
-      { label: "Overview", href: "/user-panel" },
-      { label: "Add stats", href: "/user-panel/add-stats" },
-      { label: "Reset character", href: "/user-panel/reset" },
-      { label: "Clear PK", href: "/user-panel/clear-pk" },
-    ],
-  },
   {
     label: "Market",
     items: [
@@ -55,6 +48,14 @@ interface UserPanelNavProps {
 
 export function UserPanelNav({ onNavigate, className }: UserPanelNavProps) {
   const pathname = usePathname();
+  const { characters, selectedCharacter, setSelectedCharacter } =
+    useUserPanel();
+  const isCharacterPage = [
+    "/user-panel",
+    "/user-panel/add-stats",
+    "/user-panel/reset",
+    "/user-panel/clear-pk",
+  ].includes(pathname);
 
   const isActive = (href: string) => {
     if (href === "/user-panel") return pathname === "/user-panel";
@@ -65,6 +66,54 @@ export function UserPanelNav({ onNavigate, className }: UserPanelNavProps) {
   return (
     <nav className={cn("animate-fade-in h-full", className)}>
       <div className="grid grid-cols-1 gap-6">
+        <div>
+          <div className="text-muted-foreground mb-2 text-xs tracking-wider uppercase">
+            Characters
+          </div>
+          <div className="flex flex-col gap-1">
+            {characters.map((character) => {
+              const active =
+                isCharacterPage && selectedCharacter?.name === character.name;
+              return (
+                <Link
+                  key={character.name}
+                  href={isCharacterPage ? pathname : "/user-panel"}
+                  aria-current={active ? "true" : undefined}
+                  onClick={() => {
+                    setSelectedCharacter(character);
+                    onNavigate?.();
+                  }}
+                  className={cn(
+                    "focus-visible:outline-ring flex min-w-0 items-center gap-3 rounded-lg px-3 py-3 transition-colors focus-visible:outline-2",
+                    active
+                      ? "text-gold bg-gold/10"
+                      : "text-foreground hover:bg-muted/50",
+                  )}
+                >
+                  <span className="flex min-w-0 flex-1 flex-col gap-1">
+                    <span className="truncate text-sm font-semibold">
+                      {character.name}
+                    </span>
+                    <span className="text-muted-foreground text-xs">
+                      {character.class} · Lv. {character.level}
+                    </span>
+                  </span>
+                  <ChevronRight
+                    className="size-icon-sm shrink-0"
+                    aria-hidden="true"
+                  />
+                </Link>
+              );
+            })}
+            {characters.length === 0 && (
+              <EmptyState
+                variant="compact"
+                description="No characters yet. Create one in-game to get started."
+                className="px-3 py-2 text-left"
+              />
+            )}
+          </div>
+        </div>
         {NAV_GROUPS.map((group) => (
           <div key={group.label}>
             <div className="text-muted-foreground mb-2 text-xs tracking-wider uppercase">

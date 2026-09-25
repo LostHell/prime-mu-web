@@ -8,7 +8,6 @@ export default function ResetPage() {
     <ActionPageLayout
       title="Reset Character"
       description="Reset your character to level 1 and gain bonus points"
-      relevantFields={["level", "resets", "zen"]}
     >
       {(character) => <ResetForm character={character} />}
     </ActionPageLayout>
