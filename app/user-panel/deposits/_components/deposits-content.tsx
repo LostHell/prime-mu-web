@@ -1,7 +1,9 @@
 "use client";
 
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Separator } from "@/components/ui/separator";
 import type { DepositData } from "@/lib/queries/get-deposits";
+import { Fragment } from "react";
 import { useDeposits } from "../_hooks/use-deposits";
 import { ConfirmAllDialog } from "./confirm-all-dialog";
 import { ItemBalance } from "./item-balance";
@@ -24,33 +26,33 @@ export function DepositsContent({ deposits }: DepositsContentProps) {
   } = useDeposits(deposits);
 
   return (
-    <div>
+    <div className="flex flex-col gap-6">
       {!isOffline && (
-        <Alert variant="destructive" className="mb-4">
+        <Alert variant="destructive">
           <AlertDescription>
             Your account must be offline to deposit or withdraw.
           </AlertDescription>
         </Alert>
       )}
 
-      {items.map((item) => (
-        <ItemBalance
-          key={item.type}
-          item={item}
-          actionsLocked={actionsLocked}
-          onDeposit={() => transfer.open("deposit", item.type)}
-          onDepositAll={() => confirmAll.request("deposit", item.type)}
-          onWithdraw={() => transfer.open("withdraw", item.type)}
-          onWithdrawAll={() => confirmAll.request("withdraw", item.type)}
-        />
+      {items.map((item, index) => (
+        <Fragment key={item.type}>
+          {index > 0 && <Separator />}
+          <ItemBalance
+            item={item}
+            actionsLocked={actionsLocked}
+            onDeposit={() => transfer.open("deposit", item.type)}
+            onDepositAll={() => confirmAll.request("deposit", item.type)}
+            onWithdraw={() => transfer.open("withdraw", item.type)}
+            onWithdrawAll={() => confirmAll.request("withdraw", item.type)}
+          />
+        </Fragment>
       ))}
 
       {pageMessage && (
-        <div className="mt-4">
-          <Alert variant={pageMessage.success ? "success" : "destructive"}>
-            <AlertDescription>{pageMessage.text}</AlertDescription>
-          </Alert>
-        </div>
+        <Alert variant={pageMessage.success ? "success" : "destructive"}>
+          <AlertDescription>{pageMessage.text}</AlertDescription>
+        </Alert>
       )}
 
       {transfer.item && transfer.mode && (
