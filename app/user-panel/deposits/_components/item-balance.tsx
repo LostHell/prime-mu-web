@@ -26,7 +26,7 @@ export function ItemBalance({
   const canWithdraw = !actionsLocked && maxWithdrawable > 0;
 
   return (
-    <div className="border-border/50 border-b py-4 last:border-b-0">
+    <div>
       <div className="mb-3 flex items-center gap-3">
         {icon && (
           <div className="flex size-9 shrink-0 items-center justify-center overflow-hidden">
