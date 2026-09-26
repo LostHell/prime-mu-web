@@ -6,6 +6,12 @@ import { type DecodedItem } from "@/lib/game/item-decoder/types";
 import { depositAmountsFromColumns } from "@/lib/utils/deposits";
 import type { MarketplaceListing as MarketplaceListingRow } from "@/prisma/generated/prisma/client";
 import { prisma } from "@/prisma/prisma";
+import type { Prisma } from "@/prisma/generated/prisma/client";
+import {
+  MARKET_PAGE_SIZE,
+  MARKET_SCAN_BATCH_SIZE,
+  MAX_SEARCH_LENGTH,
+} from "@/constants/pagination";
 
 export type ListingItem = DecodedItem &
   Pick<
@@ -25,7 +31,7 @@ export type ListingItem = DecodedItem &
 
 export type MarketListing = {
   id: number;
-  sellerAccountId: string;
+  isOwnListing: boolean;
   sellerCharacter: string;
   item: ListingItem;
   prices: DepositAmounts;
@@ -62,13 +68,14 @@ const decodeItemFromHex = (itemHex: Buffer): ListingItem | null => {
 
 const toMarketListing = (
   listing: MarketplaceListingRow,
+  accountId: string,
 ): MarketListing | null => {
   const item = decodeItemFromHex(Buffer.from(listing.itemHex));
   if (!item) return null;
 
   return {
     id: listing.id,
-    sellerAccountId: listing.sellerAccountId,
+    isOwnListing: listing.sellerAccountId === accountId,
     sellerCharacter: listing.sellerCharacter,
     item,
     prices: depositAmountsFromColumns(listing),
@@ -82,44 +89,73 @@ const toMarketListing = (
 export async function getMyListings(
   accountId: string,
   status?: string,
-): Promise<MarketListing[]> {
-  const listings = await prisma.marketplaceListing.findMany({
-    where: {
+  page = 1,
+) {
+  return getListingPage(
+    accountId,
+    {
       sellerAccountId: accountId,
       ...(status ? { status } : {}),
     },
-    orderBy: { listedAt: "desc" },
-  });
-
-  return listings
-    .map(toMarketListing)
-    .filter((l): l is MarketListing => l !== null);
+    page,
+  );
 }
 
-export async function getAllActiveListings(): Promise<MarketListing[]> {
-  const listings = await prisma.marketplaceListing.findMany({
-    where: { status: "active" },
-    orderBy: { listedAt: "desc" },
-    take: 100,
-  });
-
-  return listings
-    .map(toMarketListing)
-    .filter((l): l is MarketListing => l !== null);
-}
-
-export async function getMyPurchases(
+export async function getAllActiveListings(
   accountId: string,
-): Promise<MarketListing[]> {
-  const listings = await prisma.marketplaceListing.findMany({
-    where: {
+  page = 1,
+  query = "",
+) {
+  return getListingPage(accountId, { status: "active" }, page, query);
+}
+
+export async function getMyPurchases(accountId: string, page = 1) {
+  return getListingPage(
+    accountId,
+    {
       buyerAccountId: accountId,
       status: "sold",
     },
-    orderBy: { soldAt: "desc" },
-  });
+    page,
+  );
+}
 
-  return listings
-    .map(toMarketListing)
-    .filter((l): l is MarketListing => l !== null);
+async function getListingPage(
+  accountId: string,
+  where: Prisma.MarketplaceListingWhereInput,
+  page: number,
+  query = "",
+) {
+  const search = query.trim().slice(0, MAX_SEARCH_LENGTH).toLowerCase();
+  const items: MarketListing[] = [];
+  let beforeId: number | undefined;
+  let matched = 0;
+  const skip = (page - 1) * MARKET_PAGE_SIZE;
+  // Names are decoded from game bytes, not a database text column. Scan bounded
+  // batches so searching includes older listings without loading the catalogue into memory.
+  while (items.length <= MARKET_PAGE_SIZE) {
+    const rows = await prisma.marketplaceListing.findMany({
+      where: {
+        ...where,
+        ...(beforeId === undefined ? {} : { id: { lt: beforeId } }),
+      },
+      orderBy: { id: "desc" },
+      take: MARKET_SCAN_BATCH_SIZE,
+    });
+    for (const row of rows) {
+      const listing = toMarketListing(row, accountId);
+      if (!listing || !listing.item.name.toLowerCase().includes(search))
+        continue;
+      if (matched++ < skip) continue;
+      items.push(listing);
+      if (items.length > MARKET_PAGE_SIZE) break;
+    }
+    if (rows.length < MARKET_SCAN_BATCH_SIZE || items.length > MARKET_PAGE_SIZE)
+      break;
+    beforeId = rows[rows.length - 1].id;
+  }
+  return {
+    items: items.slice(0, MARKET_PAGE_SIZE),
+    hasNext: items.length > MARKET_PAGE_SIZE,
+  };
 }

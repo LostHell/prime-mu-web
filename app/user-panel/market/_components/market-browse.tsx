@@ -2,65 +2,54 @@
 
 import EmptyState from "@/components/empty-state";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Field, FieldLabel } from "@/components/ui/field";
+import { MAX_SEARCH_LENGTH } from "@/constants/pagination";
 import { type DepositAmounts } from "@/constants/depositable-items";
 import { MarketListing as ListingRow } from "@/lib/queries/get-marketplace-listings";
-import { Filter, Search, Store } from "lucide-react";
-import { useState } from "react";
+import { Filter } from "lucide-react";
 import MarketListing from "./market-listing";
 
 interface MarketBrowseProps {
   listings: ListingRow[];
-  currentAccountId: string;
+  query: string;
   buyerDeposits: DepositAmounts;
 }
 
 export function MarketBrowse({
   listings,
-  currentAccountId,
+  query,
   buyerDeposits,
 }: MarketBrowseProps) {
-  const [searchQuery, setSearchQuery] = useState("");
-
-  const filteredListings = listings.filter((listing) =>
-    listing.item.name.toLowerCase().includes(searchQuery.toLowerCase()),
-  );
-
-  if (listings.length === 0) {
-    return (
-      <EmptyState
-        icon={Store}
-        title="No Items Listed"
-        description={
-          <>
-            The marketplace is empty.
-            <br />
-            Be the first to list an item!
-          </>
-        }
-      />
-    );
-  }
-
   return (
     <div className="flex flex-col gap-5">
-      <div className="relative">
-        <Search className="text-muted-foreground absolute top-1/2 left-3 size-4 -translate-y-1/2" />
-        <Input
-          placeholder="Search items..."
-          className="pl-10"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
-      </div>
+      <form
+        action="/user-panel/market"
+        method="get"
+        className="flex items-end gap-3"
+      >
+        <Field>
+          <FieldLabel htmlFor="market-search">Search all listings</FieldLabel>
+          <Input
+            key={query}
+            id="market-search"
+            name="q"
+            defaultValue={query}
+            maxLength={MAX_SEARCH_LENGTH}
+            placeholder="Item name"
+          />
+        </Field>
+        <Button type="submit">Search</Button>
+      </form>
 
       <p className="text-muted-foreground -mt-2 text-xs">
-        {filteredListings.length} item
-        {filteredListings.length !== 1 ? "s" : ""} listed
+        {listings.length} item
+        {listings.length !== 1 ? "s" : ""} on this page
       </p>
 
-      {filteredListings.length > 0 ? (
+      {listings.length > 0 ? (
         <div className="flex flex-col gap-4">
-          {filteredListings.map((listing) => {
+          {listings.map((listing) => {
             return (
               <MarketListing
                 key={listing.id}
@@ -68,10 +57,10 @@ export function MarketBrowse({
                 listing={listing}
                 actions={
                   <>
-                    {listing.sellerAccountId === currentAccountId && (
+                    {listing.isOwnListing && (
                       <MarketListing.Cancel listing={listing} />
                     )}
-                    {listing.sellerAccountId !== currentAccountId && (
+                    {!listing.isOwnListing && (
                       <MarketListing.Buy
                         listing={listing}
                         buyerDeposits={buyerDeposits}
@@ -88,7 +77,7 @@ export function MarketBrowse({
           icon={Filter}
           variant="compact"
           title="No items found"
-          description="Try adjusting your search"
+          description="Try another search or return to an earlier page."
         />
       )}
     </div>
