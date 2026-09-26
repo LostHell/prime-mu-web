@@ -21,12 +21,17 @@ export default async function ListedItemsPage({
   const result = await getMyListings(session.user.id, "active", page);
   const listings = result.items;
 
+  if (page > 1 && listings.length === 0) {
+    redirect("/user-panel/market/listed");
+  }
+
   return (
     <MarketLayout>
       <MyListings listings={listings} />
       <ResultsPagination
         page={page}
         hasNext={result.hasNext}
+        itemCount={listings.length}
         pathname="/user-panel/market/listed"
       />
     </MarketLayout>

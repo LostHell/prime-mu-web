@@ -3,10 +3,9 @@ import {
   PaginationContent,
   PaginationItem,
   PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
 } from "@/components/ui/pagination";
 import { cn } from "@/lib/utils";
+import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 
 export function getPaginationHref(
   pathname: string,
@@ -27,14 +26,20 @@ export function getPaginationHref(
 export function ResultsPagination({
   page,
   hasNext,
+  itemCount,
   pathname,
   query = {},
 }: {
   page: number;
   hasNext: boolean;
+  itemCount: number;
   pathname: string;
   query?: Record<string, string>;
 }) {
+  if (itemCount <= 0) {
+    return null;
+  }
+
   const href = (target: number) => getPaginationHref(pathname, target, query);
   const hasPrevious = page > 1;
   const disabledClassName = "pointer-events-none opacity-50";
@@ -43,27 +48,40 @@ export function ResultsPagination({
     <Pagination aria-label="Results pages" className="mt-5">
       <PaginationContent className="w-full justify-between">
         <PaginationItem>
-          <PaginationPrevious
+          <PaginationLink
             href={href(Math.max(1, page - 1))}
+            aria-label="Go to previous page"
             aria-disabled={!hasPrevious}
             tabIndex={hasPrevious ? undefined : -1}
             prefetch={hasPrevious ? undefined : false}
             className={cn(!hasPrevious && disabledClassName)}
-          />
-        </PaginationItem>
-        <PaginationItem>
-          <PaginationLink href={href(page)} isActive size="default">
-            Page {page}
+            size="icon-xs"
+          >
+            <ChevronLeftIcon aria-hidden />
           </PaginationLink>
         </PaginationItem>
         <PaginationItem>
-          <PaginationNext
+          <PaginationLink
+            href={href(page)}
+            aria-label={`Page ${page}`}
+            isActive
+            size="icon-xs"
+          >
+            {page}
+          </PaginationLink>
+        </PaginationItem>
+        <PaginationItem>
+          <PaginationLink
             href={href(page + 1)}
+            aria-label="Go to next page"
             aria-disabled={!hasNext}
             tabIndex={hasNext ? undefined : -1}
             prefetch={hasNext ? undefined : false}
             className={cn(!hasNext && disabledClassName)}
-          />
+            size="icon-xs"
+          >
+            <ChevronRightIcon aria-hidden />
+          </PaginationLink>
         </PaginationItem>
       </PaginationContent>
     </Pagination>

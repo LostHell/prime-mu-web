@@ -21,12 +21,17 @@ export default async function BoughtItemsPage({
   const result = await getMyPurchases(session.user.id, page);
   const purchases = result.items;
 
+  if (page > 1 && purchases.length === 0) {
+    redirect("/user-panel/market/bought");
+  }
+
   return (
     <MarketLayout>
       <BoughtItems purchases={purchases} />
       <ResultsPagination
         page={page}
         hasNext={result.hasNext}
+        itemCount={purchases.length}
         pathname="/user-panel/market/bought"
       />
     </MarketLayout>

@@ -7,6 +7,7 @@ describe("ResultsPagination", () => {
       <ResultsPagination
         page={2}
         hasNext
+        itemCount={25}
         pathname="/user-panel/market"
         query={{ q: "Jewel & Sword" }}
       />,
@@ -16,7 +17,10 @@ describe("ResultsPagination", () => {
       "href",
       "/user-panel/market?q=Jewel+%26+Sword",
     );
-    expect(screen.getByRole("link", { name: "Page 2" })).toHaveAttribute(
+    const currentPage = screen.getByRole("link", { name: "Page 2" });
+    expect(currentPage).toHaveTextContent("2");
+    expect(currentPage).toHaveClass("size-8");
+    expect(currentPage).toHaveAttribute(
       "href",
       "/user-panel/market?q=Jewel+%26+Sword&page=2",
     );
@@ -24,6 +28,8 @@ describe("ResultsPagination", () => {
       "href",
       "/user-panel/market?q=Jewel+%26+Sword&page=3",
     );
+    expect(screen.queryByText("Previous")).not.toBeInTheDocument();
+    expect(screen.queryByText("Next")).not.toBeInTheDocument();
   });
 
   test("makes unavailable directions non-interactive", () => {
@@ -31,6 +37,7 @@ describe("ResultsPagination", () => {
       <ResultsPagination
         page={1}
         hasNext={false}
+        itemCount={1}
         pathname="/user-panel/market/listed"
       />,
     );
@@ -43,6 +50,21 @@ describe("ResultsPagination", () => {
       "aria-disabled",
       "true",
     );
+  });
+
+  test("does not render for an empty result set", () => {
+    render(
+      <ResultsPagination
+        page={1}
+        hasNext={false}
+        itemCount={0}
+        pathname="/user-panel/market"
+      />,
+    );
+
+    expect(
+      screen.queryByRole("navigation", { name: "Results pages" }),
+    ).not.toBeInTheDocument();
   });
 });
 

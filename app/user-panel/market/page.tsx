@@ -4,7 +4,10 @@ import { getAllActiveListings } from "@/lib/queries/get-marketplace-listings";
 import { redirect } from "next/navigation";
 import { MarketBrowse } from "./_components/market-browse";
 import { MarketLayout } from "./_components/market-layout";
-import { ResultsPagination } from "@/components/results-pagination";
+import {
+  getPaginationHref,
+  ResultsPagination,
+} from "@/components/results-pagination";
 import {
   getPageNumber,
   getSearchQuery,
@@ -29,6 +32,11 @@ export default async function MarketPage({
     getAllActiveListings(session.user.id, page, query),
     getAccountDepositAmounts(session.user.id),
   ]);
+  const paginationQuery: Record<string, string> = query ? { q: query } : {};
+
+  if (page > 1 && result.items.length === 0) {
+    redirect(getPaginationHref("/user-panel/market", 1, paginationQuery));
+  }
 
   return (
     <MarketLayout>
@@ -40,8 +48,9 @@ export default async function MarketPage({
       <ResultsPagination
         page={page}
         hasNext={result.hasNext}
+        itemCount={result.items.length}
         pathname="/user-panel/market"
-        query={query ? { q: query } : {}}
+        query={paginationQuery}
       />
     </MarketLayout>
   );
