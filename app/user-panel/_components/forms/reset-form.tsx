@@ -21,14 +21,16 @@ import {
   RESET_COST_PER_RESET,
 } from "@/constants/resets";
 import { resetCharacterAction } from "@/lib/actions/reset-character";
-import { type Character } from "@/lib/types/character";
+import { type CharacterWithNextReset } from "@/lib/types/character";
 import { startTransition, useActionState } from "react";
+import { useUserPanel } from "../../_context/user-panel-context";
 
 interface ResetFormProps {
-  character: Character;
+  character: CharacterWithNextReset;
 }
 
 export function ResetForm({ character }: ResetFormProps) {
+  const { account } = useUserPanel();
   const [state, formAction, isPending] = useActionState(
     resetCharacterAction,
     {},
@@ -38,9 +40,9 @@ export function ResetForm({ character }: ResetFormProps) {
   const hasRequiredLevel = character.level >= MIN_RESET_LEVEL;
   const isUnderResetLimit = character.resets < MAX_RESETS;
   const hasEnoughZen = character.zen >= resetCost;
-  const preview = character.resetPreview;
-  const isOffline = preview?.isOffline === true;
-  const equipmentIsEmpty = preview?.equipment === "empty";
+  const nextReset = character.nextReset;
+  const isOffline = account.isOffline;
+  const equipmentIsEmpty = nextReset?.equipmentStatus === "empty";
 
   const handleConfirm = () => {
     const formData = new FormData();
@@ -66,7 +68,7 @@ export function ResetForm({ character }: ResetFormProps) {
       label: "Equipment",
       value: equipmentIsEmpty
         ? "All items unequipped"
-        : preview?.equipment === "equipped"
+        : nextReset?.equipmentStatus === "equipped"
           ? "Unequip all items"
           : "Unable to verify",
     },
@@ -77,7 +79,7 @@ export function ResetForm({ character }: ResetFormProps) {
     hasEnoughZen &&
     isOffline &&
     equipmentIsEmpty &&
-    !!preview;
+    !!nextReset;
 
   return (
     <div className="flex flex-col gap-6">
@@ -88,11 +90,16 @@ export function ResetForm({ character }: ResetFormProps) {
       <CharacterSection title="After this reset">
         <CharacterValues
           items={[
-            { label: "Level", value: preview?.level ?? "Unavailable" },
+            {
+              label: "Level",
+              value: nextReset?.resultingLevel ?? "Unavailable",
+            },
             { label: "Total resets", value: character.resets + 1 },
             {
               label: "Total available stat points",
-              value: preview?.freePoints.toLocaleString() ?? "Unavailable",
+              value:
+                nextReset?.resultingAvailablePoints.toLocaleString() ??
+                "Unavailable",
             },
             {
               label: "Zen balance",
@@ -114,7 +121,7 @@ export function ResetForm({ character }: ResetFormProps) {
         <Alert>
           <AlertDescription>
             <ul className="flex list-inside list-disc flex-col gap-2">
-              {!preview && (
+              {!nextReset && (
                 <li>
                   Reset configuration is unavailable. Please contact support.
                 </li>
@@ -164,10 +171,10 @@ export function ResetForm({ character }: ResetFormProps) {
                 <AlertDialogTitle>Reset Character?</AlertDialogTitle>
                 <AlertDialogDescription>
                   This cannot be undone. {character.name} will return to level{" "}
-                  {preview?.level}, base stats will be restored, and{" "}
+                  {nextReset?.resultingLevel}, base stats will be restored, and{" "}
                   {resetCost.toLocaleString()} Zen will be deducted from your
                   balance. Your total available stat points will be{" "}
-                  {preview?.freePoints.toLocaleString()}.
+                  {nextReset?.resultingAvailablePoints.toLocaleString()}.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>

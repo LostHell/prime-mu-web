@@ -26,12 +26,29 @@ export interface Character {
   pkCount: number;
   freePoints: number;
   stats: CharacterStats;
-  resetPreview?: {
-    isOffline: boolean;
-    equipment: "empty" | "equipped" | "unknown";
-    level: number;
-    freePoints: number;
-  } | null;
+}
+
+/** Account state that applies to every character returned for an account. */
+export interface AccountConnectionState {
+  isOffline: boolean;
+}
+
+/** The character-specific values and checks for its next reset. */
+export interface NextReset {
+  equipmentStatus: "empty" | "equipped" | "unknown";
+  resultingLevel: number;
+  resultingAvailablePoints: number;
+}
+
+/** A panel character enriched with information needed by the reset service. */
+export interface CharacterWithNextReset extends Character {
+  nextReset: NextReset | null;
+}
+
+/** Data needed to render the authenticated character-services panel. */
+export interface AccountCharactersResult {
+  account: AccountConnectionState;
+  characters: CharacterWithNextReset[];
 }
 
 export const CMD_CLASSES: CharacterClass[] = ["Dark Lord"];

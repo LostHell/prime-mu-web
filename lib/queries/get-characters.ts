@@ -1,5 +1,5 @@
 import { CHARACTER_CLASS_BY_ID } from "@/lib/game/constants/characters";
-import { Character } from "@/lib/types/character";
+import { type AccountCharactersResult } from "@/lib/types/character";
 import { prisma } from "@/prisma/prisma";
 import {
   getBaseClass,
@@ -7,7 +7,9 @@ import {
   getResetPoints,
 } from "@/lib/game/characters/reset";
 
-export async function getCharacters(accountId: string): Promise<Character[]> {
+export async function getCharacters(
+  accountId: string,
+): Promise<AccountCharactersResult> {
   const characters = await prisma.character.findMany({
     where: { AccountID: accountId },
     select: {
@@ -56,35 +58,39 @@ export async function getCharacters(accountId: string): Promise<Character[]> {
   ]);
   const classDefaults = new Map(defaults.map((entry) => [entry.Class, entry]));
 
-  return characters.map((character) => {
-    const defaults = classDefaults.get(getBaseClass(character.Class ?? 0));
-    return {
-      name: character.Name,
-      class: CHARACTER_CLASS_BY_ID[character.Class ?? 0],
-      level: character.cLevel ?? 1,
-      resets: character.ResetCount ?? 0,
-      guild: guilds.get(character.Name),
-      zen: character.Money ?? 0,
-      pkCount: character.PkCount ?? 0,
-      freePoints: character.LevelUpPoint ?? 0,
-      resetPreview: defaults
-        ? {
-            isOffline: accountStatus?.ConnectStat === 0,
-            equipment: getEquipmentStatus(character.Inventory),
-            level: defaults.Level ?? 1,
-            freePoints: getResetPoints(
-              character.ResetCount ?? 0,
-              defaults.LevelUpPoint ?? 0,
-            ),
-          }
-        : null,
-      stats: {
-        str: character.Strength ?? 0,
-        agi: character.Dexterity ?? 0,
-        vit: character.Vitality ?? 0,
-        ene: character.Energy ?? 0,
-        cmd: 0,
-      },
-    };
-  });
+  return {
+    account: {
+      isOffline: accountStatus?.ConnectStat === 0,
+    },
+    characters: characters.map((character) => {
+      const defaults = classDefaults.get(getBaseClass(character.Class ?? 0));
+      return {
+        name: character.Name,
+        class: CHARACTER_CLASS_BY_ID[character.Class ?? 0],
+        level: character.cLevel ?? 1,
+        resets: character.ResetCount ?? 0,
+        guild: guilds.get(character.Name),
+        zen: character.Money ?? 0,
+        pkCount: character.PkCount ?? 0,
+        freePoints: character.LevelUpPoint ?? 0,
+        nextReset: defaults
+          ? {
+              equipmentStatus: getEquipmentStatus(character.Inventory),
+              resultingLevel: defaults.Level ?? 1,
+              resultingAvailablePoints: getResetPoints(
+                character.ResetCount ?? 0,
+                defaults.LevelUpPoint ?? 0,
+              ),
+            }
+          : null,
+        stats: {
+          str: character.Strength ?? 0,
+          agi: character.Dexterity ?? 0,
+          vit: character.Vitality ?? 0,
+          ene: character.Energy ?? 0,
+          cmd: 0,
+        },
+      };
+    }),
+  };
 }
