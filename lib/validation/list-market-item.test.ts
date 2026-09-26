@@ -8,11 +8,13 @@ import {
   listMarketItemErrorMessage,
   listMarketItemSchema,
 } from "./list-market-item";
+const itemFingerprint = "0102030405060708090a";
 
 describe("listMarketItemSchema", () => {
   test("requires at least one price", () => {
     const result = listMarketItemSchema.safeParse({
       slotIndex: 0,
+      itemFingerprint,
     });
     expect(result.success).toBe(false);
   });
@@ -20,6 +22,7 @@ describe("listMarketItemSchema", () => {
   test("treats blank price fields as zero", () => {
     const result = listMarketItemSchema.safeParse({
       slotIndex: 0,
+      itemFingerprint,
       zen: "",
       jewelOfBless: "1",
     });
@@ -33,6 +36,7 @@ describe("listMarketItemSchema", () => {
   test("accepts mixed deposit prices", () => {
     const result = listMarketItemSchema.safeParse({
       slotIndex: 3,
+      itemFingerprint,
       zen: "1000",
       jewelOfBless: "5",
     });
@@ -40,6 +44,7 @@ describe("listMarketItemSchema", () => {
     if (result.success) {
       expect(result.data).toEqual({
         slotIndex: 3,
+        itemFingerprint,
         prices: { ...EMPTY_DEPOSIT_AMOUNTS, zen: 1000, jewelOfBless: 5 },
       });
     }
@@ -49,12 +54,14 @@ describe("listMarketItemSchema", () => {
     expect(
       listMarketItemSchema.safeParse({
         slotIndex: 0,
+        itemFingerprint,
         zen: String(MAX_LISTING_ZEN_PRICE),
       }).success,
     ).toBe(true);
     expect(
       listMarketItemSchema.safeParse({
         slotIndex: 0,
+        itemFingerprint,
         jewelOfBless: String(MAX_LISTING_ITEM_PRICE),
       }).success,
     ).toBe(true);
@@ -63,6 +70,7 @@ describe("listMarketItemSchema", () => {
   test("rejects zen above the zen cap and jewels above the item cap", () => {
     const zen = listMarketItemSchema.safeParse({
       slotIndex: 0,
+      itemFingerprint,
       zen: String(MAX_LISTING_ZEN_PRICE + 1),
     });
     expect(zen.success).toBe(false);
@@ -74,6 +82,7 @@ describe("listMarketItemSchema", () => {
 
     const jewel = listMarketItemSchema.safeParse({
       slotIndex: 0,
+      itemFingerprint,
       jewelOfBless: String(MAX_LISTING_ITEM_PRICE + 1),
     });
     expect(jewel.success).toBe(false);

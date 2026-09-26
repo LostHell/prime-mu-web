@@ -29,6 +29,7 @@ export async function listMarketItemAction(
 
   const validated = listMarketItemSchema.safeParse({
     slotIndex: formData.get("slotIndex"),
+    itemFingerprint: formData.get("itemFingerprint"),
     zen: formData.get("zen"),
     rena: formData.get("rena"),
     jewelOfBless: formData.get("jewelOfBless"),
@@ -46,7 +47,7 @@ export async function listMarketItemAction(
     };
   }
 
-  const { slotIndex, prices } = validated.data;
+  const { slotIndex, prices, itemFingerprint } = validated.data;
 
   const offline = await isAccountOffline(accountId);
   if (!offline) {
@@ -91,6 +92,11 @@ export async function listMarketItemAction(
       }
 
       const itemHex = itemsBuffer.slice(offset, offset + BYTES_PER_SLOT);
+      if (itemHex.toString("hex") !== itemFingerprint) {
+        throw new ActionError(
+          "This item changed since you selected it. Refresh your warehouse and select it again.",
+        );
+      }
       if (!decodeItem(itemHex)) {
         throw new ActionError("Could not decode item data.");
       }

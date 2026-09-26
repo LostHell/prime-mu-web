@@ -26,7 +26,7 @@ import { hasAnyPositiveDepositAmounts } from "@/lib/utils/deposits";
 import { clampAmount, parseAmountInput } from "@/lib/utils/numbers";
 import { listingPriceLimit } from "@/lib/validation/listing-price-limits";
 import { Coins, Loader2, Package } from "lucide-react";
-import { useActionState, useEffect, useState } from "react";
+import { useActionState, useState } from "react";
 
 interface SellItemFormProps {
   warehouseItems: WarehouseItem[];
@@ -55,19 +55,20 @@ export function SellItemForm({ warehouseItems }: SellItemFormProps) {
   const [selectedSlot, setSelectedSlot] = useState<number | null>(null);
   const [priceInputs, setPriceInputs] = useState(emptyPriceInputs);
 
-  const [listState, formAction, isPending] = useActionState(
-    withActionToast(listMarketItemAction),
+  const [, formAction, isPending] = useActionState(
+    withActionToast(async (state, formData) => {
+      const result = await listMarketItemAction(state, formData);
+      if (result.success) {
+        setSelectedSlot(null);
+        setPriceInputs(emptyPriceInputs());
+      }
+      return result;
+    }),
     {
       success: false,
       message: "",
     },
   );
-
-  useEffect(() => {
-    if (!listState.success) return;
-    setSelectedSlot(null);
-    setPriceInputs(emptyPriceInputs());
-  }, [listState]);
 
   const selectedItem =
     selectedSlot !== null
@@ -204,7 +205,7 @@ export function SellItemForm({ warehouseItems }: SellItemFormProps) {
                         placeholder="0"
                         value={priceInputs[type]}
                         onChange={(event) => setPrice(type, event.target.value)}
-                        disabled={!selectedItem}
+                        disabled={!selectedItem || isPending}
                         className="h-10 text-right tabular-nums"
                       />
                     </label>
@@ -222,6 +223,11 @@ export function SellItemForm({ warehouseItems }: SellItemFormProps) {
           </div>
 
           <form action={formAction}>
+            <input
+              type="hidden"
+              name="itemFingerprint"
+              value={selectedItem?.itemFingerprint ?? ""}
+            />
             <input
               type="hidden"
               name="slotIndex"

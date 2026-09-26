@@ -15,4 +15,5 @@ export type WarehouseItem = DecodedItem &
     name: string;
     width: number;
     height: number;
+    itemFingerprint: string;
   };

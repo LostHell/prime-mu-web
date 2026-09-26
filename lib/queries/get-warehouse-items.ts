@@ -1,5 +1,6 @@
 import { getItemDefinition } from "@/lib/game/item-database";
 import { decodeItems } from "@/lib/game/item-decoder";
+import { BYTES_PER_SLOT } from "@/lib/game/item-decoder/constants";
 import { prisma } from "@/prisma/prisma";
 import { type WarehouseItem } from "../types/warehouse";
 
@@ -24,6 +25,9 @@ export async function getWarehouseItems(
 
     return {
       ...item,
+      itemFingerprint: Buffer.from(warehouse.Items!)
+        .subarray(item.slot * BYTES_PER_SLOT, (item.slot + 1) * BYTES_PER_SLOT)
+        .toString("hex"),
       name: itemDef?.name ?? "Unknown item",
       width: itemDef?.width ?? 1,
       height: itemDef?.height ?? 1,
