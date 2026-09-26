@@ -1,5 +1,11 @@
 export const BYTES_PER_SLOT = 10;
 export const EMPTY_SLOT_BYTE = 0xff;
+export const MAX_ITEM_SERIAL = 2_147_483_647;
+
+/** A MU item stores its four-byte, big-endian serial at bytes 3–6. */
+export const ITEM_SERIAL_OFFSET = 3;
+export const ITEM_SERIAL_BYTES = 4;
+export const BYTE_RADIX = 0x100;
 
 export const ITEM_TYPE_GROUP_SIZE = 32;
 /** Byte 7: item type +256. Confirmed on in-game Bless/Soul/Life jewels. */

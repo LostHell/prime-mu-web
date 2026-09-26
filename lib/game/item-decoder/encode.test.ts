@@ -1,4 +1,4 @@
-import { decodeItem } from "./decode";
+import { decodeItem, getItemSerial } from "./decode";
 import { createItemBytes } from "./encode";
 
 describe("createItemBytes", () => {
@@ -9,9 +9,11 @@ describe("createItemBytes", () => {
     expect(bytes).toEqual([
       0xcd, 0x00, 0x01, 0x00, 0x05, 0xe7, 0x9d, 0x80, 0x00, 0x0e,
     ]);
+    expect(getItemSerial(Uint8Array.from(bytes))).toBe(0x0005e79d);
     expect(decodeItem(Uint8Array.from(bytes))).toMatchObject({
       ...itemId,
       durability: 1,
+      serial: 0x0005e79d,
     });
   });
 

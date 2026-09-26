@@ -9,5 +9,6 @@ export type DecodedItem = ItemId & {
   addOption: number;
   excellent: number;
   durability: number;
+  serial: number;
   rawBytes: number[];
 };
