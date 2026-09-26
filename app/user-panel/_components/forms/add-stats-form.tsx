@@ -31,7 +31,13 @@ const STAT_CONFIG: Record<string, { label: string; short: string }> = {
 export function AddStatsForm({ character }: AddStatsFormProps) {
   const [pts, setPts] = useState({ str: 0, agi: 0, vit: 0, ene: 0, cmd: 0 });
   const [state, formAction, isPending] = useActionState<ActionState, FormData>(
-    addStatsAction,
+    async (previousState, formData) => {
+      const result = await addStatsAction(previousState, formData);
+      if (result.success) {
+        setPts({ str: 0, agi: 0, vit: 0, ene: 0, cmd: 0 });
+      }
+      return result;
+    },
     {},
   );
 
@@ -54,9 +60,6 @@ export function AddStatsForm({ character }: AddStatsFormProps) {
     formData.set("ene", String(pts.ene));
     formData.set("cmd", String(pts.cmd));
     formAction(formData);
-    if (!state.errors) {
-      setPts({ str: 0, agi: 0, vit: 0, ene: 0, cmd: 0 });
-    }
   };
 
   return (
