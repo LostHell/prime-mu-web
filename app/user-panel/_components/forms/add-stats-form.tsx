@@ -12,21 +12,14 @@ import {
 import { CharacterSection, CharacterValues } from "../character-info";
 import { Input } from "@/components/ui/input";
 import { addStatsAction } from "@/lib/actions/add-stats";
-import { type Character, CMD_CLASSES } from "@/lib/types/character";
+import { type Character } from "@/lib/types/character";
+import { ALLOCATABLE_STATS, STAT_LABELS } from "@/constants/character-rules";
 import type { ActionState } from "@/lib/types/action-state";
 import { useActionState, useState } from "react";
 
 interface AddStatsFormProps {
   character: Character;
 }
-
-const STAT_CONFIG: Record<string, { label: string; short: string }> = {
-  str: { label: "Strength", short: "STR" },
-  agi: { label: "Agility", short: "AGI" },
-  vit: { label: "Vitality", short: "VIT" },
-  ene: { label: "Energy", short: "ENE" },
-  cmd: { label: "Command", short: "CMD" },
-};
 
 export function AddStatsForm({ character }: AddStatsFormProps) {
   const [pts, setPts] = useState({ str: 0, agi: 0, vit: 0, ene: 0, cmd: 0 });
@@ -41,7 +34,6 @@ export function AddStatsForm({ character }: AddStatsFormProps) {
     {},
   );
 
-  const hasCmd = CMD_CLASSES.includes(character.class);
   const ptsTotal = Object.values(pts).reduce((a, b) => a + b, 0);
   const remaining = character.freePoints - ptsTotal;
 
@@ -80,53 +72,51 @@ export function AddStatsForm({ character }: AddStatsFormProps) {
       </CharacterSection>
       <form action={handleSubmit} className="flex flex-col gap-6">
         <FieldGroup>
-          {(["str", "agi", "vit", "ene", "cmd"] as const)
-            .filter((stat) => stat !== "cmd" || hasCmd)
-            .map((stat) => (
-              <Field
-                key={stat}
-                orientation="horizontal"
-                className="grid grid-cols-2 items-center gap-4 has-[>[data-slot=field-content]]:items-center"
-                data-disabled={isPending}
-                data-invalid={Boolean(state.errors?.[stat])}
-              >
-                <FieldContent className="min-w-0">
-                  <FieldLabel htmlFor={`stat-${stat}`}>
-                    {STAT_CONFIG[stat].label}
-                  </FieldLabel>
-                  <FieldDescription id={`stat-${stat}-description`}>
-                    {character.stats[stat].toLocaleString()}
-                    {pts[stat] > 0 && (
-                      <>
-                        {" "}
-                        → {(character.stats[stat] + pts[stat]).toLocaleString()}
-                      </>
-                    )}
-                  </FieldDescription>
-                  {state.errors?.[stat] && (
-                    <p className="text-destructive text-sm">
-                      {state.errors[stat]}
-                    </p>
+          {ALLOCATABLE_STATS.map((stat) => (
+            <Field
+              key={stat}
+              orientation="horizontal"
+              className="grid grid-cols-2 items-center gap-4 has-[>[data-slot=field-content]]:items-center"
+              data-disabled={isPending}
+              data-invalid={Boolean(state.errors?.[stat])}
+            >
+              <FieldContent className="min-w-0">
+                <FieldLabel htmlFor={`stat-${stat}`}>
+                  {STAT_LABELS[stat]}
+                </FieldLabel>
+                <FieldDescription id={`stat-${stat}-description`}>
+                  {character.stats[stat].toLocaleString()}
+                  {pts[stat] > 0 && (
+                    <>
+                      {" "}
+                      → {(character.stats[stat] + pts[stat]).toLocaleString()}
+                    </>
                   )}
-                </FieldContent>
-                <Input
-                  id={`stat-${stat}`}
-                  aria-label={`Points to add to ${STAT_CONFIG[stat].label.toLowerCase()}`}
-                  aria-describedby={`stat-${stat}-description`}
-                  aria-invalid={Boolean(state.errors?.[stat])}
-                  type="number"
-                  inputMode="numeric"
-                  min={0}
-                  max={remaining + pts[stat]}
-                  step={1}
-                  value={pts[stat] || ""}
-                  onChange={(event) => updateStat(stat, event.target.value)}
-                  placeholder="0"
-                  disabled={isPending}
-                  className="w-full"
-                />
-              </Field>
-            ))}
+                </FieldDescription>
+                {state.errors?.[stat] && (
+                  <p className="text-destructive text-sm">
+                    {state.errors[stat]}
+                  </p>
+                )}
+              </FieldContent>
+              <Input
+                id={`stat-${stat}`}
+                aria-label={`Points to add to ${STAT_LABELS[stat].toLowerCase()}`}
+                aria-describedby={`stat-${stat}-description`}
+                aria-invalid={Boolean(state.errors?.[stat])}
+                type="number"
+                inputMode="numeric"
+                min={0}
+                max={remaining + pts[stat]}
+                step={1}
+                value={pts[stat] || ""}
+                onChange={(event) => updateStat(stat, event.target.value)}
+                placeholder="0"
+                disabled={isPending}
+                className="w-full"
+              />
+            </Field>
+          ))}
         </FieldGroup>
         <p className="text-muted-foreground text-sm">
           Your account must be offline to apply stat points.
