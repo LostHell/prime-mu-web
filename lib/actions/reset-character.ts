@@ -174,7 +174,8 @@ export async function resetCharacterAction(
     },
   });
 
-  revalidatePath(`/user-panel/${characterName}`);
+  revalidatePath("/user-panel", "layout");
+  revalidatePath("/top-players");
   return {
     success: true,
     message: `Character reset! Total points: ${totalPointsAfterReset.toLocaleString()}. ${resetCost.toLocaleString()} Zen spent.`,

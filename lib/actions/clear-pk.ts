@@ -46,7 +46,7 @@ export async function clearPkAction(
     },
   });
 
-  revalidatePath(`/user-panel/${characterName}`);
+  revalidatePath("/user-panel", "layout");
   return {
     success: true,
     message: "PK status cleared. You are no longer a Player Killer.",

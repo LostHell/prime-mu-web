@@ -78,7 +78,7 @@ export async function addStatsAction(
     },
   });
 
-  revalidatePath(`/user-panel/${characterName}`);
+  revalidatePath("/user-panel", "layout");
   return {
     success: true,
     message: `Successfully added ${totalPoints} stat points.`,
