@@ -2,6 +2,10 @@
 
 import { type Character } from "@/lib/types/character";
 import {
+  CHARACTER_SELECTION_COOKIE,
+  CHARACTER_SELECTION_MAX_AGE,
+} from "@/constants/character-selection";
+import {
   createContext,
   ReactNode,
   useCallback,
@@ -21,19 +25,24 @@ const UserPanelContext = createContext<UserPanelContextValue | null>(null);
 interface UserPanelProviderProps {
   children: ReactNode;
   characters: Character[];
+  initialSelectedName?: string;
 }
 
 export function UserPanelProvider({
   children,
   characters,
+  initialSelectedName,
 }: UserPanelProviderProps) {
-  const [selectedName, setSelectedName] = useState<string | null>(null);
+  const [selectedName, setSelectedName] = useState<string | null>(
+    initialSelectedName ?? null,
+  );
   const selectedCharacter =
     characters.find((character) => character.name === selectedName) ??
     characters[0] ??
     null;
   const setSelectedCharacter = useCallback((character: Character | null) => {
     setSelectedName(character?.name ?? null);
+    document.cookie = `${CHARACTER_SELECTION_COOKIE}=${encodeURIComponent(character?.name ?? "")}; Path=/user-panel; Max-Age=${character ? CHARACTER_SELECTION_MAX_AGE : 0}; SameSite=Lax${window.location.protocol === "https:" ? "; Secure" : ""}`;
   }, []);
 
   const selectCharacterByName = useCallback(
