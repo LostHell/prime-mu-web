@@ -21,12 +21,22 @@ export async function getCharacters(accountId: string): Promise<Character[]> {
     orderBy: { Name: "asc" },
   });
 
+  const memberships = characters.length
+    ? await prisma.guildMember.findMany({
+        where: { Name: { in: characters.map((character) => character.Name) } },
+        select: { Name: true, G_Name: true },
+      })
+    : [];
+  const guilds = new Map(
+    memberships.map((membership) => [membership.Name, membership.G_Name]),
+  );
+
   return characters.map((character) => ({
     name: character.Name,
     class: CHARACTER_CLASS_BY_ID[character.Class ?? 0],
     level: character.cLevel ?? 1,
     resets: character.ResetCount ?? 0,
-    guild: undefined,
+    guild: guilds.get(character.Name),
     zen: character.Money ?? 0,
     pkCount: character.PkCount ?? 0,
     freePoints: character.LevelUpPoint ?? 0,
