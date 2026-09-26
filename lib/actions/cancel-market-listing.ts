@@ -68,8 +68,12 @@ export async function cancelMarketplaceListingAction(
         index: decodedItem.index,
         level: decodedItem.level,
       });
-      const itemWidth = itemDef?.width ?? 1;
-      const itemHeight = itemDef?.height ?? 1;
+      if (!itemDef)
+        throw new ActionError(
+          "This item is unsupported. Please contact support with the listing number.",
+        );
+      const itemWidth = itemDef.width;
+      const itemHeight = itemDef.height;
 
       const warehouse = await tx.warehouse.findUnique({
         where: { AccountID: accountId },

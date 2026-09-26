@@ -4,11 +4,18 @@ import { WAREHOUSE_COLS, WAREHOUSE_ROWS } from "@/lib/game/constants/warehouse";
 import { getItemDefinition } from "@/lib/game/item-database";
 import { decodeItems } from "./decode";
 import { type BinaryItemData } from "./types";
+import { ActionError } from "@/lib/errors/action-error";
+import { BYTES_PER_SLOT } from "./constants";
 
 const cols = WAREHOUSE_COLS;
 const rows = WAREHOUSE_ROWS;
 
 const buildOccupancyGrid = (data: BinaryItemData): boolean[][] => {
+  if (data.length !== cols * rows * BYTES_PER_SLOT) {
+    throw new ActionError(
+      "Warehouse data cannot be safely read. Please contact support.",
+    );
+  }
   const grid: boolean[][] = Array.from({ length: rows }, () =>
     Array.from({ length: cols }, () => false),
   );
@@ -21,8 +28,12 @@ const buildOccupancyGrid = (data: BinaryItemData): boolean[][] => {
       index: item.index,
       level: item.level,
     });
-    const itemWidth = itemDef?.width ?? 1;
-    const itemHeight = itemDef?.height ?? 1;
+    if (!itemDef)
+      throw new ActionError(
+        "Your warehouse contains an unsupported item. Please contact support before transferring items.",
+      );
+    const itemWidth = itemDef.width;
+    const itemHeight = itemDef.height;
 
     const startRow = Math.floor(item.slot / cols);
     const startCol = item.slot % cols;

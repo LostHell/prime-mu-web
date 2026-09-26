@@ -14,9 +14,11 @@ export const getItemDefinition = (
   if (!item) return undefined;
 
   if (isBoxOfLuckItem(group, index)) {
+    const variant = BOX_OF_LUCK_ITEM_LEVEL_MAP[level];
+    if (!variant) return undefined;
     return {
       ...item,
-      name: BOX_OF_LUCK_ITEM_LEVEL_MAP[level].name,
+      name: variant.name,
     };
   }
 

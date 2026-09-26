@@ -8,6 +8,7 @@ import {
   ItemTooltipTrigger,
 } from "@/components/item-tooltip";
 import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { withActionToast } from "@/hooks/use-action-toast";
 import {
   DEPOSIT_ITEM_TYPES,
@@ -155,11 +156,7 @@ function ListingPrices({
           key={line.type}
           className={cn(line.type === "zen" && "basis-full")}
         >
-          <PriceLine
-            type={line.type}
-            amount={line.amount}
-            variant={variant}
-          />
+          <PriceLine type={line.type} amount={line.amount} variant={variant} />
         </div>
       ))}
     </div>
@@ -291,11 +288,22 @@ function ListingMeta({
 function MarketListingCard(props: MarketListingCardProps) {
   const { listing, variant, className, actions } = props;
   const item = listing.item;
+  if (!item) {
+    return (
+      <Alert>
+        <AlertTitle>Listing #{listing.id} needs review</AlertTitle>
+        <AlertDescription>
+          This item cannot be transferred safely. Contact support with this
+          listing number; it has not been removed from your history.
+        </AlertDescription>
+      </Alert>
+    );
+  }
 
   return (
     <article
       className={cn(
-        "@container/market-listing bg-card border-border rounded-xl border p-4",
+        "bg-card border-border @container/market-listing rounded-xl border p-4",
         className,
       )}
     >
@@ -336,7 +344,7 @@ function MarketListingCard(props: MarketListingCardProps) {
         </div>
 
         {actions ? (
-          <div className="col-span-2 col-start-1 row-start-3 @md/market-listing:col-span-1 @md/market-listing:col-start-3 @md/market-listing:row-start-1 @md/market-listing:row-span-2 @md/market-listing:self-center @md/market-listing:justify-self-end [&_form]:w-full @md/market-listing:[&_form]:w-auto">
+          <div className="col-span-2 col-start-1 row-start-3 @md/market-listing:col-span-1 @md/market-listing:col-start-3 @md/market-listing:row-span-2 @md/market-listing:row-start-1 @md/market-listing:self-center @md/market-listing:justify-self-end [&_form]:w-full @md/market-listing:[&_form]:w-auto">
             {actions}
           </div>
         ) : null}
