@@ -26,6 +26,12 @@ export interface Character {
   pkCount: number;
   freePoints: number;
   stats: CharacterStats;
+  resetPreview?: {
+    isOffline: boolean;
+    equipment: "empty" | "equipped" | "unknown";
+    level: number;
+    freePoints: number;
+  } | null;
 }
 
 export const CMD_CLASSES: CharacterClass[] = ["Dark Lord"];

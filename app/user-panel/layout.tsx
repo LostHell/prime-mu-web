@@ -23,7 +23,7 @@ const UserPanelLayout = async ({ children }: UserPanelLayoutProps) => {
   )?.value;
   // Only select characters from this authenticated account, regardless of cookie contents.
   const initialSelectedName = characters.find(
-    (character) => encodeURIComponent(character.name) === storedSelection,
+    (character) => character.name === storedSelection,
   )?.name;
 
   return (

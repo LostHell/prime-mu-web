@@ -18,7 +18,6 @@ import { Button } from "@/components/ui/button";
 import {
   MAX_RESETS,
   MIN_RESET_LEVEL,
-  POINTS_PER_RESET,
   RESET_COST_PER_RESET,
 } from "@/constants/resets";
 import { resetCharacterAction } from "@/lib/actions/reset-character";
@@ -39,6 +38,9 @@ export function ResetForm({ character }: ResetFormProps) {
   const hasRequiredLevel = character.level >= MIN_RESET_LEVEL;
   const isUnderResetLimit = character.resets < MAX_RESETS;
   const hasEnoughZen = character.zen >= resetCost;
+  const preview = character.resetPreview;
+  const isOffline = preview?.isOffline === true;
+  const equipmentIsEmpty = preview?.equipment === "empty";
 
   const handleConfirm = () => {
     const formData = new FormData();
@@ -56,8 +58,26 @@ export function ResetForm({ character }: ResetFormProps) {
     { label: "Resets", value: `${character.resets} / ${MAX_RESETS} maximum` },
     { label: "Zen balance", value: character.zen.toLocaleString() },
     { label: "Reset cost", value: resetCost.toLocaleString() },
+    {
+      label: "Account",
+      value: isOffline ? "Offline" : "Disconnect from the game",
+    },
+    {
+      label: "Equipment",
+      value: equipmentIsEmpty
+        ? "All items unequipped"
+        : preview?.equipment === "equipped"
+          ? "Unequip all items"
+          : "Unable to verify",
+    },
   ];
-  const canReset = hasRequiredLevel && isUnderResetLimit && hasEnoughZen;
+  const canReset =
+    hasRequiredLevel &&
+    isUnderResetLimit &&
+    hasEnoughZen &&
+    isOffline &&
+    equipmentIsEmpty &&
+    !!preview;
 
   return (
     <div className="flex flex-col gap-6">
@@ -68,9 +88,18 @@ export function ResetForm({ character }: ResetFormProps) {
       <CharacterSection title="After this reset">
         <CharacterValues
           items={[
-            { label: "Level", value: 1 },
+            { label: "Level", value: preview?.level ?? "Unavailable" },
             { label: "Total resets", value: character.resets + 1 },
-            { label: "Bonus stat points", value: `+${POINTS_PER_RESET}` },
+            {
+              label: "Total available stat points",
+              value: preview?.freePoints.toLocaleString() ?? "Unavailable",
+            },
+            {
+              label: "Zen balance",
+              value: canReset
+                ? (character.zen - resetCost).toLocaleString()
+                : "Requirements not met",
+            },
             { label: "Attributes", value: "Class defaults" },
           ]}
         />
@@ -85,6 +114,20 @@ export function ResetForm({ character }: ResetFormProps) {
         <Alert>
           <AlertDescription>
             <ul className="flex list-inside list-disc flex-col gap-2">
+              {!preview && (
+                <li>
+                  Reset configuration is unavailable. Please contact support.
+                </li>
+              )}
+              {!isOffline && (
+                <li>Disconnect from the game, then refresh this page.</li>
+              )}
+              {!equipmentIsEmpty && (
+                <li>
+                  Unequip all items in-game before resetting, then disconnect
+                  and refresh.
+                </li>
+              )}
               {!hasRequiredLevel && (
                 <li>Reach level {MIN_RESET_LEVEL} to reset.</li>
               )}
@@ -120,10 +163,11 @@ export function ResetForm({ character }: ResetFormProps) {
               <AlertDialogHeader>
                 <AlertDialogTitle>Reset Character?</AlertDialogTitle>
                 <AlertDialogDescription>
-                  This cannot be undone. Your character will return to level 1,
-                  base stats will be restored, and {resetCost.toLocaleString()}{" "}
-                  Zen will be deducted from your balance. You will be granted +
-                  {POINTS_PER_RESET} stat points.
+                  This cannot be undone. {character.name} will return to level{" "}
+                  {preview?.level}, base stats will be restored, and{" "}
+                  {resetCost.toLocaleString()} Zen will be deducted from your
+                  balance. Your total available stat points will be{" "}
+                  {preview?.freePoints.toLocaleString()}.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
