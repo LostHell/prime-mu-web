@@ -1,118 +1,42 @@
 "use client";
 
+import { SERVER_TIME_ZONE } from "@/constants/server";
+import { formatCountdown, nextEventTime } from "@/lib/utils/event-schedule";
 import { useEffect, useState } from "react";
 
-function getNextOccurrence(scheduleHours: number[]): {
-  countdown: string;
-} {
-  const safeTimes = scheduleHours
-    .filter((time) => Number.isFinite(time) && time >= 0 && time < 24)
-    .map((time) => {
-      const hour = Math.floor(time);
-      const minute = Math.round((time - hour) * 60);
-
-      if (
-        !Number.isInteger(hour) ||
-        !Number.isInteger(minute) ||
-        minute < 0 ||
-        minute > 59
-      ) {
-        return null;
-      }
-
-      return { hour, minute };
-    })
-    .filter(
-      (entry): entry is { hour: number; minute: number } => entry !== null,
-    )
-    .sort((a, b) =>
-      a.hour === b.hour ? a.minute - b.minute : a.hour - b.hour,
-    );
-
-  if (safeTimes.length === 0) {
-    return { countdown: "00:00:00" };
-  }
-
-  const now = new Date();
-
-  let next = safeTimes
-    .map(({ hour, minute }) => {
-      const candidate = new Date(now);
-      candidate.setHours(hour, minute, 0, 0);
-      return candidate;
-    })
-    .find((candidate) => candidate.getTime() > now.getTime());
-
-  if (!next) {
-    const first = safeTimes[0];
-    next = new Date(now);
-    next.setDate(next.getDate() + 1);
-    next.setHours(first.hour, first.minute, 0, 0);
-  }
-
-  const diffMs = next.getTime() - now.getTime();
-  const totalSeconds = Math.max(0, Math.floor(diffMs / 1000));
-  const hours = Math.floor(totalSeconds / 3600);
-  const minutes = Math.floor((totalSeconds % 3600) / 60);
-  const seconds = totalSeconds % 60;
-
-  const pad = (n: number) => String(n).padStart(2, "0");
-  return {
-    countdown: `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`,
-  };
-}
-
-const EventCountdown = ({
+export default function EventCountdown({
   scheduleHours,
   colorClass,
 }: {
   scheduleHours: number[];
   colorClass: string;
-}) => {
-  const [state, setState] = useState<{
-    countdown: string;
-  } | null>(null);
-
+}) {
+  const [countdown, setCountdown] = useState("--:--:--");
   useEffect(() => {
-    let timeoutId: ReturnType<typeof setTimeout> | null = null;
-
-    const tick = () => {
-      setState(getNextOccurrence(scheduleHours));
+    let next: number | null = null;
+    const refresh = () => {
       const now = Date.now();
-      const delayToNextSecond = 1000 - (now % 1000);
-      timeoutId = setTimeout(tick, delayToNextSecond);
+      if (next === null || next <= now)
+        next = nextEventTime(scheduleHours, now, SERVER_TIME_ZONE);
+      setCountdown(next === null ? "Unavailable" : formatCountdown(next - now));
     };
-
-    const refresh = () => setState(getNextOccurrence(scheduleHours));
-
-    tick();
+    refresh();
+    const timer = setInterval(refresh, 1000);
     document.addEventListener("visibilitychange", refresh);
     window.addEventListener("pageshow", refresh);
-
     return () => {
-      if (timeoutId) {
-        clearTimeout(timeoutId);
-      }
+      clearInterval(timer);
       document.removeEventListener("visibilitychange", refresh);
       window.removeEventListener("pageshow", refresh);
     };
   }, [scheduleHours]);
 
   return (
-    <div className="text-muted-foreground flex items-center gap-2">
+    <div className="text-muted-foreground flex flex-col items-end gap-1">
       <span className="font-serif font-semibold tracking-widest uppercase">
-        {state === null ? (
-          <span className={colorClass}>
-            --:--:--
-          </span>
-        ) : (
-          <span className={colorClass}>
-            {state.countdown}
-          </span>
-        )}
+        <span className={colorClass}>{countdown}</span>
       </span>
+      <span className="text-xs">{SERVER_TIME_ZONE}</span>
     </div>
   );
-};
-
-export default EventCountdown;
+}
