@@ -9,6 +9,7 @@ import {
   getItemSerial,
 } from "@/lib/game/item-decoder";
 import { getWarehouseItemsBuffer } from "@/lib/game/warehouse";
+import { getItemDefinition } from "@/lib/game/item-database";
 import { depositColumnsFromAmounts } from "@/lib/utils/deposits";
 import {
   listMarketItemErrorMessage,
@@ -98,8 +99,14 @@ export async function listMarketItemAction(
           "This item changed since you selected it. Refresh your warehouse and select it again.",
         );
       }
-      if (!decodeItem(itemHex)) {
+      const decodedItem = decodeItem(itemHex);
+      if (!decodedItem) {
         throw new ActionError("Could not decode item data.");
+      }
+      if (!getItemDefinition(decodedItem)) {
+        throw new ActionError(
+          "This item is unsupported and cannot be listed. Please contact support.",
+        );
       }
 
       const updatedBuffer = clearWarehouseSlot(itemsBuffer, slotIndex);

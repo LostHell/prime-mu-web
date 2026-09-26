@@ -33,7 +33,7 @@ export type MarketListing = {
   id: number;
   isOwnListing: boolean;
   sellerCharacter: string;
-  item: ListingItem;
+  item: ListingItem | null;
   prices: DepositAmounts;
   listedAt: Date;
   status: string;
@@ -49,6 +49,7 @@ const decodeItemFromHex = (itemHex: Buffer): ListingItem | null => {
     index: decodedItem.index,
     level: decodedItem.level,
   });
+  if (!itemDef) return null;
 
   return {
     ...decodedItem,
@@ -69,9 +70,8 @@ const decodeItemFromHex = (itemHex: Buffer): ListingItem | null => {
 const toMarketListing = (
   listing: MarketplaceListingRow,
   accountId: string,
-): MarketListing | null => {
+): MarketListing => {
   const item = decodeItemFromHex(Buffer.from(listing.itemHex));
-  if (!item) return null;
 
   return {
     id: listing.id,
@@ -145,7 +145,7 @@ async function getListingPage(
     });
     for (const row of rows) {
       const listing = toMarketListing(row, accountId);
-      if (!listing || !listing.item.name.toLowerCase().includes(search))
+      if (search && !listing.item?.name.toLowerCase().includes(search))
         continue;
       if (total >= skip && items.length < MARKET_PAGE_SIZE) {
         items.push(listing);
