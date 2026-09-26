@@ -67,16 +67,33 @@ export async function addStatsAction(
     return { success: false, message: "Not enough free stat points." };
   }
 
-  await prisma.character.update({
-    where: { Name: characterName },
+  const { count } = await prisma.character.updateMany({
+    where: {
+      Name: characterName,
+      AccountID: accountId,
+      LevelUpPoint: character.LevelUpPoint,
+      Strength: character.Strength,
+      Dexterity: character.Dexterity,
+      Vitality: character.Vitality,
+      Energy: character.Energy,
+      ResetCount: character.ResetCount,
+    },
     data: {
-      Strength: { increment: str },
-      Dexterity: { increment: agi },
-      Vitality: { increment: vit },
-      Energy: { increment: ene },
+      Strength: (character.Strength ?? 0) + str,
+      Dexterity: (character.Dexterity ?? 0) + agi,
+      Vitality: (character.Vitality ?? 0) + vit,
+      Energy: (character.Energy ?? 0) + ene,
       LevelUpPoint: { decrement: totalPoints },
     },
   });
+  if (!count) {
+    revalidatePath("/user-panel", "layout");
+    return {
+      success: false,
+      message:
+        "Your character changed while applying points. Review the refreshed values and try again.",
+    };
+  }
 
   revalidatePath("/user-panel", "layout");
   return {
