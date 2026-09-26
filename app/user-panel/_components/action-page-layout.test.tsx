@@ -36,9 +36,18 @@ function Draft({ character }: { character: Character }) {
     </>
   );
 }
-function Panel({ characters }: { characters: Character[] }) {
+function Panel({
+  characters,
+  initialSelectedName,
+}: {
+  characters: Character[];
+  initialSelectedName?: string;
+}) {
   return (
-    <UserPanelProvider characters={characters}>
+    <UserPanelProvider
+      characters={characters}
+      initialSelectedName={initialSelectedName}
+    >
       <UserPanelNav />
       <ActionPageLayout title="Add stats">
         {(character) => <Draft character={character} />}
@@ -90,4 +99,20 @@ test("renders the current service label in the initial server HTML before openin
   expect(document.querySelector('[role="combobox"]')?.textContent).toContain(
     "Add stats",
   );
+});
+
+test("restores the saved character in server HTML and ignores a character from another account", () => {
+  const html = renderToString(
+    <Panel characters={[first, second]} initialSelectedName="Wizard" />,
+  );
+  const document = new DOMParser().parseFromString(html, "text/html");
+  expect(
+    document.querySelector('[aria-current="true"]')?.textContent,
+  ).toContain("Wizard");
+  render(
+    <Panel characters={[first]} initialSelectedName="OtherAccountCharacter" />,
+  );
+  expect(
+    screen.getByRole("link", { name: /Knight Dark Knight/ }),
+  ).toHaveAttribute("aria-current", "true");
 });
