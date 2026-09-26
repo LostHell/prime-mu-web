@@ -4,13 +4,8 @@ import type { DepositItemType } from "@/constants/depositable-items";
 import { depositAction } from "@/lib/actions/deposit";
 import { withdrawAction } from "@/lib/actions/withdraw";
 import type { DepositData, ItemBalance } from "@/lib/queries/get-deposits";
-import {
-  startTransition,
-  useActionState,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import type { ActionState } from "@/lib/types/action-state";
+import { startTransition, useActionState, useState } from "react";
 
 export type TransferMode = "deposit" | "withdraw";
 
@@ -27,14 +22,6 @@ function findItem(
 }
 
 export function useDeposits(deposits: DepositData) {
-  const [depositState, depositFormAction, isDepositPending] = useActionState(
-    depositAction,
-    {},
-  );
-  const [withdrawState, withdrawFormAction, isWithdrawPending] = useActionState(
-    withdrawAction,
-    {},
-  );
   const [lastAction, setLastAction] = useState<TransferMode | null>(null);
   const [transferTarget, setTransferTarget] = useState<TransferTarget | null>(
     null,
@@ -44,9 +31,28 @@ export function useDeposits(deposits: DepositData) {
     useState<TransferTarget | null>(null);
   const [isConfirmAllOpen, setIsConfirmAllOpen] = useState(false);
 
-  const requestIdRef = useRef(0);
-  const requestIdAtOpenRef = useRef(0);
-  const closedRequestIdRef = useRef(0);
+  const finishTransfer = async (
+    action: typeof depositAction,
+    state: Parameters<typeof depositAction>[0],
+    formData: FormData,
+  ) => {
+    const result = await action(state, formData);
+    if (result.success) {
+      setIsTransferOpen(false);
+      setIsConfirmAllOpen(false);
+    }
+    return result;
+  };
+  const [depositState, depositFormAction, isDepositPending] = useActionState(
+    (state: ActionState, formData: FormData) =>
+      finishTransfer(depositAction, state, formData),
+    {},
+  );
+  const [withdrawState, withdrawFormAction, isWithdrawPending] = useActionState(
+    (state: ActionState, formData: FormData) =>
+      finishTransfer(withdrawAction, state, formData),
+    {},
+  );
 
   const isPending = isDepositPending || isWithdrawPending;
   const activeState = lastAction === "withdraw" ? withdrawState : depositState;
@@ -61,25 +67,16 @@ export function useDeposits(deposits: DepositData) {
     lastAction === transferTarget.mode &&
     !activeState.success &&
     activeState.message &&
-    requestIdRef.current > requestIdAtOpenRef.current
+    !isPending
       ? activeState.message
       : undefined;
 
   const pageMessage =
-    !isTransferOpen && !isConfirmAllOpen && activeState.message
+    lastAction && !isTransferOpen && !isConfirmAllOpen && activeState.message
       ? { success: !!activeState.success, text: activeState.message }
       : null;
 
-  useEffect(() => {
-    if (isPending || !activeState.success) return;
-    if (requestIdRef.current === closedRequestIdRef.current) return;
-    closedRequestIdRef.current = requestIdRef.current;
-    setIsTransferOpen(false);
-    setIsConfirmAllOpen(false);
-  }, [isPending, activeState.success]);
-
   function beginRequest(mode: TransferMode) {
-    requestIdRef.current += 1;
     setLastAction(mode);
   }
 
@@ -92,7 +89,7 @@ export function useDeposits(deposits: DepositData) {
   }
 
   function openTransfer(mode: TransferMode, type: DepositItemType) {
-    requestIdAtOpenRef.current = requestIdRef.current;
+    setLastAction(null);
     setTransferTarget({ mode, type });
     setIsTransferOpen(true);
   }
@@ -108,6 +105,7 @@ export function useDeposits(deposits: DepositData) {
   }
 
   function requestAll(mode: TransferMode, type: DepositItemType) {
+    setLastAction(null);
     setConfirmAllTarget({ mode, type });
     setIsConfirmAllOpen(true);
   }
