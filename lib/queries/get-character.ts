@@ -1,10 +1,7 @@
 import { CHARACTER_CLASS_BY_ID } from "@/lib/game/constants/characters";
 import { prisma } from "@/prisma/prisma";
 
-export async function getCharacter(
-  accountId: string,
-  characterName: string,
-) {
+export async function getCharacter(accountId: string, characterName: string) {
   const character = await prisma.character.findFirst({
     where: {
       Name: characterName,
@@ -29,12 +26,17 @@ export async function getCharacter(
     return null;
   }
 
+  const membership = await prisma.guildMember.findUnique({
+    where: { Name: character.Name },
+    select: { G_Name: true },
+  });
+
   return {
     name: character.Name,
     class: CHARACTER_CLASS_BY_ID[character.Class ?? 0],
     level: character.cLevel ?? 1,
     resets: character.ResetCount ?? 0,
-    guild: undefined,
+    guild: membership?.G_Name,
     zen: character.Money ?? 0,
     pkCount: character.PkCount ?? 0,
     freePoints: character.LevelUpPoint ?? 0,
