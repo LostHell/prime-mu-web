@@ -1,32 +1,31 @@
 import { render, screen } from "@testing-library/react";
-import { getPaginationHref, ResultsPagination } from "./results-pagination";
+import { getPaginationHref, MarketPagination } from "./market-pagination";
 
-describe("ResultsPagination", () => {
+describe("MarketPagination", () => {
   test("preserves search filters and creates canonical page links", () => {
     render(
-      <ResultsPagination
+      <MarketPagination
         page={2}
         hasNext
-        itemCount={25}
         pathname="/user-panel/market"
-        query={{ q: "Jewel & Sword" }}
+        query={{ query: "Jewel & Sword" }}
       />,
     );
 
     expect(screen.getByRole("link", { name: /previous/i })).toHaveAttribute(
       "href",
-      "/user-panel/market?q=Jewel+%26+Sword",
+      "/user-panel/market?query=Jewel+%26+Sword",
     );
     const currentPage = screen.getByRole("link", { name: "Page 2" });
     expect(currentPage).toHaveTextContent("2");
     expect(currentPage).toHaveClass("size-8");
     expect(currentPage).toHaveAttribute(
       "href",
-      "/user-panel/market?q=Jewel+%26+Sword&page=2",
+      "/user-panel/market?query=Jewel+%26+Sword&page=2",
     );
     expect(screen.getByRole("link", { name: /next/i })).toHaveAttribute(
       "href",
-      "/user-panel/market?q=Jewel+%26+Sword&page=3",
+      "/user-panel/market?query=Jewel+%26+Sword&page=3",
     );
     expect(screen.queryByText("Previous")).not.toBeInTheDocument();
     expect(screen.queryByText("Next")).not.toBeInTheDocument();
@@ -34,10 +33,9 @@ describe("ResultsPagination", () => {
 
   test("makes unavailable directions non-interactive", () => {
     render(
-      <ResultsPagination
+      <MarketPagination
         page={1}
         hasNext={false}
-        itemCount={1}
         pathname="/user-panel/market/listed"
       />,
     );
@@ -51,28 +49,13 @@ describe("ResultsPagination", () => {
       "true",
     );
   });
-
-  test("does not render for an empty result set", () => {
-    render(
-      <ResultsPagination
-        page={1}
-        hasNext={false}
-        itemCount={0}
-        pathname="/user-panel/market"
-      />,
-    );
-
-    expect(
-      screen.queryByRole("navigation", { name: "Results pages" }),
-    ).not.toBeInTheDocument();
-  });
 });
 
 test("removes an existing page parameter when linking to page one", () => {
   expect(
     getPaginationHref("/user-panel/market", 1, {
-      q: "Sword",
+      query: "Sword",
       page: "9",
     }),
-  ).toBe("/user-panel/market?q=Sword");
+  ).toBe("/user-panel/market?query=Sword");
 });

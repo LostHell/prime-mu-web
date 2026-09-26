@@ -2,9 +2,8 @@ import { auth } from "@/auth";
 import { getMyPurchases } from "@/lib/queries/get-marketplace-listings";
 import { redirect } from "next/navigation";
 import { MarketLayout } from "../_components/market-layout";
+import { MarketPagination } from "../_components/market-pagination";
 import { BoughtItems } from "./_components/bought-items";
-
-import { ResultsPagination } from "@/components/results-pagination";
 import { getPageNumber, type SearchParams } from "@/lib/utils/pagination";
 
 export default async function BoughtItemsPage({
@@ -28,12 +27,13 @@ export default async function BoughtItemsPage({
   return (
     <MarketLayout>
       <BoughtItems purchases={purchases} />
-      <ResultsPagination
-        page={page}
-        hasNext={result.hasNext}
-        itemCount={purchases.length}
-        pathname="/user-panel/market/bought"
-      />
+      {purchases.length > 0 && (
+        <MarketPagination
+          page={page}
+          hasNext={result.hasNext}
+          pathname="/user-panel/market/bought"
+        />
+      )}
     </MarketLayout>
   );
 }

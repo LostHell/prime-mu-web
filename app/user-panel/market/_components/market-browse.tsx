@@ -33,7 +33,7 @@ export function MarketBrowse({
           <Input
             key={query}
             id="market-search"
-            name="q"
+            name="query"
             defaultValue={query}
             maxLength={MAX_SEARCH_LENGTH}
             placeholder="Item name"

@@ -6,8 +6,8 @@ import { MarketBrowse } from "./_components/market-browse";
 import { MarketLayout } from "./_components/market-layout";
 import {
   getPaginationHref,
-  ResultsPagination,
-} from "@/components/results-pagination";
+  MarketPagination,
+} from "./_components/market-pagination";
 import {
   getPageNumber,
   getSearchQuery,
@@ -27,12 +27,12 @@ export default async function MarketPage({
 
   const params = await searchParams;
   const page = getPageNumber(params.page);
-  const query = getSearchQuery(params.q, MAX_SEARCH_LENGTH);
+  const query = getSearchQuery(params.query, MAX_SEARCH_LENGTH);
   const [result, buyerDeposits] = await Promise.all([
     getAllActiveListings(session.user.id, page, query),
     getAccountDepositAmounts(session.user.id),
   ]);
-  const paginationQuery: Record<string, string> = query ? { q: query } : {};
+  const paginationQuery: Record<string, string> = query ? { query } : {};
 
   if (page > 1 && result.items.length === 0) {
     redirect(getPaginationHref("/user-panel/market", 1, paginationQuery));
@@ -45,13 +45,14 @@ export default async function MarketPage({
         query={query}
         buyerDeposits={buyerDeposits}
       />
-      <ResultsPagination
-        page={page}
-        hasNext={result.hasNext}
-        itemCount={result.items.length}
-        pathname="/user-panel/market"
-        query={paginationQuery}
-      />
+      {result.items.length > 0 && (
+        <MarketPagination
+          page={page}
+          hasNext={result.hasNext}
+          pathname="/user-panel/market"
+          query={paginationQuery}
+        />
+      )}
     </MarketLayout>
   );
 }

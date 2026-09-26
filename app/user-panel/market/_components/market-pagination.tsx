@@ -20,26 +20,23 @@ export function getPaginationHref(
   }
 
   const search = params.toString();
-  return search ? `${pathname}?${search}` : pathname;
+  if (search) {
+    return `${pathname}?${search}`;
+  }
+  return pathname;
 }
 
-export function ResultsPagination({
+export function MarketPagination({
   page,
   hasNext,
-  itemCount,
   pathname,
   query = {},
 }: {
   page: number;
   hasNext: boolean;
-  itemCount: number;
   pathname: string;
   query?: Record<string, string>;
 }) {
-  if (itemCount <= 0) {
-    return null;
-  }
-
   const href = (target: number) => getPaginationHref(pathname, target, query);
   const hasPrevious = page > 1;
   const disabledClassName = "pointer-events-none opacity-50";
