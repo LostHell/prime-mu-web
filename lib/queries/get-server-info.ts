@@ -1,12 +1,11 @@
+import { MAX_RESETS, POINTS_PER_RESET } from "@/constants/resets";
 import {
   DROP_RATE,
   EXPERIENCE_RATE,
   MAX_ONLINE,
-  MAX_RESETS,
-  MIN_RESET_LEVEL,
-  POINTS_PER_RESET,
+  MAX_LEVEL,
   VERSION,
-} from "@/constants/resets";
+} from "@/constants/server";
 import { ServerInfo } from "@/lib/types/server-info";
 import { prisma } from "@/prisma/prisma";
 import { getServerStatus } from "./get-server-status";
@@ -23,7 +22,7 @@ export async function getServerInfo(): Promise<ServerInfo> {
     version: VERSION,
     experience: EXPERIENCE_RATE,
     drop: DROP_RATE,
-    maxLevel: MIN_RESET_LEVEL,
+    maxLevel: MAX_LEVEL,
     maxResets: MAX_RESETS,
     points: `${POINTS_PER_RESET}/reset`,
     online,
