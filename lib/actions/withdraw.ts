@@ -1,5 +1,7 @@
 "use server";
 
+import { ActionError, actionErrorMessage } from "@/lib/errors/action-error";
+
 import {
   DEPOSITABLE_ITEM_DURABILITY,
   DEPOSITABLE_ITEMS,
@@ -78,7 +80,7 @@ async function withdrawZen(
 
       const deposited = deposit?.Zen ?? 0n;
       if (deposited < amount) {
-        throw new Error(
+        throw new ActionError(
           `Not enough Zen deposited. Available: ${deposited.toLocaleString()}.`,
         );
       }
@@ -91,7 +93,7 @@ async function withdrawZen(
       });
 
       if (withdrawCount === 0) {
-        throw new Error(
+        throw new ActionError(
           `Not enough Zen deposited. Available: ${deposited.toLocaleString()}.`,
         );
       }
@@ -114,7 +116,7 @@ async function withdrawZen(
       });
 
       if (creditCount === 0) {
-        throw new Error(
+        throw new ActionError(
           "Withdrawing this amount would exceed your warehouse's Zen capacity. Try a smaller amount.",
         );
       }
@@ -125,8 +127,7 @@ async function withdrawZen(
     revalidatePath("/user-panel/deposits");
     return { success: true, message };
   } catch (err) {
-    const message =
-      err instanceof Error ? err.message : "Failed to withdraw Zen.";
+    const message = actionErrorMessage(err, "Failed to withdraw Zen.");
     return { success: false, message };
   }
 }
@@ -160,7 +161,7 @@ async function withdrawItem(
 
       const deposited = (deposit?.[dbField] as number | undefined) ?? 0;
       if (deposited < amount) {
-        throw new Error(
+        throw new ActionError(
           `Not enough ${label} deposited. Available: ${deposited}.`,
         );
       }
@@ -169,12 +170,16 @@ async function withdrawItem(
       const buffer = getWarehouseItemsBuffer(originalItems);
 
       const itemDef = getItemDefinition(itemId);
-      const itemWidth = itemDef?.width ?? 1;
-      const itemHeight = itemDef?.height ?? 1;
+      if (!itemDef)
+        throw new ActionError(
+          "This item is unsupported. Please contact support.",
+        );
+      const itemWidth = itemDef.width;
+      const itemHeight = itemDef.height;
 
       const freeSlots = findFreeAreas(buffer, itemWidth, itemHeight, amount);
       if (freeSlots.length < amount) {
-        throw new Error(
+        throw new ActionError(
           `Not enough space in warehouse to withdraw ${amount} ${label} (${itemWidth}x${itemHeight} each). Free up some space and try again.`,
         );
       }
@@ -204,7 +209,7 @@ async function withdrawItem(
         });
 
         if (count === 0) {
-          throw new Error(
+          throw new ActionError(
             "Your warehouse changed while processing this request. Please try again.",
           );
         }
@@ -218,7 +223,7 @@ async function withdrawItem(
       });
 
       if (depositCount === 0) {
-        throw new Error(
+        throw new ActionError(
           `Not enough ${label} deposited. Available: ${deposited}.`,
         );
       }
@@ -229,8 +234,7 @@ async function withdrawItem(
     revalidatePath("/user-panel/deposits");
     return { success: true, message };
   } catch (err) {
-    const message =
-      err instanceof Error ? err.message : `Failed to withdraw ${label}.`;
+    const message = actionErrorMessage(err, `Failed to withdraw ${label}.`);
     return { success: false, message };
   }
 }
