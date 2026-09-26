@@ -42,6 +42,7 @@ export default async function MarketPage({
     <MarketLayout>
       <MarketBrowse
         listings={result.items}
+        total={result.total}
         query={query}
         buyerDeposits={buyerDeposits}
       />

@@ -8,26 +8,25 @@ import { MAX_SEARCH_LENGTH } from "@/constants/pagination";
 import { type DepositAmounts } from "@/constants/depositable-items";
 import { MarketListing as ListingRow } from "@/lib/queries/get-marketplace-listings";
 import { Filter } from "lucide-react";
+import Form from "next/form";
 import MarketListing from "./market-listing";
 
 interface MarketBrowseProps {
   listings: ListingRow[];
+  total: number;
   query: string;
   buyerDeposits: DepositAmounts;
 }
 
 export function MarketBrowse({
   listings,
+  total,
   query,
   buyerDeposits,
 }: MarketBrowseProps) {
   return (
     <div className="flex flex-col gap-5">
-      <form
-        action="/user-panel/market"
-        method="get"
-        className="flex items-end gap-3"
-      >
+      <Form action="/user-panel/market" className="flex items-end gap-3">
         <Field>
           <FieldLabel htmlFor="market-search">Search all listings</FieldLabel>
           <Input
@@ -40,11 +39,10 @@ export function MarketBrowse({
           />
         </Field>
         <Button type="submit">Search</Button>
-      </form>
+      </Form>
 
       <p className="text-muted-foreground -mt-2 text-xs">
-        {listings.length} item
-        {listings.length !== 1 ? "s" : ""} on this page
+        {total} item{total === 1 ? "" : "s"} found
       </p>
 
       {listings.length > 0 ? (

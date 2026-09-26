@@ -49,6 +49,7 @@ beforeEach(() => {
 test("searches beyond the newest hundred listings without exposing seller logins", async () => {
   const result = await getAllActiveListings("buyer", 1, "old blade");
   expect(result.items.map((item) => item.id)).toEqual([1]);
+  expect(result.total).toBe(1);
   expect(result.hasNext).toBe(false);
   expect(result.items[0]).not.toHaveProperty("sellerAccountId");
   expect(result.items[0].isOwnListing).toBe(false);
@@ -59,12 +60,14 @@ test("makes older pages reachable with stable ordering and a bounded response", 
   expect(result.items).toHaveLength(MARKET_PAGE_SIZE);
   expect(result.items[0].id).toBe(51);
   expect(result.items[0].isOwnListing).toBe(true);
+  expect(result.total).toBe(151);
   expect(result.hasNext).toBe(true);
 });
 
 test("reports the final partial page without a next page", async () => {
   const result = await getAllActiveListings("buyer", 7);
   expect(result.items.map((item) => item.id)).toEqual([1]);
+  expect(result.total).toBe(151);
   expect(result.hasNext).toBe(false);
 });
 
@@ -73,6 +76,7 @@ test("paginates within the complete filtered result set", async () => {
   expect(result.items).toHaveLength(MARKET_PAGE_SIZE);
   expect(result.items[0].id).toBe(126);
   expect(result.items.at(-1)?.id).toBe(102);
+  expect(result.total).toBe(150);
   expect(result.hasNext).toBe(true);
 });
 

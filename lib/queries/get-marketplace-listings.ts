@@ -130,11 +130,11 @@ async function getListingPage(
   const search = query.trim().slice(0, MAX_SEARCH_LENGTH).toLowerCase();
   const items: MarketListing[] = [];
   let beforeId: number | undefined;
-  let matched = 0;
+  let total = 0;
   const skip = (currentPage - 1) * MARKET_PAGE_SIZE;
   // Names are decoded from game bytes, not a database text column. Scan bounded
-  // batches so searching includes older listings without loading the catalogue into memory.
-  while (items.length <= MARKET_PAGE_SIZE) {
+  // batches so the match total includes every page without keeping the catalogue in memory.
+  while (true) {
     const rows = await prisma.marketplaceListing.findMany({
       where: {
         ...where,
@@ -147,16 +147,17 @@ async function getListingPage(
       const listing = toMarketListing(row, accountId);
       if (!listing || !listing.item.name.toLowerCase().includes(search))
         continue;
-      if (matched++ < skip) continue;
-      items.push(listing);
-      if (items.length > MARKET_PAGE_SIZE) break;
+      if (total >= skip && items.length < MARKET_PAGE_SIZE) {
+        items.push(listing);
+      }
+      total += 1;
     }
-    if (rows.length < MARKET_SCAN_BATCH_SIZE || items.length > MARKET_PAGE_SIZE)
-      break;
+    if (rows.length < MARKET_SCAN_BATCH_SIZE) break;
     beforeId = rows[rows.length - 1].id;
   }
   return {
-    items: items.slice(0, MARKET_PAGE_SIZE),
-    hasNext: items.length > MARKET_PAGE_SIZE,
+    items,
+    hasNext: total > skip + MARKET_PAGE_SIZE,
+    total,
   };
 }
