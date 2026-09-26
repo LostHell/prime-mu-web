@@ -6,7 +6,7 @@ import { hasAnyPositiveDepositAmounts } from "@/lib/utils/deposits";
 import { formatNumber } from "@/lib/utils/numbers";
 import { listingPriceLimit } from "@/lib/validation/listing-price-limits";
 import { z } from "zod";
-import { BYTES_PER_SLOT } from "@/lib/game/item-decoder/constants";
+import { MAX_ITEM_SERIAL } from "@/lib/game/item-decoder/constants";
 import { WAREHOUSE_SLOTS } from "@/lib/game/constants/warehouse";
 
 const listingPriceSchema = (max: number) =>
@@ -26,11 +26,7 @@ export const listMarketItemSchema = z
       .int()
       .min(0)
       .max(WAREHOUSE_SLOTS - 1),
-    itemFingerprint: z
-      .string()
-      .length(BYTES_PER_SLOT * 2)
-      .regex(/^[0-9a-f]+$/i)
-      .toLowerCase(),
+    itemSerial: z.coerce.number().int().min(1).max(MAX_ITEM_SERIAL),
     zen: listingPriceSchema(listingPriceLimit("zen")),
     rena: listingPriceSchema(listingPriceLimit("rena")),
     jewelOfBless: listingPriceSchema(listingPriceLimit("jewelOfBless")),
@@ -40,9 +36,9 @@ export const listMarketItemSchema = z
     jewelOfChaos: listingPriceSchema(listingPriceLimit("jewelOfChaos")),
   })
   .transform((data) => {
-    const { slotIndex, itemFingerprint, ...priceFields } = data;
+    const { slotIndex, itemSerial, ...priceFields } = data;
     const prices: DepositAmounts = { ...EMPTY_DEPOSIT_AMOUNTS, ...priceFields };
-    return { slotIndex, itemFingerprint, prices };
+    return { slotIndex, itemSerial, prices };
   })
   .refine((data) => hasAnyPositiveDepositAmounts(data.prices), {
     message: "Set at least one price.",

@@ -225,8 +225,8 @@ export function SellItemForm({ warehouseItems }: SellItemFormProps) {
           <form action={formAction}>
             <input
               type="hidden"
-              name="itemFingerprint"
-              value={selectedItem?.itemFingerprint ?? ""}
+              name="itemSerial"
+              value={selectedItem?.serial ?? ""}
             />
             <input
               type="hidden"

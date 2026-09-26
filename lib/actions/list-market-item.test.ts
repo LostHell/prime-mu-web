@@ -18,11 +18,9 @@ test("refuses to list a replacement item from a stale warehouse tab", async () =
   const create = jest.fn();
   const transaction = {
     warehouse: {
-      findUnique: jest
-        .fn()
-        .mockResolvedValue({
-          Items: Buffer.from("0102030405060708090a", "hex"),
-        }),
+      findUnique: jest.fn().mockResolvedValue({
+        Items: Buffer.from("0102030405060708090a", "hex"),
+      }),
       updateMany,
     },
     marketplaceListing: { create },
@@ -33,7 +31,7 @@ test("refuses to list a replacement item from a stale warehouse tab", async () =
   const form = new FormData();
   form.set("slotIndex", "0");
   form.set("zen", "100");
-  form.set("itemFingerprint", "0a090807060504030201");
+  form.set("itemSerial", "168496141");
   const result = await listMarketItemAction({}, form);
   expect(result.success).toBe(false);
   expect(result.message).toMatch(/changed since you selected/);

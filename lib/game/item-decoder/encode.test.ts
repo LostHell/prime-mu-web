@@ -12,6 +12,7 @@ describe("createItemBytes", () => {
     expect(decodeItem(Uint8Array.from(bytes))).toMatchObject({
       ...itemId,
       durability: 1,
+      serial: 0x0005e79d,
     });
   });
 

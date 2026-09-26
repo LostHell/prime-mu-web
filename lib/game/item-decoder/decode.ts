@@ -12,6 +12,15 @@ import {
 } from "./constants";
 import { type BinaryItemData, type DecodedItem } from "./types";
 
+/** Reads the four-byte big-endian item instance serial at bytes 3–6. */
+export const getItemSerial = (data: BinaryItemData): number | null => {
+  if (data.length < 7) {
+    return null;
+  }
+
+  return data[3] * 0x1_000000 + data[4] * 0x1_0000 + data[5] * 0x100 + data[6];
+};
+
 const parseItemAtSlot = (
   data: BinaryItemData,
   slot: number,
@@ -36,6 +45,11 @@ const parseItemAtSlot = (
   const durability = b2;
   const level = (b1 >> ITEM_LEVEL_SHIFT) & ITEM_LEVEL_MASK;
   const excellent = b7 & ITEM_EXCELLENT_MASK;
+  const serial = getItemSerial(data.subarray(offset, offset + BYTES_PER_SLOT));
+
+  if (serial === null) {
+    return null;
+  }
 
   return {
     slot,
@@ -47,6 +61,7 @@ const parseItemAtSlot = (
     addOption,
     excellent,
     durability,
+    serial,
     rawBytes: Array.from(data.subarray(offset, offset + BYTES_PER_SLOT)),
   };
 };

@@ -1,5 +1,6 @@
 export const BYTES_PER_SLOT = 10;
 export const EMPTY_SLOT_BYTE = 0xff;
+export const MAX_ITEM_SERIAL = 2_147_483_647;
 
 export const ITEM_TYPE_GROUP_SIZE = 32;
 /** Byte 7: item type +256. Confirmed on in-game Bless/Soul/Life jewels. */
