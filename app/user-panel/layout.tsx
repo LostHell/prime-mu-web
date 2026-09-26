@@ -17,17 +17,18 @@ const UserPanelLayout = async ({ children }: UserPanelLayoutProps) => {
     redirect("/login");
   }
 
-  const characters = await getCharacters(session.user.id);
+  const { account, characters } = await getCharacters(session.user.id);
   const storedSelection = (await cookies()).get(
     CHARACTER_SELECTION_COOKIE,
   )?.value;
   // Only select characters from this authenticated account, regardless of cookie contents.
   const initialSelectedName = characters.find(
-    (character) => encodeURIComponent(character.name) === storedSelection,
+    (character) => character.name === storedSelection,
   )?.name;
 
   return (
     <UserPanelProvider
+      account={account}
       characters={characters}
       initialSelectedName={initialSelectedName}
     >

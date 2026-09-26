@@ -11,7 +11,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
-import { type Character } from "@/lib/types/character";
+import { type CharacterWithNextReset } from "@/lib/types/character";
 import { usePathname, useRouter } from "next/navigation";
 import { Fragment } from "react";
 import { useUserPanel } from "../_context/user-panel-context";
@@ -27,7 +27,7 @@ const SERVICES = [
 interface ActionPageLayoutProps {
   title: string;
   description?: string;
-  children: (character: Character) => React.ReactNode;
+  children: (character: CharacterWithNextReset) => React.ReactNode;
 }
 
 export function ActionPageLayout({

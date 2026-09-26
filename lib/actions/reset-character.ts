@@ -3,7 +3,6 @@
 import {
   MAX_RESETS,
   MIN_RESET_LEVEL,
-  POINTS_PER_RESET,
   RESET_COST_PER_RESET,
 } from "@/constants/resets";
 import { resetCharacterSchema } from "@/lib/validation/reset-character";
@@ -11,39 +10,11 @@ import { ActionState } from "@/lib/types/action-state";
 import { prisma } from "@/prisma/prisma";
 import { revalidatePath } from "next/cache";
 import { getAuthenticatedUser, verifyCharacterOwnership } from "./utils";
-
-const DEFAULT_CLASS_TYPE_BY_SUBCLASS: Record<number, number> = {
-  1: 0,
-  17: 16,
-  33: 32,
-};
-
-const ITEM_BYTE_SIZE = 10;
-const EQUIPMENT_SLOT_COUNT = 12;
-
-function hasEquippedItems(inventory: Uint8Array | null | undefined): boolean {
-  if (!inventory || inventory.length === 0) {
-    return false;
-  }
-
-  for (let slotIndex = 0; slotIndex < EQUIPMENT_SLOT_COUNT; slotIndex += 1) {
-    const start = slotIndex * ITEM_BYTE_SIZE;
-    const end = start + ITEM_BYTE_SIZE;
-
-    if (end > inventory.length) {
-      break;
-    }
-
-    const isEmptySlot = inventory
-      .subarray(start, end)
-      .every((byte) => byte === 0xff);
-    if (!isEmptySlot) {
-      return true;
-    }
-  }
-
-  return false;
-}
+import {
+  getBaseClass,
+  getEquipmentStatus,
+  getResetPoints,
+} from "@/lib/game/characters/reset";
 
 export async function resetCharacterAction(
   _state: ActionState,
@@ -108,7 +79,14 @@ export async function resetCharacterAction(
     };
   }
 
-  if (hasEquippedItems(character.Inventory)) {
+  const equipment = getEquipmentStatus(character.Inventory);
+  if (equipment === "unknown") {
+    return {
+      success: false,
+      message: "Unable to verify equipped items. Please contact support.",
+    };
+  }
+  if (equipment === "equipped") {
     return {
       success: false,
       message:
@@ -127,7 +105,7 @@ export async function resetCharacterAction(
   }
 
   const rawClass = character.Class ?? 0;
-  const defaultClassId = DEFAULT_CLASS_TYPE_BY_SUBCLASS[rawClass] ?? rawClass;
+  const defaultClassId = getBaseClass(rawClass);
 
   const defaultClassType = await prisma.defaultClassType.findUnique({
     where: { Class: defaultClassId },
@@ -151,10 +129,8 @@ export async function resetCharacterAction(
     };
   }
 
-  const newResetCount = currentResets + 1;
   const baseClassPoints = defaultClassType.LevelUpPoint ?? 0;
-  const totalPointsAfterReset =
-    baseClassPoints + newResetCount * POINTS_PER_RESET;
+  const totalPointsAfterReset = getResetPoints(currentResets, baseClassPoints);
 
   await prisma.character.update({
     where: { Name: characterName },

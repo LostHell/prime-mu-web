@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { useState } from "react";
 import { renderToString } from "react-dom/server";
-import { Character } from "@/lib/types/character";
+import { type CharacterWithNextReset } from "@/lib/types/character";
 import { UserPanelProvider } from "../_context/user-panel-context";
 import { ActionPageLayout } from "./action-page-layout";
 import { UserPanelNav } from "./user-panel-nav";
@@ -11,7 +11,7 @@ jest.mock("next/navigation", () => ({
   useRouter: () => ({ push: jest.fn() }),
 }));
 
-const first: Character = {
+const first: CharacterWithNextReset = {
   name: "Knight",
   class: "Dark Knight",
   level: 100,
@@ -20,10 +20,15 @@ const first: Character = {
   pkCount: 0,
   freePoints: 20,
   stats: { str: 30, agi: 20, vit: 25, ene: 10, cmd: 0 },
+  nextReset: null,
 };
-const second: Character = { ...first, name: "Wizard", class: "Dark Wizard" };
+const second: CharacterWithNextReset = {
+  ...first,
+  name: "Wizard",
+  class: "Dark Wizard",
+};
 
-function Draft({ character }: { character: Character }) {
+function Draft({ character }: { character: CharacterWithNextReset }) {
   const [points, setPoints] = useState("");
   return (
     <>
@@ -40,11 +45,12 @@ function Panel({
   characters,
   initialSelectedName,
 }: {
-  characters: Character[];
+  characters: CharacterWithNextReset[];
   initialSelectedName?: string;
 }) {
   return (
     <UserPanelProvider
+      account={{ isOffline: true }}
       characters={characters}
       initialSelectedName={initialSelectedName}
     >

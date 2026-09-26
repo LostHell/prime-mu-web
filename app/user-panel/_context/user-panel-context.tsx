@@ -1,6 +1,9 @@
 "use client";
 
-import { type Character } from "@/lib/types/character";
+import {
+  type AccountConnectionState,
+  type CharacterWithNextReset,
+} from "@/lib/types/character";
 import {
   CHARACTER_SELECTION_COOKIE,
   CHARACTER_SELECTION_MAX_AGE,
@@ -14,9 +17,10 @@ import {
 } from "react";
 
 interface UserPanelContextValue {
-  characters: Character[];
-  selectedCharacter: Character | null;
-  setSelectedCharacter: (character: Character | null) => void;
+  account: AccountConnectionState;
+  characters: CharacterWithNextReset[];
+  selectedCharacter: CharacterWithNextReset | null;
+  setSelectedCharacter: (character: CharacterWithNextReset | null) => void;
   selectCharacterByName: (name: string) => void;
 }
 
@@ -24,12 +28,14 @@ const UserPanelContext = createContext<UserPanelContextValue | null>(null);
 
 interface UserPanelProviderProps {
   children: ReactNode;
-  characters: Character[];
+  account: AccountConnectionState;
+  characters: CharacterWithNextReset[];
   initialSelectedName?: string;
 }
 
 export function UserPanelProvider({
   children,
+  account,
   characters,
   initialSelectedName,
 }: UserPanelProviderProps) {
@@ -40,10 +46,13 @@ export function UserPanelProvider({
     characters.find((character) => character.name === selectedName) ??
     characters[0] ??
     null;
-  const setSelectedCharacter = useCallback((character: Character | null) => {
-    setSelectedName(character?.name ?? null);
-    document.cookie = `${CHARACTER_SELECTION_COOKIE}=${encodeURIComponent(character?.name ?? "")}; Path=/user-panel; Max-Age=${character ? CHARACTER_SELECTION_MAX_AGE : 0}; SameSite=Lax${window.location.protocol === "https:" ? "; Secure" : ""}`;
-  }, []);
+  const setSelectedCharacter = useCallback(
+    (character: CharacterWithNextReset | null) => {
+      setSelectedName(character?.name ?? null);
+      document.cookie = `${CHARACTER_SELECTION_COOKIE}=${encodeURIComponent(character?.name ?? "")}; Path=/user-panel; Max-Age=${character ? CHARACTER_SELECTION_MAX_AGE : 0}; SameSite=Lax${window.location.protocol === "https:" ? "; Secure" : ""}`;
+    },
+    [],
+  );
 
   const selectCharacterByName = useCallback(
     (name: string) => {
@@ -56,6 +65,7 @@ export function UserPanelProvider({
   return (
     <UserPanelContext.Provider
       value={{
+        account,
         characters,
         selectedCharacter,
         setSelectedCharacter,
