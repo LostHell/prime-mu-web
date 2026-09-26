@@ -5,7 +5,11 @@ import { redirect } from "next/navigation";
 import { MarketBrowse } from "./_components/market-browse";
 import { MarketLayout } from "./_components/market-layout";
 import { ResultsPagination } from "@/components/results-pagination";
-import { getPageNumber, type SearchParams } from "@/lib/utils/pagination";
+import {
+  getPageNumber,
+  getSearchQuery,
+  type SearchParams,
+} from "@/lib/utils/pagination";
 import { MAX_SEARCH_LENGTH } from "@/constants/pagination";
 
 export default async function MarketPage({
@@ -20,10 +24,7 @@ export default async function MarketPage({
 
   const params = await searchParams;
   const page = getPageNumber(params.page);
-  const query =
-    typeof params.q === "string"
-      ? params.q.trim().slice(0, MAX_SEARCH_LENGTH)
-      : "";
+  const query = getSearchQuery(params.q, MAX_SEARCH_LENGTH);
   const [result, buyerDeposits] = await Promise.all([
     getAllActiveListings(session.user.id, page, query),
     getAccountDepositAmounts(session.user.id),

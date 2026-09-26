@@ -126,11 +126,12 @@ async function getListingPage(
   page: number,
   query = "",
 ) {
+  const currentPage = Number.isSafeInteger(page) && page > 0 ? page : 1;
   const search = query.trim().slice(0, MAX_SEARCH_LENGTH).toLowerCase();
   const items: MarketListing[] = [];
   let beforeId: number | undefined;
   let matched = 0;
-  const skip = (page - 1) * MARKET_PAGE_SIZE;
+  const skip = (currentPage - 1) * MARKET_PAGE_SIZE;
   // Names are decoded from game bytes, not a database text column. Scan bounded
   // batches so searching includes older listings without loading the catalogue into memory.
   while (items.length <= MARKET_PAGE_SIZE) {

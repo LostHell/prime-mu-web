@@ -1,4 +1,8 @@
-import { getAllActiveListings } from "./get-marketplace-listings";
+import {
+  getAllActiveListings,
+  getMyListings,
+  getMyPurchases,
+} from "./get-marketplace-listings";
 import { prisma } from "@/prisma/prisma";
 import { MARKET_PAGE_SIZE } from "@/constants/pagination";
 
@@ -56,4 +60,49 @@ test("makes older pages reachable with stable ordering and a bounded response", 
   expect(result.items[0].id).toBe(51);
   expect(result.items[0].isOwnListing).toBe(true);
   expect(result.hasNext).toBe(true);
+});
+
+test("reports the final partial page without a next page", async () => {
+  const result = await getAllActiveListings("buyer", 7);
+  expect(result.items.map((item) => item.id)).toEqual([1]);
+  expect(result.hasNext).toBe(false);
+});
+
+test("paginates within the complete filtered result set", async () => {
+  const result = await getAllActiveListings("buyer", 2, "sword");
+  expect(result.items).toHaveLength(MARKET_PAGE_SIZE);
+  expect(result.items[0].id).toBe(126);
+  expect(result.items.at(-1)?.id).toBe(102);
+  expect(result.hasNext).toBe(true);
+});
+
+test("normalizes invalid page arguments at the query boundary", async () => {
+  const result = await getAllActiveListings("buyer", 0);
+  expect(result.items[0].id).toBe(151);
+});
+
+test("scopes listed and sold pages to the authenticated seller", async () => {
+  await getMyListings("account", "sold", 1);
+
+  expect(prisma.marketplaceListing.findMany).toHaveBeenCalledWith(
+    expect.objectContaining({
+      where: expect.objectContaining({
+        sellerAccountId: "account",
+        status: "sold",
+      }),
+    }),
+  );
+});
+
+test("scopes purchase history to the authenticated buyer", async () => {
+  await getMyPurchases("account", 1);
+
+  expect(prisma.marketplaceListing.findMany).toHaveBeenCalledWith(
+    expect.objectContaining({
+      where: expect.objectContaining({
+        buyerAccountId: "account",
+        status: "sold",
+      }),
+    }),
+  );
 });
