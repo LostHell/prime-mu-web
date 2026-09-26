@@ -24,6 +24,8 @@ export interface Character {
   guild?: string;
   zen: number;
   pkCount: number;
+  pkLevel?: number;
+  pkTime?: number;
   freePoints: number;
   stats: CharacterStats;
 }
