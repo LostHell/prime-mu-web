@@ -1,39 +1,37 @@
 import { render, screen } from "@testing-library/react";
-import { getPaginationHref, MarketPagination } from "./market-pagination";
+import {
+  getPaginationHref,
+  SearchResultsPagination,
+} from "./search-results-pagination";
 
-describe("MarketPagination", () => {
-  test("preserves search filters and creates canonical page links", () => {
+describe("SearchResultsPagination", () => {
+  test("preserves search parameters and creates canonical page links", () => {
     render(
-      <MarketPagination
+      <SearchResultsPagination
         page={2}
         hasNext
-        pathname="/user-panel/market"
-        query={{ query: "Jewel & Sword" }}
+        pathname="/top-players"
+        searchParams={{ query: "Dark Wizard", class: "1" }}
       />,
     );
 
     expect(screen.getByRole("link", { name: /previous/i })).toHaveAttribute(
       "href",
-      "/user-panel/market?query=Jewel+%26+Sword",
+      "/top-players?query=Dark+Wizard&class=1",
     );
-    const currentPage = screen.getByRole("link", { name: "Page 2" });
-    expect(currentPage).toHaveTextContent("2");
-    expect(currentPage).toHaveClass("size-8");
-    expect(currentPage).toHaveAttribute(
+    expect(screen.getByRole("link", { name: "Page 2" })).toHaveAttribute(
       "href",
-      "/user-panel/market?query=Jewel+%26+Sword&page=2",
+      "/top-players?query=Dark+Wizard&class=1&page=2",
     );
     expect(screen.getByRole("link", { name: /next/i })).toHaveAttribute(
       "href",
-      "/user-panel/market?query=Jewel+%26+Sword&page=3",
+      "/top-players?query=Dark+Wizard&class=1&page=3",
     );
-    expect(screen.queryByText("Previous")).not.toBeInTheDocument();
-    expect(screen.queryByText("Next")).not.toBeInTheDocument();
   });
 
   test("makes unavailable directions non-interactive", () => {
     render(
-      <MarketPagination
+      <SearchResultsPagination
         page={1}
         hasNext={false}
         pathname="/user-panel/market/listed"

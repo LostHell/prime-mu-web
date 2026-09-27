@@ -6,8 +6,8 @@ import { MarketBrowse } from "./_components/market-browse";
 import { MarketLayout } from "./_components/market-layout";
 import {
   getPaginationHref,
-  MarketPagination,
-} from "./_components/market-pagination";
+  SearchResultsPagination,
+} from "@/components/search-results-pagination";
 import {
   getPageNumber,
   getSearchQuery,
@@ -47,11 +47,11 @@ export default async function MarketPage({
         buyerDeposits={buyerDeposits}
       />
       {result.items.length > 0 && (
-        <MarketPagination
+        <SearchResultsPagination
           page={page}
           hasNext={result.hasNext}
           pathname="/user-panel/market"
-          query={paginationQuery}
+          searchParams={paginationQuery}
         />
       )}
     </MarketLayout>

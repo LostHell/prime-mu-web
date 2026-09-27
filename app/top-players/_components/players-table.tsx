@@ -34,7 +34,7 @@ export default function PlayersTable({
           <FieldLabel htmlFor="player-search">Search players</FieldLabel>
           <Input
             id="player-search"
-            name="q"
+            name="query"
             defaultValue={query}
             maxLength={MAX_SEARCH_LENGTH}
             placeholder="Character name"
@@ -54,9 +54,10 @@ export default function PlayersTable({
             const active =
               (classId === undefined ? "" : String(classId)) === id;
             const params = new URLSearchParams({
-              ...(query ? { q: query } : {}),
+              ...(query ? { query } : {}),
               ...(id ? { class: id } : {}),
             });
+            const search = params.toString();
             return (
               <Button
                 key={id}
@@ -65,7 +66,7 @@ export default function PlayersTable({
                 asChild
               >
                 <Link
-                  href={`/top-players?${params}`}
+                  href={search ? `/top-players?${search}` : "/top-players"}
                   aria-current={active ? "page" : undefined}
                 >
                   {label}
