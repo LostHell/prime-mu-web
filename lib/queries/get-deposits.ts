@@ -102,7 +102,7 @@ export async function getDeposits(accountId: string): Promise<DepositData> {
   });
 
   return {
-    isOffline: (stat?.ConnectStat ?? 0) === 0,
+    isOffline: stat?.ConnectStat === 0,
     items,
   };
 }

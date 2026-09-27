@@ -32,5 +32,5 @@ export async function isAccountOffline(accountId: string): Promise<boolean> {
     select: { ConnectStat: true },
   });
 
-  return (stat?.ConnectStat ?? 0) === 0;
+  return stat?.ConnectStat === 0;
 }

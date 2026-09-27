@@ -1,5 +1,7 @@
 "use server";
 
+import { ActionError, actionErrorMessage } from "@/lib/errors/action-error";
+
 import {
   DEPOSITABLE_ITEMS,
   type AccountDepositItemFields,
@@ -67,7 +69,7 @@ async function depositZen(
       const depositAmount = depositAll ? available : (amount ?? 0);
 
       if (depositAmount <= 0) {
-        throw new Error("Amount must be greater than zero.");
+        throw new ActionError("Amount must be greater than zero.");
       }
 
       const { count } = await tx.warehouse.updateMany({
@@ -76,7 +78,7 @@ async function depositZen(
       });
 
       if (count === 0) {
-        throw new Error(
+        throw new ActionError(
           `Not enough Zen in warehouse. Available: ${available.toLocaleString()}.`,
         );
       }
@@ -93,8 +95,7 @@ async function depositZen(
     revalidatePath("/user-panel/deposits");
     return { success: true, message };
   } catch (err) {
-    const message =
-      err instanceof Error ? err.message : "Failed to deposit Zen.";
+    const message = actionErrorMessage(err, "Failed to deposit Zen.");
     return { success: false, message };
   }
 }
@@ -123,7 +124,7 @@ async function depositItem(
       });
 
       if (!warehouse?.Items) {
-        throw new Error("Warehouse is empty.");
+        throw new ActionError("Warehouse is empty.");
       }
 
       const buffer = Buffer.from(warehouse.Items);
@@ -131,11 +132,11 @@ async function depositItem(
       const depositAmount = depositAll ? available : (amount ?? 0);
 
       if (depositAmount <= 0) {
-        throw new Error("Amount must be greater than zero.");
+        throw new ActionError("Amount must be greater than zero.");
       }
 
       if (available < depositAmount) {
-        throw new Error(
+        throw new ActionError(
           `Not enough ${label} in warehouse. Available: ${available}.`,
         );
       }
@@ -150,7 +151,7 @@ async function depositItem(
       });
 
       if (count === 0) {
-        throw new Error(
+        throw new ActionError(
           "Your warehouse changed while processing this request. Please try again.",
         );
       }
@@ -167,8 +168,7 @@ async function depositItem(
     revalidatePath("/user-panel/deposits");
     return { success: true, message };
   } catch (err) {
-    const message =
-      err instanceof Error ? err.message : `Failed to deposit ${label}.`;
+    const message = actionErrorMessage(err, `Failed to deposit ${label}.`);
     return { success: false, message };
   }
 }

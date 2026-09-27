@@ -1,6 +1,12 @@
 import { ActionError, actionErrorMessage } from "./action-error";
 
 describe("actionErrorMessage", () => {
+  beforeEach(() => {
+    jest.spyOn(console, "error").mockImplementation(() => {});
+  });
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
   test("returns ActionError messages and hides unknown errors", () => {
     expect(
       actionErrorMessage(
@@ -13,7 +19,10 @@ describe("actionErrorMessage", () => {
         new Error("Invalid `prisma.accountDeposit.updateMany()`"),
         "Failed.",
       ),
-    ).toBe("Failed.");
-    expect(actionErrorMessage("nope", "Failed.")).toBe("Failed.");
+    ).toMatch(/^Failed\. Reference: [\w-]+\.$/);
+    expect(actionErrorMessage("nope", "Failed.")).toMatch(
+      /^Failed\. Reference:/,
+    );
+    expect(console.error).toHaveBeenCalled();
   });
 });
