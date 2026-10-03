@@ -13,6 +13,7 @@ import {
 import { CHARACTER_CLASS_BY_ID } from "@/lib/game/constants/characters";
 import { MAX_SEARCH_LENGTH } from "@/constants/pagination";
 import type { TopCharacterEntry } from "@/lib/queries/get-top-characters";
+import Form from "next/form";
 
 export default function PlayersTable({
   characters,
@@ -25,9 +26,9 @@ export default function PlayersTable({
 }) {
   return (
     <div>
-      <form
+      <Form
         action="/top-players"
-        method="get"
+        scroll={false}
         className="mb-4 flex items-end gap-3"
       >
         <Field>
@@ -44,7 +45,7 @@ export default function PlayersTable({
           <input type="hidden" name="class" value={classId} />
         )}
         <Button type="submit">Search</Button>
-      </form>
+      </Form>
       <nav
         aria-label="Filter players by class"
         className="mb-6 flex flex-wrap gap-2"

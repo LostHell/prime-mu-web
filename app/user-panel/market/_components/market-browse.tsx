@@ -26,7 +26,11 @@ export function MarketBrowse({
 }: MarketBrowseProps) {
   return (
     <div className="flex flex-col gap-5">
-      <Form action="/user-panel/market" className="flex items-end gap-3">
+      <Form
+        action="/user-panel/market"
+        scroll={false}
+        className="flex items-end gap-3"
+      >
         <Field>
           <FieldLabel htmlFor="market-search">Search all listings</FieldLabel>
           <Input
