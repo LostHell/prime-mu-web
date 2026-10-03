@@ -132,8 +132,20 @@ export async function resetCharacterAction(
   const baseClassPoints = defaultClassType.LevelUpPoint ?? 0;
   const totalPointsAfterReset = getResetPoints(currentResets, baseClassPoints);
 
-  await prisma.character.update({
-    where: { Name: characterName },
+  const { count } = await prisma.character.updateMany({
+    where: {
+      Name: characterName,
+      AccountID: accountId,
+      cLevel: character.cLevel,
+      ResetCount: currentResets,
+      LevelUpPoint: character.LevelUpPoint,
+      Strength: character.Strength,
+      Dexterity: character.Dexterity,
+      Vitality: character.Vitality,
+      Energy: character.Energy,
+      Inventory: character.Inventory,
+      Money: { gte: resetCost },
+    },
     data: {
       cLevel: defaultClassType.Level ?? 1,
       ResetCount: { increment: 1 },
@@ -149,6 +161,14 @@ export async function resetCharacterAction(
       Experience: 0,
     },
   });
+  if (!count) {
+    revalidatePath("/user-panel", "layout");
+    return {
+      success: false,
+      message:
+        "Your character changed while resetting. Review the refreshed values and try again.",
+    };
+  }
 
   revalidatePath("/user-panel", "layout");
   revalidatePath("/top-players");
