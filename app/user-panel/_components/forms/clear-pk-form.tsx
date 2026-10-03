@@ -15,6 +15,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { clearPkAction } from "@/lib/actions/clear-pk";
 import { type Character } from "@/lib/types/character";
+import { NEUTRAL_PK_LEVEL } from "@/constants/character-rules";
 import { CharacterSection, CharacterValues } from "../character-info";
 import { startTransition, useActionState } from "react";
 
@@ -33,7 +34,10 @@ export function ClearPkForm({ character }: ClearPkFormProps) {
     });
   };
 
-  const hasPk = character.pkCount > 0;
+  const hasPk =
+    character.pkCount > 0 ||
+    (character.pkLevel ?? NEUTRAL_PK_LEVEL) > NEUTRAL_PK_LEVEL ||
+    (character.pkTime ?? 0) > 0;
 
   return (
     <div className="flex flex-col gap-6">
@@ -41,6 +45,7 @@ export function ClearPkForm({ character }: ClearPkFormProps) {
         <CharacterValues
           items={[
             { label: "PK kills", value: character.pkCount },
+            { label: "Requirement", value: "Account offline" },
             {
               label: "Service status",
               value: hasPk ? "Available to clear" : "Nothing to clear",
@@ -57,13 +62,14 @@ export function ClearPkForm({ character }: ClearPkFormProps) {
       {!hasPk ? (
         <Alert>
           <AlertDescription>
-            Your character has no PK kills. Nothing to clear.
+            Your character has no PK penalties to clear.
           </AlertDescription>
         </Alert>
       ) : (
         <div className="flex flex-col gap-4">
           <p className="text-muted-foreground text-sm leading-relaxed">
-            This will remove all Player Killer marks from your character,
+            Disconnect from the game before continuing. This removes Player
+            Killer marks and the remaining penalty timer from your character,
             allowing you to enter towns and interact with NPCs freely.
           </p>
           <AlertDialog>

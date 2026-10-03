@@ -19,6 +19,8 @@ export async function getCharacters(
       ResetCount: true,
       Money: true,
       PkCount: true,
+      PkLevel: true,
+      PkTime: true,
       LevelUpPoint: true,
       Strength: true,
       Dexterity: true,
@@ -72,6 +74,8 @@ export async function getCharacters(
         guild: guilds.get(character.Name),
         zen: character.Money ?? 0,
         pkCount: character.PkCount ?? 0,
+        pkLevel: character.PkLevel ?? undefined,
+        pkTime: character.PkTime ?? 0,
         freePoints: character.LevelUpPoint ?? 0,
         nextReset: defaults
           ? {

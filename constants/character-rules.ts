@@ -13,3 +13,5 @@ export const BASE_CLASS_BY_SUBCLASS: Record<number, number> = {
   33: 32,
 };
 export const EQUIPMENT_SLOT_COUNT = 12;
+/** Neutral PK state matches the Character table and seed data. */
+export const NEUTRAL_PK_LEVEL = 3;

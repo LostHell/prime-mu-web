@@ -4,7 +4,12 @@ import { clearPkSchema } from "@/lib/validation/clear-pk";
 import { ActionState } from "@/lib/types/action-state";
 import { prisma } from "@/prisma/prisma";
 import { revalidatePath } from "next/cache";
-import { getAuthenticatedUser, verifyCharacterOwnership } from "./utils";
+import {
+  getAuthenticatedUser,
+  isAccountOffline,
+  verifyCharacterOwnership,
+} from "./utils";
+import { NEUTRAL_PK_LEVEL } from "@/constants/character-rules";
 
 export async function clearPkAction(
   _state: ActionState,
@@ -34,17 +39,40 @@ export async function clearPkAction(
     return { success: false, message: "Character not found." };
   }
 
-  if ((character.PkCount ?? 0) === 0) {
+  if (!(await isAccountOffline(accountId))) {
+    return {
+      success: false,
+      message: "Your account must be offline to clear PK status.",
+    };
+  }
+
+  if (
+    (character.PkCount ?? 0) === 0 &&
+    (character.PkLevel ?? NEUTRAL_PK_LEVEL) <= NEUTRAL_PK_LEVEL &&
+    (character.PkTime ?? 0) === 0
+  ) {
     return { success: false, message: "Character has no PK kills to clear." };
   }
 
-  await prisma.character.update({
-    where: { Name: characterName },
+  const { count } = await prisma.character.updateMany({
+    where: {
+      Name: characterName,
+      AccountID: accountId,
+      PkCount: character.PkCount,
+      PkLevel: character.PkLevel,
+      PkTime: character.PkTime,
+    },
     data: {
       PkCount: 0,
-      PkLevel: 0,
+      PkLevel: NEUTRAL_PK_LEVEL,
+      PkTime: 0,
     },
   });
+  if (!count)
+    return {
+      success: false,
+      message: "Character status changed. Refresh and try again.",
+    };
 
   revalidatePath("/user-panel", "layout");
   return {
