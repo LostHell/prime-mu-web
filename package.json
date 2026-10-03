@@ -14,7 +14,7 @@
     "format:check": "prettier --check .",
     "format:fix": "prettier --write .",
     "prisma:pull": "prisma db pull",
-    "prisma:generate": "prisma generate"
+    "prisma:generate": "prisma generate --sql"
   },
   "dependencies": {
     "@prisma/adapter-mariadb": "^7.6.0",

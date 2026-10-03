@@ -2,7 +2,7 @@ import { auth } from "@/auth";
 import { getMyListings } from "@/lib/queries/get-marketplace-listings";
 import { redirect } from "next/navigation";
 import { MarketLayout } from "../_components/market-layout";
-import { MarketPagination } from "../_components/market-pagination";
+import { SearchResultsPagination } from "@/components/search-results-pagination";
 import { MyListings } from "./_components/my-listings";
 import { getPageNumber, type SearchParams } from "@/lib/utils/pagination";
 
@@ -28,7 +28,7 @@ export default async function ListedItemsPage({
     <MarketLayout>
       <MyListings listings={listings} />
       {listings.length > 0 && (
-        <MarketPagination
+        <SearchResultsPagination
           page={page}
           hasNext={result.hasNext}
           pathname="/user-panel/market/listed"

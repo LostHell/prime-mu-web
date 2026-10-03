@@ -10,9 +10,9 @@ import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 export function getPaginationHref(
   pathname: string,
   targetPage: number,
-  query: Record<string, string> = {},
+  searchParams: Record<string, string> = {},
 ) {
-  const params = new URLSearchParams(query);
+  const params = new URLSearchParams(searchParams);
   if (targetPage > 1) {
     params.set("page", String(targetPage));
   } else {
@@ -20,24 +20,22 @@ export function getPaginationHref(
   }
 
   const search = params.toString();
-  if (search) {
-    return `${pathname}?${search}`;
-  }
-  return pathname;
+  return search ? `${pathname}?${search}` : pathname;
 }
 
-export function MarketPagination({
+export function SearchResultsPagination({
   page,
   hasNext,
   pathname,
-  query = {},
+  searchParams = {},
 }: {
   page: number;
   hasNext: boolean;
   pathname: string;
-  query?: Record<string, string>;
+  searchParams?: Record<string, string>;
 }) {
-  const href = (target: number) => getPaginationHref(pathname, target, query);
+  const href = (target: number) =>
+    getPaginationHref(pathname, target, searchParams);
   const hasPrevious = page > 1;
   const disabledClassName = "pointer-events-none opacity-50";
 
