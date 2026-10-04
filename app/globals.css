@@ -15,7 +15,7 @@
   --secondary: 230 15% 18%;
   --secondary-foreground: 40 15% 85%;
   --muted: 230 15% 15%;
-  --muted-foreground: 230 10% 50%;
+  --muted-foreground: 230 10% 55%;
   --accent: 270 40% 35%;
   --accent-foreground: 40 15% 90%;
   --destructive: 0 70% 45%;
@@ -31,6 +31,7 @@
   --gold-glow: 45 100% 60%;
   --crimson: 0 70% 45%;
   --online: 130 85% 50%;
+  --success: 130 85% 50%; /* Alert success variant; same green as --online */
   --dark-purple: 270 40% 15%;
   --surface-elevated: 230 20% 14%;
 
@@ -48,11 +49,11 @@
   --mu-tooltip-exc: 145 89% 57%; /* excellent item title (#2FF387) */
   --mu-tooltip-text: 222 38% 72%; /* core stat lines (#9aadd5) */
   --mu-tooltip-line: 219 67% 73%; /* excellent option rows (#8CB0EA) */
+  --mu-tooltip-bg: 0 0% 4.7%; /* tooltip panel (rgb 12 12 12), used at /90 */
 }
 
 @theme inline {
   --font-sans: "Raleway", "Geist", sans-serif;
-  --font-mono: "Geist Mono", "Geist Mono Fallback";
   --font-serif: "Cinzel", serif;
   --color-background: hsl(var(--background));
   --color-foreground: hsl(var(--foreground));
@@ -78,6 +79,7 @@
   --color-gold-glow: hsl(var(--gold-glow));
   --color-crimson: hsl(var(--crimson));
   --color-online: hsl(var(--online));
+  --color-success: hsl(var(--success));
   --color-surface-elevated: hsl(var(--surface-elevated));
   --color-class-dk: hsl(var(--class-dk));
   --color-class-dw: hsl(var(--class-dw));
@@ -87,6 +89,7 @@
   --color-mu-tooltip-exc: hsl(var(--mu-tooltip-exc));
   --color-mu-tooltip-text: hsl(var(--mu-tooltip-text));
   --color-mu-tooltip-line: hsl(var(--mu-tooltip-line));
+  --color-mu-tooltip-bg: hsl(var(--mu-tooltip-bg));
   --radius-sm: calc(var(--radius) - 2px);
   --radius-md: var(--radius);
   --radius-lg: calc(var(--radius) + 2px);

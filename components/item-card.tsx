@@ -138,7 +138,7 @@ export function ItemCard({ item }: ItemCardProps) {
   );
 
   return (
-    <div className="w-56 overflow-hidden rounded-lg bg-[rgba(12,12,12,0.9)] font-sans text-[10px] leading-snug">
+    <div className="bg-mu-tooltip-bg/90 w-56 overflow-hidden rounded-lg font-sans text-[10px] leading-snug">
       <div className="space-y-2 px-1.5 py-2 text-center">
         <div>{title}</div>
 
