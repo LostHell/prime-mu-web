@@ -1,4 +1,5 @@
 "use client";
+import Text from "@/components/ui/text";
 
 import EmptyState from "@/components/empty-state";
 import type { MarketListing as Listing } from "@/lib/queries/get-marketplace-listings";
@@ -29,9 +30,9 @@ export function MyListings({ listings }: MyListingsProps) {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h3 className="text-muted-foreground text-sm font-medium tracking-wider uppercase">
+        <Text variant="section">
           {listings.length} Active Listing{listings.length !== 1 ? "s" : ""}
-        </h3>
+        </Text>
       </div>
 
       <div className="flex flex-col gap-4">

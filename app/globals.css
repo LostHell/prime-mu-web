@@ -1,8 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-@custom-variant dark (&:is(.dark *));
-
 :root {
   --background: 230 25% 7%;
   --foreground: 40 15% 85%;
@@ -15,11 +13,10 @@
   --secondary: 230 15% 18%;
   --secondary-foreground: 40 15% 85%;
   --muted: 230 15% 15%;
-  --muted-foreground: 230 10% 50%;
+  --muted-foreground: 230 10% 55%;
   --accent: 270 40% 35%;
   --accent-foreground: 40 15% 90%;
   --destructive: 0 70% 45%;
-  --destructive-foreground: 0 0% 100%;
   --border: 230 15% 20%;
   --input: 230 15% 20%;
   --ring: 45 90% 50%;
@@ -31,28 +28,19 @@
   --gold-glow: 45 100% 60%;
   --crimson: 0 70% 45%;
   --online: 130 85% 50%;
-  --dark-purple: 270 40% 15%;
-  --surface-elevated: 230 20% 14%;
-
-  /* Class colors — single source of truth */
-  --class-dk: 0 70% 55%;
-  --class-bk: 0 70% 55%;
-  --class-dw: 220 80% 65%;
-  --class-sm: 220 80% 65%;
-  --class-fe: 130 60% 50%;
-  --class-me: 130 60% 50%;
-  --class-mg: 270 70% 65%;
-  --class-dl: 45 90% 55%;
+  --silver: 218 11% 64%; /* 2nd-place podium medal */
+  --bronze: 25 100% 37%; /* 3rd-place podium medal */
+  --success: 130 85% 50%; /* Alert success variant; same green as --online */
 
   /* Item tooltip palette (legacy MU / web shop tooltip look). Used by components/item-card.tsx. */
   --mu-tooltip-exc: 145 89% 57%; /* excellent item title (#2FF387) */
   --mu-tooltip-text: 222 38% 72%; /* core stat lines (#9aadd5) */
   --mu-tooltip-line: 219 67% 73%; /* excellent option rows (#8CB0EA) */
+  --mu-tooltip-bg: 0 0% 4.7%; /* tooltip panel (rgb 12 12 12), used at /90 */
 }
 
 @theme inline {
   --font-sans: "Raleway", "Geist", sans-serif;
-  --font-mono: "Geist Mono", "Geist Mono Fallback";
   --font-serif: "Cinzel", serif;
   --color-background: hsl(var(--background));
   --color-foreground: hsl(var(--foreground));
@@ -69,7 +57,6 @@
   --color-accent: hsl(var(--accent));
   --color-accent-foreground: hsl(var(--accent-foreground));
   --color-destructive: hsl(var(--destructive));
-  --color-destructive-foreground: hsl(var(--destructive-foreground));
   --color-border: hsl(var(--border));
   --color-input: hsl(var(--input));
   --color-ring: hsl(var(--ring));
@@ -78,15 +65,13 @@
   --color-gold-glow: hsl(var(--gold-glow));
   --color-crimson: hsl(var(--crimson));
   --color-online: hsl(var(--online));
-  --color-surface-elevated: hsl(var(--surface-elevated));
-  --color-class-dk: hsl(var(--class-dk));
-  --color-class-dw: hsl(var(--class-dw));
-  --color-class-fe: hsl(var(--class-fe));
-  --color-class-mg: hsl(var(--class-mg));
-  --color-class-dl: hsl(var(--class-dl));
+  --color-silver: hsl(var(--silver));
+  --color-bronze: hsl(var(--bronze));
+  --color-success: hsl(var(--success));
   --color-mu-tooltip-exc: hsl(var(--mu-tooltip-exc));
   --color-mu-tooltip-text: hsl(var(--mu-tooltip-text));
   --color-mu-tooltip-line: hsl(var(--mu-tooltip-line));
+  --color-mu-tooltip-bg: hsl(var(--mu-tooltip-bg));
   --radius-sm: calc(var(--radius) - 2px);
   --radius-md: var(--radius);
   --radius-lg: calc(var(--radius) + 2px);
@@ -99,6 +84,12 @@
   --spacing-icon-md: 1.25rem; /* 20px — pairs with text-base / text-lg */
   --spacing-icon-lg: 1.5rem; /* 24px — pairs with text-lg / text-xl */
   --spacing-icon-xl: 2rem; /* 32px — pairs with text-2xl+ */
+  --spacing-icon-2xl: 3rem; /* 48px — compact empty states */
+  --spacing-icon-3xl: 4rem; /* 64px — display icons (download hero) */
+
+  /* Item tooltip text sizes (legacy MU tooltip). Use as `text-item-title` / `text-item-line`. */
+  --text-item-title: 11px;
+  --text-item-line: 10px;
 }
 
 @layer base {
@@ -140,12 +131,6 @@
     hsl(var(--gold-glow)),
     hsl(var(--gold))
   );
-}
-
-.gold-glow {
-  box-shadow:
-    0 0 20px hsl(var(--gold) / 0.3),
-    0 0 40px hsl(var(--gold) / 0.1);
 }
 
 /* Page background with hero image */
@@ -238,36 +223,16 @@
   }
 }
 
-@keyframes pulse-gold {
-  0%,
-  100% {
-    text-shadow: 0 0 10px hsl(var(--gold) / 0.5);
-  }
-  50% {
-    text-shadow:
-      0 0 20px hsl(var(--gold) / 0.8),
-      0 0 30px hsl(var(--gold) / 0.4);
-  }
-}
-
 .animate-fade-up {
-  animation-fill-mode: backwards;
-  animation: fadeUp 0.6s ease-out forwards;
+  animation: fadeUp 0.6s ease-out both;
 }
 
 .animate-fade-in {
-  animation-fill-mode: backwards;
-  animation: fadeIn 0.6s ease-out forwards;
+  animation: fadeIn 0.6s ease-out both;
 }
 
 .animate-glow {
-  animation-fill-mode: backwards;
   animation: glow 3s ease-in-out infinite;
-}
-
-.animate-pulse-gold {
-  animation-fill-mode: backwards;
-  animation: pulse-gold 2s ease-in-out infinite;
 }
 
 /* Staggered animation delays */
@@ -280,16 +245,9 @@
 .delay-300 {
   animation-delay: 0.3s;
 }
-.delay-400 {
-  animation-delay: 0.4s;
-}
-.delay-500 {
-  animation-delay: 0.5s;
-}
 
 /* Card hover effect */
 .card-hover {
-  animation-fill-mode: backwards;
   transition:
     transform 0.3s ease,
     box-shadow 0.3s ease;
@@ -300,14 +258,6 @@
   box-shadow:
     0 0 30px hsl(var(--gold) / 0.2),
     0 10px 40px hsl(var(--background) / 0.5);
-}
-
-.progress {
-  --progress: attr(data-progress percentage);
-}
-
-.progress-bar {
-  width: var(--progress);
 }
 
 /* Scrollbar */

@@ -65,7 +65,7 @@ export default function Navigation({ items }: NavigationProps) {
                 <DrawerTitle>Menu</DrawerTitle>
                 <DrawerClose>
                   <span className="sr-only">Close</span>
-                  <XIcon className="size-6" aria-hidden="true" />
+                  <XIcon className="size-icon-lg" aria-hidden="true" />
                 </DrawerClose>
               </DrawerHeader>
               <div className="flex flex-col gap-4 p-6">

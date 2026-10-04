@@ -33,16 +33,14 @@ const EmptyState = ({
       {Icon ? (
         variant === "default" ? (
           <div className="bg-muted/30 mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full">
-            <Icon className="text-muted-foreground size-8" />
+            <Icon className="text-muted-foreground size-icon-xl" />
           </div>
         ) : (
-          <Icon className="text-muted-foreground/50 mx-auto mb-3 size-12" />
+          <Icon className="text-muted-foreground/50 size-icon-2xl mx-auto mb-3" />
         )
       ) : null}
 
-      {title ? (
-        <h3 className="mb-2 text-lg font-medium">{title}</h3>
-      ) : null}
+      {title ? <h3 className="mb-2 text-lg font-semibold">{title}</h3> : null}
 
       {description ? (
         <p className="text-muted-foreground mx-auto max-w-sm text-sm">

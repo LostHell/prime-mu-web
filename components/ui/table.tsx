@@ -78,7 +78,7 @@ function TableHead({ className, ...props }: React.ComponentProps<"th">) {
       className={cn(
         // shadcn default: "h-10 px-2 text-left align-middle font-medium whitespace-nowrap text-foreground ..."
         // project: gold uppercase serif label, 0.1em tracking, 12px size (formerly `.table-header-cell`)
-        "text-gold h-10 px-4 py-3 text-left align-middle font-serif text-xs font-medium whitespace-nowrap uppercase [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
+        "text-gold h-10 px-4 py-3 text-left align-middle font-serif text-xs font-semibold whitespace-nowrap uppercase [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
         className,
       )}
       {...props}
@@ -122,6 +122,5 @@ export {
   TableFooter,
   TableHead,
   TableHeader,
-  TableRow
+  TableRow,
 };
-

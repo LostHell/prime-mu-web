@@ -137,7 +137,7 @@ export function UserPanelNav({ onNavigate, className }: UserPanelNavProps) {
                   >
                     <ChevronRight
                       className={cn(
-                        "h-4 w-4 shrink-0",
+                        "size-icon-sm shrink-0",
                         active ? "text-gold" : "text-muted-foreground",
                       )}
                       aria-hidden="true"

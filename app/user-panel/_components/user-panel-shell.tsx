@@ -35,9 +35,7 @@ export function UserPanelShell({ children }: UserPanelShellProps) {
             </div>
           </aside>
 
-          <main className="min-w-0 md:col-span-9">
-            {children}
-          </main>
+          <main className="min-w-0 md:col-span-9">{children}</main>
         </div>
       </PageLayout>
 
@@ -47,7 +45,7 @@ export function UserPanelShell({ children }: UserPanelShellProps) {
             <DrawerTitle>User panel</DrawerTitle>
             <DrawerClose>
               <span className="sr-only">Close</span>
-              <XIcon className="size-6" aria-hidden="true" />
+              <XIcon className="size-icon-lg" aria-hidden="true" />
             </DrawerClose>
           </DrawerHeader>
 

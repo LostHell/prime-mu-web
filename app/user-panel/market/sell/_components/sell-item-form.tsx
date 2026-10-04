@@ -1,4 +1,5 @@
 "use client";
+import Text from "@/components/ui/text";
 
 import { ItemCard } from "@/components/item-card";
 import { ItemIcon } from "@/components/item-icon";
@@ -89,13 +90,10 @@ export function SellItemForm({ warehouseItems }: SellItemFormProps) {
     }));
   };
 
-  const sectionHeadingClass =
-    "text-muted-foreground text-sm font-medium tracking-wider uppercase";
-
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2">
       <div className="flex flex-col gap-4">
-        <h3 className={sectionHeadingClass}>Select Item from Warehouse</h3>
+        <Text variant="section">Select Item from Warehouse</Text>
         <WarehouseGrid
           warehouseItems={warehouseItems}
           selectedSlot={selectedItem?.slot ?? null}
@@ -104,7 +102,7 @@ export function SellItemForm({ warehouseItems }: SellItemFormProps) {
       </div>
 
       <div className="flex flex-col gap-4">
-        <h3 className={sectionHeadingClass}>Set Price</h3>
+        <Text variant="section">Set Price</Text>
         <div className="flex flex-col gap-5">
           <div className="border-border/50 bg-muted/20 relative overflow-visible rounded-xl border p-4">
             <div
@@ -158,7 +156,7 @@ export function SellItemForm({ warehouseItems }: SellItemFormProps) {
                 ) : (
                   <>
                     <div className={selectionIconFrameClass}>
-                      <Package className="text-muted-foreground/50 size-8" />
+                      <Package className="text-muted-foreground/50 size-icon-xl" />
                     </div>
                     <div className="min-w-0 flex-1">
                       <p className="text-muted-foreground text-sm leading-5">
@@ -191,7 +189,7 @@ export function SellItemForm({ warehouseItems }: SellItemFormProps) {
                         </div>
                       ) : (
                         <div className="flex size-8 shrink-0 items-center justify-center">
-                          <Coins className="text-gold-dim size-5" />
+                          <Coins className="text-gold-dim size-icon-md" />
                         </div>
                       )}
                       <span className="w-32 shrink-0 text-sm font-medium">
@@ -245,7 +243,7 @@ export function SellItemForm({ warehouseItems }: SellItemFormProps) {
             <Button disabled={!canSubmit || isPending} className="w-full">
               {isPending ? (
                 <>
-                  <Loader2 className="size-4 animate-spin" />
+                  <Loader2 className="size-icon-sm animate-spin" />
                   <span>Listing...</span>
                 </>
               ) : (
