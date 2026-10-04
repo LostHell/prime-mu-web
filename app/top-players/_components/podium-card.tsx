@@ -1,3 +1,4 @@
+import Text from "@/components/ui/text";
 import { Card, CardContent } from "@/components/ui/card";
 import { TopCharacterEntry } from "@/lib/queries/get-top-characters";
 import { cn } from "@/lib/utils";
@@ -10,16 +11,16 @@ const PODIUM_CONFIG: Record<
   { icon: React.ReactNode; className: string }
 > = {
   1: {
-    icon: <Trophy className="text-gold h-8 w-8" />,
+    icon: <Trophy className="text-gold size-icon-xl" />,
     className: "animate-glow md:-translate-y-3 [animation-delay:0.15s]",
   },
   2: {
-    icon: <Medal className="h-7 w-7 text-gray-400" />,
-    className: "md:translate-y-3 [animation-delay:0s]",
+    icon: <Medal className="text-silver size-icon-lg" />,
+    className: "md:translate-y-3",
   },
   3: {
-    icon: <Medal className="h-6 w-6 text-amber-700 md:mt-4" />,
-    className: "md:translate-y-3 [animation-delay:0.30s]",
+    icon: <Medal className="text-bronze size-icon-md md:mt-4" />,
+    className: "md:translate-y-3",
   },
 };
 
@@ -45,12 +46,10 @@ const PodiumCard = ({ character, position, className }: PodiumCardProps) => {
         </div>
 
         <div className="text-gold mb-2 font-serif text-lg">#{position}</div>
-        <h3 className="text-foreground mb-1 font-serif text-xl font-bold">
+        <Text variant="h4" as="h3" className="mb-1">
           {characterName}
-        </h3>
-        <p className="text-sm">
-          {characterClass}
-        </p>
+        </Text>
+        <p className="text-sm">{characterClass}</p>
 
         <div className="mt-4 grid grid-cols-2 gap-4">
           <div>

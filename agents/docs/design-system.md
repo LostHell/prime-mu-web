@@ -51,7 +51,7 @@ export function Panel() {
 
 ### Use `components/ui/*` primitives for consistent interaction + accessibility
 
-- **Do** use `Button`, `Input`, `Select`, `Sheet`, `Tabs`, etc.
+- **Do** use `Button`, `Input`, `Select`, `Dialog`, `Drawer`, etc.
 - **Avoid** re-implementing basic primitives with raw HTML + custom classes.
 
 Bad:
@@ -160,35 +160,33 @@ export function LoginCTA() {
 
 ## Tokens
 
-All tokens live in `app/globals.css` as HSL channels (`--gold: 45 90% 50%`) and are exposed to Tailwind through `@theme inline` as `--color-*` (use `bg-gold`, `text-gold/80`, …). One theme only: dark. Raw CSS uses `hsl(var(--token))` / `hsl(var(--token) / 0.5)`.
+All tokens live in `app/globals.css` as HSL channels (`--gold: 45 90% 50%`) and are exposed to Tailwind through `@theme inline` as `--color-*` (use `bg-gold`, `text-gold/80`, …). One theme only: dark. Raw CSS uses `hsl(var(--token))` / `hsl(var(--token) / 0.5)`. There is no light theme and no `dark:` variant; don't add `dark:` classes.
 
 ### Colors
 
-| Token                                  | Use                                                                                                                                              |
-| -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `background` / `foreground`            | Page ground and default text.                                                                                                                    |
-| `card`, `popover` (+ `-foreground`)    | Raised panels (with `backdrop-blur-md`); select, menu and toast surfaces.                                                                        |
-| `surface-elevated`                     | One step above `card`.                                                                                                                           |
-| `primary` / `primary-foreground`       | Gold fill + dark ink on it. `primary` = `gold`.                                                                                                  |
-| `secondary`, `muted` (+ `-foreground`) | Low-emphasis fills. `muted-foreground` (55% L, ≈5:1 on `background`) for hints and descriptions.                                                 |
-| `accent` / `accent-foreground`         | Deep purple: info toasts, menu checkbox/radio focus only.                                                                                        |
-| `destructive` / `crimson`              | Errors, offline, class-requirement lines. 3.3:1 on `background`: pair with an icon or word.                                                      |
-| `online` / `success`                   | Server online, success toasts, `Alert variant="success"`. Same green.                                                                            |
-| `border`, `input`, `ring`              | 1px borders (set on `*`), input borders, gold focus ring (used at /50, 3px).                                                                     |
-| `gold`, `gold-dim`, `gold-glow`        | Brand gold: headings, highlighted values, table headers, hover. `gold-dim` for hairlines and quiet borders; `gold-glow` only as a gradient stop. |
-| `class-dk/bk/dw/sm/fe/me/mg/dl`        | Character class identity in rankings only.                                                                                                       |
-| `mu-tooltip-bg/exc/text/line`          | Item tooltip (`ItemCard`) legacy palette: panel at `/90`, excellent title, stat lines, excellent options.                                        |
-| `dark-purple`                          | Defined, currently unused.                                                                                                                       |
+| Token                                  | Use                                                                                                                                                                 |
+| -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `background` / `foreground`            | Page ground and default text.                                                                                                                                       |
+| `card`, `popover` (+ `-foreground`)    | Raised panels (with `backdrop-blur-md`); select, menu and toast surfaces.                                                                                           |
+| `primary` / `primary-foreground`       | Gold fill + dark ink on it. `primary` = `gold`.                                                                                                                     |
+| `secondary`, `muted` (+ `-foreground`) | Low-emphasis fills. `muted-foreground` (55% L, ≈5:1 on `background`) for hints and descriptions.                                                                    |
+| `accent` / `accent-foreground`         | Deep purple: info toasts, menu checkbox/radio focus only.                                                                                                           |
+| `destructive` / `crimson`              | Errors, offline, class-requirement lines. 3.3:1 on `background`: pair with an icon or word.                                                                         |
+| `online` / `success`                   | Server online, success toasts, `Alert variant="success"`. Same green.                                                                                               |
+| `border`, `input`, `ring`              | 1px borders (set on `*`), input borders, gold focus ring (used at /50, 3px).                                                                                        |
+| `gold`, `gold-dim`, `gold-glow`        | Brand gold: headings, highlighted values, table headers, hover. `gold-dim` for hairlines and quiet borders; `gold-glow` only as a gradient stop.                    |
+| `mu-tooltip-bg/exc/text/line`          | Item tooltip (`ItemCard`) legacy palette: panel at `/90`, excellent title, stat lines, excellent options. Sizes: `text-item-title` (11px), `text-item-line` (10px). |
+| `silver` / `bronze`                    | 2nd / 3rd place podium medals.                                                                                                                                      |
 
 ### Type
 
-- `font-serif` = **Cinzel** (600/700): `Text` variants `hero`, `h1`–`h4` (always `gold-gradient-text`), all `h1`–`h6`, `Button decorative`, table headers.
+- `font-serif` = **Cinzel** (600/700 only — never `font-medium`): `Text` variants `hero`, `h1`–`h4` (always `gold-gradient-text`) and `section`, all `h1`–`h6`, `Button decorative`, table headers.
 - `font-sans` = **Raleway** (400–700): everything else. Default.
 - No mono font is loaded.
 
 ### Spacing and sizing
 
-- Tailwind 0.25rem unit. Controls (button, input, select, tab list, menu item) default to `h-12` (48px); `sm` `h-10`, `xs` `h-8`, `lg` `h-14`.
+- Tailwind 0.25rem unit. Controls (button, input, select, tab list, menu item) default to `h-12` (48px); `sm` `h-10`. Button sizes: `default`, `sm`, `icon` (48px square), `icon-xs` (32px square).
 - Cards: `py-5`, `gap-5`, sections `px-6`. Table cells `px-4 py-3`.
 - `PageLayout`: `public` `max-w-5xl py-28`, `auth` `max-w-md py-28`, `panel` `max-w-5xl py-8`.
 
@@ -201,7 +199,7 @@ Single source: `--radius` in `app/globals.css` (**`0.25rem`**). Tailwind exposes
 
 ### Depth and ornament
 
-- Depth is gold glow, not drop shadow: `Card enableGlow`, `.gold-glow`, `.animate-glow`, `.card-hover`. Popovers use `shadow-lg shadow-black/20`.
+- Depth is gold glow, not drop shadow: `.animate-glow` (pulsing, e.g. the 1st-place podium card) and `.card-hover` (lift + glow on hover). Popovers use `shadow-lg shadow-black/20`.
 - Section breaks: `Divider` (gold diamond) between major sections; `OrnamentLine` (fading `gold-dim` hairline) for quiet separation.
 
 ## Components
@@ -212,11 +210,11 @@ Use the primitive before writing markup:
 | ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Action     | `Button` (`default` gold gradient for the one primary action, `outline` for the secondary, `decorative` only on real CTAs; `secondary`, `ghost`, `destructive`, `link`) |
 | Form       | `Field*` + `Input` / `Select` / `Label`, errors via `FieldError`                                                                                                        |
-| Panel      | `Card` (`enableGlow` for the featured block)                                                                                                                            |
-| Lists      | `Table` (gold Cinzel headers), `Pagination` / `SearchResultsPagination`, `Tabs`                                                                                         |
+| Panel      | `Card`                                                                                                                                                                  |
+| Lists      | `Table` (gold Cinzel headers), `Pagination` / `SearchResultsPagination`                                                                                                 |
 | Messages   | `Alert` (persistent), `toast.*` from `sonner` (transient), `EmptyState`                                                                                                 |
-| Overlays   | `Dialog`, `AlertDialog` (confirm before irreversible actions), `Sheet`, `Drawer`, `DropdownMenu`, `Tooltip`, `HoverCard`                                                |
-| Text       | `Text` + `Headline`; never style raw `h1`–`h4`                                                                                                                          |
+| Overlays   | `Dialog`, `AlertDialog` (confirm before irreversible actions), `Drawer`. For item hover use `ItemTooltip`.                                                              |
+| Text       | `Text` + `Headline`; never style raw `h1`–`h6`. Small uppercase section labels: `<Text variant="section">` (renders `h3`; pass `as="h2"` if needed).                    |
 | Game items | `ItemIcon`, `ItemTooltip` + `ItemCard`, `WarehouseGrid`                                                                                                                 |
 
 ## Typography weight scale
@@ -238,19 +236,21 @@ Only the weights actually used in JSX are pre-loaded. Add a weight here _before_
 
 ## Icon size scale
 
-Icon sizes are tokenized in `app/globals.css` (`--spacing-icon-{xs,sm,md,lg,xl}`) and surfaced as Tailwind utilities `size-icon-xs`, `size-icon-sm`, `size-icon-md`, `size-icon-lg`, `size-icon-xl`. Use them on `lucide-react` icons and inline SVGs to keep them visually paired with the text they sit next to.
+Icon sizes are tokenized in `app/globals.css` (`--spacing-icon-{xs,sm,md,lg,xl,2xl,3xl}`) and surfaced as Tailwind utilities `size-icon-xs` … `size-icon-3xl`. Use them on `lucide-react` icons and inline SVGs to keep them visually paired with the text they sit next to.
 
-| Token          | Value     | Pair with text class   | Typical use                                            |
-| -------------- | --------- | ---------------------- | ------------------------------------------------------ |
-| `size-icon-xs` | `0.75rem` | `text-xs`              | Inline icons inside chips, badges, tabular labels.     |
-| `size-icon-sm` | `1rem`    | `text-sm`, `text-base` | Buttons, form fields, body copy.                       |
-| `size-icon-md` | `1.25rem` | `text-base`, `text-lg` | Card actions, alerts, table-row affordances.           |
-| `size-icon-lg` | `1.5rem`  | `text-lg`, `text-xl`   | Section headers (e.g. blood-castle / devil-square h3). |
-| `size-icon-xl` | `2rem`    | `text-2xl` and above   | Empty-state and large hero icons.                      |
+| Token           | Value     | Pair with text class   | Typical use                                            |
+| --------------- | --------- | ---------------------- | ------------------------------------------------------ |
+| `size-icon-xs`  | `0.75rem` | `text-xs`              | Inline icons inside chips, badges, tabular labels.     |
+| `size-icon-sm`  | `1rem`    | `text-sm`, `text-base` | Buttons, form fields, body copy.                       |
+| `size-icon-md`  | `1.25rem` | `text-base`, `text-lg` | Card actions, alerts, table-row affordances.           |
+| `size-icon-lg`  | `1.5rem`  | `text-lg`, `text-xl`   | Section headers (e.g. blood-castle / devil-square h3). |
+| `size-icon-xl`  | `2rem`    | `text-2xl` and above   | Empty-state and large hero icons.                      |
+| `size-icon-2xl` | `3rem`    | —                      | Compact empty-state icon.                              |
+| `size-icon-3xl` | `4rem`    | —                      | Display icons (download hero).                         |
 
 - **Do** prefer a token (`size-icon-md`) over arbitrary `size-5` / `h-5 w-5` literals.
 - **Avoid** mixing icon size with text size that doesn't pair (e.g. `size-icon-xl` next to `text-xs`). Pick the row in the table above and stay on it.
-- **Exception:** primitives in `components/ui/*` may use `size-{n}` literals to match shadcn defaults; app code should prefer the token.
+- **Exception:** primitives in `components/ui/*` may use `size-{n}` literals to match shadcn defaults; app code uses the token. Skeleton bars and image frames are not icons and may use plain sizes.
 
 ## Tailwind class ordering
 

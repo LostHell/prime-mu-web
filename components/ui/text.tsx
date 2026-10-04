@@ -12,6 +12,8 @@ const textVariants = cva("font-sans text-foreground", {
       h4: "font-serif text-xl md:text-2xl font-semibold gold-gradient-text",
       subtitle: "text-lg md:text-xl uppercase text-foreground",
       small: "text-sm text-muted-foreground",
+      section:
+        "font-serif text-sm font-semibold tracking-wider uppercase text-muted-foreground",
       p: "text-base md:text-lg",
     },
   },
@@ -34,6 +36,7 @@ const tagMap = {
   h4: "h4",
   subtitle: "p",
   small: "p",
+  section: "h3",
   p: "p",
 } as const;
 

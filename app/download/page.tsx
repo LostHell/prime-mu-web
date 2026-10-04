@@ -29,15 +29,13 @@ const DownloadPage = () => {
   return (
     <PageLayout>
       <Headline className="text-center">
-        <Text variant="h1">
-          Download Client
-        </Text>
+        <Text variant="h1">Download Client</Text>
         <Text variant="p">Get started in minutes</Text>
       </Headline>
 
       <Card className="mb-8 text-center">
         <CardContent>
-          <Download className="text-gold mx-auto mb-6 h-16 w-16" />
+          <Download className="text-gold size-icon-3xl mx-auto mb-6" />
           <Text variant="h3" as="h2" className="mb-2">
             {BRAND} Full Client
           </Text>
@@ -78,12 +76,14 @@ const DownloadPage = () => {
 
         <Card>
           <CardContent>
-            <Text variant="h3" className="mb-2">Installation Guide</Text>
+            <Text variant="h3" className="mb-2">
+              Installation Guide
+            </Text>
             <OrnamentLine className="my-4" />
             <div className="space-y-3">
               {steps.map((step, i) => (
                 <div key={i} className="flex items-start gap-3">
-                  <CheckCircle className="text-gold mt-0.5 h-5 w-5 shrink-0" />
+                  <CheckCircle className="text-gold size-icon-md mt-0.5 shrink-0" />
                   <span className="text-foreground text-sm">{step}</span>
                 </div>
               ))}

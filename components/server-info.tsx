@@ -10,7 +10,7 @@ const ServerInfo = async () => {
     100,
   );
 
-  const widthClass = { 
+  const widthClass = {
     0: "w-0",
     10: "w-[10%]",
     20: "w-[20%]",
@@ -31,7 +31,7 @@ const ServerInfo = async () => {
       <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
         {/* Online Players — with capacity progress bar */}
         <Card className="card-hover gap-0 p-6 text-center">
-          <Users className="text-gold mx-auto mb-2 h-6 w-6" />
+          <Users className="text-gold size-icon-lg mx-auto mb-2" />
           <div className="gold-gradient-text text-2xl font-bold">
             {serverInfo.online}
             <span className="text-muted-foreground text-sm font-normal">
@@ -63,7 +63,7 @@ const ServerInfo = async () => {
             key={i}
             className={`card-hover animate-fade-up gap-0 p-6 text-center ${animationDelay[i]}`}
           >
-            <stat.icon className="text-gold mx-auto mb-2 h-6 w-6" />
+            <stat.icon className="text-gold size-icon-lg mx-auto mb-2" />
             <div className="gold-gradient-text text-2xl font-bold">
               {stat.value}
             </div>

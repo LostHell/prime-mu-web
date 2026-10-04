@@ -5,7 +5,7 @@ import { KeyboardEvent } from "react";
 import { HeaderNavItem } from "./types";
 
 const base =
-  "font-serif text-sm uppercase tracking-[0.1em] transition-all duration-300 ease-out";
+  "font-serif text-sm uppercase tracking-widest transition-all duration-300 ease-out";
 
 const inactive =
   "text-muted-foreground hover:text-gold hover:[text-shadow:0_0_10px_hsl(var(--gold)/0.5)]";

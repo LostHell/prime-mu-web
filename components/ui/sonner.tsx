@@ -8,7 +8,6 @@ import {
   OctagonXIcon,
   TriangleAlertIcon,
 } from "lucide-react";
-import { useTheme } from "next-themes";
 import { Toaster as Sonner, type ToasterProps } from "sonner";
 
 /** Sonner reads these as full CSS colors — use hsl(var(--token)), not raw theme channels. */
@@ -43,11 +42,9 @@ const defaultToastClassNames: NonNullable<
 };
 
 const Toaster = ({ toastOptions, ...props }: ToasterProps) => {
-  const { theme = "system" } = useTheme();
-
   return (
     <Sonner
-      theme={theme as ToasterProps["theme"]}
+      theme="dark"
       className="toaster group"
       closeButton
       richColors={false}

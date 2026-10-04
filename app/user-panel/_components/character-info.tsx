@@ -1,3 +1,4 @@
+import Text from "@/components/ui/text";
 import { type ReactNode } from "react";
 
 export function CharacterSection({
@@ -9,7 +10,9 @@ export function CharacterSection({
 }) {
   return (
     <section className="flex flex-col gap-4">
-      <h2 className="text-sm font-semibold">{title}</h2>
+      <Text variant="section" as="h2">
+        {title}
+      </Text>
       {children}
     </section>
   );
