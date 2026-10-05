@@ -200,6 +200,7 @@ CREATE TABLE `OptionData` (
 CREATE TABLE `RankingBloodCastle` (
 	`Name` VARCHAR(10) NOT NULL,
 	`Score` INT UNSIGNED NULL,
+	`MonthlyScore` INT UNSIGNED NOT NULL DEFAULT 0,
 	CONSTRAINT PK_RankingBloodCastle PRIMARY KEY (`Name`)
 );
 
@@ -209,6 +210,7 @@ CREATE TABLE `RankingBloodCastle` (
 CREATE TABLE `RankingDevilSquare` (
 	`Name` VARCHAR(10) NOT NULL,
 	`Score` INT UNSIGNED NULL,
+	`MonthlyScore` INT UNSIGNED NOT NULL DEFAULT 0,
 	CONSTRAINT PK_RankingDevilSquare PRIMARY KEY (`Name`)
 );
 
@@ -244,6 +246,64 @@ CREATE TABLE `warehouse` (
 );
 
 -- ----------------------------------------------------------------------------
+-- Table AFK_CreditReward
+-- ----------------------------------------------------------------------------
+
+CREATE TABLE `AFK_CreditReward` (
+	`AccountID` VARCHAR(10) NOT NULL,
+	`DaviasEnterTime` DATETIME NULL,
+	`DaviasNextRewardTime` DATETIME NULL,
+	`DaviasLastRewardTime` DATETIME NULL,
+	`ArenaEnterTime` DATETIME NULL,
+	`ArenaNextRewardTime` DATETIME NULL,
+	`ArenaLastRewardTime` DATETIME NULL,
+	`Credits` INT NOT NULL DEFAULT 0,
+	CONSTRAINT PK_AFK_CreditReward PRIMARY KEY (`AccountID`)
+);
+
+
+-- ----------------------------------------------------------------------------
+-- Table MarketplaceListing
+-- ----------------------------------------------------------------------------
+CREATE TABLE `MarketplaceListing` (
+	`id` INT NOT NULL AUTO_INCREMENT,
+	`sellerAccountId` VARCHAR(10) NOT NULL,
+	`sellerCharacter` VARCHAR(10) NOT NULL,
+	`itemHex` VARBINARY(32) NOT NULL,
+	`Zen` INT UNSIGNED NOT NULL DEFAULT 0,
+	`Rena` INT UNSIGNED NOT NULL DEFAULT 0,
+	`JewelOfBless` INT UNSIGNED NOT NULL DEFAULT 0,
+	`JewelOfSoul` INT UNSIGNED NOT NULL DEFAULT 0,
+	`JewelOfLife` INT UNSIGNED NOT NULL DEFAULT 0,
+	`JewelOfCreation` INT UNSIGNED NOT NULL DEFAULT 0,
+	`JewelOfChaos` INT UNSIGNED NOT NULL DEFAULT 0,
+	`listedAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	`status` VARCHAR(10) NOT NULL DEFAULT 'active',
+	`buyerAccountId` VARCHAR(10) NULL,
+	`buyerCharacter` VARCHAR(10) NULL,
+	`soldAt` DATETIME NULL,
+	CONSTRAINT PK_MarketplaceListing PRIMARY KEY (`id`)
+);
+
+CREATE INDEX IX_MarketplaceListing_Status ON MarketplaceListing (status);
+CREATE INDEX IX_MarketplaceListing_Seller ON MarketplaceListing (sellerAccountId);
+
+-- ----------------------------------------------------------------------------
+-- Table AccountDeposit
+-- ----------------------------------------------------------------------------
+CREATE TABLE `AccountDeposit` (
+	`AccountID` VARCHAR(10) NOT NULL,
+	`Zen` BIGINT UNSIGNED NOT NULL DEFAULT 0,
+	`Rena` INT UNSIGNED NOT NULL DEFAULT 0,
+	`JewelOfBless` INT UNSIGNED NOT NULL DEFAULT 0,
+	`JewelOfSoul` INT UNSIGNED NOT NULL DEFAULT 0,
+	`JewelOfLife` INT UNSIGNED NOT NULL DEFAULT 0,
+	`JewelOfCreation` INT UNSIGNED NOT NULL DEFAULT 0,
+	`JewelOfChaos` INT UNSIGNED NOT NULL DEFAULT 0,
+	CONSTRAINT PK_AccountDeposit PRIMARY KEY (`AccountID`)
+);
+
+-- ----------------------------------------------------------------------------
 -- Poblate table DefaultClassType with default values
 -- ----------------------------------------------------------------------------
 
@@ -268,15 +328,15 @@ BEGIN
 
 	SELECT S.memb___id INTO @find_id
 	FROM `MEMB_STAT` S INNER JOIN `MEMB_INFO` I ON S.memb___id = I.memb___id
-	WHERE I.memb___id = `inAccountID`;
+	WHERE I.memb___id = inAccountID;
 
 	IF (@find_id = 'NOT') THEN
 		INSERT INTO `MEMB_STAT` (memb___id, ConnectStat, ServerName, IP, ConnectTM)
-		VALUES (`inAccountID`, @ConnectStat, `inServerName`, `inIpAddress`, NOW());
+		VALUES (inAccountID, @ConnectStat, inServerName, inIpAddress, NOW());
 	ELSE
 		UPDATE `MEMB_STAT`
-		SET ConnectStat = @ConnectStat, ServerName = `inServerName`, IP = `inIpAddress`, ConnectTM = NOW()
-		WHERE memb___id = `inAccountID`;
+		SET ConnectStat = @ConnectStat, ServerName = inServerName, IP = inIpAddress, ConnectTM = NOW()
+		WHERE memb___id = inAccountID;
 	END IF;
 END $$
 
@@ -293,7 +353,12 @@ CREATE PROCEDURE `WZ_DISCONNECT_MEMB`(
 BEGIN
 	UPDATE `MEMB_STAT`
 	SET ConnectStat = 0, DisConnectTM = NOW(), OnlineHours = OnlineHours + TIMESTAMPDIFF(HOUR, ConnectTM, NOW())
-	WHERE memb___id = `inAccountID`;
+	WHERE memb___id = inAccountID;
+
+	UPDATE `AFK_CreditReward`
+	SET DaviasEnterTime = NULL, DaviasNextRewardTime = NULL, DaviasLastRewardTime = NULL,
+	    ArenaEnterTime = NULL, ArenaNextRewardTime = NULL, ArenaLastRewardTime = NULL
+	WHERE AccountID = inAccountID;
 END $$
 
 DELIMITER ;
@@ -309,7 +374,7 @@ CREATE PROCEDURE `WZ_DesblocAccount`(
 BEGIN
 	UPDATE `MEMB_INFO`
 	SET bloc_code = 0
-	WHERE memb___id = `inAccountID` AND bloc_code = 1 AND bloc_expire < NOW();
+	WHERE memb___id = inAccountID AND bloc_code = 1 AND bloc_expire < NOW();
 END $$
 
 DELIMITER ;
@@ -325,7 +390,7 @@ CREATE PROCEDURE `WZ_DesblocCharacters`(
 BEGIN
 	UPDATE `Character`
 	SET CtlCode = 0
-	WHERE AccountID = `inAccountID` AND CtlCode = 1 AND bloc_expire < NOW();
+	WHERE AccountID = inAccountID AND CtlCode = 1 AND bloc_expire < NOW();
 END $$
 
 DELIMITER ;
@@ -341,14 +406,14 @@ CREATE PROCEDURE `WZ_GetAccountLevel` (
 BEGIN
 	SELECT AccountLevel, AccountExpireDate INTO @CurrentAccountLevel, @CurrentAccountExpireDate
 	FROM `MEMB_INFO`
-	WHERE memb___id = `inAccountID`;
+	WHERE memb___id = inAccountID;
 
 	IF (@CurrentAccountLevel <> 0 AND NOW() >= @CurrentAccountExpireDate) THEN
 		SET @CurrentAccountLevel = 0;
 
 		UPDATE `MEMB_INFO`
 		SET AccountLevel = 0
-		WHERE memb___id = `inAccountID`;
+		WHERE memb___id = inAccountID;
 	END IF;
 
 	SELECT @CurrentAccountLevel AS AccountLevel, @CurrentAccountExpireDate AS AccountExpireDate;
@@ -369,18 +434,18 @@ CREATE PROCEDURE `WZ_SetAccountLevel`(
 BEGIN
 	SELECT AccountLevel, AccountExpireDate INTO @CurrentAccountLevel, @CurrentAccountExpireDate
 	FROM `MEMB_INFO`
-	WHERE memb___id = `inAccountID`;
+	WHERE memb___id = inAccountID;
 
-	IF (@CurrentAccountLevel = `inAccountLevel`) THEN
-		SET @CurrentAccountExpireDate = DATE_ADD(@CurrentAccountExpireDate, INTERVAL `inAccountExpireTime` SECOND);
+	IF (@CurrentAccountLevel = inAccountLevel) THEN
+		SET @CurrentAccountExpireDate = DATE_ADD(@CurrentAccountExpireDate, INTERVAL inAccountExpireTime SECOND);
 	ELSE
-		SET @CurrentAccountLevel = `inAccountLevel`;
-		SET @CurrentAccountExpireDate = DATE_ADD(NOW(), INTERVAL `inAccountExpireTime` SECOND);
+		SET @CurrentAccountLevel = inAccountLevel;
+		SET @CurrentAccountExpireDate = DATE_ADD(NOW(), INTERVAL inAccountExpireTime SECOND);
 	END IF;
 
 	UPDATE `MEMB_INFO`
 	SET AccountLevel = @CurrentAccountLevel, AccountExpireDate = @CurrentAccountExpireDate
-	WHERE memb___id = `inAccountID`;
+	WHERE memb___id = inAccountID;
 END $$
 
 DELIMITER ;
@@ -408,15 +473,15 @@ BEGIN
 	-- -- Return 2 will show: 'No more characters can be created.'
 	SET @Result = 1;
 
-	IF EXISTS (SELECT 1 FROM `Character` WHERE Name = `inCharName`) THEN
+	IF EXISTS (SELECT 1 FROM `Character` WHERE Name = inCharName) THEN
 		SET @Result = 0;
 	ELSE
 		START TRANSACTION;
-		IF NOT EXISTS (SELECT 1 FROM `AccountCharacter` WHERE Id = `inAccountID`) THEN
-			INSERT INTO `AccountCharacter` (Id) VALUES (`inAccountID`);
+		IF NOT EXISTS (SELECT 1 FROM `AccountCharacter` WHERE Id = inAccountID) THEN
+			INSERT INTO `AccountCharacter` (Id) VALUES (inAccountID);
 		ELSEIF NOT EXISTS (
 				SELECT 1 FROM `AccountCharacter`
-				WHERE Id = `inAccountID`
+				WHERE Id = inAccountID
 					AND (GameID1 IS NULL
 						OR GameID2 IS NULL
 						OR GameID3 IS NULL
@@ -431,8 +496,8 @@ BEGIN
 			ROLLBACK;
 		ELSE
 			INSERT INTO `Character` (AccountID, Name, cLevel, LevelUpPoint, Class, Strength, Dexterity, Vitality, Energy, Inventory, MagicList, Life, MaxLife, Mana, MaxMana, BP, MaxBP, MapNumber, MapPosX, MapPosY, Quest, EffectList)
-			SELECT `inAccountID`, `inCharName`, Level, LevelUpPoint, `inCharClass`, Strength, Dexterity, Vitality, Energy, Inventory, MagicList, Life, MaxLife, Mana, MaxMana, 0, 0, MapNumber, MapPosX, MapPosY, Quest, EffectList
-			FROM `DefaultClassType` WHERE Class = `inCharClass`;
+			SELECT inAccountID, inCharName, Level, LevelUpPoint, inCharClass, Strength, Dexterity, Vitality, Energy, Inventory, MagicList, Life, MaxLife, Mana, MaxMana, 0, 0, MapNumber, MapPosX, MapPosY, Quest, EffectList
+			FROM `DefaultClassType` WHERE Class = inCharClass;
 			COMMIT;
 		END IF;
 	END IF;
@@ -461,14 +526,14 @@ BEGIN
 	-- -- Return 3 will show: 'This is an item-blocked character.'
 	SET @Result = 1;
 
-	IF NOT EXISTS (SELECT 1 FROM `Character` WHERE Name = `inCharName`) THEN
+	IF NOT EXISTS (SELECT 1 FROM `Character` WHERE Name = inCharName) THEN
 		SET @Result = 0;
 	ELSE
-		DELETE FROM `Character` WHERE AccountID = `inAccountID` AND Name = `inCharName`;
-		DELETE FROM `ResetInfo` WHERE Name = `inCharName`;
-		DELETE FROM `OptionData` WHERE Name = `inCharName`;
-		DELETE FROM `RankingBloodCastle` WHERE Name = `inCharName`;
-		DELETE FROM `RankingDevilSquare` WHERE Name = `inCharName`;
+		DELETE FROM `Character` WHERE AccountID = inAccountID AND Name = inCharName;
+		DELETE FROM `ResetInfo` WHERE Name = inCharName;
+		DELETE FROM `OptionData` WHERE Name = inCharName;
+		DELETE FROM `RankingBloodCastle` WHERE Name = inCharName;
+		DELETE FROM `RankingDevilSquare` WHERE Name = inCharName;
 
 		UPDATE AccountCharacter
 			SET GameID1 = NULLIF(GameID1, @inCharName),
@@ -520,13 +585,13 @@ BEGIN
 	START TRANSACTION;
 
 	INSERT INTO `Guild` (G_Name, G_Master)
-	VALUES (`inGuildName`, `inCharName`);
+	VALUES (inGuildName, inCharName);
 
 	IF (ROW_COUNT() = 0) THEN
 		SET @ErrorCode = 6;
 	ELSE
 		INSERT INTO `GuildMember` (Name, G_Name)
-		VALUES (`inCharName`, `inGuildName`);
+		VALUES (inCharName, inGuildName);
 
 		IF (ROW_COUNT() = 0) THEN
 			SET @ErrorCode = 6;
@@ -570,13 +635,13 @@ BEGIN
 	START TRANSACTION;
 
 	DELETE FROM `GuildMember`
-	WHERE G_Name = `inGuildName`;
+	WHERE G_Name = inGuildName;
 
 	IF (ROW_COUNT() = 0) THEN
 		SET @Result = 3;
 	ELSE
 		DELETE FROM `Guild`
-		WHERE G_Name = `inGuildName`;
+		WHERE G_Name = inGuildName;
 
 		IF (ROW_COUNT() = 0) THEN
 			SET @Result = 3;
@@ -604,32 +669,32 @@ CREATE PROCEDURE `WZ_GetGrandResetInfo` (
 	IN inCharName VARCHAR(10)
 )
 BEGIN
-	IF NOT EXISTS (SELECT * FROM `ResetInfo` WHERE Name = `inCharName`) THEN
-		INSERT INTO `ResetInfo` (Name) VALUES (`inCharName`);
+	IF NOT EXISTS (SELECT * FROM `ResetInfo` WHERE Name = inCharName) THEN
+		INSERT INTO `ResetInfo` (Name) VALUES (inCharName);
 	END IF;
 
 	SELECT GrandResetCount INTO @GrandReset
 	FROM `Character`
-	WHERE AccountID = `inAccountID` AND Name = `inCharName`;
+	WHERE AccountID = inAccountID AND Name = inCharName;
 
 	SELECT GrandResetDay, GrandResetDayDate, GrandResetWek, GrandResetWekDate, GrandResetMon, GrandResetMonDate
 	INTO @GrandResetDay, @GrandResetDayDate, @GrandResetWek, @GrandResetWekDate, @GrandResetMon, @GrandResetMonDate
 	FROM `ResetInfo`
-	WHERE Name = `InCharName`;
+	WHERE Name = InCharName;
 
 	IF DATEDIFF(NOW(), @GrandResetDayDate) > 0 THEN
 		SET @GrandResetDay = 0;
-		UPDATE `ResetInfo` SET GrandResetDay = 0 WHERE Name = `InCharName`;
+		UPDATE `ResetInfo` SET GrandResetDay = 0 WHERE Name = InCharName;
 	END IF;
 
 	IF DATEDIFF(NOW(), @GrandResetWekDate) > 0 THEN
 		SET @GrandResetWek = 0;
-		UPDATE `ResetInfo` SET GrandResetWek = 0 WHERE Name = `InCharName`;
+		UPDATE `ResetInfo` SET GrandResetWek = 0 WHERE Name = InCharName;
 	END IF;
 
 	IF DATEDIFF(NOW(), @GrandResetMonDate) > 0 THEN
 		SET @GrandResetMon = 0;
-		UPDATE `ResetInfo` SET GrandResetMon = 0 WHERE Name = `InCharName`;
+		UPDATE `ResetInfo` SET GrandResetMon = 0 WHERE Name = InCharName;
 	END IF;
 
 	SELECT @GrandReset AS GrandReset, @GrandResetDay AS GrandResetDay, @GrandResetWek AS GrandResetWek, @GrandResetMon AS GrandResetMon;
@@ -660,14 +725,14 @@ BEGIN
 	START TRANSACTION;
 
 	UPDATE `Character`
-	SET ResetCount = `inReset`, GrandResetCount = `inGrandReset`
-	WHERE AccountID = `inAccountID` AND Name = `inCharName`;
+	SET ResetCount = inReset, GrandResetCount = inGrandReset
+	WHERE AccountID = inAccountID AND Name = inCharName;
 
 	UPDATE `ResetInfo`
-	SET GrandResetDay = `inGrandResetDay`, GrandResetDayDate = NOW(),
-		GrandResetWek = `inGrandResetWek`, GrandResetWekDate = NOW(),
-		GrandResetMon = `inGrandResetMon`, GrandResetMonDate = NOW()
-	WHERE Name = `inCharName`;
+	SET GrandResetDay = inGrandResetDay, GrandResetDayDate = NOW(),
+		GrandResetWek = inGrandResetWek, GrandResetWekDate = NOW(),
+		GrandResetMon = inGrandResetMon, GrandResetMonDate = NOW()
+	WHERE Name = inCharName;
 
 	COMMIT;
 END $$
@@ -684,32 +749,32 @@ CREATE PROCEDURE `WZ_GetResetInfo`(
 	IN inCharName VARCHAR(10)
 )
 BEGIN
-	IF NOT EXISTS (SELECT * FROM `ResetInfo` WHERE Name = `inCharName`) THEN
-		INSERT INTO `ResetInfo` (Name) VALUES (`inCharName`);
+	IF NOT EXISTS (SELECT * FROM `ResetInfo` WHERE Name = inCharName) THEN
+		INSERT INTO `ResetInfo` (Name) VALUES (inCharName);
 	END IF;
 
 	SELECT ResetCount INTO @ResetCount
 	FROM `Character`
-	WHERE AccountID = `inAccountID` AND Name = `inCharName`;
+	WHERE AccountID = inAccountID AND Name = inCharName;
 
 	SELECT ResetDay, ResetDayDate, ResetWek, ResetWekDate, ResetMon, ResetMonDate
 	INTO @ResetDay, @ResetDayDate, @ResetWek, @ResetWekDate, @ResetMon, @ResetMonDate
 	FROM `ResetInfo`
-	WHERE Name = `inCharName`;
+	WHERE Name = inCharName;
 
 	IF DATEDIFF(NOW(), @ResetDayDate) > 0 THEN
 		SET @ResetDay = 0;
-		UPDATE `ResetInfo` SET ResetDay = 0 WHERE Name = `inCharName`;
+		UPDATE `ResetInfo` SET ResetDay = 0 WHERE Name = inCharName;
 	END IF;
 
 	IF DATEDIFF(NOW(), @ResetWekDate) > 0 THEN
 		SET @ResetWek = 0;
-		UPDATE `ResetInfo` SET ResetWek = 0 WHERE Name = `inCharName`;
+		UPDATE `ResetInfo` SET ResetWek = 0 WHERE Name = inCharName;
 	END IF;
 
 	IF DATEDIFF(NOW(), @ResetMonDate) > 0 THEN
 		SET @ResetMon = 0;
-		UPDATE `ResetInfo` SET ResetMon = 0 WHERE Name = `inCharName`;
+		UPDATE `ResetInfo` SET ResetMon = 0 WHERE Name = inCharName;
 	END IF;
 
 	SELECT @ResetCount AS Reset, @ResetDay AS ResetDay, @ResetWek AS ResetWek, @ResetMon AS ResetMon;
@@ -739,14 +804,14 @@ BEGIN
 	START TRANSACTION;
 
 	UPDATE `Character`
-	SET ResetCount = `inReset`
-	WHERE AccountID = `inAccountID` AND Name = `inCharName`;
+	SET ResetCount = inReset
+	WHERE AccountID = inAccountID AND Name = inCharName;
 
 	UPDATE `ResetInfo`
-	SET ResetDay = `inResetDay`, ResetDayDate = NOW(),
-		ResetWek = `inResetWek`, ResetWekDate = NOW(),
-		ResetMon = `inResetMon`, ResetMonDate = NOW()
-	WHERE Name = `inCharName`;
+	SET ResetDay = inResetDay, ResetDayDate = NOW(),
+		ResetWek = inResetWek, ResetWekDate = NOW(),
+		ResetMon = inResetMon, ResetMonDate = NOW()
+	WHERE Name = inCharName;
 
 	COMMIT;
 END $$
@@ -792,3 +857,331 @@ BEGIN
 END $$
 
 DELIMITER ;
+
+-- ----------------------------------------------------------------------------
+-- Routine ProcessZoneCreditRewards
+-- ----------------------------------------------------------------------------
+DELIMITER $$
+
+CREATE PROCEDURE `ProcessZoneCreditRewards`()
+BEGIN
+	/* =========================================================
+	   0. CLEAR AFK TRACKING FOR OFFLINE ACCOUNTS
+	========================================================= */
+	UPDATE AFK_CreditReward r
+	LEFT JOIN MEMB_STAT ms ON BINARY ms.memb___id = BINARY r.AccountID
+	SET
+		r.DaviasEnterTime = NULL,
+		r.DaviasNextRewardTime = NULL,
+		r.DaviasLastRewardTime = NULL,
+		r.ArenaEnterTime = NULL,
+		r.ArenaNextRewardTime = NULL,
+		r.ArenaLastRewardTime = NULL
+	WHERE IFNULL(ms.ConnectStat, 0) = 0;
+
+    /* =========================================================
+       1. CREATE tracking row if missing
+    ========================================================= */
+	INSERT INTO AFK_CreditReward (AccountID, DaviasEnterTime, DaviasNextRewardTime, DaviasLastRewardTime, Credits)
+    SELECT DISTINCT c.AccountID, NULL, NULL, NULL, 0
+    FROM `Character` c
+    WHERE NOT EXISTS (
+        SELECT 1
+        FROM AFK_CreditReward r
+			WHERE BINARY r.AccountID = BINARY c.AccountID
+    );
+
+    /* =========================================================
+       2. Zone enter / exit handling (DAVIAS)
+    ========================================================= */
+	UPDATE AFK_CreditReward r
+	LEFT JOIN `AccountCharacter` ac ON BINARY ac.Id = BINARY r.AccountID
+	LEFT JOIN `Character` c ON BINARY c.AccountID = BINARY ac.Id AND c.Name = ac.GameIDC
+	LEFT JOIN MEMB_STAT ms ON BINARY ms.memb___id = BINARY r.AccountID
+	SET
+		r.DaviasEnterTime =
+			CASE
+				WHEN IFNULL(ms.ConnectStat, 0) = 0 THEN NULL
+				WHEN c.Name IS NULL OR NOT (
+					c.MapNumber = 2
+					AND c.MapPosX BETWEEN 170 AND 242
+					AND c.MapPosY BETWEEN 5 AND 85
+				)
+				THEN NULL
+
+				WHEN r.DaviasEnterTime IS NULL
+				THEN NOW()
+
+				ELSE r.DaviasEnterTime
+			END,
+		r.DaviasNextRewardTime =
+			CASE
+				WHEN IFNULL(ms.ConnectStat, 0) = 0 THEN NULL
+				WHEN c.Name IS NULL OR NOT (
+					c.MapNumber = 2
+					AND c.MapPosX BETWEEN 170 AND 242
+					AND c.MapPosY BETWEEN 5 AND 85
+				)
+				THEN NULL
+				ELSE r.DaviasNextRewardTime
+			END,
+		r.ArenaEnterTime = CASE
+			WHEN IFNULL(ms.ConnectStat, 0) = 0 THEN NULL
+			WHEN c.MapNumber = 2 AND c.MapPosX BETWEEN 170 AND 242 AND c.MapPosY BETWEEN 5 AND 85 THEN NULL
+			ELSE r.ArenaEnterTime
+		END,
+		r.ArenaNextRewardTime = CASE
+			WHEN IFNULL(ms.ConnectStat, 0) = 0 THEN NULL
+			WHEN c.MapNumber = 2 AND c.MapPosX BETWEEN 170 AND 242 AND c.MapPosY BETWEEN 5 AND 85 THEN NULL
+			ELSE r.ArenaNextRewardTime
+		END,
+		r.ArenaLastRewardTime = CASE
+			WHEN IFNULL(ms.ConnectStat, 0) = 0 THEN NULL
+			WHEN c.MapNumber = 2 AND c.MapPosX BETWEEN 170 AND 242 AND c.MapPosY BETWEEN 5 AND 85 THEN NULL
+			ELSE r.ArenaLastRewardTime
+		END;
+
+    /* =========================================================
+       3. INIT reward timer (first time in zone)
+    ========================================================= */
+    UPDATE AFK_CreditReward r
+	 JOIN `AccountCharacter` ac ON BINARY ac.Id = BINARY r.AccountID
+	 JOIN `Character` c ON BINARY c.AccountID = BINARY ac.Id AND c.Name = ac.GameIDC
+	 JOIN MEMB_STAT ms ON BINARY ms.memb___id = BINARY r.AccountID
+		SET r.DaviasNextRewardTime = NOW() + INTERVAL 1 HOUR
+    WHERE c.MapNumber = 2
+      AND c.MapPosX BETWEEN 170 AND 242
+      AND c.MapPosY BETWEEN 5 AND 85
+			AND ms.ConnectStat = 1
+			AND r.DaviasNextRewardTime IS NULL;
+
+    /* =========================================================
+       4. DAVIAS REWARD LOGIC
+    ========================================================= */
+    UPDATE AFK_CreditReward r
+	JOIN `AccountCharacter` ac ON BINARY ac.Id = BINARY r.AccountID
+	JOIN `Character` c ON BINARY c.AccountID = BINARY ac.Id AND c.Name = ac.GameIDC
+	JOIN MEMB_STAT ms ON BINARY ms.memb___id = BINARY r.AccountID
+    SET
+        r.Credits = r.Credits + 1,
+				r.DaviasLastRewardTime = NOW(),
+				r.DaviasNextRewardTime = NOW() + INTERVAL 1 HOUR
+    WHERE c.MapNumber = 2
+      AND c.MapPosX BETWEEN 170 AND 242
+      AND c.MapPosY BETWEEN 5 AND 85
+      AND ms.ConnectStat = 1
+			AND r.DaviasNextRewardTime IS NOT NULL
+			AND NOW() >= r.DaviasNextRewardTime;
+
+    /* =========================================================
+       5. ARENA ZONE ENTER / EXIT HANDLING (Map 6, no coord check)
+    ========================================================= */
+    UPDATE AFK_CreditReward r
+	LEFT JOIN `AccountCharacter` ac ON BINARY ac.Id = BINARY r.AccountID
+	LEFT JOIN `Character` c ON BINARY c.AccountID = BINARY ac.Id AND c.Name = ac.GameIDC
+	LEFT JOIN MEMB_STAT ms ON BINARY ms.memb___id = BINARY r.AccountID
+    SET
+        r.ArenaEnterTime =
+            CASE
+                WHEN IFNULL(ms.ConnectStat, 0) = 0 THEN NULL
+                WHEN c.Name IS NULL OR c.MapNumber != 6
+                THEN NULL
+                WHEN r.ArenaEnterTime IS NULL
+                THEN NOW()
+                ELSE r.ArenaEnterTime
+            END,
+        r.ArenaNextRewardTime =
+            CASE
+                WHEN IFNULL(ms.ConnectStat, 0) = 0 THEN NULL
+                WHEN c.Name IS NULL OR c.MapNumber != 6
+                THEN NULL
+                ELSE r.ArenaNextRewardTime
+			END,
+		r.DaviasEnterTime = CASE
+			WHEN IFNULL(ms.ConnectStat, 0) = 0 THEN NULL
+			WHEN c.MapNumber = 6 THEN NULL
+			ELSE r.DaviasEnterTime
+		END,
+		r.DaviasNextRewardTime = CASE
+			WHEN IFNULL(ms.ConnectStat, 0) = 0 THEN NULL
+			WHEN c.MapNumber = 6 THEN NULL
+			ELSE r.DaviasNextRewardTime
+		END,
+		r.DaviasLastRewardTime = CASE
+			WHEN IFNULL(ms.ConnectStat, 0) = 0 THEN NULL
+			WHEN c.MapNumber = 6 THEN NULL
+			ELSE r.DaviasLastRewardTime
+		END;
+
+    /* =========================================================
+       6. ARENA INIT REWARD TIMER (first time on Arena)
+    ========================================================= */
+    UPDATE AFK_CreditReward r
+	 JOIN `AccountCharacter` ac ON BINARY ac.Id = BINARY r.AccountID
+	 JOIN `Character` c ON BINARY c.AccountID = BINARY ac.Id AND c.Name = ac.GameIDC
+	 JOIN MEMB_STAT ms ON BINARY ms.memb___id = BINARY r.AccountID
+    SET r.ArenaNextRewardTime = NOW() + INTERVAL 6 HOUR
+    WHERE c.MapNumber = 6
+			AND ms.ConnectStat = 1
+      AND r.ArenaNextRewardTime IS NULL;
+
+    /* =========================================================
+       7. ARENA REWARD LOGIC (1 credit every 6 hours)
+    ========================================================= */
+    UPDATE AFK_CreditReward r
+	JOIN `AccountCharacter` ac ON BINARY ac.Id = BINARY r.AccountID
+	JOIN `Character` c ON BINARY c.AccountID = BINARY ac.Id AND c.Name = ac.GameIDC
+	JOIN MEMB_STAT ms ON BINARY ms.memb___id = BINARY r.AccountID
+    SET
+        r.Credits = r.Credits + 1,
+		r.ArenaLastRewardTime = NOW(),
+        r.ArenaNextRewardTime = NOW() + INTERVAL 6 HOUR
+    WHERE c.MapNumber = 6
+      AND ms.ConnectStat = 1
+      AND r.ArenaNextRewardTime IS NOT NULL
+      AND NOW() >= r.ArenaNextRewardTime;
+
+END $$
+
+DELIMITER ;
+
+-- ----------------------------------------------------------------------------
+-- Routine ProcessWeeklyRankingRollover
+-- ----------------------------------------------------------------------------
+DELIMITER $$
+
+CREATE PROCEDURE `ProcessWeeklyRankingRollover`()
+BEGIN
+	DECLARE EXIT HANDLER FOR SQLEXCEPTION
+	BEGIN
+		ROLLBACK;
+	END;
+
+	START TRANSACTION;
+
+	UPDATE `RankingBloodCastle`
+	SET `Score` = 0;
+
+	UPDATE `RankingDevilSquare`
+	SET `Score` = 0;
+
+	COMMIT;
+END $$
+
+DELIMITER ;
+
+-- ----------------------------------------------------------------------------
+-- Routine ProcessMonthlyRankingRollover
+-- ----------------------------------------------------------------------------
+DELIMITER $$
+
+CREATE PROCEDURE `ProcessMonthlyRankingRollover`()
+BEGIN
+	DECLARE EXIT HANDLER FOR SQLEXCEPTION
+	BEGIN
+		ROLLBACK;
+	END;
+
+	START TRANSACTION;
+
+	UPDATE `RankingBloodCastle`
+	SET `MonthlyScore` = 0;
+
+	UPDATE `RankingDevilSquare`
+	SET `MonthlyScore` = 0;
+
+	COMMIT;
+END $$
+
+DELIMITER ;
+
+-- ----------------------------------------------------------------------------
+-- Triggers RankingBloodCastle and RankingDevilSquare
+-- ----------------------------------------------------------------------------
+DELIMITER $$
+
+CREATE TRIGGER `TR_RankingBloodCastle_BI`
+BEFORE INSERT ON `RankingBloodCastle`
+FOR EACH ROW
+BEGIN
+	SET NEW.`MonthlyScore` = IFNULL(NEW.`MonthlyScore`, 0) + GREATEST(IFNULL(NEW.`Score`, 0), 0);
+END $$
+
+CREATE TRIGGER `TR_RankingBloodCastle_BU`
+BEFORE UPDATE ON `RankingBloodCastle`
+FOR EACH ROW
+BEGIN
+	DECLARE deltaScore INT;
+
+	SET deltaScore = IFNULL(NEW.`Score`, 0) - IFNULL(OLD.`Score`, 0);
+
+	IF (deltaScore > 0) THEN
+		SET NEW.`MonthlyScore` = IFNULL(OLD.`MonthlyScore`, 0) + deltaScore;
+	ELSE
+		SET NEW.`MonthlyScore` = IFNULL(OLD.`MonthlyScore`, 0);
+	END IF;
+END $$
+
+CREATE TRIGGER `TR_RankingDevilSquare_BI`
+BEFORE INSERT ON `RankingDevilSquare`
+FOR EACH ROW
+BEGIN
+	SET NEW.`MonthlyScore` = IFNULL(NEW.`MonthlyScore`, 0) + GREATEST(IFNULL(NEW.`Score`, 0), 0);
+END $$
+
+CREATE TRIGGER `TR_RankingDevilSquare_BU`
+BEFORE UPDATE ON `RankingDevilSquare`
+FOR EACH ROW
+BEGIN
+	DECLARE deltaScore INT;
+
+	SET deltaScore = IFNULL(NEW.`Score`, 0) - IFNULL(OLD.`Score`, 0);
+
+	IF (deltaScore > 0) THEN
+		SET NEW.`MonthlyScore` = IFNULL(OLD.`MonthlyScore`, 0) + deltaScore;
+	ELSE
+		SET NEW.`MonthlyScore` = IFNULL(OLD.`MonthlyScore`, 0);
+	END IF;
+END $$
+
+DELIMITER ;
+
+-- ----------------------------------------------------------------------------
+-- Event EV_ProcessZoneCreditRewards
+-- ----------------------------------------------------------------------------
+CREATE EVENT `EV_ProcessZoneCreditRewards`
+ON SCHEDULE EVERY 1 MINUTE
+ON COMPLETION PRESERVE
+ENABLE
+DO
+	CALL `ProcessZoneCreditRewards`();
+
+-- ----------------------------------------------------------------------------
+-- Event EV_ProcessWeeklyRankingRollover
+-- ----------------------------------------------------------------------------
+CREATE EVENT `EV_ProcessWeeklyRankingRollover`
+ON SCHEDULE EVERY 1 WEEK
+STARTS (
+	TIMESTAMP(CURRENT_DATE)
+	+ INTERVAL (
+		CASE
+			WHEN DAYOFWEEK(CURRENT_DATE) = 2 THEN 7
+			ELSE (9 - DAYOFWEEK(CURRENT_DATE)) % 7
+		END
+	) DAY
+)
+ON COMPLETION PRESERVE
+ENABLE
+DO
+	CALL `ProcessWeeklyRankingRollover`();
+
+-- ----------------------------------------------------------------------------
+-- Event EV_ProcessMonthlyRankingRollover
+-- ----------------------------------------------------------------------------
+CREATE EVENT `EV_ProcessMonthlyRankingRollover`
+ON SCHEDULE EVERY 1 MONTH
+STARTS DATE_FORMAT(DATE_ADD(CURRENT_DATE, INTERVAL 1 MONTH), '%Y-%m-01 00:00:00')
+ON COMPLETION PRESERVE
+ENABLE
+DO
+	CALL `ProcessMonthlyRankingRollover`();
