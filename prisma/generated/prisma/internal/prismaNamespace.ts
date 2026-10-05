@@ -399,6 +399,7 @@ export const ModelName = {
   ResetInfo: 'ResetInfo',
   warehouse: 'warehouse',
   AccountDeposit: 'AccountDeposit',
+  AFK_CreditReward: 'AFK_CreditReward',
   MarketplaceListing: 'MarketplaceListing'
 } as const
 
@@ -415,7 +416,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "accountCharacter" | "character" | "defaultClassType" | "gameServerInfo" | "goldenArcherCoin" | "guild" | "guildMember" | "mEMB_INFO" | "mEMB_STAT" | "optionData" | "rankingBloodCastle" | "rankingDevilSquare" | "resetInfo" | "warehouse" | "accountDeposit" | "marketplaceListing"
+    modelProps: "accountCharacter" | "character" | "defaultClassType" | "gameServerInfo" | "goldenArcherCoin" | "guild" | "guildMember" | "mEMB_INFO" | "mEMB_STAT" | "optionData" | "rankingBloodCastle" | "rankingDevilSquare" | "resetInfo" | "warehouse" | "accountDeposit" | "aFK_CreditReward" | "marketplaceListing"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1409,6 +1410,72 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    AFK_CreditReward: {
+      payload: Prisma.$AFK_CreditRewardPayload<ExtArgs>
+      fields: Prisma.AFK_CreditRewardFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AFK_CreditRewardFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AFK_CreditRewardPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AFK_CreditRewardFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AFK_CreditRewardPayload>
+        }
+        findFirst: {
+          args: Prisma.AFK_CreditRewardFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AFK_CreditRewardPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AFK_CreditRewardFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AFK_CreditRewardPayload>
+        }
+        findMany: {
+          args: Prisma.AFK_CreditRewardFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AFK_CreditRewardPayload>[]
+        }
+        create: {
+          args: Prisma.AFK_CreditRewardCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AFK_CreditRewardPayload>
+        }
+        createMany: {
+          args: Prisma.AFK_CreditRewardCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.AFK_CreditRewardDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AFK_CreditRewardPayload>
+        }
+        update: {
+          args: Prisma.AFK_CreditRewardUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AFK_CreditRewardPayload>
+        }
+        deleteMany: {
+          args: Prisma.AFK_CreditRewardDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AFK_CreditRewardUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.AFK_CreditRewardUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AFK_CreditRewardPayload>
+        }
+        aggregate: {
+          args: Prisma.AFK_CreditRewardAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAFK_CreditReward>
+        }
+        groupBy: {
+          args: Prisma.AFK_CreditRewardGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AFK_CreditRewardGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AFK_CreditRewardCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AFK_CreditRewardCountAggregateOutputType> | number
+        }
+      }
+    }
     MarketplaceListing: {
       payload: Prisma.$MarketplaceListingPayload<ExtArgs>
       fields: Prisma.MarketplaceListingFieldRefs
@@ -1678,7 +1745,8 @@ export type OptionDataScalarFieldEnum = (typeof OptionDataScalarFieldEnum)[keyof
 
 export const RankingBloodCastleScalarFieldEnum = {
   Name: 'Name',
-  Score: 'Score'
+  Score: 'Score',
+  MonthlyScore: 'MonthlyScore'
 } as const
 
 export type RankingBloodCastleScalarFieldEnum = (typeof RankingBloodCastleScalarFieldEnum)[keyof typeof RankingBloodCastleScalarFieldEnum]
@@ -1686,7 +1754,8 @@ export type RankingBloodCastleScalarFieldEnum = (typeof RankingBloodCastleScalar
 
 export const RankingDevilSquareScalarFieldEnum = {
   Name: 'Name',
-  Score: 'Score'
+  Score: 'Score',
+  MonthlyScore: 'MonthlyScore'
 } as const
 
 export type RankingDevilSquareScalarFieldEnum = (typeof RankingDevilSquareScalarFieldEnum)[keyof typeof RankingDevilSquareScalarFieldEnum]
@@ -1733,6 +1802,20 @@ export const AccountDepositScalarFieldEnum = {
 } as const
 
 export type AccountDepositScalarFieldEnum = (typeof AccountDepositScalarFieldEnum)[keyof typeof AccountDepositScalarFieldEnum]
+
+
+export const AFK_CreditRewardScalarFieldEnum = {
+  AccountID: 'AccountID',
+  DaviasEnterTime: 'DaviasEnterTime',
+  DaviasNextRewardTime: 'DaviasNextRewardTime',
+  DaviasLastRewardTime: 'DaviasLastRewardTime',
+  ArenaEnterTime: 'ArenaEnterTime',
+  ArenaNextRewardTime: 'ArenaNextRewardTime',
+  ArenaLastRewardTime: 'ArenaLastRewardTime',
+  Credits: 'Credits'
+} as const
+
+export type AFK_CreditRewardScalarFieldEnum = (typeof AFK_CreditRewardScalarFieldEnum)[keyof typeof AFK_CreditRewardScalarFieldEnum]
 
 
 export const MarketplaceListingScalarFieldEnum = {
@@ -1880,6 +1963,13 @@ export const AccountDepositOrderByRelevanceFieldEnum = {
 } as const
 
 export type AccountDepositOrderByRelevanceFieldEnum = (typeof AccountDepositOrderByRelevanceFieldEnum)[keyof typeof AccountDepositOrderByRelevanceFieldEnum]
+
+
+export const AFK_CreditRewardOrderByRelevanceFieldEnum = {
+  AccountID: 'AccountID'
+} as const
+
+export type AFK_CreditRewardOrderByRelevanceFieldEnum = (typeof AFK_CreditRewardOrderByRelevanceFieldEnum)[keyof typeof AFK_CreditRewardOrderByRelevanceFieldEnum]
 
 
 export const MarketplaceListingOrderByRelevanceFieldEnum = {
@@ -2050,6 +2140,7 @@ export type GlobalOmitConfig = {
   resetInfo?: Prisma.ResetInfoOmit
   warehouse?: Prisma.warehouseOmit
   accountDeposit?: Prisma.AccountDepositOmit
+  aFK_CreditReward?: Prisma.AFK_CreditRewardOmit
   marketplaceListing?: Prisma.MarketplaceListingOmit
 }
 

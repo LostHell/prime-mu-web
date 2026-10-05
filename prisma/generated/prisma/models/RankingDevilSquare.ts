@@ -28,50 +28,60 @@ export type AggregateRankingDevilSquare = {
 
 export type RankingDevilSquareAvgAggregateOutputType = {
   Score: number | null
+  MonthlyScore: number | null
 }
 
 export type RankingDevilSquareSumAggregateOutputType = {
   Score: number | null
+  MonthlyScore: number | null
 }
 
 export type RankingDevilSquareMinAggregateOutputType = {
   Name: string | null
   Score: number | null
+  MonthlyScore: number | null
 }
 
 export type RankingDevilSquareMaxAggregateOutputType = {
   Name: string | null
   Score: number | null
+  MonthlyScore: number | null
 }
 
 export type RankingDevilSquareCountAggregateOutputType = {
   Name: number
   Score: number
+  MonthlyScore: number
   _all: number
 }
 
 
 export type RankingDevilSquareAvgAggregateInputType = {
   Score?: true
+  MonthlyScore?: true
 }
 
 export type RankingDevilSquareSumAggregateInputType = {
   Score?: true
+  MonthlyScore?: true
 }
 
 export type RankingDevilSquareMinAggregateInputType = {
   Name?: true
   Score?: true
+  MonthlyScore?: true
 }
 
 export type RankingDevilSquareMaxAggregateInputType = {
   Name?: true
   Score?: true
+  MonthlyScore?: true
 }
 
 export type RankingDevilSquareCountAggregateInputType = {
   Name?: true
   Score?: true
+  MonthlyScore?: true
   _all?: true
 }
 
@@ -164,6 +174,7 @@ export type RankingDevilSquareGroupByArgs<ExtArgs extends runtime.Types.Extensio
 export type RankingDevilSquareGroupByOutputType = {
   Name: string
   Score: number | null
+  MonthlyScore: number
   _count: RankingDevilSquareCountAggregateOutputType | null
   _avg: RankingDevilSquareAvgAggregateOutputType | null
   _sum: RankingDevilSquareSumAggregateOutputType | null
@@ -192,11 +203,13 @@ export type RankingDevilSquareWhereInput = {
   NOT?: Prisma.RankingDevilSquareWhereInput | Prisma.RankingDevilSquareWhereInput[]
   Name?: Prisma.StringFilter<"RankingDevilSquare"> | string
   Score?: Prisma.IntNullableFilter<"RankingDevilSquare"> | number | null
+  MonthlyScore?: Prisma.IntFilter<"RankingDevilSquare"> | number
 }
 
 export type RankingDevilSquareOrderByWithRelationInput = {
   Name?: Prisma.SortOrder
   Score?: Prisma.SortOrderInput | Prisma.SortOrder
+  MonthlyScore?: Prisma.SortOrder
   _relevance?: Prisma.RankingDevilSquareOrderByRelevanceInput
 }
 
@@ -206,11 +219,13 @@ export type RankingDevilSquareWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.RankingDevilSquareWhereInput[]
   NOT?: Prisma.RankingDevilSquareWhereInput | Prisma.RankingDevilSquareWhereInput[]
   Score?: Prisma.IntNullableFilter<"RankingDevilSquare"> | number | null
+  MonthlyScore?: Prisma.IntFilter<"RankingDevilSquare"> | number
 }, "Name">
 
 export type RankingDevilSquareOrderByWithAggregationInput = {
   Name?: Prisma.SortOrder
   Score?: Prisma.SortOrderInput | Prisma.SortOrder
+  MonthlyScore?: Prisma.SortOrder
   _count?: Prisma.RankingDevilSquareCountOrderByAggregateInput
   _avg?: Prisma.RankingDevilSquareAvgOrderByAggregateInput
   _max?: Prisma.RankingDevilSquareMaxOrderByAggregateInput
@@ -224,41 +239,49 @@ export type RankingDevilSquareScalarWhereWithAggregatesInput = {
   NOT?: Prisma.RankingDevilSquareScalarWhereWithAggregatesInput | Prisma.RankingDevilSquareScalarWhereWithAggregatesInput[]
   Name?: Prisma.StringWithAggregatesFilter<"RankingDevilSquare"> | string
   Score?: Prisma.IntNullableWithAggregatesFilter<"RankingDevilSquare"> | number | null
+  MonthlyScore?: Prisma.IntWithAggregatesFilter<"RankingDevilSquare"> | number
 }
 
 export type RankingDevilSquareCreateInput = {
   Name: string
   Score?: number | null
+  MonthlyScore?: number
 }
 
 export type RankingDevilSquareUncheckedCreateInput = {
   Name: string
   Score?: number | null
+  MonthlyScore?: number
 }
 
 export type RankingDevilSquareUpdateInput = {
   Name?: Prisma.StringFieldUpdateOperationsInput | string
   Score?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  MonthlyScore?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type RankingDevilSquareUncheckedUpdateInput = {
   Name?: Prisma.StringFieldUpdateOperationsInput | string
   Score?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  MonthlyScore?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type RankingDevilSquareCreateManyInput = {
   Name: string
   Score?: number | null
+  MonthlyScore?: number
 }
 
 export type RankingDevilSquareUpdateManyMutationInput = {
   Name?: Prisma.StringFieldUpdateOperationsInput | string
   Score?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  MonthlyScore?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type RankingDevilSquareUncheckedUpdateManyInput = {
   Name?: Prisma.StringFieldUpdateOperationsInput | string
   Score?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  MonthlyScore?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type RankingDevilSquareOrderByRelevanceInput = {
@@ -270,24 +293,29 @@ export type RankingDevilSquareOrderByRelevanceInput = {
 export type RankingDevilSquareCountOrderByAggregateInput = {
   Name?: Prisma.SortOrder
   Score?: Prisma.SortOrder
+  MonthlyScore?: Prisma.SortOrder
 }
 
 export type RankingDevilSquareAvgOrderByAggregateInput = {
   Score?: Prisma.SortOrder
+  MonthlyScore?: Prisma.SortOrder
 }
 
 export type RankingDevilSquareMaxOrderByAggregateInput = {
   Name?: Prisma.SortOrder
   Score?: Prisma.SortOrder
+  MonthlyScore?: Prisma.SortOrder
 }
 
 export type RankingDevilSquareMinOrderByAggregateInput = {
   Name?: Prisma.SortOrder
   Score?: Prisma.SortOrder
+  MonthlyScore?: Prisma.SortOrder
 }
 
 export type RankingDevilSquareSumOrderByAggregateInput = {
   Score?: Prisma.SortOrder
+  MonthlyScore?: Prisma.SortOrder
 }
 
 
@@ -295,6 +323,7 @@ export type RankingDevilSquareSumOrderByAggregateInput = {
 export type RankingDevilSquareSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   Name?: boolean
   Score?: boolean
+  MonthlyScore?: boolean
 }, ExtArgs["result"]["rankingDevilSquare"]>
 
 
@@ -302,9 +331,10 @@ export type RankingDevilSquareSelect<ExtArgs extends runtime.Types.Extensions.In
 export type RankingDevilSquareSelectScalar = {
   Name?: boolean
   Score?: boolean
+  MonthlyScore?: boolean
 }
 
-export type RankingDevilSquareOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"Name" | "Score", ExtArgs["result"]["rankingDevilSquare"]>
+export type RankingDevilSquareOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"Name" | "Score" | "MonthlyScore", ExtArgs["result"]["rankingDevilSquare"]>
 
 export type $RankingDevilSquarePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "RankingDevilSquare"
@@ -312,6 +342,7 @@ export type $RankingDevilSquarePayload<ExtArgs extends runtime.Types.Extensions.
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     Name: string
     Score: number | null
+    MonthlyScore: number
   }, ExtArgs["result"]["rankingDevilSquare"]>
   composites: {}
 }
@@ -683,6 +714,7 @@ export interface Prisma__RankingDevilSquareClient<T, Null = never, ExtArgs exten
 export interface RankingDevilSquareFieldRefs {
   readonly Name: Prisma.FieldRef<"RankingDevilSquare", 'String'>
   readonly Score: Prisma.FieldRef<"RankingDevilSquare", 'Int'>
+  readonly MonthlyScore: Prisma.FieldRef<"RankingDevilSquare", 'Int'>
 }
     
 

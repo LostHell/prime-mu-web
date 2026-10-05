@@ -28,50 +28,60 @@ export type AggregateRankingBloodCastle = {
 
 export type RankingBloodCastleAvgAggregateOutputType = {
   Score: number | null
+  MonthlyScore: number | null
 }
 
 export type RankingBloodCastleSumAggregateOutputType = {
   Score: number | null
+  MonthlyScore: number | null
 }
 
 export type RankingBloodCastleMinAggregateOutputType = {
   Name: string | null
   Score: number | null
+  MonthlyScore: number | null
 }
 
 export type RankingBloodCastleMaxAggregateOutputType = {
   Name: string | null
   Score: number | null
+  MonthlyScore: number | null
 }
 
 export type RankingBloodCastleCountAggregateOutputType = {
   Name: number
   Score: number
+  MonthlyScore: number
   _all: number
 }
 
 
 export type RankingBloodCastleAvgAggregateInputType = {
   Score?: true
+  MonthlyScore?: true
 }
 
 export type RankingBloodCastleSumAggregateInputType = {
   Score?: true
+  MonthlyScore?: true
 }
 
 export type RankingBloodCastleMinAggregateInputType = {
   Name?: true
   Score?: true
+  MonthlyScore?: true
 }
 
 export type RankingBloodCastleMaxAggregateInputType = {
   Name?: true
   Score?: true
+  MonthlyScore?: true
 }
 
 export type RankingBloodCastleCountAggregateInputType = {
   Name?: true
   Score?: true
+  MonthlyScore?: true
   _all?: true
 }
 
@@ -164,6 +174,7 @@ export type RankingBloodCastleGroupByArgs<ExtArgs extends runtime.Types.Extensio
 export type RankingBloodCastleGroupByOutputType = {
   Name: string
   Score: number | null
+  MonthlyScore: number
   _count: RankingBloodCastleCountAggregateOutputType | null
   _avg: RankingBloodCastleAvgAggregateOutputType | null
   _sum: RankingBloodCastleSumAggregateOutputType | null
@@ -192,11 +203,13 @@ export type RankingBloodCastleWhereInput = {
   NOT?: Prisma.RankingBloodCastleWhereInput | Prisma.RankingBloodCastleWhereInput[]
   Name?: Prisma.StringFilter<"RankingBloodCastle"> | string
   Score?: Prisma.IntNullableFilter<"RankingBloodCastle"> | number | null
+  MonthlyScore?: Prisma.IntFilter<"RankingBloodCastle"> | number
 }
 
 export type RankingBloodCastleOrderByWithRelationInput = {
   Name?: Prisma.SortOrder
   Score?: Prisma.SortOrderInput | Prisma.SortOrder
+  MonthlyScore?: Prisma.SortOrder
   _relevance?: Prisma.RankingBloodCastleOrderByRelevanceInput
 }
 
@@ -206,11 +219,13 @@ export type RankingBloodCastleWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.RankingBloodCastleWhereInput[]
   NOT?: Prisma.RankingBloodCastleWhereInput | Prisma.RankingBloodCastleWhereInput[]
   Score?: Prisma.IntNullableFilter<"RankingBloodCastle"> | number | null
+  MonthlyScore?: Prisma.IntFilter<"RankingBloodCastle"> | number
 }, "Name">
 
 export type RankingBloodCastleOrderByWithAggregationInput = {
   Name?: Prisma.SortOrder
   Score?: Prisma.SortOrderInput | Prisma.SortOrder
+  MonthlyScore?: Prisma.SortOrder
   _count?: Prisma.RankingBloodCastleCountOrderByAggregateInput
   _avg?: Prisma.RankingBloodCastleAvgOrderByAggregateInput
   _max?: Prisma.RankingBloodCastleMaxOrderByAggregateInput
@@ -224,41 +239,49 @@ export type RankingBloodCastleScalarWhereWithAggregatesInput = {
   NOT?: Prisma.RankingBloodCastleScalarWhereWithAggregatesInput | Prisma.RankingBloodCastleScalarWhereWithAggregatesInput[]
   Name?: Prisma.StringWithAggregatesFilter<"RankingBloodCastle"> | string
   Score?: Prisma.IntNullableWithAggregatesFilter<"RankingBloodCastle"> | number | null
+  MonthlyScore?: Prisma.IntWithAggregatesFilter<"RankingBloodCastle"> | number
 }
 
 export type RankingBloodCastleCreateInput = {
   Name: string
   Score?: number | null
+  MonthlyScore?: number
 }
 
 export type RankingBloodCastleUncheckedCreateInput = {
   Name: string
   Score?: number | null
+  MonthlyScore?: number
 }
 
 export type RankingBloodCastleUpdateInput = {
   Name?: Prisma.StringFieldUpdateOperationsInput | string
   Score?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  MonthlyScore?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type RankingBloodCastleUncheckedUpdateInput = {
   Name?: Prisma.StringFieldUpdateOperationsInput | string
   Score?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  MonthlyScore?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type RankingBloodCastleCreateManyInput = {
   Name: string
   Score?: number | null
+  MonthlyScore?: number
 }
 
 export type RankingBloodCastleUpdateManyMutationInput = {
   Name?: Prisma.StringFieldUpdateOperationsInput | string
   Score?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  MonthlyScore?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type RankingBloodCastleUncheckedUpdateManyInput = {
   Name?: Prisma.StringFieldUpdateOperationsInput | string
   Score?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  MonthlyScore?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type RankingBloodCastleOrderByRelevanceInput = {
@@ -270,24 +293,29 @@ export type RankingBloodCastleOrderByRelevanceInput = {
 export type RankingBloodCastleCountOrderByAggregateInput = {
   Name?: Prisma.SortOrder
   Score?: Prisma.SortOrder
+  MonthlyScore?: Prisma.SortOrder
 }
 
 export type RankingBloodCastleAvgOrderByAggregateInput = {
   Score?: Prisma.SortOrder
+  MonthlyScore?: Prisma.SortOrder
 }
 
 export type RankingBloodCastleMaxOrderByAggregateInput = {
   Name?: Prisma.SortOrder
   Score?: Prisma.SortOrder
+  MonthlyScore?: Prisma.SortOrder
 }
 
 export type RankingBloodCastleMinOrderByAggregateInput = {
   Name?: Prisma.SortOrder
   Score?: Prisma.SortOrder
+  MonthlyScore?: Prisma.SortOrder
 }
 
 export type RankingBloodCastleSumOrderByAggregateInput = {
   Score?: Prisma.SortOrder
+  MonthlyScore?: Prisma.SortOrder
 }
 
 
@@ -295,6 +323,7 @@ export type RankingBloodCastleSumOrderByAggregateInput = {
 export type RankingBloodCastleSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   Name?: boolean
   Score?: boolean
+  MonthlyScore?: boolean
 }, ExtArgs["result"]["rankingBloodCastle"]>
 
 
@@ -302,9 +331,10 @@ export type RankingBloodCastleSelect<ExtArgs extends runtime.Types.Extensions.In
 export type RankingBloodCastleSelectScalar = {
   Name?: boolean
   Score?: boolean
+  MonthlyScore?: boolean
 }
 
-export type RankingBloodCastleOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"Name" | "Score", ExtArgs["result"]["rankingBloodCastle"]>
+export type RankingBloodCastleOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"Name" | "Score" | "MonthlyScore", ExtArgs["result"]["rankingBloodCastle"]>
 
 export type $RankingBloodCastlePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "RankingBloodCastle"
@@ -312,6 +342,7 @@ export type $RankingBloodCastlePayload<ExtArgs extends runtime.Types.Extensions.
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     Name: string
     Score: number | null
+    MonthlyScore: number
   }, ExtArgs["result"]["rankingBloodCastle"]>
   composites: {}
 }
@@ -683,6 +714,7 @@ export interface Prisma__RankingBloodCastleClient<T, Null = never, ExtArgs exten
 export interface RankingBloodCastleFieldRefs {
   readonly Name: Prisma.FieldRef<"RankingBloodCastle", 'String'>
   readonly Score: Prisma.FieldRef<"RankingBloodCastle", 'Int'>
+  readonly MonthlyScore: Prisma.FieldRef<"RankingBloodCastle", 'Int'>
 }
     
 

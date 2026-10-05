@@ -157,13 +157,15 @@ model OptionData {
 }
 
 model RankingBloodCastle {
-  Name  String @id @db.VarChar(10)
-  Score Int?   @db.UnsignedInt
+  Name         String @id @db.VarChar(10)
+  Score        Int?   @db.UnsignedInt
+  MonthlyScore Int    @default(0) @db.UnsignedInt
 }
 
 model RankingDevilSquare {
-  Name  String @id @db.VarChar(10)
-  Score Int?   @db.UnsignedInt
+  Name         String @id @db.VarChar(10)
+  Score        Int?   @db.UnsignedInt
+  MonthlyScore Int    @default(0) @db.UnsignedInt
 }
 
 model ResetInfo {
@@ -199,6 +201,17 @@ model AccountDeposit {
   JewelOfLife     Int    @default(0) @db.UnsignedInt
   JewelOfCreation Int    @default(0) @db.UnsignedInt
   JewelOfChaos    Int    @default(0) @db.UnsignedInt
+}
+
+model AFK_CreditReward {
+  AccountID            String    @id @db.VarChar(10)
+  DaviasEnterTime      DateTime? @db.DateTime(0)
+  DaviasNextRewardTime DateTime? @db.DateTime(0)
+  DaviasLastRewardTime DateTime? @db.DateTime(0)
+  ArenaEnterTime       DateTime? @db.DateTime(0)
+  ArenaNextRewardTime  DateTime? @db.DateTime(0)
+  ArenaLastRewardTime  DateTime? @db.DateTime(0)
+  Credits              Int       @default(0)
 }
 
 model MarketplaceListing {

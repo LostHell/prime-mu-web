@@ -66,6 +66,7 @@ export const ModelName = {
   ResetInfo: 'ResetInfo',
   warehouse: 'warehouse',
   AccountDeposit: 'AccountDeposit',
+  AFK_CreditReward: 'AFK_CreditReward',
   MarketplaceListing: 'MarketplaceListing'
 } as const
 
@@ -245,7 +246,8 @@ export type OptionDataScalarFieldEnum = (typeof OptionDataScalarFieldEnum)[keyof
 
 export const RankingBloodCastleScalarFieldEnum = {
   Name: 'Name',
-  Score: 'Score'
+  Score: 'Score',
+  MonthlyScore: 'MonthlyScore'
 } as const
 
 export type RankingBloodCastleScalarFieldEnum = (typeof RankingBloodCastleScalarFieldEnum)[keyof typeof RankingBloodCastleScalarFieldEnum]
@@ -253,7 +255,8 @@ export type RankingBloodCastleScalarFieldEnum = (typeof RankingBloodCastleScalar
 
 export const RankingDevilSquareScalarFieldEnum = {
   Name: 'Name',
-  Score: 'Score'
+  Score: 'Score',
+  MonthlyScore: 'MonthlyScore'
 } as const
 
 export type RankingDevilSquareScalarFieldEnum = (typeof RankingDevilSquareScalarFieldEnum)[keyof typeof RankingDevilSquareScalarFieldEnum]
@@ -300,6 +303,20 @@ export const AccountDepositScalarFieldEnum = {
 } as const
 
 export type AccountDepositScalarFieldEnum = (typeof AccountDepositScalarFieldEnum)[keyof typeof AccountDepositScalarFieldEnum]
+
+
+export const AFK_CreditRewardScalarFieldEnum = {
+  AccountID: 'AccountID',
+  DaviasEnterTime: 'DaviasEnterTime',
+  DaviasNextRewardTime: 'DaviasNextRewardTime',
+  DaviasLastRewardTime: 'DaviasLastRewardTime',
+  ArenaEnterTime: 'ArenaEnterTime',
+  ArenaNextRewardTime: 'ArenaNextRewardTime',
+  ArenaLastRewardTime: 'ArenaLastRewardTime',
+  Credits: 'Credits'
+} as const
+
+export type AFK_CreditRewardScalarFieldEnum = (typeof AFK_CreditRewardScalarFieldEnum)[keyof typeof AFK_CreditRewardScalarFieldEnum]
 
 
 export const MarketplaceListingScalarFieldEnum = {
@@ -447,6 +464,13 @@ export const AccountDepositOrderByRelevanceFieldEnum = {
 } as const
 
 export type AccountDepositOrderByRelevanceFieldEnum = (typeof AccountDepositOrderByRelevanceFieldEnum)[keyof typeof AccountDepositOrderByRelevanceFieldEnum]
+
+
+export const AFK_CreditRewardOrderByRelevanceFieldEnum = {
+  AccountID: 'AccountID'
+} as const
+
+export type AFK_CreditRewardOrderByRelevanceFieldEnum = (typeof AFK_CreditRewardOrderByRelevanceFieldEnum)[keyof typeof AFK_CreditRewardOrderByRelevanceFieldEnum]
 
 
 export const MarketplaceListingOrderByRelevanceFieldEnum = {

@@ -93,6 +93,11 @@ export type warehouse = Prisma.warehouseModel
  */
 export type AccountDeposit = Prisma.AccountDepositModel
 /**
+ * Model AFK_CreditReward
+ * 
+ */
+export type AFK_CreditReward = Prisma.AFK_CreditRewardModel
+/**
  * Model MarketplaceListing
  * 
  */
