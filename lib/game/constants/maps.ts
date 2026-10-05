@@ -1,19 +1,4 @@
-export const MAP_NAME_BY_ID: Record<number, string> = {
-  0: "Lorencia",
-  1: "Dungeon",
-  2: "Devias",
-  3: "Noria",
-  4: "Lost Tower",
-  5: "Dare Devil",
-  6: "Arena",
-  7: "Atlans",
-  8: "Tarkan",
-  9: "Devil Square 1",
-  10: "Icarus",
-  11: "Blood Castle 1",
-  12: "Blood Castle 2",
-  13: "Blood Castle 3",
-  14: "Blood Castle 4",
-  15: "Blood Castle 5",
-  16: "Blood Castle 6",
-};
+import { serverConfig } from "@/lib/game/server-config";
+
+/** Map names by map number, synced from the game server's MapManager.txt. */
+export const MAP_NAME_BY_ID: Record<number, string> = serverConfig.maps;

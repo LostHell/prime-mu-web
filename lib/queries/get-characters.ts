@@ -27,6 +27,8 @@ export async function getCharacters(
       Vitality: true,
       Energy: true,
       Inventory: true,
+      Quest: true,
+      FruitAddPoint: true,
     },
     orderBy: { Name: "asc" },
   });
@@ -55,7 +57,7 @@ export async function getCharacters(
           ],
         },
       },
-      select: { Class: true, Level: true, LevelUpPoint: true },
+      select: { Class: true, Level: true },
     }),
   ]);
   const classDefaults = new Map(defaults.map((entry) => [entry.Class, entry]));
@@ -81,10 +83,11 @@ export async function getCharacters(
           ? {
               equipmentStatus: getEquipmentStatus(character.Inventory),
               resultingLevel: defaults.Level ?? 1,
-              resultingAvailablePoints: getResetPoints(
-                character.ResetCount ?? 0,
-                defaults.LevelUpPoint ?? 0,
-              ),
+              resultingAvailablePoints: getResetPoints({
+                resets: character.ResetCount ?? 0,
+                quest: character.Quest,
+                fruitAddPoint: character.FruitAddPoint,
+              }),
             }
           : null,
         stats: {

@@ -15,11 +15,7 @@ import {
 import { CharacterSection, CharacterValues } from "../character-info";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
-import {
-  MAX_RESETS,
-  MIN_RESET_LEVEL,
-  RESET_COST_PER_RESET,
-} from "@/constants/resets";
+import { getNextResetRule, MAX_RESETS } from "@/constants/resets";
 import { resetCharacterAction } from "@/lib/actions/reset-character";
 import { type CharacterWithNextReset } from "@/lib/types/character";
 import { startTransition, useActionState } from "react";
@@ -36,8 +32,9 @@ export function ResetForm({ character }: ResetFormProps) {
     {},
   );
 
-  const resetCost = (character.resets + 1) * RESET_COST_PER_RESET;
-  const hasRequiredLevel = character.level >= MIN_RESET_LEVEL;
+  const nextResetRule = getNextResetRule(character.resets);
+  const resetCost = nextResetRule.money;
+  const hasRequiredLevel = character.level >= nextResetRule.level;
   const isUnderResetLimit = character.resets < MAX_RESETS;
   const hasEnoughZen = character.zen >= resetCost;
   const nextReset = character.nextReset;
@@ -55,7 +52,7 @@ export function ResetForm({ character }: ResetFormProps) {
   const requirements = [
     {
       label: "Level",
-      value: `${character.level} / ${MIN_RESET_LEVEL} required`,
+      value: `${character.level} / ${nextResetRule.level} required`,
     },
     { label: "Resets", value: `${character.resets} / ${MAX_RESETS} maximum` },
     { label: "Zen balance", value: character.zen.toLocaleString() },
@@ -136,7 +133,7 @@ export function ResetForm({ character }: ResetFormProps) {
                 </li>
               )}
               {!hasRequiredLevel && (
-                <li>Reach level {MIN_RESET_LEVEL} to reset.</li>
+                <li>Reach level {nextResetRule.level} to reset.</li>
               )}
               {!isUnderResetLimit && (
                 <li>You have reached the maximum of {MAX_RESETS} resets.</li>

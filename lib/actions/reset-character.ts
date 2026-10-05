@@ -1,10 +1,6 @@
 "use server";
 
-import {
-  MAX_RESETS,
-  MIN_RESET_LEVEL,
-  RESET_COST_PER_RESET,
-} from "@/constants/resets";
+import { getNextResetRule, MAX_RESETS } from "@/constants/resets";
 import { resetCharacterSchema } from "@/lib/validation/reset-character";
 import { ActionState } from "@/lib/types/action-state";
 import { prisma } from "@/prisma/prisma";
@@ -72,10 +68,12 @@ export async function resetCharacterAction(
     };
   }
 
-  if ((character.cLevel ?? 0) < MIN_RESET_LEVEL) {
+  const nextReset = getNextResetRule(currentResets);
+
+  if ((character.cLevel ?? 0) < nextReset.level) {
     return {
       success: false,
-      message: `Character must be at least level ${MIN_RESET_LEVEL} to reset.`,
+      message: `Character must be at least level ${nextReset.level} to reset.`,
     };
   }
 
@@ -94,7 +92,7 @@ export async function resetCharacterAction(
     };
   }
 
-  const resetCost = (currentResets + 1) * RESET_COST_PER_RESET;
+  const resetCost = nextReset.money;
   const currentZen = character.Money ?? 0;
 
   if (currentZen < resetCost) {
@@ -111,7 +109,6 @@ export async function resetCharacterAction(
     where: { Class: defaultClassId },
     select: {
       Level: true,
-      LevelUpPoint: true,
       Strength: true,
       Dexterity: true,
       Vitality: true,
@@ -129,8 +126,11 @@ export async function resetCharacterAction(
     };
   }
 
-  const baseClassPoints = defaultClassType.LevelUpPoint ?? 0;
-  const totalPointsAfterReset = getResetPoints(currentResets, baseClassPoints);
+  const totalPointsAfterReset = getResetPoints({
+    resets: currentResets,
+    quest: character.Quest,
+    fruitAddPoint: character.FruitAddPoint,
+  });
 
   const { count } = await prisma.character.updateMany({
     where: {
@@ -144,6 +144,8 @@ export async function resetCharacterAction(
       Vitality: character.Vitality,
       Energy: character.Energy,
       Inventory: character.Inventory,
+      Quest: character.Quest,
+      FruitAddPoint: character.FruitAddPoint,
       Money: { gte: resetCost },
     },
     data: {
