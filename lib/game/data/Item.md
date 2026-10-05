@@ -463,24 +463,26 @@ Orbs teach skills to characters. `Req Str / Req Agi / Req Ene` = stat requiremen
 
 ### Jewels & Special Items
 
-| #   | Name                 | Notes                             |
-| --- | -------------------- | --------------------------------- |
-| 11  | Box of Luck          | Random reward box                 |
-| 12  | Heart                | Event item                        |
-| 13  | Jewel of Bless       | Upgrades item level               |
-| 14  | Jewel of Soul        | Upgrades item with success chance |
-| 15  | Zen                  | In-game currency                  |
-| 16  | Jewel of Life        | Adds item option (Req Lvl 72)     |
-| 17  | Devil's Eye          | Event component                   |
-| 18  | Devil's Key          | Event component                   |
-| 19  | Devil's Invitation   | Event item                        |
-| 20  | Remedy of Love       | Quest item                        |
-| 21  | Rena                 | Resurrection item                 |
-| 22  | Jewel of Creation    | Crafting jewel (Req Lvl 78)       |
-| 23  | Scroll of Emperor    | Quest scroll                      |
-| 24  | Broken Sword         | Quest item                        |
-| 25  | Tear of Elf          | Quest item                        |
-| 26  | Soul Shard of Wizard | Quest item                        |
+| #   | Name                 | Notes                              |
+| --- | -------------------- | ---------------------------------- |
+| 11  | Box of Luck          | Random reward box                  |
+| 12  | Heart                | Event item                         |
+| 13  | Jewel of Bless       | Upgrades item level                |
+| 14  | Jewel of Soul        | Upgrades item with success chance  |
+| 15  | Zen                  | In-game currency                   |
+| 16  | Jewel of Life        | Adds item option (Req Lvl 72)      |
+| 17  | Devil's Eye          | Event component                    |
+| 18  | Devil's Key          | Event component                    |
+| 19  | Devil's Invitation   | Event item                         |
+| 20  | Remedy of Love       | Quest item                         |
+| 21  | Rena                 | Resurrection item                  |
+| 22  | Jewel of Creation    | Crafting jewel (Req Lvl 78)        |
+| 23  | Scroll of Emperor    | Quest scroll                       |
+| 24  | Broken Sword         | Quest item                         |
+| 25  | Tear of Elf          | Quest item                         |
+| 26  | Soul Shard of Wizard | Quest item                         |
+| 27  | Jewel of Excellent   | Adds excellent option (Req Lvl 80) |
+| 28  | Jewel of Luck        | Adds luck option (Req Lvl 75)      |
 
 ---
 

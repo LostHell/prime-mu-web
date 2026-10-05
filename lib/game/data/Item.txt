@@ -104,7 +104,7 @@ end
 15	0	0	1	1	1	1	1	"Arrows"					0	0	0	0	-1	0	0	0	0	0	0	0	0	0	0	1	0
 16	0	24	2	4	1	1	1	"Saint Crossbow"					84	102	127	35	72	0	0	0	50	160	0	0	2	0	0	1	0
 17	1	24	2	4	1	1	1	"Celestial Bow"					92	127	155	35	76	0	0	0	54	198	0	0	2	0	0	2	0
-18	0	24	2	3	1	1	1	"Divine Crossbow of Archangel"					100	144	166	35	200	0	0	0	40	110	0	0	0	0	0	1	0
+18	0	24	2	3	1	1	0	"Divine Crossbow of Archangel"					100	144	166	35	200	0	0	0	40	110	0	0	0	0	0	1	0
 end
 
 //=====================================
@@ -375,7 +375,7 @@ end
 10	10	0	1	1	1	1	1	"Transformation Ring"					0	200	0	0	0	0	0	1	1	1	1
 12	9	0	1	1	1	1	1	"Pendant of Lightning"					21	50	0	0	1	0	3	1	1	1	1
 13	9	0	1	1	1	1	1	"Pendant of Fire"					13	50	0	0	0	1	1	1	1	1	1
-14	-1	0	1	2	1	1	0	"Loch's Feather"					78	0	0	0	0	0	0	1	1	1	1
+14	-1	0	1	2	1	1	1	"Loch's Feather"					78	0	0	0	0	0	0	1	1	1	1
 15	-1	0	1	1	1	1	0	"Fruit"					0	0	0	0	0	0	0	1	1	1	1
 16	-1	0	1	2	1	1	0	"Scroll of Archangel"					0	128	0	0	0	0	0	1	1	1	1
 17	-1	0	1	2	1	1	0	"Blood Bone"					0	128	0	0	0	0	0	1	1	1	1
@@ -414,6 +414,8 @@ end
 24	-1	0	1	2	1	1	0	"Broken Sword"					0	0
 25	-1	0	1	1	1	1	0	"Tear of Elf"					0	0
 26	-1	0	1	1	1	1	0	"Soul Shard of Wizard"					0	0
+27	-1	0	1	1	1	1	0	"Jewel of Excellent"					0	80
+28	-1	0	1	1	1	1	0	"Jewel of Luck"					0	75
 end
 
 //=====================================
