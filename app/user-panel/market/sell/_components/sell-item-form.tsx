@@ -220,7 +220,7 @@ export function SellItemForm({ warehouseItems }: SellItemFormProps) {
             )}
           </div>
 
-          <form action={formAction}>
+          <form action={formAction} autoComplete="off">
             <input
               type="hidden"
               name="itemSerial"
