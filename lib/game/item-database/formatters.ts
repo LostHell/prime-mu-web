@@ -15,7 +15,8 @@ export const formatItemName = ({
   options,
 }: FormatItemNameInput): string => {
   if (isBoxOfLuckItem(item.group, item.index)) {
-    return BOX_OF_LUCK_ITEM_LEVEL_MAP[item.level].name;
+    const variant = BOX_OF_LUCK_ITEM_LEVEL_MAP[item.level];
+    if (variant) return variant.name;
   }
 
   const base = item.level > 0 ? `${item.name} +${item.level}` : item.name;
