@@ -38,4 +38,5 @@ export const serverConfig: ServerConfig = {
   events: { bloodCastle: [0, 12], devilSquare: [0.5, 12.5] },
   maps: { "0": "Lorencia" },
   warehouse: { maxMoney: 2_000_000_000 },
+  pkClear: { moneyPerKill: 25_000_000 },
 };

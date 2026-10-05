@@ -61,6 +61,10 @@ export type ServerConfig = {
   warehouse: {
     maxMoney: number;
   };
+  pkClear: {
+    /** Zen charged per PK kill by /pkclear and the website (CommandPKClearMoney). */
+    moneyPerKill: number;
+  };
 };
 
 export const serverConfig: ServerConfig = config;

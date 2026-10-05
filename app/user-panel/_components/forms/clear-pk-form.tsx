@@ -14,8 +14,13 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { clearPkAction } from "@/lib/actions/clear-pk";
+import { getPkClearCost, splitPkClearPayment } from "@/lib/game/characters/pk";
+import { formatNumber } from "@/lib/utils/numbers";
 import { type Character } from "@/lib/types/character";
-import { NEUTRAL_PK_LEVEL } from "@/constants/character-rules";
+import {
+  NEUTRAL_PK_LEVEL,
+  PK_CLEAR_COST_PER_KILL,
+} from "@/constants/character-rules";
 import { CharacterSection, CharacterValues } from "../character-info";
 import { startTransition, useActionState } from "react";
 
@@ -38,6 +43,17 @@ export function ClearPkForm({ character }: ClearPkFormProps) {
     character.pkCount > 0 ||
     (character.pkLevel ?? NEUTRAL_PK_LEVEL) > NEUTRAL_PK_LEVEL ||
     (character.pkTime ?? 0) > 0;
+  const cost = getPkClearCost(character.pkCount);
+  const { fromCharacter, fromDeposit } = splitPkClearPayment(
+    cost,
+    character.zen,
+  );
+  const costDescription =
+    fromDeposit === 0
+      ? `${formatNumber(cost)} Zen will be taken from your character.`
+      : fromCharacter === 0
+        ? `${formatNumber(cost)} Zen will be taken from your deposited Zen.`
+        : `${formatNumber(cost)} Zen will be taken: ${formatNumber(fromCharacter)} from your character and ${formatNumber(fromDeposit)} from your deposited Zen.`;
 
   return (
     <div className="flex flex-col gap-6">
@@ -45,6 +61,8 @@ export function ClearPkForm({ character }: ClearPkFormProps) {
         <CharacterValues
           items={[
             { label: "PK kills", value: character.pkCount },
+            { label: "Clear cost", value: `${formatNumber(cost)} Zen` },
+            { label: "Zen balance", value: formatNumber(character.zen) },
             { label: "Requirement", value: "Account offline" },
             {
               label: "Service status",
@@ -72,6 +90,13 @@ export function ClearPkForm({ character }: ClearPkFormProps) {
             Killer marks and the remaining penalty timer from your character,
             allowing you to enter towns and interact with NPCs freely.
           </p>
+          {cost > 0 && (
+            <p className="text-muted-foreground text-sm leading-relaxed">
+              Clearing costs {formatNumber(PK_CLEAR_COST_PER_KILL)} Zen per PK
+              kill. Your character&apos;s Zen is used first, then your deposited
+              Zen.
+            </p>
+          )}
           <AlertDialog>
             <AlertDialogTrigger asChild>
               <Button
@@ -90,6 +115,7 @@ export function ClearPkForm({ character }: ClearPkFormProps) {
                     {character.name}
                   </span>{" "}
                   and remove the Player Killer mark. This cannot be undone.
+                  {cost > 0 && <> {costDescription}</>}
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
