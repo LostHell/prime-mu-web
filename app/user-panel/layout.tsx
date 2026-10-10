@@ -1,8 +1,8 @@
 import { auth } from "@/auth";
-import { getCharacters } from "@/lib/queries/get-characters";
-import { redirect } from "next/navigation";
-import { cookies } from "next/headers";
 import { CHARACTER_SELECTION_COOKIE } from "@/constants/character-selection";
+import { getCharacters } from "@/lib/queries/get-characters";
+import { getServerCookie } from "@/lib/utils/cookies.server";
+import { redirect } from "next/navigation";
 import { UserPanelShell } from "./_components/user-panel-shell";
 import { UserPanelProvider } from "./_context/user-panel-context";
 
@@ -18,10 +18,7 @@ const UserPanelLayout = async ({ children }: UserPanelLayoutProps) => {
   }
 
   const { account, characters } = await getCharacters(session.user.id);
-  const storedSelection = (await cookies()).get(
-    CHARACTER_SELECTION_COOKIE,
-  )?.value;
-  // Only select characters from this authenticated account, regardless of cookie contents.
+  const storedSelection = await getServerCookie(CHARACTER_SELECTION_COOKIE);
   const initialSelectedName = characters.find(
     (character) => character.name === storedSelection,
   )?.name;

@@ -28,7 +28,7 @@ export function CharacterValues({
       {items.map(({ label, value }) => (
         <div key={label} className="min-w-0">
           <dt className="text-muted-foreground text-sm">{label}</dt>
-          <dd className="mt-1 text-sm font-semibold break-words tabular-nums">
+          <dd className="mt-1 text-sm font-semibold wrap-break-word tabular-nums">
             {value}
           </dd>
         </div>

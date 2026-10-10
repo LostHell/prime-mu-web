@@ -1,36 +1,30 @@
 import { auth } from "@/auth";
 import Navigation from "@/components/header/navigation";
 import type { HeaderNavItem } from "@/components/header/types";
-import { IS_HEADER_STICKY } from "@/constants/header";
-import { logoutAction } from "@/lib/actions/logout";
+import { HEADER_NAV, IS_HEADER_STICKY } from "@/constants/header";
 import { cn } from "@/lib/utils";
-
-const HEADER_NAV_PUBLIC: HeaderNavItem[] = [
-  { href: "/", label: "Home" },
-  { href: "/top-players", label: "Top Players" },
-  { href: "/download", label: "Download" },
-];
 
 export default async function Header() {
   const session = await auth();
-  const isAuthenticated = !!session?.user?.id;
+  const accountId = session?.user?.id;
 
-  const items = [
-    ...HEADER_NAV_PUBLIC,
-    ...(isAuthenticated
-      ? [
-          { href: "/user-panel", label: "User Panel" },
-          { label: "Logout", clickHandler: logoutAction },
-        ]
-      : [
-          { href: "/login", label: "Login" },
-          { href: "/register", label: "Register" },
-        ]),
-  ];
+  const accountItems: HeaderNavItem[] = accountId
+    ? [
+        {
+          href: "/user-panel",
+          label: "User Panel",
+          variant: "avatar",
+          initial: accountId.charAt(0).toUpperCase(),
+        },
+      ]
+    : [
+        { href: "/login", label: "Log in" },
+        { href: "/register", label: "Create account", variant: "button" },
+      ];
 
   return (
     <header className={cn(IS_HEADER_STICKY && "sticky top-0 z-50")}>
-      <Navigation items={items} />
+      <Navigation navItems={HEADER_NAV} accountItems={accountItems} />
     </header>
   );
 }

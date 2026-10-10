@@ -8,7 +8,7 @@ const Logo = () => {
       alt={`${BRAND} Logo`}
       width={48}
       height={48}
-      className="h-12 w-12"
+      className="size-10 md:size-12"
       loading="eager"
       priority
     />

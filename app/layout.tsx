@@ -1,5 +1,5 @@
-import Footer from "@/components/footer";
 import Header from "@/components/header";
+import { SiteFooter } from "@/components/site-footer";
 import { Toaster } from "@/components/ui/sonner";
 import { BRAND } from "@/constants/app";
 import type { Metadata } from "next";
@@ -39,7 +39,7 @@ const RootLayout = ({
         <div className="page-background" />
         <Header />
         {children}
-        <Footer />
+        <SiteFooter />
         <Toaster />
       </body>
     </html>

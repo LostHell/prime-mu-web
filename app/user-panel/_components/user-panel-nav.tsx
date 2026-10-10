@@ -1,16 +1,16 @@
 "use client";
 
 import EmptyState from "@/components/empty-state";
-import { useUserPanel } from "../_context/user-panel-context";
+import { logoutAction } from "@/lib/actions/logout";
 import { cn } from "@/lib/utils";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useUserPanel } from "../_context/user-panel-context";
 
-interface NavItem {
-  label: string;
-  href: string;
-}
+type NavItem =
+  | { label: string; href: string }
+  | { label: string; action: () => Promise<void> };
 
 interface NavGroup {
   label: string;
@@ -37,6 +37,7 @@ const NAV_GROUPS: NavGroup[] = [
     items: [
       { label: "Change password", href: "/user-panel/account/change-password" },
       { label: "Change email", href: "/user-panel/account/change-email" },
+      { label: "Logout", action: logoutAction },
     ],
   },
 ];
@@ -64,7 +65,7 @@ export function UserPanelNav({ onNavigate, className }: UserPanelNavProps) {
   };
 
   return (
-    <nav className={cn("animate-fade-in h-full", className)}>
+    <nav className={cn("h-full", className)}>
       <div className="grid grid-cols-1 gap-6">
         <div>
           <div className="text-muted-foreground mb-2 text-xs tracking-wider uppercase">
@@ -77,17 +78,19 @@ export function UserPanelNav({ onNavigate, className }: UserPanelNavProps) {
               return (
                 <Link
                   key={character.name}
-                  href={isCharacterPage ? pathname : "/user-panel"}
+                  href={
+                    isCharacterPage && pathname !== "/user-panel"
+                      ? pathname
+                      : "/user-panel?view=character"
+                  }
                   aria-current={active ? "true" : undefined}
                   onClick={() => {
                     setSelectedCharacter(character);
                     onNavigate?.();
                   }}
                   className={cn(
-                    "focus-visible:outline-ring flex min-w-0 items-center gap-3 rounded-lg px-3 py-3 transition-colors focus-visible:outline-2",
-                    active
-                      ? "text-gold bg-gold/10"
-                      : "text-foreground hover:bg-muted/50",
+                    "focus-visible:outline-ring text-foreground hover:bg-muted/50 flex min-w-0 items-center gap-3 rounded-lg px-3 py-3 transition-colors focus-visible:outline-2",
+                    active && "md:text-gold md:bg-gold/10 md:hover:bg-gold/10",
                   )}
                 >
                   <span className="flex min-w-0 flex-1 flex-col gap-1">
@@ -121,6 +124,30 @@ export function UserPanelNav({ onNavigate, className }: UserPanelNavProps) {
             </div>
             <div className="flex flex-col gap-1">
               {group.items.map((item) => {
+                const rowClass =
+                  "flex w-full cursor-pointer items-center gap-2 rounded-lg px-3 py-2 text-left transition-colors";
+
+                if (!("href" in item)) {
+                  return (
+                    <form key={item.label} action={item.action}>
+                      <button
+                        type="submit"
+                        onClick={onNavigate}
+                        className={cn(
+                          rowClass,
+                          "text-foreground hover:bg-muted/50",
+                        )}
+                      >
+                        <ChevronRight
+                          className="text-muted-foreground size-icon-sm shrink-0"
+                          aria-hidden="true"
+                        />
+                        <span className="text-sm">{item.label}</span>
+                      </button>
+                    </form>
+                  );
+                }
+
                 const active = isActive(item.href);
 
                 return (
@@ -129,7 +156,7 @@ export function UserPanelNav({ onNavigate, className }: UserPanelNavProps) {
                     href={item.href}
                     onClick={onNavigate}
                     className={cn(
-                      "flex items-center gap-2 rounded-lg px-3 py-2 transition-colors",
+                      rowClass,
                       active
                         ? "text-gold bg-gold/10"
                         : "text-foreground hover:bg-muted/50",
