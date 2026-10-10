@@ -1,10 +1,8 @@
 import { clearPkAction } from "./clear-pk";
 import { isAccountOffline, verifyCharacterOwnership } from "./utils";
 import { prisma } from "@/prisma/prisma";
-import {
-  NEUTRAL_PK_LEVEL,
-  PK_CLEAR_COST_PER_KILL,
-} from "@/constants/character-rules";
+import { NEUTRAL_PK_LEVEL } from "@/constants/character-rules";
+import { PK_CLEAR_COST_PER_KILL } from "@/lib/game/characters/pk";
 
 jest.mock("@/lib/game/server-config", () =>
   jest.requireActual("@/lib/test-utils/server-config"),
@@ -23,7 +21,7 @@ const mockCharacter = (character: {
   PkCount: number;
   PkLevel: number;
   PkTime: number;
-  Money: number;
+  Money: number | null;
 }) => (verifyCharacterOwnership as jest.Mock).mockResolvedValue(character);
 
 beforeEach(() => {
@@ -42,12 +40,22 @@ test("clears remaining penalties for free when the kill count is zero", async ()
   expect((await submit()).success).toBe(true);
   expect(prisma.character.updateMany).toHaveBeenCalledWith(
     expect.objectContaining({
+      where: expect.not.objectContaining({ Money: expect.anything() }),
       data: {
         PkCount: 0,
         PkLevel: NEUTRAL_PK_LEVEL,
         PkTime: 0,
-        Money: { decrement: 0 },
       },
+    }),
+  );
+});
+
+test("clears a free penalty when the character's zen is null", async () => {
+  mockCharacter({ PkCount: 0, PkLevel: 6, PkTime: 100, Money: null });
+  expect((await submit()).success).toBe(true);
+  expect(prisma.character.updateMany).toHaveBeenCalledWith(
+    expect.objectContaining({
+      where: expect.not.objectContaining({ Money: expect.anything() }),
     }),
   );
 });

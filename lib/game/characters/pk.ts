@@ -1,4 +1,7 @@
-import { PK_CLEAR_COST_PER_KILL } from "@/constants/character-rules";
+import { serverConfig } from "@/lib/game/server-config";
+
+/** Zen charged per PK kill to clear a Player Killer status, as /pkclear does in game. */
+export const PK_CLEAR_COST_PER_KILL = serverConfig.pkClear.moneyPerKill;
 
 /** Zen needed to clear a character's PK status: a fixed price per PK kill. */
 export const getPkClearCost = (pkCount: number): number =>

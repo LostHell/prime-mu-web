@@ -14,13 +14,13 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { clearPkAction } from "@/lib/actions/clear-pk";
-import { getPkClearCost } from "@/lib/game/characters/pk";
+import {
+  getPkClearCost,
+  PK_CLEAR_COST_PER_KILL,
+} from "@/lib/game/characters/pk";
 import { formatNumber } from "@/lib/utils/numbers";
 import { type Character } from "@/lib/types/character";
-import {
-  NEUTRAL_PK_LEVEL,
-  PK_CLEAR_COST_PER_KILL,
-} from "@/constants/character-rules";
+import { NEUTRAL_PK_LEVEL } from "@/constants/character-rules";
 import { CharacterSection, CharacterValues } from "../character-info";
 import { startTransition, useActionState } from "react";
 
@@ -57,7 +57,11 @@ export function ClearPkForm({ character }: ClearPkFormProps) {
             { label: "Requirement", value: "Account offline" },
             {
               label: "Service status",
-              value: hasPk ? "Available to clear" : "Nothing to clear",
+              value: !hasPk
+                ? "Nothing to clear"
+                : hasEnoughZen
+                  ? "Available to clear"
+                  : "Not enough Zen",
             },
           ]}
         />

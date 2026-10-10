@@ -58,7 +58,7 @@ export async function clearPkAction(
 
   const cost = getPkClearCost(character.PkCount ?? 0);
   const characterZen = character.Money ?? 0;
-  if (characterZen < cost) {
+  if (cost > 0 && characterZen < cost) {
     return {
       success: false,
       message: `Not enough Zen. Required: ${formatNumber(cost)}, available: ${formatNumber(characterZen)}.`,
@@ -72,13 +72,13 @@ export async function clearPkAction(
       PkCount: character.PkCount,
       PkLevel: character.PkLevel,
       PkTime: character.PkTime,
-      Money: { gte: cost },
+      ...(cost > 0 ? { Money: { gte: cost } } : {}),
     },
     data: {
       PkCount: 0,
       PkLevel: NEUTRAL_PK_LEVEL,
       PkTime: 0,
-      Money: { decrement: cost },
+      ...(cost > 0 ? { Money: { decrement: cost } } : {}),
     },
   });
   if (!count)
