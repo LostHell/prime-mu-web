@@ -6,7 +6,7 @@ import {
   BYTES_PER_SLOT,
   EMPTY_SLOT_BYTE,
 } from "@/lib/game/item-decoder/constants";
-import { serverConfig } from "@/lib/game/server-config";
+import { type ResetRule, serverConfig } from "@/lib/game/server-config";
 
 /** Quest state stored in the Character.Quest bitfield (GameServer Quest.h). */
 const QUEST_STATE_FINISHED = 2;
@@ -41,6 +41,10 @@ export const getAccumulatedResetPoints = (resets: number): number =>
   serverConfig.reset.table
     .filter((rule) => rule.reset <= resets)
     .reduce((total, rule) => total + rule.points, 0);
+
+/** Requirements and reward of the next reset after `resets` completed ones. */
+export const getNextResetRule = (resets: number): ResetRule | null =>
+  serverConfig.reset.table.find((rule) => rule.reset === resets + 1) ?? null;
 
 type ResetPointsInput = {
   /** Resets before this one. */

@@ -44,8 +44,8 @@ test("limits a stat to its starting value plus every obtainable point", () => {
 });
 
 test("falls back to the server's MaxStatPoint for unknown classes", () => {
-  expect(getMaxObtainablePoints(444)).toBeNull();
-  expect(getMaxStatPoint(444, "str")).toBe(serverConfig.character.maxStatPoint);
+  expect(getMaxObtainablePoints(99)).toBeNull();
+  expect(getMaxStatPoint(99, "str")).toBe(serverConfig.character.maxStatPoint);
 });
 
 test("never goes above the server's MaxStatPoint", () => {

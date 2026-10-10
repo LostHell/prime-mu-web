@@ -71,6 +71,7 @@ export async function getCharacters(
       return {
         name: character.Name,
         class: CHARACTER_CLASS_BY_ID[character.Class ?? 0],
+        classId: character.Class ?? 0,
         level: character.cLevel ?? 1,
         resets: character.ResetCount ?? 0,
         guild: guilds.get(character.Name),
@@ -95,7 +96,6 @@ export async function getCharacters(
           agi: character.Dexterity ?? 0,
           vit: character.Vitality ?? 0,
           ene: character.Energy ?? 0,
-          cmd: 0,
         },
       };
     }),

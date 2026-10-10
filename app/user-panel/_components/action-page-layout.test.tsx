@@ -14,18 +14,20 @@ jest.mock("next/navigation", () => ({
 const first: CharacterWithNextReset = {
   name: "Knight",
   class: "Dark Knight",
+  classId: 16,
   level: 100,
   resets: 2,
   zen: 1000,
   pkCount: 0,
   freePoints: 20,
-  stats: { str: 30, agi: 20, vit: 25, ene: 10, cmd: 0 },
+  stats: { str: 30, agi: 20, vit: 25, ene: 10 },
   nextReset: null,
 };
 const second: CharacterWithNextReset = {
   ...first,
   name: "Wizard",
   class: "Dark Wizard",
+  classId: 0,
 };
 
 function Draft({ character }: { character: CharacterWithNextReset }) {

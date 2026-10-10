@@ -1,6 +1,7 @@
 import {
   getBaseClass,
   getEquipmentStatus,
+  getNextResetRule,
   getQuestRewardPoints,
   getResetPoints,
   isQuestFinished,
@@ -39,6 +40,17 @@ test("reads finished quests from the two-bit quest states", () => {
   expect(getQuestRewardPoints(quest)).toBe(20);
   // 0xF6 = 11 11 01 10: quest 0 finished, quest 1 only accepted.
   expect(getQuestRewardPoints(Uint8Array.of(0xf6))).toBe(10);
+});
+
+test("finds the next reset by its reset number", () => {
+  expect(getNextResetRule(0)).toEqual({
+    reset: 1,
+    level: 300,
+    money: 1_000,
+    points: 100,
+  });
+  expect(getNextResetRule(2)).toMatchObject({ reset: 3, money: 3_000 });
+  expect(getNextResetRule(3)).toBeNull();
 });
 
 test("adds up each reset's points from the reset table", () => {

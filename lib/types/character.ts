@@ -5,20 +5,21 @@ export type CharacterClass =
   | "Soul Master"
   | "Fairy Elf"
   | "Muse Elf"
-  | "Magic Gladiator"
-  | "Dark Lord";
+  | "Magic Gladiator";
 
 export interface CharacterStats {
   str: number;
   agi: number;
   vit: number;
   ene: number;
-  cmd: number;
 }
 
 export interface Character {
   name: string;
+  /** Display name for `classId`. */
   class: CharacterClass;
+  /** Character.Class from the database. */
+  classId: number;
   level: number;
   resets: number;
   guild?: string;
@@ -52,5 +53,3 @@ export interface AccountCharactersResult {
   account: AccountConnectionState;
   characters: CharacterWithNextReset[];
 }
-
-export const CMD_CLASSES: CharacterClass[] = ["Dark Lord"];

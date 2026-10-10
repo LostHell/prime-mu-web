@@ -1,16 +1,16 @@
 import { addStatsSchema } from "./add-stats";
 
-test("rejects unsupported Command allocations instead of spending unassigned points", () => {
-  const allocation = {
+test("does not treat command as an allocatable stat", () => {
+  const result = addStatsSchema.safeParse({
     characterName: "Knight",
     str: 5,
     agi: 0,
     vit: 0,
     ene: 0,
-    cmd: 0,
-  };
-  expect(addStatsSchema.safeParse(allocation).success).toBe(true);
-  expect(addStatsSchema.safeParse({ ...allocation, cmd: 5 }).success).toBe(
-    false,
-  );
+    cmd: 5,
+  });
+  expect(result.success).toBe(true);
+  if (result.success) {
+    expect(result.data).not.toHaveProperty("cmd");
+  }
 });

@@ -26,6 +26,8 @@ jest.mock("./utils", () => ({
       Energy: 10,
       Money: 1000000000,
       Inventory: new Uint8Array(760).fill(255),
+      Quest: null,
+      FruitAddPoint: 0,
     }),
   ),
 }));
@@ -42,5 +44,14 @@ test.each([addStatsAction, resetCharacterAction])(
     expect(result.success).toBe(false);
     expect(result.message).toMatch(/character changed/);
     expect(prisma.character.updateMany).toHaveBeenCalledTimes(1);
+    if (action === resetCharacterAction) {
+      const [{ data }] = jest.mocked(prisma.character.updateMany).mock.calls[0];
+      expect(data).toEqual(
+        expect.objectContaining({
+          LevelUpPoint: expect.any(Number),
+        }),
+      );
+      expect(Number.isFinite(data.LevelUpPoint)).toBe(true);
+    }
   },
 );

@@ -15,7 +15,8 @@ import {
 import { CharacterSection, CharacterValues } from "../character-info";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
-import { getNextResetRule, MAX_RESETS } from "@/constants/resets";
+import { MAX_RESETS } from "@/constants/resets";
+import { getNextResetRule } from "@/lib/game/characters/reset";
 import { resetCharacterAction } from "@/lib/actions/reset-character";
 import { type CharacterWithNextReset } from "@/lib/types/character";
 import { startTransition, useActionState } from "react";
@@ -33,10 +34,39 @@ export function ResetForm({ character }: ResetFormProps) {
   );
 
   const nextResetRule = getNextResetRule(character.resets);
-  const resetCost = nextResetRule.money;
-  const hasRequiredLevel = character.level >= nextResetRule.level;
   const isUnderResetLimit = character.resets < MAX_RESETS;
-  const hasEnoughZen = character.zen >= resetCost;
+
+  if (!isUnderResetLimit) {
+    return (
+      <div className="flex flex-col gap-6">
+        <CharacterSection title="Reset requirements">
+          <CharacterValues
+            items={[
+              {
+                label: "Resets",
+                value: `${character.resets} / ${MAX_RESETS} maximum`,
+              },
+            ]}
+          />
+        </CharacterSection>
+        {state.message && (
+          <Alert variant={state.success ? "success" : "destructive"}>
+            <AlertDescription>{state.message}</AlertDescription>
+          </Alert>
+        )}
+        <Alert>
+          <AlertDescription>
+            You have reached the maximum of {MAX_RESETS} resets.
+          </AlertDescription>
+        </Alert>
+      </div>
+    );
+  }
+
+  const hasRequiredLevel =
+    nextResetRule !== null && character.level >= nextResetRule.level;
+  const hasEnoughZen =
+    nextResetRule !== null && character.zen >= nextResetRule.money;
   const nextReset = character.nextReset;
   const isOffline = account.isOffline;
   const equipmentIsEmpty = nextReset?.equipmentStatus === "empty";
@@ -52,11 +82,18 @@ export function ResetForm({ character }: ResetFormProps) {
   const requirements = [
     {
       label: "Level",
-      value: `${character.level} / ${nextResetRule.level} required`,
+      value: nextResetRule
+        ? `${character.level} / ${nextResetRule.level} required`
+        : "Unavailable",
     },
     { label: "Resets", value: `${character.resets} / ${MAX_RESETS} maximum` },
     { label: "Zen balance", value: character.zen.toLocaleString() },
-    { label: "Reset cost", value: resetCost.toLocaleString() },
+    {
+      label: "Reset cost",
+      value: nextResetRule
+        ? nextResetRule.money.toLocaleString()
+        : "Unavailable",
+    },
     {
       label: "Account",
       value: isOffline ? "Offline" : "Disconnect from the game",
@@ -72,7 +109,6 @@ export function ResetForm({ character }: ResetFormProps) {
   ];
   const canReset =
     hasRequiredLevel &&
-    isUnderResetLimit &&
     hasEnoughZen &&
     isOffline &&
     equipmentIsEmpty &&
@@ -100,9 +136,10 @@ export function ResetForm({ character }: ResetFormProps) {
             },
             {
               label: "Zen balance",
-              value: canReset
-                ? (character.zen - resetCost).toLocaleString()
-                : "Requirements not met",
+              value:
+                canReset && nextResetRule
+                  ? (character.zen - nextResetRule.money).toLocaleString()
+                  : "Requirements not met",
             },
             { label: "Attributes", value: "Class defaults" },
           ]}
@@ -132,15 +169,18 @@ export function ResetForm({ character }: ResetFormProps) {
                   and refresh.
                 </li>
               )}
-              {!hasRequiredLevel && (
+              {!nextResetRule && isUnderResetLimit && (
+                <li>
+                  Reset configuration is unavailable. Please contact support.
+                </li>
+              )}
+              {nextResetRule && !hasRequiredLevel && (
                 <li>Reach level {nextResetRule.level} to reset.</li>
               )}
-              {!isUnderResetLimit && (
-                <li>You have reached the maximum of {MAX_RESETS} resets.</li>
-              )}
-              {!hasEnoughZen && (
+              {nextResetRule && !hasEnoughZen && (
                 <li>
-                  You need {(resetCost - character.zen).toLocaleString()} more
+                  You need{" "}
+                  {(nextResetRule.money - character.zen).toLocaleString()} more
                   Zen.
                 </li>
               )}
@@ -148,7 +188,7 @@ export function ResetForm({ character }: ResetFormProps) {
           </AlertDescription>
         </Alert>
       )}
-      {canReset && (
+      {canReset && nextResetRule && (
         <div className="flex flex-col gap-4">
           <p className="text-muted-foreground text-sm">
             Resetting restores your class’s base attributes and deducts the
@@ -169,8 +209,8 @@ export function ResetForm({ character }: ResetFormProps) {
                 <AlertDialogDescription>
                   This cannot be undone. {character.name} will return to level{" "}
                   {nextReset?.resultingLevel}, base stats will be restored, and{" "}
-                  {resetCost.toLocaleString()} Zen will be deducted from your
-                  balance. Your total available stat points will be{" "}
+                  {nextResetRule.money.toLocaleString()} Zen will be deducted
+                  from your balance. Your total available stat points will be{" "}
                   {nextReset?.resultingAvailablePoints.toLocaleString()}.
                 </AlertDialogDescription>
               </AlertDialogHeader>

@@ -1,6 +1,6 @@
 "use server";
 
-import { getNextResetRule, MAX_RESETS } from "@/constants/resets";
+import { MAX_RESETS } from "@/constants/resets";
 import { resetCharacterSchema } from "@/lib/validation/reset-character";
 import { ActionState } from "@/lib/types/action-state";
 import { prisma } from "@/prisma/prisma";
@@ -9,6 +9,7 @@ import { getAuthenticatedUser, verifyCharacterOwnership } from "./utils";
 import {
   getBaseClass,
   getEquipmentStatus,
+  getNextResetRule,
   getResetPoints,
 } from "@/lib/game/characters/reset";
 
@@ -69,6 +70,12 @@ export async function resetCharacterAction(
   }
 
   const nextReset = getNextResetRule(currentResets);
+  if (!nextReset) {
+    return {
+      success: false,
+      message: "Reset configuration is unavailable. Please contact support.",
+    };
+  }
 
   if ((character.cLevel ?? 0) < nextReset.level) {
     return {

@@ -1,6 +1,7 @@
-import { resetCharacterAction } from "./reset-character";
 import { MAX_RESETS, MIN_RESET_LEVEL } from "@/constants/resets";
+import { serverConfig } from "@/lib/game/server-config";
 import { prisma } from "@/prisma/prisma";
+import { resetCharacterAction } from "./reset-character";
 import { verifyCharacterOwnership } from "./utils";
 
 jest.mock("@/lib/game/server-config", () =>
@@ -57,6 +58,22 @@ test("keeps quest and fruit points, as the game server's reset does", async () =
       }),
     }),
   );
+});
+
+test("rejects a reset the table does not define", async () => {
+  const table = serverConfig.reset.table;
+  serverConfig.reset.table = table.filter((rule) => rule.reset !== 1);
+  jest
+    .mocked(verifyCharacterOwnership)
+    .mockResolvedValue({ ...character, ResetCount: 0 } as never);
+  try {
+    const result = await reset();
+    expect(result.success).toBe(false);
+    expect(result.message).toMatch(/unavailable/);
+    expect(prisma.character.updateMany).not.toHaveBeenCalled();
+  } finally {
+    serverConfig.reset.table = table;
+  }
 });
 
 test("stops at the server's reset limit", async () => {

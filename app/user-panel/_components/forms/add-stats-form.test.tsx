@@ -8,12 +8,13 @@ jest.mock("@/lib/actions/add-stats", () => ({ addStatsAction: jest.fn() }));
 const character: Character = {
   name: "Knight",
   class: "Dark Knight",
+  classId: 16,
   level: 100,
   resets: 2,
   zen: 1000,
   pkCount: 0,
   freePoints: 20,
-  stats: { str: 30, agi: 20, vit: 25, ene: 10, cmd: 0 },
+  stats: { str: 30, agi: 20, vit: 25, ene: 10 },
 };
 
 test("keeps an allocation after rejection and clears it after a successful retry", async () => {

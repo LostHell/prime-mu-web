@@ -24,7 +24,6 @@ export async function addStatsAction(
     agi: Number(formData.get("agi")) || 0,
     vit: Number(formData.get("vit")) || 0,
     ene: Number(formData.get("ene")) || 0,
-    cmd: Number(formData.get("cmd")) || 0,
   });
 
   if (!validated.success) {
@@ -54,8 +53,8 @@ export async function addStatsAction(
     };
   }
 
-  const { characterName, str, agi, vit, ene, cmd } = validated.data;
-  const totalPoints = str + agi + vit + ene + cmd;
+  const { characterName, str, agi, vit, ene } = validated.data;
+  const totalPoints = str + agi + vit + ene;
 
   if (totalPoints === 0) {
     return { success: false, message: "No stats to add." };

@@ -105,8 +105,8 @@ async function withdrawZen(
         return "Zen withdrawn successfully.";
       }
 
-      // Guard the increment so the total can never exceed warehouse.Money's
-      // UnsignedInt capacity, atomically at the DB level.
+      // Guard the increment so the total can never exceed the server's
+      // warehouse money cap, atomically at the DB level.
       const { count: creditCount } = await tx.warehouse.updateMany({
         where: {
           AccountID: accountId,
