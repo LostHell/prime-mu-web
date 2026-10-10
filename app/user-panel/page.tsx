@@ -1,7 +1,6 @@
 "use client";
 
 import { Separator } from "@/components/ui/separator";
-import { CMD_CLASSES } from "@/lib/types/character";
 import { ActionPageLayout } from "./_components/action-page-layout";
 import {
   CharacterSection,
@@ -47,14 +46,6 @@ export default function UserPanelPage() {
                   label: "Energy",
                   value: character.stats.ene.toLocaleString(),
                 },
-                ...(CMD_CLASSES.includes(character.class)
-                  ? [
-                      {
-                        label: "Command",
-                        value: character.stats.cmd.toLocaleString(),
-                      },
-                    ]
-                  : []),
               ]}
             />
           </CharacterSection>

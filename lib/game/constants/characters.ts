@@ -8,5 +8,4 @@ export const CHARACTER_CLASS_BY_ID: Record<number, CharacterClass> = {
   32: "Fairy Elf",
   33: "Muse Elf",
   48: "Magic Gladiator",
-  444: "Dark Lord",
 };

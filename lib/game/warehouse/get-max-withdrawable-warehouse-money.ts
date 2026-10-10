@@ -1,6 +1,6 @@
 import { MAX_WAREHOUSE_MONEY } from "@/lib/game/constants/warehouse";
 
-/** Zen that can be withdrawn without exceeding warehouse.Money's UnsignedInt cap. */
+/** Zen that can be withdrawn without exceeding the server's warehouse money cap. */
 export const getMaxWithdrawableWarehouseMoney = (
   depositedCount: number,
   warehouseMoney: number,

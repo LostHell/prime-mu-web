@@ -1,0 +1,354 @@
+{
+  "server": {
+    "maxOnline": 120,
+    "experienceRate": 100,
+    "itemDropRate": 30
+  },
+  "character": {
+    "maxLevel": 350,
+    "maxStatPoint": 32767,
+    "levelUpPoints": {
+      "dw": 5,
+      "dk": 5,
+      "fe": 5,
+      "mg": 7
+    },
+    "plusStatPoint": 1,
+    "defaultStats": {
+      "dw": {
+        "str": 18,
+        "agi": 18,
+        "vit": 15,
+        "ene": 30
+      },
+      "dk": {
+        "str": 28,
+        "agi": 20,
+        "vit": 25,
+        "ene": 10
+      },
+      "fe": {
+        "str": 22,
+        "agi": 25,
+        "vit": 20,
+        "ene": 15
+      },
+      "mg": {
+        "str": 26,
+        "agi": 26,
+        "vit": 26,
+        "ene": 26
+      }
+    },
+    "quests": {
+      "0": {
+        "rewardPoints": 10,
+        "classes": [
+          "dw",
+          "dk",
+          "fe"
+        ]
+      },
+      "1": {
+        "rewardPoints": 10,
+        "classes": [
+          "dw",
+          "dk",
+          "fe"
+        ]
+      }
+    },
+    "heroLevelBonus": false
+  },
+  "reset": {
+    "limit": 40,
+    "table": [
+      {
+        "reset": 1,
+        "level": 350,
+        "money": 10000000,
+        "points": 380
+      },
+      {
+        "reset": 2,
+        "level": 350,
+        "money": 20000000,
+        "points": 380
+      },
+      {
+        "reset": 3,
+        "level": 350,
+        "money": 30000000,
+        "points": 380
+      },
+      {
+        "reset": 4,
+        "level": 350,
+        "money": 40000000,
+        "points": 380
+      },
+      {
+        "reset": 5,
+        "level": 350,
+        "money": 50000000,
+        "points": 380
+      },
+      {
+        "reset": 6,
+        "level": 350,
+        "money": 60000000,
+        "points": 380
+      },
+      {
+        "reset": 7,
+        "level": 350,
+        "money": 70000000,
+        "points": 380
+      },
+      {
+        "reset": 8,
+        "level": 350,
+        "money": 80000000,
+        "points": 380
+      },
+      {
+        "reset": 9,
+        "level": 350,
+        "money": 90000000,
+        "points": 380
+      },
+      {
+        "reset": 10,
+        "level": 350,
+        "money": 100000000,
+        "points": 380
+      },
+      {
+        "reset": 11,
+        "level": 350,
+        "money": 110000000,
+        "points": 380
+      },
+      {
+        "reset": 12,
+        "level": 350,
+        "money": 120000000,
+        "points": 380
+      },
+      {
+        "reset": 13,
+        "level": 350,
+        "money": 130000000,
+        "points": 380
+      },
+      {
+        "reset": 14,
+        "level": 350,
+        "money": 140000000,
+        "points": 380
+      },
+      {
+        "reset": 15,
+        "level": 350,
+        "money": 150000000,
+        "points": 380
+      },
+      {
+        "reset": 16,
+        "level": 350,
+        "money": 160000000,
+        "points": 380
+      },
+      {
+        "reset": 17,
+        "level": 350,
+        "money": 170000000,
+        "points": 380
+      },
+      {
+        "reset": 18,
+        "level": 350,
+        "money": 180000000,
+        "points": 380
+      },
+      {
+        "reset": 19,
+        "level": 350,
+        "money": 190000000,
+        "points": 380
+      },
+      {
+        "reset": 20,
+        "level": 350,
+        "money": 200000000,
+        "points": 380
+      },
+      {
+        "reset": 21,
+        "level": 350,
+        "money": 210000000,
+        "points": 380
+      },
+      {
+        "reset": 22,
+        "level": 350,
+        "money": 220000000,
+        "points": 380
+      },
+      {
+        "reset": 23,
+        "level": 350,
+        "money": 230000000,
+        "points": 380
+      },
+      {
+        "reset": 24,
+        "level": 350,
+        "money": 240000000,
+        "points": 380
+      },
+      {
+        "reset": 25,
+        "level": 350,
+        "money": 250000000,
+        "points": 380
+      },
+      {
+        "reset": 26,
+        "level": 350,
+        "money": 260000000,
+        "points": 380
+      },
+      {
+        "reset": 27,
+        "level": 350,
+        "money": 270000000,
+        "points": 380
+      },
+      {
+        "reset": 28,
+        "level": 350,
+        "money": 280000000,
+        "points": 380
+      },
+      {
+        "reset": 29,
+        "level": 350,
+        "money": 290000000,
+        "points": 380
+      },
+      {
+        "reset": 30,
+        "level": 350,
+        "money": 300000000,
+        "points": 380
+      },
+      {
+        "reset": 31,
+        "level": 350,
+        "money": 310000000,
+        "points": 380
+      },
+      {
+        "reset": 32,
+        "level": 350,
+        "money": 320000000,
+        "points": 380
+      },
+      {
+        "reset": 33,
+        "level": 350,
+        "money": 330000000,
+        "points": 380
+      },
+      {
+        "reset": 34,
+        "level": 350,
+        "money": 340000000,
+        "points": 380
+      },
+      {
+        "reset": 35,
+        "level": 350,
+        "money": 350000000,
+        "points": 380
+      },
+      {
+        "reset": 36,
+        "level": 350,
+        "money": 360000000,
+        "points": 380
+      },
+      {
+        "reset": 37,
+        "level": 350,
+        "money": 370000000,
+        "points": 380
+      },
+      {
+        "reset": 38,
+        "level": 350,
+        "money": 380000000,
+        "points": 380
+      },
+      {
+        "reset": 39,
+        "level": 350,
+        "money": 390000000,
+        "points": 380
+      },
+      {
+        "reset": 40,
+        "level": 350,
+        "money": 400000000,
+        "points": 380
+      }
+    ]
+  },
+  "events": {
+    "bloodCastle": [
+      0,
+      2,
+      4,
+      6,
+      8,
+      10,
+      12,
+      14,
+      16,
+      18,
+      20,
+      22
+    ],
+    "devilSquare": [
+      0.5,
+      4.5,
+      8.5,
+      12.5,
+      16.5,
+      20.5
+    ]
+  },
+  "maps": {
+    "0": "Lorencia",
+    "1": "Dungeon",
+    "2": "Davias",
+    "3": "Noria",
+    "4": "Lost Tower",
+    "5": "Dare Devil",
+    "6": "Arena",
+    "7": "Atlans",
+    "8": "Tarkan",
+    "9": "Devil Square 1",
+    "10": "Icarus",
+    "11": "Blood Castle 1",
+    "12": "Blood Castle 2",
+    "13": "Blood Castle 3",
+    "14": "Blood Castle 4",
+    "15": "Blood Castle 5",
+    "16": "Blood Castle 6"
+  },
+  "warehouse": {
+    "maxMoney": 2000000000
+  }
+}

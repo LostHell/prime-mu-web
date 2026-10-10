@@ -1,7 +1,10 @@
 "use server";
 
+import { ALLOCATABLE_STATS, STAT_LABELS } from "@/constants/character-rules";
+import { getMaxStatPoint } from "@/lib/game/characters/stat-limits";
 import { addStatsSchema } from "@/lib/validation/add-stats";
 import { ActionState } from "@/lib/types/action-state";
+import { formatNumber } from "@/lib/utils/numbers";
 import { prisma } from "@/prisma/prisma";
 import { revalidatePath } from "next/cache";
 import { getAuthenticatedUser, verifyCharacterOwnership } from "./utils";
@@ -21,7 +24,6 @@ export async function addStatsAction(
     agi: Number(formData.get("agi")) || 0,
     vit: Number(formData.get("vit")) || 0,
     ene: Number(formData.get("ene")) || 0,
-    cmd: Number(formData.get("cmd")) || 0,
   });
 
   if (!validated.success) {
@@ -51,8 +53,8 @@ export async function addStatsAction(
     };
   }
 
-  const { characterName, str, agi, vit, ene, cmd } = validated.data;
-  const totalPoints = str + agi + vit + ene + cmd;
+  const { characterName, str, agi, vit, ene } = validated.data;
+  const totalPoints = str + agi + vit + ene;
 
   if (totalPoints === 0) {
     return { success: false, message: "No stats to add." };
@@ -67,6 +69,31 @@ export async function addStatsAction(
     return { success: false, message: "Not enough free stat points." };
   }
 
+  const resultingStats = {
+    str: (character.Strength ?? 0) + str,
+    agi: (character.Dexterity ?? 0) + agi,
+    vit: (character.Vitality ?? 0) + vit,
+    ene: (character.Energy ?? 0) + ene,
+  };
+  const classId = character.Class ?? 0;
+  const errors = Object.fromEntries(
+    ALLOCATABLE_STATS.filter(
+      (stat) => resultingStats[stat] > getMaxStatPoint(classId, stat),
+    ).map((stat) => [
+      stat,
+      [
+        `${STAT_LABELS[stat]} cannot exceed ${formatNumber(getMaxStatPoint(classId, stat))}.`,
+      ],
+    ]),
+  );
+  if (Object.keys(errors).length) {
+    return {
+      success: false,
+      errors,
+      message: Object.values(errors).flat().join(" "),
+    };
+  }
+
   const { count } = await prisma.character.updateMany({
     where: {
       Name: characterName,
@@ -79,10 +106,10 @@ export async function addStatsAction(
       ResetCount: character.ResetCount,
     },
     data: {
-      Strength: (character.Strength ?? 0) + str,
-      Dexterity: (character.Dexterity ?? 0) + agi,
-      Vitality: (character.Vitality ?? 0) + vit,
-      Energy: (character.Energy ?? 0) + ene,
+      Strength: resultingStats.str,
+      Dexterity: resultingStats.agi,
+      Vitality: resultingStats.vit,
+      Energy: resultingStats.ene,
       LevelUpPoint: { decrement: totalPoints },
     },
   });

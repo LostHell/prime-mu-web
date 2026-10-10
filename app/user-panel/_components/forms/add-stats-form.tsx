@@ -12,6 +12,7 @@ import {
 import { CharacterSection, CharacterValues } from "../character-info";
 import { Input } from "@/components/ui/input";
 import { addStatsAction } from "@/lib/actions/add-stats";
+import { getMaxStatPoint } from "@/lib/game/characters/stat-limits";
 import { type Character } from "@/lib/types/character";
 import { ALLOCATABLE_STATS, STAT_LABELS } from "@/constants/character-rules";
 import type { ActionState } from "@/lib/types/action-state";
@@ -22,12 +23,12 @@ interface AddStatsFormProps {
 }
 
 export function AddStatsForm({ character }: AddStatsFormProps) {
-  const [pts, setPts] = useState({ str: 0, agi: 0, vit: 0, ene: 0, cmd: 0 });
+  const [pts, setPts] = useState({ str: 0, agi: 0, vit: 0, ene: 0 });
   const [state, formAction, isPending] = useActionState<ActionState, FormData>(
     async (previousState, formData) => {
       const result = await addStatsAction(previousState, formData);
       if (result.success) {
-        setPts({ str: 0, agi: 0, vit: 0, ene: 0, cmd: 0 });
+        setPts({ str: 0, agi: 0, vit: 0, ene: 0 });
       }
       return result;
     },
@@ -37,9 +38,21 @@ export function AddStatsForm({ character }: AddStatsFormProps) {
   const ptsTotal = Object.values(pts).reduce((a, b) => a + b, 0);
   const remaining = character.freePoints - ptsTotal;
 
-  const updateStat = (stat: keyof typeof pts, value: string) => {
+  const maxAddable = (stat: (typeof ALLOCATABLE_STATS)[number]) =>
+    Math.max(
+      0,
+      Math.min(
+        remaining + pts[stat],
+        getMaxStatPoint(character.classId, stat) - character.stats[stat],
+      ),
+    );
+
+  const updateStat = (
+    stat: (typeof ALLOCATABLE_STATS)[number],
+    value: string,
+  ) => {
     const num = parseInt(value) || 0;
-    const maxAllowed = remaining + pts[stat];
+    const maxAllowed = maxAddable(stat);
     const clamped = Math.max(0, Math.min(num, maxAllowed));
     setPts((prev) => ({ ...prev, [stat]: clamped }));
   };
@@ -50,7 +63,6 @@ export function AddStatsForm({ character }: AddStatsFormProps) {
     formData.set("agi", String(pts.agi));
     formData.set("vit", String(pts.vit));
     formData.set("ene", String(pts.ene));
-    formData.set("cmd", String(pts.cmd));
     formAction(formData);
   };
 
@@ -107,7 +119,7 @@ export function AddStatsForm({ character }: AddStatsFormProps) {
                 type="number"
                 inputMode="numeric"
                 min={0}
-                max={remaining + pts[stat]}
+                max={maxAddable(stat)}
                 step={1}
                 value={pts[stat] || ""}
                 onChange={(event) => updateStat(stat, event.target.value)}

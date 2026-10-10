@@ -27,3 +27,6 @@ next-env.d.ts
 # generated
 prisma/generated
 db
+
+# synced from the server by its "Sync server data to web" workflow
+lib/game/data/server-config.json
