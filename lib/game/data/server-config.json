@@ -350,5 +350,8 @@
   },
   "warehouse": {
     "maxMoney": 2000000000
+  },
+  "pkClear": {
+    "moneyPerKill": 15000000
   }
 }

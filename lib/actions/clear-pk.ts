@@ -1,7 +1,9 @@
 "use server";
 
+import { getPkClearCost } from "@/lib/game/characters/pk";
 import { clearPkSchema } from "@/lib/validation/clear-pk";
 import { ActionState } from "@/lib/types/action-state";
+import { formatNumber } from "@/lib/utils/numbers";
 import { prisma } from "@/prisma/prisma";
 import { revalidatePath } from "next/cache";
 import {
@@ -54,6 +56,15 @@ export async function clearPkAction(
     return { success: false, message: "Character has no PK kills to clear." };
   }
 
+  const cost = getPkClearCost(character.PkCount ?? 0);
+  const characterZen = character.Money ?? 0;
+  if (characterZen < cost) {
+    return {
+      success: false,
+      message: `Not enough Zen. Required: ${formatNumber(cost)}, available: ${formatNumber(characterZen)}.`,
+    };
+  }
+
   const { count } = await prisma.character.updateMany({
     where: {
       Name: characterName,
@@ -61,11 +72,13 @@ export async function clearPkAction(
       PkCount: character.PkCount,
       PkLevel: character.PkLevel,
       PkTime: character.PkTime,
+      Money: { gte: cost },
     },
     data: {
       PkCount: 0,
       PkLevel: NEUTRAL_PK_LEVEL,
       PkTime: 0,
+      Money: { decrement: cost },
     },
   });
   if (!count)
@@ -77,6 +90,9 @@ export async function clearPkAction(
   revalidatePath("/user-panel", "layout");
   return {
     success: true,
-    message: "PK status cleared. You are no longer a Player Killer.",
+    message:
+      cost > 0
+        ? `PK status cleared for ${formatNumber(cost)} Zen. You are no longer a Player Killer.`
+        : "PK status cleared. You are no longer a Player Killer.",
   };
 }

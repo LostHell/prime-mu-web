@@ -14,8 +14,13 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { clearPkAction } from "@/lib/actions/clear-pk";
+import { getPkClearCost } from "@/lib/game/characters/pk";
+import { formatNumber } from "@/lib/utils/numbers";
 import { type Character } from "@/lib/types/character";
-import { NEUTRAL_PK_LEVEL } from "@/constants/character-rules";
+import {
+  NEUTRAL_PK_LEVEL,
+  PK_CLEAR_COST_PER_KILL,
+} from "@/constants/character-rules";
 import { CharacterSection, CharacterValues } from "../character-info";
 import { startTransition, useActionState } from "react";
 
@@ -38,6 +43,8 @@ export function ClearPkForm({ character }: ClearPkFormProps) {
     character.pkCount > 0 ||
     (character.pkLevel ?? NEUTRAL_PK_LEVEL) > NEUTRAL_PK_LEVEL ||
     (character.pkTime ?? 0) > 0;
+  const cost = getPkClearCost(character.pkCount);
+  const hasEnoughZen = character.zen >= cost;
 
   return (
     <div className="flex flex-col gap-6">
@@ -45,6 +52,8 @@ export function ClearPkForm({ character }: ClearPkFormProps) {
         <CharacterValues
           items={[
             { label: "PK kills", value: character.pkCount },
+            { label: "Clear cost", value: `${formatNumber(cost)} Zen` },
+            { label: "Zen balance", value: formatNumber(character.zen) },
             { label: "Requirement", value: "Account offline" },
             {
               label: "Service status",
@@ -72,10 +81,24 @@ export function ClearPkForm({ character }: ClearPkFormProps) {
             Killer marks and the remaining penalty timer from your character,
             allowing you to enter towns and interact with NPCs freely.
           </p>
+          {cost > 0 && (
+            <p className="text-muted-foreground text-sm leading-relaxed">
+              Clearing costs {formatNumber(PK_CLEAR_COST_PER_KILL)} Zen per PK
+              kill, paid from the Zen your character carries.
+            </p>
+          )}
+          {!hasEnoughZen && (
+            <Alert variant="destructive">
+              <AlertDescription>
+                You need {formatNumber(cost - character.zen)} more Zen on your
+                character to clear its PK status.
+              </AlertDescription>
+            </Alert>
+          )}
           <AlertDialog>
             <AlertDialogTrigger asChild>
               <Button
-                disabled={isPending}
+                disabled={isPending || !hasEnoughZen}
                 className="w-full sm:w-auto sm:self-start"
               >
                 Clear PK Status
@@ -90,6 +113,13 @@ export function ClearPkForm({ character }: ClearPkFormProps) {
                     {character.name}
                   </span>{" "}
                   and remove the Player Killer mark. This cannot be undone.
+                  {cost > 0 && (
+                    <>
+                      {" "}
+                      {formatNumber(cost)} Zen will be taken from your
+                      character.
+                    </>
+                  )}
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
