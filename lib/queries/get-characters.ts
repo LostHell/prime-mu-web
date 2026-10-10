@@ -1,11 +1,9 @@
 import { CHARACTER_CLASS_BY_ID } from "@/lib/game/constants/characters";
 import { type AccountCharactersResult } from "@/lib/types/character";
 import { prisma } from "@/prisma/prisma";
-import {
-  getBaseClass,
-  getEquipmentStatus,
-  getResetPoints,
-} from "@/lib/game/characters/reset";
+import { getBaseClass } from "@/lib/game/characters/class";
+import { getEquipmentStatus } from "@/lib/game/characters/equipment";
+import { getResetPoints } from "@/lib/game/characters/reset";
 
 export async function getCharacters(
   accountId: string,

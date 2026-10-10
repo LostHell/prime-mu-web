@@ -1,24 +1,17 @@
 import { type ALLOCATABLE_STATS } from "@/constants/character-rules";
 import { serverConfig } from "@/lib/game/server-config";
-import { getAccumulatedResetPoints, getBaseClass } from "./reset";
+import { type ClassKey, getClassKey } from "./class";
+import { getAccumulatedResetPoints } from "./reset";
 
 type AllocatableStat = (typeof ALLOCATABLE_STATS)[number];
-type ClassKey = keyof typeof serverConfig.character.levelUpPoints;
-
-const CLASS_KEY_BY_BASE_CLASS: Record<number, ClassKey> = {
-  0: "dw",
-  16: "dk",
-  32: "fe",
-  48: "mg",
-};
 
 /**
- * Rules that live in the GameServer code rather than its config: when the
- * server has a HERO quest reward, finishing quest 2 grants PlusStatPoint more
- * for each level above 220 (ObjectManager.cpp, QuestReward.cpp).
+ * Quest 2's HERO reward, from ObjectManager.cpp and QuestReward.cpp: when the
+ * server has that reward, finishing the quest grants PlusStatPoint for each
+ * level above 220.
  */
-const HERO_QUEST_INDEX = "2";
-const HERO_LEVEL_BONUS_FROM_LEVEL = 220;
+const QUEST_THAT_GRANTS_LEVEL_BONUS = "2";
+const HERO_BONUS_STARTS_AFTER_LEVEL = 220;
 
 /** Highest fruit points at `level` (Fruit.cpp CFruit::Init). */
 const getMaxFruitPoints = (classKey: ClassKey, level: number): number => {
@@ -38,27 +31,30 @@ const getMaxFruitPoints = (classKey: ClassKey, level: number): number => {
  * the class can take, and fruits.
  */
 export const getMaxObtainablePoints = (classId: number): number | null => {
-  const classKey = CLASS_KEY_BY_BASE_CLASS[getBaseClass(classId)];
+  const classKey = getClassKey(classId);
   if (!classKey) return null;
 
   const { maxLevel, levelUpPoints, plusStatPoint, quests, heroLevelBonus } =
     serverConfig.character;
   const canTakeQuest = (questIndex: string) =>
     quests[questIndex]?.classes.includes(classKey) ?? false;
-  const questPoints = Object.entries(quests)
+  const questRewardPoints = Object.entries(quests)
     .filter(([questIndex]) => canTakeQuest(questIndex))
     .reduce((total, [, { rewardPoints }]) => total + rewardPoints, 0);
-  const heroPoints =
-    heroLevelBonus && canTakeQuest(HERO_QUEST_INDEX)
-      ? Math.max(0, maxLevel - HERO_LEVEL_BONUS_FROM_LEVEL) * plusStatPoint
+  const pointsFromHeroQuest =
+    heroLevelBonus && canTakeQuest(QUEST_THAT_GRANTS_LEVEL_BONUS)
+      ? Math.max(0, maxLevel - HERO_BONUS_STARTS_AFTER_LEVEL) * plusStatPoint
       : 0;
+  const resetPoints = getAccumulatedResetPoints(serverConfig.reset.limit);
+  const pointsFromLastLevelClimb = (maxLevel - 1) * levelUpPoints[classKey];
+  const fruitPoints = getMaxFruitPoints(classKey, maxLevel);
 
   return (
-    getAccumulatedResetPoints(serverConfig.reset.limit) +
-    (maxLevel - 1) * levelUpPoints[classKey] +
-    questPoints +
-    heroPoints +
-    getMaxFruitPoints(classKey, maxLevel)
+    resetPoints +
+    pointsFromLastLevelClimb +
+    questRewardPoints +
+    pointsFromHeroQuest +
+    fruitPoints
   );
 };
 
@@ -71,7 +67,7 @@ export const getMaxStatPoint = (
   stat: AllocatableStat,
 ): number => {
   const { maxStatPoint, defaultStats } = serverConfig.character;
-  const classKey = CLASS_KEY_BY_BASE_CLASS[getBaseClass(classId)];
+  const classKey = getClassKey(classId);
   const obtainable = getMaxObtainablePoints(classId);
   if (!classKey || obtainable === null) return maxStatPoint;
   return Math.min(maxStatPoint, defaultStats[classKey][stat] + obtainable);

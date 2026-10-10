@@ -6,12 +6,9 @@ import { ActionState } from "@/lib/types/action-state";
 import { prisma } from "@/prisma/prisma";
 import { revalidatePath } from "next/cache";
 import { getAuthenticatedUser, verifyCharacterOwnership } from "./utils";
-import {
-  getBaseClass,
-  getEquipmentStatus,
-  getNextResetRule,
-  getResetPoints,
-} from "@/lib/game/characters/reset";
+import { getBaseClass } from "@/lib/game/characters/class";
+import { getEquipmentStatus } from "@/lib/game/characters/equipment";
+import { getNextResetRule, getResetPoints } from "@/lib/game/characters/reset";
 
 export async function resetCharacterAction(
   _state: ActionState,
