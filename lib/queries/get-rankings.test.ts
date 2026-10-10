@@ -4,7 +4,7 @@ import {
   getRankedCharacters,
   getRankedCharactersByClass,
 } from "@/prisma/generated/prisma/sql";
-import { getTopCharacters } from "./get-top-characters";
+import { getRankings } from "./get-rankings";
 
 jest.mock("@/prisma/prisma", () => ({
   prisma: {
@@ -42,7 +42,7 @@ beforeEach(() => {
 });
 
 test("uses the generated unfiltered query and preserves global rank data", async () => {
-  const result = await getTopCharacters({ page: 2 });
+  const result = await getRankings({ page: 2 });
 
   expect(getRankedCharacters).toHaveBeenCalledWith(
     "%%",
@@ -66,7 +66,7 @@ test("uses the generated unfiltered query and preserves global rank data", async
 });
 
 test("uses the class-filtered query and binds escaped search text as a value", async () => {
-  await getTopCharacters({
+  await getRankings({
     query: "Blade_100%!' OR 1=1 --",
     classId: 16,
     pageSize: 3,
@@ -85,7 +85,7 @@ test("uses the class-filtered query and binds escaped search text as a value", a
 });
 
 test("normalizes invalid pagination at the query boundary", async () => {
-  await getTopCharacters({ page: 0, pageSize: 0 });
+  await getRankings({ page: 0, pageSize: 0 });
 
   expect(getRankedCharacters).toHaveBeenCalledWith(
     "%%",
@@ -95,7 +95,7 @@ test("normalizes invalid pagination at the query boundary", async () => {
 });
 
 test("does not query the database when the requested offset is not exact", async () => {
-  const result = await getTopCharacters({ page: Number.MAX_SAFE_INTEGER });
+  const result = await getRankings({ page: Number.MAX_SAFE_INTEGER });
 
   expect(result).toEqual({ characters: [], hasNext: false });
   expect(prisma.$queryRawTyped).not.toHaveBeenCalled();

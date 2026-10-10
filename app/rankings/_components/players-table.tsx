@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/table";
 import { CHARACTER_CLASS_BY_ID } from "@/lib/game/constants/characters";
 import { MAX_SEARCH_LENGTH } from "@/constants/pagination";
-import type { TopCharacterEntry } from "@/lib/queries/get-top-characters";
+import type { RankingEntry } from "@/lib/queries/get-rankings";
 import Form from "next/form";
 
 export default function PlayersTable({
@@ -20,14 +20,14 @@ export default function PlayersTable({
   query,
   classId,
 }: {
-  characters: TopCharacterEntry[];
+  characters: RankingEntry[];
   query: string;
   classId?: number;
 }) {
   return (
     <div>
       <Form
-        action="/top-players"
+        action="/rankings"
         scroll={false}
         className="mb-4 flex items-end gap-3"
       >
@@ -67,7 +67,7 @@ export default function PlayersTable({
                 asChild
               >
                 <Link
-                  href={search ? `/top-players?${search}` : "/top-players"}
+                  href={search ? `/rankings?${search}` : "/rankings"}
                   aria-current={active ? "page" : undefined}
                 >
                   {label}

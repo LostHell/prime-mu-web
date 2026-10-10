@@ -5,7 +5,7 @@ import { HTMLAttributes } from "react";
 const pageLayoutVariants = cva("mx-auto", {
   variants: {
     variant: {
-      /** Public marketing / content pages (top-players, download, home sections). */
+      /** Public marketing / content pages (rankings, download, home sections). */
       public: "max-w-5xl py-28  px-4",
       /** Narrow auth flows (login, register). */
       auth: "max-w-md py-28 px-4",

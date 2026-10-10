@@ -10,22 +10,22 @@ describe("SearchResultsPagination", () => {
       <SearchResultsPagination
         page={2}
         hasNext
-        pathname="/top-players"
+        pathname="/rankings"
         searchParams={{ query: "Dark Wizard", class: "1" }}
       />,
     );
 
     expect(screen.getByRole("link", { name: /previous/i })).toHaveAttribute(
       "href",
-      "/top-players?query=Dark+Wizard&class=1",
+      "/rankings?query=Dark+Wizard&class=1",
     );
     expect(screen.getByRole("link", { name: "Page 2" })).toHaveAttribute(
       "href",
-      "/top-players?query=Dark+Wizard&class=1&page=2",
+      "/rankings?query=Dark+Wizard&class=1&page=2",
     );
     expect(screen.getByRole("link", { name: /next/i })).toHaveAttribute(
       "href",
-      "/top-players?query=Dark+Wizard&class=1&page=3",
+      "/rankings?query=Dark+Wizard&class=1&page=3",
     );
   });
 
