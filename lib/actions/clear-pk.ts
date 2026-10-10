@@ -1,10 +1,9 @@
 "use server";
 
-import { ActionError, actionErrorMessage } from "@/lib/errors/action-error";
-import { getPkClearCost, splitPkClearPayment } from "@/lib/game/characters/pk";
+import { getPkClearCost } from "@/lib/game/characters/pk";
 import { clearPkSchema } from "@/lib/validation/clear-pk";
 import { ActionState } from "@/lib/types/action-state";
-import { bigIntToSafeNumber, formatNumber } from "@/lib/utils/numbers";
+import { formatNumber } from "@/lib/utils/numbers";
 import { prisma } from "@/prisma/prisma";
 import { revalidatePath } from "next/cache";
 import {
@@ -59,70 +58,36 @@ export async function clearPkAction(
 
   const cost = getPkClearCost(character.PkCount ?? 0);
   const characterZen = character.Money ?? 0;
-  const { fromCharacter, fromDeposit } = splitPkClearPayment(
-    cost,
-    characterZen,
-  );
-
-  if (fromDeposit > 0) {
-    const deposit = await prisma.accountDeposit.findUnique({
-      where: { AccountID: accountId },
-      select: { Zen: true },
-    });
-    const depositZen = deposit?.Zen ?? BigInt(0);
-    if (depositZen < BigInt(fromDeposit)) {
-      return {
-        success: false,
-        message: `Not enough Zen. Required: ${formatNumber(cost)}, available: ${formatNumber(characterZen)} on the character and ${formatNumber(bigIntToSafeNumber(depositZen))} deposited.`,
-      };
-    }
-  }
-
-  try {
-    await prisma.$transaction(async (tx) => {
-      const { count } = await tx.character.updateMany({
-        where: {
-          Name: characterName,
-          AccountID: accountId,
-          PkCount: character.PkCount,
-          PkLevel: character.PkLevel,
-          PkTime: character.PkTime,
-          Money: character.Money,
-        },
-        data: {
-          PkCount: 0,
-          PkLevel: NEUTRAL_PK_LEVEL,
-          PkTime: 0,
-          Money: { decrement: fromCharacter },
-        },
-      });
-      if (!count) {
-        throw new ActionError(
-          "Character status changed. Refresh and try again.",
-        );
-      }
-
-      if (fromDeposit > 0) {
-        const { count: paid } = await tx.accountDeposit.updateMany({
-          where: { AccountID: accountId, Zen: { gte: BigInt(fromDeposit) } },
-          data: { Zen: { decrement: BigInt(fromDeposit) } },
-        });
-        if (!paid) {
-          throw new ActionError(
-            "Your deposited Zen changed. Refresh and try again.",
-          );
-        }
-      }
-    });
-  } catch (err) {
+  if (characterZen < cost) {
     return {
       success: false,
-      message: actionErrorMessage(err, "Failed to clear PK status."),
+      message: `Not enough Zen. Required: ${formatNumber(cost)}, available: ${formatNumber(characterZen)}.`,
     };
   }
 
+  const { count } = await prisma.character.updateMany({
+    where: {
+      Name: characterName,
+      AccountID: accountId,
+      PkCount: character.PkCount,
+      PkLevel: character.PkLevel,
+      PkTime: character.PkTime,
+      Money: { gte: cost },
+    },
+    data: {
+      PkCount: 0,
+      PkLevel: NEUTRAL_PK_LEVEL,
+      PkTime: 0,
+      Money: { decrement: cost },
+    },
+  });
+  if (!count)
+    return {
+      success: false,
+      message: "Character status changed. Refresh and try again.",
+    };
+
   revalidatePath("/user-panel", "layout");
-  if (fromDeposit > 0) revalidatePath("/user-panel/deposits");
   return {
     success: true,
     message:

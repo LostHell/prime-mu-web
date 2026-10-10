@@ -352,6 +352,6 @@
     "maxMoney": 2000000000
   },
   "pkClear": {
-    "moneyPerKill": 25000000
+    "moneyPerKill": 15000000
   }
 }
