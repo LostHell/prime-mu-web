@@ -213,7 +213,7 @@ Use the primitive before writing markup:
 | Panel      | `Card`                                                                                                                                                                  |
 | Lists      | `Table` (gold Cinzel headers), `Pagination` / `SearchResultsPagination`                                                                                                 |
 | Messages   | `Alert` (persistent), `toast.*` from `sonner` (transient), `EmptyState`                                                                                                 |
-| Overlays   | `Dialog`, `AlertDialog` (confirm before irreversible actions), `Drawer`. For item hover use `ItemTooltip`.                                                              |
+| Overlays   | `Dialog`, `AlertDialog` (confirm before irreversible actions), `Drawer` (side drawers below `sm`: `calc(100% - spacing-16)`, 64px; `sm` and up cap at `max-w-sm`). For item hover use `ItemTooltip`. |
 | Text       | `Text` + `Headline`; never style raw `h1`–`h6`. Small uppercase section labels: `<Text variant="section">` (renders `h3`; pass `as="h2"` if needed).                    |
 | Game items | `ItemIcon`, `ItemTooltip` + `ItemCard`, `WarehouseGrid`                                                                                                                 |
 

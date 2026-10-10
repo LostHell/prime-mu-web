@@ -8,6 +8,7 @@ import {
   CHARACTER_SELECTION_COOKIE,
   CHARACTER_SELECTION_MAX_AGE,
 } from "@/constants/character-selection";
+import { setClientCookie } from "@/lib/utils/cookies";
 import {
   createContext,
   ReactNode,
@@ -49,7 +50,10 @@ export function UserPanelProvider({
   const setSelectedCharacter = useCallback(
     (character: CharacterWithNextReset | null) => {
       setSelectedName(character?.name ?? null);
-      document.cookie = `${CHARACTER_SELECTION_COOKIE}=${encodeURIComponent(character?.name ?? "")}; Path=/user-panel; Max-Age=${character ? CHARACTER_SELECTION_MAX_AGE : 0}; SameSite=Lax${window.location.protocol === "https:" ? "; Secure" : ""}`;
+      setClientCookie(CHARACTER_SELECTION_COOKIE, character?.name ?? "", {
+        path: "/user-panel",
+        maxAge: character ? CHARACTER_SELECTION_MAX_AGE : 0,
+      });
     },
     [],
   );

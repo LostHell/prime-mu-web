@@ -11,6 +11,10 @@ jest.mock("next/navigation", () => ({
   useRouter: () => ({ push: jest.fn() }),
 }));
 
+jest.mock("@/lib/actions/logout", () => ({
+  logoutAction: jest.fn(),
+}));
+
 const first: CharacterWithNextReset = {
   name: "Knight",
   class: "Dark Knight",
