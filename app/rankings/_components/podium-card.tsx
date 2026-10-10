@@ -1,6 +1,6 @@
 import Text from "@/components/ui/text";
 import { Card, CardContent } from "@/components/ui/card";
-import { TopCharacterEntry } from "@/lib/queries/get-top-characters";
+import { RankingEntry } from "@/lib/queries/get-rankings";
 import { cn } from "@/lib/utils";
 import { Medal, Trophy } from "lucide-react";
 
@@ -25,7 +25,7 @@ const PODIUM_CONFIG: Record<
 };
 
 interface PodiumCardProps {
-  character?: TopCharacterEntry;
+  character?: RankingEntry;
   position: PodiumPosition;
   className?: string;
 }

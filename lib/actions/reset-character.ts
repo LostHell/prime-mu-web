@@ -171,7 +171,7 @@ export async function resetCharacterAction(
   }
 
   revalidatePath("/user-panel", "layout");
-  revalidatePath("/top-players");
+  revalidatePath("/rankings");
   return {
     success: true,
     message: `Character reset! Total points: ${totalPointsAfterReset.toLocaleString()}. ${resetCost.toLocaleString()} Zen spent.`,

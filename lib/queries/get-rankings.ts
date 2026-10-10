@@ -7,7 +7,7 @@ import {
 } from "@/prisma/generated/prisma/sql";
 import { MAX_SEARCH_LENGTH, RANKING_PAGE_SIZE } from "@/constants/pagination";
 
-export interface TopCharacterEntry {
+export interface RankingEntry {
   rank: number;
   name: string;
   class: CharacterClass;
@@ -16,7 +16,7 @@ export interface TopCharacterEntry {
   guild?: string;
 }
 
-export async function getTopCharacters({
+export async function getRankings({
   page = 1,
   query = "",
   classId,
@@ -61,7 +61,7 @@ export async function getTopCharacters({
       })
     : [];
   const guildMap = new Map(guildMembers.map((g) => [g.Name, g.G_Name]));
-  const characters: TopCharacterEntry[] = visible.map((row) => ({
+  const characters: RankingEntry[] = visible.map((row) => ({
     rank: Number(row.ranking),
     name: row.Name,
     class: CHARACTER_CLASS_BY_ID[row.Class ?? 0],

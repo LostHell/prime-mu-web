@@ -1,8 +1,8 @@
-import PlayersTable from "@/app/top-players/_components/players-table";
-import PodiumCard from "@/app/top-players/_components/podium-card";
+import PlayersTable from "@/app/rankings/_components/players-table";
+import PodiumCard from "@/app/rankings/_components/podium-card";
 import Divider from "@/components/divider";
 import { Card, CardContent } from "@/components/ui/card";
-import { getTopCharacters } from "@/lib/queries/get-top-characters";
+import { getRankings } from "@/lib/queries/get-rankings";
 import {
   getPageNumber,
   getSearchQuery,
@@ -16,7 +16,7 @@ import {
 } from "@/components/search-results-pagination";
 import { redirect } from "next/navigation";
 
-const TopPlayersRankings = async ({
+const RankingsList = async ({
   searchParams,
 }: {
   searchParams: SearchParams;
@@ -30,8 +30,8 @@ const TopPlayersRankings = async ({
       ? Number(params.class)
       : undefined;
   const [result, podium] = await Promise.all([
-    getTopCharacters({ page, query, classId }),
-    getTopCharacters({ pageSize: 3 }),
+    getRankings({ page, query, classId }),
+    getRankings({ pageSize: 3 }),
   ]);
   const [first, second, third] = podium.characters;
   const paginationSearchParams: Record<string, string> = {
@@ -40,7 +40,7 @@ const TopPlayersRankings = async ({
   };
 
   if (page > 1 && result.characters.length === 0) {
-    redirect(getPaginationHref("/top-players", 1, paginationSearchParams));
+    redirect(getPaginationHref("/rankings", 1, paginationSearchParams));
   }
 
   return (
@@ -76,7 +76,7 @@ const TopPlayersRankings = async ({
             <SearchResultsPagination
               page={page}
               hasNext={result.hasNext}
-              pathname="/top-players"
+              pathname="/rankings"
               searchParams={paginationSearchParams}
             />
           )}
@@ -86,4 +86,4 @@ const TopPlayersRankings = async ({
   );
 };
 
-export default TopPlayersRankings;
+export default RankingsList;
