@@ -637,10 +637,6 @@ export type MarketplaceListingSumOrderByAggregateInput = {
   JewelOfChaos?: Prisma.SortOrder
 }
 
-export type BytesFieldUpdateOperationsInput = {
-  set?: runtime.Bytes
-}
-
 
 
 export type MarketplaceListingSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{

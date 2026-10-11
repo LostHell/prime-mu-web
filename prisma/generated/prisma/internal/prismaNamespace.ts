@@ -1904,7 +1904,6 @@ export type GuildMemberOrderByRelevanceFieldEnum = (typeof GuildMemberOrderByRel
 
 export const MEMB_INFOOrderByRelevanceFieldEnum = {
   memb___id: 'memb___id',
-  memb__pwd: 'memb__pwd',
   memb_name: 'memb_name',
   mail_addr: 'mail_addr',
   sno__numb: 'sno__numb',

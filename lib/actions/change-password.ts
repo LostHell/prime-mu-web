@@ -1,6 +1,7 @@
 "use server";
 
 import { changePasswordSchema } from "@/lib/validation/change-password";
+import { encodePassword, verifyPassword } from "@/lib/auth/password-encryption";
 import { ActionState } from "@/lib/types/action-state";
 import { prisma } from "@/prisma/prisma";
 import { getAuthenticatedUser } from "./utils";
@@ -32,13 +33,22 @@ export async function changePasswordAction(
     where: { memb___id: accountId },
   });
 
-  if (!account || account.memb__pwd !== validated.data.currentPassword) {
+  if (
+    !account ||
+    !verifyPassword(
+      account.memb___id,
+      validated.data.currentPassword,
+      account.memb__pwd,
+    )
+  ) {
     return { success: false, message: "Current password is incorrect." };
   }
 
   await prisma.mEMB_INFO.update({
     where: { memb___id: accountId },
-    data: { memb__pwd: validated.data.newPassword },
+    data: {
+      memb__pwd: encodePassword(account.memb___id, validated.data.newPassword),
+    },
   });
 
   return { success: true, message: "Password changed successfully." };

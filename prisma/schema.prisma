@@ -126,7 +126,7 @@ model GuildMember {
 
 model MEMB_INFO {
   memb___id         String   @id @db.VarChar(10)
-  memb__pwd         String   @db.VarChar(10)
+  memb__pwd         Bytes    @db.VarBinary(16)
   memb_name         String   @db.VarChar(10)
   mail_addr         String?  @db.VarChar(50)
   sno__numb         String   @db.Char(18)

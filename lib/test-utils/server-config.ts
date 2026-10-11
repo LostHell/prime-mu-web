@@ -39,4 +39,5 @@ export const serverConfig: ServerConfig = {
   maps: { "0": "Lorencia" },
   warehouse: { maxMoney: 2_000_000_000 },
   pkClear: { moneyPerKill: 15_000_000 },
+  account: { md5Encryption: 1 },
 };

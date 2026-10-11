@@ -1,4 +1,5 @@
 import { loginSchema } from "@/lib/validation/login";
+import { verifyPassword } from "@/lib/auth/password-encryption";
 import { prisma } from "@/prisma/prisma";
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
@@ -39,7 +40,13 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           return null;
         }
 
-        if (account.memb__pwd !== validatedCredentials.data.password) {
+        if (
+          !verifyPassword(
+            account.memb___id,
+            validatedCredentials.data.password,
+            account.memb__pwd,
+          )
+        ) {
           return null;
         }
 
