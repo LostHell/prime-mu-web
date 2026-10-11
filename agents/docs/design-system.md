@@ -167,7 +167,7 @@ All tokens live in `app/globals.css` as HSL channels (`--gold: 45 90% 50%`) and 
 | Token                                  | Use                                                                                                                                                                 |
 | -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `background` / `foreground`            | Page ground and default text.                                                                                                                                       |
-| `card`, `popover` (+ `-foreground`)    | Raised panels (with `backdrop-blur-md`); select, menu and toast surfaces.                                                                                           |
+| `card`, `popover` (+ `-foreground`)    | Raised panels; select, menu and toast surfaces.                                                                                                                     |
 | `primary` / `primary-foreground`       | Gold fill + dark ink on it. `primary` = `gold`.                                                                                                                     |
 | `secondary`, `muted` (+ `-foreground`) | Low-emphasis fills. `muted-foreground` (55% L, ≈5:1 on `background`) for hints and descriptions.                                                                    |
 | `accent` / `accent-foreground`         | Deep purple: info toasts, menu checkbox/radio focus only.                                                                                                           |
@@ -188,7 +188,8 @@ All tokens live in `app/globals.css` as HSL channels (`--gold: 45 90% 50%`) and 
 
 - Tailwind 0.25rem unit. Controls (button, input, select, tab list, menu item) default to `h-12` (48px); `sm` `h-10`. Button sizes: `default`, `sm`, `icon` (48px square), `icon-xs` (32px square).
 - Cards: `py-5`, `gap-5`, sections `px-6`. Table cells `px-4 py-3`.
-- `PageLayout`: `public` `max-w-5xl py-28`, `auth` `max-w-md py-28`, `panel` `max-w-5xl py-8`.
+- `PageLayout`: `public` `max-w-5xl pt-8 pb-16`, `auth` `max-w-md pt-8 pb-16`, `panel` `max-w-5xl py-8`.
+- The page ground is flat `bg-background`. There is no fixed site-wide background image. A page hero that needs the castle art sets `background-image: url("/hero-banner.jpg")` on itself.
 
 ### Radius
 

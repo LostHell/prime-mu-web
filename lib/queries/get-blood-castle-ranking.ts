@@ -1,11 +1,12 @@
-import { CHARACTER_CLASS_BY_ID } from "@/lib/game/constants/characters";
+import { characterClassName } from "@/lib/game/characters/class-name";
+import { UNKNOWN_CHARACTER_CLASS } from "@/lib/game/constants/characters";
 import { CharacterClass } from "@/lib/types/character";
 import { prisma } from "@/prisma/prisma";
 
 export interface BloodCastleRankingEntry {
   rank: number;
   name: string;
-  class: CharacterClass;
+  class: CharacterClass | typeof UNKNOWN_CHARACTER_CLASS;
   score: number;
 }
 
@@ -32,8 +33,7 @@ export async function getBloodCastleRanking(): Promise<
   return rankings.map((entry, i) => ({
     rank: i + 1,
     name: entry.Name,
-    class:
-      CHARACTER_CLASS_BY_ID[classMap.get(entry.Name) ?? 0],
+    class: characterClassName(classMap.get(entry.Name)),
     score: entry.Score ?? 0,
   }));
 }

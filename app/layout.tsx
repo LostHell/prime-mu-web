@@ -1,3 +1,4 @@
+import EventTimersBar from "@/components/event-timers-bar";
 import Header from "@/components/header";
 import { SiteFooter } from "@/components/site-footer";
 import { Toaster } from "@/components/ui/sonner";
@@ -36,8 +37,8 @@ const RootLayout = ({
       suppressHydrationWarning
     >
       <body className="bg-background text-foreground min-h-screen font-sans antialiased">
-        <div className="page-background" />
         <Header />
+        <EventTimersBar />
         {children}
         <SiteFooter />
         <Toaster />

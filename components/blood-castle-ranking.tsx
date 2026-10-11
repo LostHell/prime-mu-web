@@ -1,6 +1,5 @@
 import EventCountdown from "@/components/event-countdown";
 import { Card, CardContent } from "@/components/ui/card";
-import OrnamentLine from "@/components/ui/ornament-line";
 import {
   Table,
   TableBody,
@@ -22,9 +21,7 @@ const BloodCastleRows = async () => {
       {bloodCastleRanking.map((entry) => (
         <TableRow key={entry.name}>
           <TableCell className="text-gold">{entry.rank}</TableCell>
-          <TableCell className="font-medium">
-            {entry.name}
-          </TableCell>
+          <TableCell className="font-medium">{entry.name}</TableCell>
           <TableCell>{entry.score.toLocaleString()}</TableCell>
         </TableRow>
       ))}
@@ -52,30 +49,33 @@ const RowsSkeleton = () => (
 
 const BloodCastleRanking = () => {
   return (
-    <Card>
-      <CardContent>
-        <div className="mb-2 flex items-center justify-between gap-3">
-          <Text variant="h3">Blood Castle</Text>
-          <EventCountdown
-            scheduleHours={eventSchedules.bloodCastle}
-            colorClass="text-crimson"
-          />
-        </div>
-        <OrnamentLine className="mb-4" />
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>#</TableHead>
-              <TableHead>Name</TableHead>
-              <TableHead>Score</TableHead>
-            </TableRow>
-          </TableHeader>
-          <Suspense fallback={<RowsSkeleton />}>
-            <BloodCastleRows />
-          </Suspense>
-        </Table>
-      </CardContent>
-    </Card>
+    <section>
+      <div className="mb-4 flex items-end justify-between gap-3">
+        <Text variant="h3" as="h3">
+          Blood Castle
+        </Text>
+        <EventCountdown
+          scheduleHours={eventSchedules.bloodCastle}
+          colorClass="text-crimson"
+        />
+      </div>
+      <Card>
+        <CardContent>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>#</TableHead>
+                <TableHead>Name</TableHead>
+                <TableHead>Score</TableHead>
+              </TableRow>
+            </TableHeader>
+            <Suspense fallback={<RowsSkeleton />}>
+              <BloodCastleRows />
+            </Suspense>
+          </Table>
+        </CardContent>
+      </Card>
+    </section>
   );
 };
 

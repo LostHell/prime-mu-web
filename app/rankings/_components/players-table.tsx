@@ -1,7 +1,7 @@
-import Link from "next/link";
+import ClassFilter from "@/app/rankings/_components/class-filter";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Field, FieldLabel } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -10,111 +10,108 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { CHARACTER_CLASS_BY_ID } from "@/lib/game/constants/characters";
 import { MAX_SEARCH_LENGTH } from "@/constants/pagination";
 import type { RankingEntry } from "@/lib/queries/get-rankings";
+import { cn } from "@/lib/utils";
+import { formatNumber } from "@/lib/utils/numbers";
 import Form from "next/form";
+import type { RankingView } from "./rankings-tabs";
 
 export default function PlayersTable({
   characters,
   query,
   classId,
+  view,
+  onlineNames,
 }: {
   characters: RankingEntry[];
   query: string;
   classId?: number;
+  view: RankingView;
+  onlineNames: ReadonlySet<string>;
 }) {
   return (
     <div>
       <Form
         action="/rankings"
         scroll={false}
-        className="mb-4 flex items-end gap-3"
+        className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end"
       >
-        <Field>
+        {view !== "players" ? (
+          <input type="hidden" name="view" value={view} />
+        ) : null}
+        <Field className="flex-1">
           <FieldLabel htmlFor="player-search">Search players</FieldLabel>
           <Input
             id="player-search"
             name="query"
             defaultValue={query}
             maxLength={MAX_SEARCH_LENGTH}
-            placeholder="Character name"
+            placeholder="Search character..."
           />
         </Field>
-        {classId !== undefined && (
-          <input type="hidden" name="class" value={classId} />
-        )}
+        <Field className="sm:w-52">
+          <FieldLabel htmlFor="player-class">Class</FieldLabel>
+          <ClassFilter classId={classId} />
+        </Field>
         <Button type="submit">Search</Button>
       </Form>
-      <nav
-        aria-label="Filter players by class"
-        className="mb-6 flex flex-wrap gap-2"
-      >
-        {[["", "All"], ...Object.entries(CHARACTER_CLASS_BY_ID)].map(
-          ([id, label]) => {
-            const active =
-              (classId === undefined ? "" : String(classId)) === id;
-            const params = new URLSearchParams({
-              ...(query ? { query } : {}),
-              ...(id ? { class: id } : {}),
-            });
-            const search = params.toString();
-            return (
-              <Button
-                key={id}
-                size="sm"
-                variant={active ? "outline" : "ghost"}
-                asChild
-              >
-                <Link
-                  href={search ? `/rankings?${search}` : "/rankings"}
-                  aria-current={active ? "page" : undefined}
-                >
-                  {label}
-                </Link>
-              </Button>
-            );
-          },
-        )}
-      </nav>
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Rank</TableHead>
-            <TableHead>Name</TableHead>
+            <TableHead>#</TableHead>
+            <TableHead>Character</TableHead>
             <TableHead className="hidden md:table-cell">Class</TableHead>
-            <TableHead>Level</TableHead>
+            <TableHead className="hidden lg:table-cell">Guild</TableHead>
             <TableHead>Resets</TableHead>
-            <TableHead className="hidden md:table-cell">Guild</TableHead>
+            <TableHead>Level</TableHead>
+            <TableHead className="hidden sm:table-cell">Status</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {!characters.length && (
             <TableRow>
-              <TableCell colSpan={6}>
+              <TableCell colSpan={7}>
                 No characters match these filters.
               </TableCell>
             </TableRow>
           )}
-          {characters.map((character) => (
-            <TableRow key={character.name}>
-              <TableCell className="text-gold">{character.rank}</TableCell>
-              <TableCell className="font-medium">
-                <span>{character.name}</span>
-                <span className="block text-xs md:hidden">
+          {characters.map((character) => {
+            const online = onlineNames.has(character.name);
+            return (
+              <TableRow key={character.name}>
+                <TableCell className="text-gold">{character.rank}</TableCell>
+                <TableCell className="font-medium">
+                  <span>{character.name}</span>
+                  <span className="text-muted-foreground block text-xs md:hidden">
+                    {character.class}
+                  </span>
+                </TableCell>
+                <TableCell className="hidden md:table-cell">
                   {character.class}
-                </span>
-              </TableCell>
-              <TableCell className="hidden md:table-cell">
-                {character.class}
-              </TableCell>
-              <TableCell>{character.level}</TableCell>
-              <TableCell>{character.resets}</TableCell>
-              <TableCell className="text-muted-foreground hidden md:table-cell">
-                {character.guild || "—"}
-              </TableCell>
-            </TableRow>
-          ))}
+                </TableCell>
+                <TableCell className="text-muted-foreground hidden lg:table-cell">
+                  {character.guild || "—"}
+                </TableCell>
+                <TableCell className="text-gold">
+                  {formatNumber(character.resets)}
+                </TableCell>
+                <TableCell>{formatNumber(character.level)}</TableCell>
+                <TableCell className="hidden sm:table-cell">
+                  <span className="flex items-center gap-2">
+                    <span
+                      className={cn(
+                        "size-2 rounded-full",
+                        online ? "bg-online" : "bg-muted-foreground",
+                      )}
+                      aria-hidden="true"
+                    />
+                    {online ? "Online" : "Offline"}
+                  </span>
+                </TableCell>
+              </TableRow>
+            );
+          })}
         </TableBody>
       </Table>
     </div>

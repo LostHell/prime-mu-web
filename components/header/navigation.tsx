@@ -34,7 +34,7 @@ export default function Navigation({
   const avatarItem = accountItems.find((item) => item.variant === "avatar");
 
   return (
-    <nav className="bg-background/80 border-border border-b backdrop-blur-md">
+    <nav className="bg-background/80 border-border border-b">
       <div className="mx-auto grid max-w-5xl grid-cols-[minmax(0,1fr)_auto] items-center px-4 py-3 md:grid-cols-3">
         <BrandLockup />
 

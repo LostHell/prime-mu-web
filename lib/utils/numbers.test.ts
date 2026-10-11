@@ -1,6 +1,7 @@
 import {
   bigIntToSafeNumber,
   clampAmount,
+  formatCompact,
   formatNumber,
   parseAmountInput,
 } from "./numbers";
@@ -23,6 +24,23 @@ describe("formatNumber", () => {
 
   test("formats small numbers without separators", () => {
     expect(formatNumber(42)).toBe("42");
+  });
+});
+
+describe("formatCompact", () => {
+  test("leaves small values in full", () => {
+    expect(formatCompact(380)).toBe("380");
+    expect(formatCompact(350)).toBe("350");
+  });
+
+  test("shortens zen-sized amounts", () => {
+    expect(formatCompact(10_000_000)).toBe("10M");
+    expect(formatCompact(32_767)).toBe("32.8K");
+  });
+
+  test("promotes a rounded thousand of a unit to the next unit", () => {
+    expect(formatCompact(999_950)).toBe("1M");
+    expect(formatCompact(999_950_000)).toBe("1B");
   });
 });
 

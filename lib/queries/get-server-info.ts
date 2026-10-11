@@ -2,15 +2,16 @@ import { MAX_RESETS, POINTS_PER_RESET } from "@/constants/resets";
 import {
   DROP_RATE,
   EXPERIENCE_RATE,
-  MAX_ONLINE,
   MAX_LEVEL,
+  MAX_ONLINE,
   VERSION,
 } from "@/constants/server";
 import { ServerInfo } from "@/lib/types/server-info";
 import { prisma } from "@/prisma/prisma";
+import { cache } from "react";
 import { getServerStatus } from "./get-server-status";
 
-export async function getServerInfo(): Promise<ServerInfo> {
+export const getServerInfo = cache(async (): Promise<ServerInfo> => {
   const [online, registered, guilds, statusResult] = await Promise.all([
     prisma.mEMB_STAT.count({ where: { ConnectStat: { not: 0 } } }),
     prisma.mEMB_INFO.count(),
@@ -31,4 +32,4 @@ export async function getServerInfo(): Promise<ServerInfo> {
     guilds,
     status: statusResult.status,
   };
-}
+});

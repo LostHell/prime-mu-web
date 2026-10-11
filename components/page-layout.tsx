@@ -6,9 +6,9 @@ const pageLayoutVariants = cva("mx-auto", {
   variants: {
     variant: {
       /** Public marketing / content pages (rankings, download, home sections). */
-      public: "max-w-5xl py-28  px-4",
+      public: "max-w-5xl pt-8 pb-16 px-4",
       /** Narrow auth flows (login, register). */
-      auth: "max-w-md py-28 px-4",
+      auth: "max-w-md pt-12 pb-16 px-4",
       /** User-panel pages — used inside `app/user-panel/layout.tsx`'s `<main>`. */
       panel: "max-w-5xl py-8 px-4",
     },

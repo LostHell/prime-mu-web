@@ -1,4 +1,5 @@
-import { CHARACTER_CLASS_BY_ID } from "@/lib/game/constants/characters";
+import { characterClassName } from "@/lib/game/characters/class-name";
+import { UNKNOWN_CHARACTER_CLASS } from "@/lib/game/constants/characters";
 import { CharacterClass } from "@/lib/types/character";
 import { prisma } from "@/prisma/prisma";
 import {
@@ -10,7 +11,7 @@ import { MAX_SEARCH_LENGTH, RANKING_PAGE_SIZE } from "@/constants/pagination";
 export interface RankingEntry {
   rank: number;
   name: string;
-  class: CharacterClass;
+  class: CharacterClass | typeof UNKNOWN_CHARACTER_CLASS;
   level: number;
   resets: number;
   guild?: string;
@@ -64,7 +65,7 @@ export async function getRankings({
   const characters: RankingEntry[] = visible.map((row) => ({
     rank: Number(row.ranking),
     name: row.Name,
-    class: CHARACTER_CLASS_BY_ID[row.Class ?? 0],
+    class: characterClassName(row.Class),
     level: Number(row.cLevel),
     resets: Number(row.ResetCount),
     guild: guildMap.get(row.Name),

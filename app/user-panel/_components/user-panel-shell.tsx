@@ -10,7 +10,7 @@ export function UserPanelShell({ children }: UserPanelShellProps) {
     <PageLayout
       as="div"
       variant="panel"
-      className="bg-card/80 border-border relative lg:border-x backdrop-blur-md"
+      className="bg-card/80 border-border relative lg:border-x"
     >
       <UserPanelFrame>{children}</UserPanelFrame>
     </PageLayout>

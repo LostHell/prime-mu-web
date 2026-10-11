@@ -14,6 +14,35 @@ export const bigIntToSafeNumber = (value: bigint): number => {
 export const formatNumber = (value: number): string =>
   value.toLocaleString("en-US");
 
+/** Shortens large figures so a stat row stays on one line (10,000,000 → 10M). */
+export const formatCompact = (value: number): string => {
+  const units = [
+    { threshold: 1_000_000_000, divisor: 1_000_000_000, suffix: "B" },
+    { threshold: 1_000_000, divisor: 1_000_000, suffix: "M" },
+    { threshold: 10_000, divisor: 1_000, suffix: "K" },
+  ];
+  const abs = Math.abs(value);
+  const unit = units.find((item) => abs >= item.threshold);
+  if (!unit) return formatNumber(value);
+
+  let divisor = unit.divisor;
+  let suffix = unit.suffix;
+  let scaled = Math.round((abs / divisor) * 10) / 10;
+  if (scaled >= 1000 && suffix === "K") {
+    divisor = 1_000_000;
+    suffix = "M";
+    scaled = Math.round((abs / divisor) * 10) / 10;
+  }
+  if (scaled >= 1000 && suffix === "M") {
+    divisor = 1_000_000_000;
+    suffix = "B";
+    scaled = Math.round((abs / divisor) * 10) / 10;
+  }
+
+  const text = Number.isInteger(scaled) ? String(scaled) : scaled.toFixed(1);
+  return `${value < 0 ? "-" : ""}${text}${suffix}`;
+};
+
 /** Parses a user-typed amount. Empty → 0 so the field can be cleared while
  * typing. Commas are stripped so pasted formatted values like "1,000" work.
  * Returns `null` for non-integers so the caller can ignore the keystroke. */

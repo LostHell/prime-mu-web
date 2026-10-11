@@ -1,27 +1,21 @@
-import BloodCastleRanking from "@/components/blood-castle-ranking";
-import DevilSquareRanking from "@/components/devil-square-ranking";
-import Divider from "@/components/divider";
-import Hero from "@/components/hero";
-import LastDisconnected from "@/components/last-disconnected";
+import HomeHero from "@/app/_components/home-hero";
+import HomeNews from "@/app/_components/home-news";
+import StartPlaying from "@/app/_components/start-playing";
+import TopPlayers from "@/app/_components/top-players";
+import TradeShowcase from "@/app/_components/trade-showcase";
 import PageLayout from "@/components/page-layout";
-import ServerInfo from "@/components/server-info";
-import ServerInfoGrid from "@/components/server-info-grid";
 
-const Home = async () => {
-  return ( 
-    <PageLayout>
-      <Hero />
-      <ServerInfo />
-      <Divider />
-      <ServerInfoGrid />
-      <Divider />
-      <div className="grid gap-6 md:grid-cols-2">
-        <DevilSquareRanking />
-        <BloodCastleRanking />
-      </div>
-      <Divider />
-      <LastDisconnected />
-    </PageLayout>
+const Home = () => {
+  return (
+    <>
+      <HomeHero />
+      <PageLayout className="flex flex-col gap-10 pt-8 pb-16">
+        <HomeNews />
+        <StartPlaying />
+        <TradeShowcase />
+        <TopPlayers />
+      </PageLayout>
+    </>
   );
 };
 

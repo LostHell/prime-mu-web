@@ -1,20 +1,33 @@
 import RankingsList from "@/app/rankings/_components/rankings-list";
+import PageHero from "@/components/page-hero";
 import PageLayout from "@/components/page-layout";
-import Headline from "@/components/ui/headline";
-import Text from "@/components/ui/text";
 import { BRAND } from "@/constants/app";
+import { getServerStatus } from "@/lib/queries/get-server-status";
+import { formatServerLiveNote } from "@/lib/utils/dates";
 import type { SearchParams } from "@/lib/utils/pagination";
+import type { Metadata } from "next";
 
-const Rankings = ({ searchParams }: { searchParams: SearchParams }) => {
+export const metadata: Metadata = {
+  title: `Rankings - ${BRAND}`,
+  description: `Player and guild rankings on ${BRAND}.`,
+};
+
+const Rankings = async ({ searchParams }: { searchParams: SearchParams }) => {
+  const { status } = await getServerStatus();
+
   return (
-    <PageLayout>
-      <Headline className="text-center">
-        <Text variant="h1">Rankings</Text>
-        <Text variant="p">The mightiest warriors of {BRAND}</Text>
-      </Headline>
-
-      <RankingsList searchParams={searchParams} />
-    </PageLayout>
+    <>
+      <PageHero
+        label="Rankings"
+        title="Legends are earned."
+        description="Follow the climb. Find your rivals."
+        status={status}
+        statusNote={formatServerLiveNote()}
+      />
+      <PageLayout>
+        <RankingsList searchParams={searchParams} />
+      </PageLayout>
+    </>
   );
 };
 

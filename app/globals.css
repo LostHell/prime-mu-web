@@ -133,31 +133,6 @@
   );
 }
 
-/* Page background with hero image */
-.page-background {
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  background-image: url("/hero-banner.jpg");
-  background-size: cover;
-  background-position: center top;
-  /* `fixed` caused scroll compositing flicker (hero briefly painting above content). */
-  background-attachment: scroll;
-}
-
-.page-background::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    180deg,
-    hsl(var(--background) / 0.4) 0%,
-    hsl(var(--background) / 0.65) 30%,
-    hsl(var(--background) / 0.8) 60%,
-    hsl(var(--background)) 100%
-  );
-}
-
 /* Divider ornament */
 .divider {
   display: flex;
