@@ -1,6 +1,7 @@
 "use server";
 
 import { changeEmailSchema } from "@/lib/validation/change-email";
+import { verifyPassword } from "@/lib/auth/password";
 import { ActionState } from "@/lib/types/action-state";
 import { prisma } from "@/prisma/prisma";
 import { getAuthenticatedUser } from "./utils";
@@ -31,7 +32,16 @@ export async function changeEmailAction(
     where: { memb___id: accountId },
   });
 
-  if (!account || account.memb__pwd !== validated.data.currentPassword) {
+  if (
+    !account ||
+    !verifyPassword({
+      password: validated.data.currentPassword,
+      account: {
+        username: account.memb___id,
+        password: account.memb__pwd,
+      },
+    })
+  ) {
     return { success: false, message: "Password is incorrect." };
   }
 

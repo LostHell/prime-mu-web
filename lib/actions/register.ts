@@ -2,6 +2,7 @@
 
 import { signIn } from "@/auth";
 import { registerSchema } from "@/lib/validation/register";
+import { encodePassword } from "@/lib/auth/password";
 import { AuthFormState } from "@/lib/validation/types";
 import { prisma } from "@/prisma/prisma";
 import { redirect } from "next/navigation";
@@ -38,7 +39,10 @@ export async function registerAction(
   await prisma.mEMB_INFO.create({
     data: {
       memb___id: validatedFields.data.username,
-      memb__pwd: validatedFields.data.password,
+      memb__pwd: encodePassword(
+        validatedFields.data.username,
+        validatedFields.data.password,
+      ),
       memb_name: validatedFields.data.username,
       mail_addr: validatedFields.data.email,
       sno__numb: "111111111111111111",

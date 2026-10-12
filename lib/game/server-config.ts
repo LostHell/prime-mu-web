@@ -65,6 +65,10 @@ export type ServerConfig = {
     /** Zen charged per PK kill by /pkclear and the website (CommandPKClearMoney). */
     moneyPerKill: number;
   };
+  account: {
+    /** How memb__pwd is stored (JoinServer.ini MD5Encryption): 0 plain, 1 Webzen MD5, 2 MD5. */
+    md5Encryption: number;
+  };
 };
 
 export const serverConfig: ServerConfig = config;

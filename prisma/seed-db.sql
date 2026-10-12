@@ -54,12 +54,14 @@ INSERT `GuildMember` (Name, G_Name, G_Status) VALUES ('test2sm', 'TukiTuki', 0);
 
 -- ----------------------------------------------------------------------------
 -- Table MEMB_INFO
+-- memb__pwd is the Webzen MD5 (JoinServer MD5Encryption=1) of the password.
+-- For these accounts the password is the username.
 -- ----------------------------------------------------------------------------
-INSERT `MEMB_INFO` (memb___id, memb__pwd, memb_name, sno__numb, bloc_code, AccountLevel, AccountExpireDate, Bloc_Expire, mail_addr) VALUES ('test1', 'test1', 'test1', '111111111111111111', '0', 0, '2023-11-12T03:45:00', '1900-01-01T00:00:00', NULL);
-INSERT `MEMB_INFO` (memb___id, memb__pwd, memb_name, sno__numb, bloc_code, AccountLevel, AccountExpireDate, Bloc_Expire, mail_addr) VALUES ('test2', 'test2', 'test2', '111111111111111111', '0', 0, '2023-11-12T03:38:00', '1900-01-01T00:00:00', NULL);
-INSERT `MEMB_INFO` (memb___id, memb__pwd, memb_name, sno__numb, bloc_code, AccountLevel, AccountExpireDate, Bloc_Expire, mail_addr) VALUES ('test3', 'test3', 'test3', '111111111111111111', '0', 0, '2023-11-12T03:38:00', '1900-01-01T00:00:00', NULL);
-INSERT `MEMB_INFO` (memb___id, memb__pwd, memb_name, sno__numb, bloc_code, AccountLevel, AccountExpireDate, Bloc_Expire, mail_addr) VALUES ('test4', 'test4', 'test4', '111111111111111111', '0', 0, '2023-11-12T03:38:00', '1900-01-01T00:00:00', NULL);
-INSERT `MEMB_INFO` (memb___id, memb__pwd, memb_name, sno__numb, bloc_code, AccountLevel, AccountExpireDate, Bloc_Expire, mail_addr) VALUES ('test5', 'test5', 'test5', '111111111111111111', '0', 0, '2023-11-12T03:38:00', '1900-01-01T00:00:00', NULL);
+INSERT `MEMB_INFO` (memb___id, memb__pwd, memb_name, sno__numb, bloc_code, AccountLevel, AccountExpireDate, Bloc_Expire, mail_addr) VALUES ('test1', 0x87aadb30d0e7e192e0bcaea1ec8d5752, 'test1', '111111111111111111', '0', 0, '2023-11-12T03:45:00', '1900-01-01T00:00:00', NULL);
+INSERT `MEMB_INFO` (memb___id, memb__pwd, memb_name, sno__numb, bloc_code, AccountLevel, AccountExpireDate, Bloc_Expire, mail_addr) VALUES ('test2', 0x43a9207bb9dcd3ba5256719c41f86664, 'test2', '111111111111111111', '0', 0, '2023-11-12T03:38:00', '1900-01-01T00:00:00', NULL);
+INSERT `MEMB_INFO` (memb___id, memb__pwd, memb_name, sno__numb, bloc_code, AccountLevel, AccountExpireDate, Bloc_Expire, mail_addr) VALUES ('test3', 0x0543ff8ed9c3803de20fbacf17c98607, 'test3', '111111111111111111', '0', 0, '2023-11-12T03:38:00', '1900-01-01T00:00:00', NULL);
+INSERT `MEMB_INFO` (memb___id, memb__pwd, memb_name, sno__numb, bloc_code, AccountLevel, AccountExpireDate, Bloc_Expire, mail_addr) VALUES ('test4', 0x07d3ee90e12c075de2c5af55cb862d55, 'test4', '111111111111111111', '0', 0, '2023-11-12T03:38:00', '1900-01-01T00:00:00', NULL);
+INSERT `MEMB_INFO` (memb___id, memb__pwd, memb_name, sno__numb, bloc_code, AccountLevel, AccountExpireDate, Bloc_Expire, mail_addr) VALUES ('test5', 0xbae78d460b1d55e6fde8c7f83165fe91, 'test5', '111111111111111111', '0', 0, '2023-11-12T03:38:00', '1900-01-01T00:00:00', NULL);
 
 -- ----------------------------------------------------------------------------
 -- Table MEMB_STAT

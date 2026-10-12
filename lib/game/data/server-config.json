@@ -353,5 +353,8 @@
   },
   "pkClear": {
     "moneyPerKill": 10000000
+  },
+  "account": {
+    "md5Encryption": 1
   }
 }

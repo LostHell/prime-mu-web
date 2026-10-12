@@ -36,7 +36,7 @@ export type MEMB_INFOSumAggregateOutputType = {
 
 export type MEMB_INFOMinAggregateOutputType = {
   memb___id: string | null
-  memb__pwd: string | null
+  memb__pwd: runtime.Bytes | null
   memb_name: string | null
   mail_addr: string | null
   sno__numb: string | null
@@ -48,7 +48,7 @@ export type MEMB_INFOMinAggregateOutputType = {
 
 export type MEMB_INFOMaxAggregateOutputType = {
   memb___id: string | null
-  memb__pwd: string | null
+  memb__pwd: runtime.Bytes | null
   memb_name: string | null
   mail_addr: string | null
   sno__numb: string | null
@@ -205,7 +205,7 @@ export type MEMB_INFOGroupByArgs<ExtArgs extends runtime.Types.Extensions.Intern
 
 export type MEMB_INFOGroupByOutputType = {
   memb___id: string
-  memb__pwd: string
+  memb__pwd: runtime.Bytes
   memb_name: string
   mail_addr: string | null
   sno__numb: string
@@ -240,7 +240,7 @@ export type MEMB_INFOWhereInput = {
   OR?: Prisma.MEMB_INFOWhereInput[]
   NOT?: Prisma.MEMB_INFOWhereInput | Prisma.MEMB_INFOWhereInput[]
   memb___id?: Prisma.StringFilter<"MEMB_INFO"> | string
-  memb__pwd?: Prisma.StringFilter<"MEMB_INFO"> | string
+  memb__pwd?: Prisma.BytesFilter<"MEMB_INFO"> | runtime.Bytes
   memb_name?: Prisma.StringFilter<"MEMB_INFO"> | string
   mail_addr?: Prisma.StringNullableFilter<"MEMB_INFO"> | string | null
   sno__numb?: Prisma.StringFilter<"MEMB_INFO"> | string
@@ -268,7 +268,7 @@ export type MEMB_INFOWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.MEMB_INFOWhereInput | Prisma.MEMB_INFOWhereInput[]
   OR?: Prisma.MEMB_INFOWhereInput[]
   NOT?: Prisma.MEMB_INFOWhereInput | Prisma.MEMB_INFOWhereInput[]
-  memb__pwd?: Prisma.StringFilter<"MEMB_INFO"> | string
+  memb__pwd?: Prisma.BytesFilter<"MEMB_INFO"> | runtime.Bytes
   memb_name?: Prisma.StringFilter<"MEMB_INFO"> | string
   mail_addr?: Prisma.StringNullableFilter<"MEMB_INFO"> | string | null
   sno__numb?: Prisma.StringFilter<"MEMB_INFO"> | string
@@ -300,7 +300,7 @@ export type MEMB_INFOScalarWhereWithAggregatesInput = {
   OR?: Prisma.MEMB_INFOScalarWhereWithAggregatesInput[]
   NOT?: Prisma.MEMB_INFOScalarWhereWithAggregatesInput | Prisma.MEMB_INFOScalarWhereWithAggregatesInput[]
   memb___id?: Prisma.StringWithAggregatesFilter<"MEMB_INFO"> | string
-  memb__pwd?: Prisma.StringWithAggregatesFilter<"MEMB_INFO"> | string
+  memb__pwd?: Prisma.BytesWithAggregatesFilter<"MEMB_INFO"> | runtime.Bytes
   memb_name?: Prisma.StringWithAggregatesFilter<"MEMB_INFO"> | string
   mail_addr?: Prisma.StringNullableWithAggregatesFilter<"MEMB_INFO"> | string | null
   sno__numb?: Prisma.StringWithAggregatesFilter<"MEMB_INFO"> | string
@@ -312,7 +312,7 @@ export type MEMB_INFOScalarWhereWithAggregatesInput = {
 
 export type MEMB_INFOCreateInput = {
   memb___id: string
-  memb__pwd: string
+  memb__pwd: runtime.Bytes
   memb_name: string
   mail_addr?: string | null
   sno__numb: string
@@ -324,7 +324,7 @@ export type MEMB_INFOCreateInput = {
 
 export type MEMB_INFOUncheckedCreateInput = {
   memb___id: string
-  memb__pwd: string
+  memb__pwd: runtime.Bytes
   memb_name: string
   mail_addr?: string | null
   sno__numb: string
@@ -336,7 +336,7 @@ export type MEMB_INFOUncheckedCreateInput = {
 
 export type MEMB_INFOUpdateInput = {
   memb___id?: Prisma.StringFieldUpdateOperationsInput | string
-  memb__pwd?: Prisma.StringFieldUpdateOperationsInput | string
+  memb__pwd?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
   memb_name?: Prisma.StringFieldUpdateOperationsInput | string
   mail_addr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sno__numb?: Prisma.StringFieldUpdateOperationsInput | string
@@ -348,7 +348,7 @@ export type MEMB_INFOUpdateInput = {
 
 export type MEMB_INFOUncheckedUpdateInput = {
   memb___id?: Prisma.StringFieldUpdateOperationsInput | string
-  memb__pwd?: Prisma.StringFieldUpdateOperationsInput | string
+  memb__pwd?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
   memb_name?: Prisma.StringFieldUpdateOperationsInput | string
   mail_addr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sno__numb?: Prisma.StringFieldUpdateOperationsInput | string
@@ -360,7 +360,7 @@ export type MEMB_INFOUncheckedUpdateInput = {
 
 export type MEMB_INFOCreateManyInput = {
   memb___id: string
-  memb__pwd: string
+  memb__pwd: runtime.Bytes
   memb_name: string
   mail_addr?: string | null
   sno__numb: string
@@ -372,7 +372,7 @@ export type MEMB_INFOCreateManyInput = {
 
 export type MEMB_INFOUpdateManyMutationInput = {
   memb___id?: Prisma.StringFieldUpdateOperationsInput | string
-  memb__pwd?: Prisma.StringFieldUpdateOperationsInput | string
+  memb__pwd?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
   memb_name?: Prisma.StringFieldUpdateOperationsInput | string
   mail_addr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sno__numb?: Prisma.StringFieldUpdateOperationsInput | string
@@ -384,7 +384,7 @@ export type MEMB_INFOUpdateManyMutationInput = {
 
 export type MEMB_INFOUncheckedUpdateManyInput = {
   memb___id?: Prisma.StringFieldUpdateOperationsInput | string
-  memb__pwd?: Prisma.StringFieldUpdateOperationsInput | string
+  memb__pwd?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
   memb_name?: Prisma.StringFieldUpdateOperationsInput | string
   mail_addr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sno__numb?: Prisma.StringFieldUpdateOperationsInput | string
@@ -444,6 +444,10 @@ export type MEMB_INFOSumOrderByAggregateInput = {
   AccountLevel?: Prisma.SortOrder
 }
 
+export type BytesFieldUpdateOperationsInput = {
+  set?: runtime.Bytes
+}
+
 export type DateTimeFieldUpdateOperationsInput = {
   set?: Date | string
 }
@@ -483,7 +487,7 @@ export type $MEMB_INFOPayload<ExtArgs extends runtime.Types.Extensions.InternalA
   objects: {}
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     memb___id: string
-    memb__pwd: string
+    memb__pwd: runtime.Bytes
     memb_name: string
     mail_addr: string | null
     sno__numb: string
@@ -861,7 +865,7 @@ export interface Prisma__MEMB_INFOClient<T, Null = never, ExtArgs extends runtim
  */
 export interface MEMB_INFOFieldRefs {
   readonly memb___id: Prisma.FieldRef<"MEMB_INFO", 'String'>
-  readonly memb__pwd: Prisma.FieldRef<"MEMB_INFO", 'String'>
+  readonly memb__pwd: Prisma.FieldRef<"MEMB_INFO", 'Bytes'>
   readonly memb_name: Prisma.FieldRef<"MEMB_INFO", 'String'>
   readonly mail_addr: Prisma.FieldRef<"MEMB_INFO", 'String'>
   readonly sno__numb: Prisma.FieldRef<"MEMB_INFO", 'String'>
