@@ -1,7 +1,7 @@
 "use server";
 
 import { changePasswordSchema } from "@/lib/validation/change-password";
-import { encodePassword, verifyPassword } from "@/lib/auth/password-encryption";
+import { encodePassword, verifyPassword } from "@/lib/auth/password";
 import { ActionState } from "@/lib/types/action-state";
 import { prisma } from "@/prisma/prisma";
 import { getAuthenticatedUser } from "./utils";
@@ -35,11 +35,13 @@ export async function changePasswordAction(
 
   if (
     !account ||
-    !verifyPassword(
-      account.memb___id,
-      validated.data.currentPassword,
-      account.memb__pwd,
-    )
+    !verifyPassword({
+      password: validated.data.currentPassword,
+      account: {
+        username: account.memb___id,
+        password: account.memb__pwd,
+      },
+    })
   ) {
     return { success: false, message: "Current password is incorrect." };
   }

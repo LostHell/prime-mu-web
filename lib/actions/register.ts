@@ -2,7 +2,7 @@
 
 import { signIn } from "@/auth";
 import { registerSchema } from "@/lib/validation/register";
-import { encodePassword } from "@/lib/auth/password-encryption";
+import { encodePassword } from "@/lib/auth/password";
 import { AuthFormState } from "@/lib/validation/types";
 import { prisma } from "@/prisma/prisma";
 import { redirect } from "next/navigation";
