@@ -1,4 +1,4 @@
-import LoginForm from "@/app/login/_components/login-form";
+import { LoginForm } from "@/app/login/_components/login-form";
 import { auth } from "@/auth";
 import PageLayout from "@/components/page-layout";
 import { Card, CardContent } from "@/components/ui/card";

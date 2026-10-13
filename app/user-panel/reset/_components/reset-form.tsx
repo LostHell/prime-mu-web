@@ -12,7 +12,10 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { CharacterSection, CharacterValues } from "../character-info";
+import {
+  CharacterSection,
+  CharacterValues,
+} from "@/app/user-panel/_components/character-info";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { MAX_RESETS } from "@/constants/resets";
@@ -20,7 +23,8 @@ import { getNextResetRule } from "@/lib/game/characters/reset";
 import { resetCharacterAction } from "@/lib/actions/reset-character";
 import { type CharacterWithNextReset } from "@/lib/types/character";
 import { startTransition, useActionState } from "react";
-import { useUserPanel } from "../../_context/user-panel-context";
+import { useUserPanel } from "@/app/user-panel/_context/user-panel-context";
+import { formatNumber } from "@/lib/utils/numbers";
 
 interface ResetFormProps {
   character: CharacterWithNextReset;
@@ -87,12 +91,10 @@ export function ResetForm({ character }: ResetFormProps) {
         : "Unavailable",
     },
     { label: "Resets", value: `${character.resets} / ${MAX_RESETS} maximum` },
-    { label: "Zen balance", value: character.zen.toLocaleString() },
+    { label: "Zen balance", value: formatNumber(character.zen) },
     {
       label: "Reset cost",
-      value: nextResetRule
-        ? nextResetRule.money.toLocaleString()
-        : "Unavailable",
+      value: nextResetRule ? formatNumber(nextResetRule.money) : "Unavailable",
     },
     {
       label: "Account",
@@ -130,15 +132,15 @@ export function ResetForm({ character }: ResetFormProps) {
             { label: "Total resets", value: character.resets + 1 },
             {
               label: "Total available stat points",
-              value:
-                nextReset?.resultingAvailablePoints.toLocaleString() ??
-                "Unavailable",
+              value: nextReset
+                ? formatNumber(nextReset.resultingAvailablePoints)
+                : "Unavailable",
             },
             {
               label: "Zen balance",
               value:
                 canReset && nextResetRule
-                  ? (character.zen - nextResetRule.money).toLocaleString()
+                  ? formatNumber(character.zen - nextResetRule.money)
                   : "Requirements not met",
             },
             { label: "Attributes", value: "Class defaults" },
@@ -179,9 +181,8 @@ export function ResetForm({ character }: ResetFormProps) {
               )}
               {nextResetRule && !hasEnoughZen && (
                 <li>
-                  You need{" "}
-                  {(nextResetRule.money - character.zen).toLocaleString()} more
-                  Zen.
+                  You need {formatNumber(nextResetRule.money - character.zen)}{" "}
+                  more Zen.
                 </li>
               )}
             </ul>
@@ -209,9 +210,12 @@ export function ResetForm({ character }: ResetFormProps) {
                 <AlertDialogDescription>
                   This cannot be undone. {character.name} will return to level{" "}
                   {nextReset?.resultingLevel}, base stats will be restored, and{" "}
-                  {nextResetRule.money.toLocaleString()} Zen will be deducted
-                  from your balance. Your total available stat points will be{" "}
-                  {nextReset?.resultingAvailablePoints.toLocaleString()}.
+                  {formatNumber(nextResetRule.money)} Zen will be deducted from
+                  your balance. Your total available stat points will be{" "}
+                  {nextReset
+                    ? formatNumber(nextReset.resultingAvailablePoints)
+                    : "Unavailable"}
+                  .
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>

@@ -9,29 +9,14 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import Text from "@/components/ui/text";
-import { eventSchedules } from "@/constants/events";
-import { getDevilSquareRanking } from "@/lib/queries/get-devil-square-ranking";
+import { type ScoredRankingEntry } from "@/lib/queries/rank-scored-characters";
+import { formatNumber } from "@/lib/utils/numbers";
 import { Suspense } from "react";
-
-const DevilSquareRows = async () => {
-  const devilSquareRanking = await getDevilSquareRanking();
-  return (
-    <TableBody>
-      {devilSquareRanking.map((entry) => (
-        <TableRow key={entry.name}>
-          <TableCell className="text-gold">{entry.rank}</TableCell>
-          <TableCell className="font-medium">{entry.name}</TableCell>
-          <TableCell>{entry.score.toLocaleString()}</TableCell>
-        </TableRow>
-      ))}
-    </TableBody>
-  );
-};
 
 const RowsSkeleton = () => (
   <TableBody>
-    {Array.from({ length: 5 }).map((_, i) => (
-      <TableRow key={i}>
+    {Array.from({ length: 5 }).map((_, index) => (
+      <TableRow key={index}>
         <TableCell>
           <div className="bg-muted h-4 w-6 animate-pulse rounded" />
         </TableCell>
@@ -46,17 +31,44 @@ const RowsSkeleton = () => (
   </TableBody>
 );
 
-const DevilSquareRanking = () => {
+const EventRows = async ({
+  load,
+}: {
+  load: () => Promise<ScoredRankingEntry[]>;
+}) => {
+  const ranking = await load();
+
+  return (
+    <TableBody>
+      {ranking.map((entry) => (
+        <TableRow key={entry.name}>
+          <TableCell className="text-gold">{entry.rank}</TableCell>
+          <TableCell className="font-medium">{entry.name}</TableCell>
+          <TableCell>{formatNumber(entry.score)}</TableCell>
+        </TableRow>
+      ))}
+    </TableBody>
+  );
+};
+
+export function EventRanking({
+  title,
+  scheduleHours,
+  colorClass,
+  load,
+}: {
+  title: string;
+  scheduleHours: number[];
+  colorClass: string;
+  load: () => Promise<ScoredRankingEntry[]>;
+}) {
   return (
     <section>
       <div className="mb-4 flex items-end justify-between gap-3">
         <Text variant="h3" as="h3">
-          Devil Square
+          {title}
         </Text>
-        <EventCountdown
-          scheduleHours={eventSchedules.devilSquare}
-          colorClass="text-gold"
-        />
+        <EventCountdown scheduleHours={scheduleHours} colorClass={colorClass} />
       </div>
       <Card>
         <CardContent>
@@ -69,13 +81,11 @@ const DevilSquareRanking = () => {
               </TableRow>
             </TableHeader>
             <Suspense fallback={<RowsSkeleton />}>
-              <DevilSquareRows />
+              <EventRows load={load} />
             </Suspense>
           </Table>
         </CardContent>
       </Card>
     </section>
   );
-};
-
-export default DevilSquareRanking;
+}

@@ -1,5 +1,6 @@
 "use server";
 
+import { flattenError } from "zod";
 import { ALLOCATABLE_STATS, STAT_LABELS } from "@/constants/character-rules";
 import { getMaxStatPoint } from "@/lib/game/characters/stat-limits";
 import { addStatsSchema } from "@/lib/validation/add-stats";
@@ -7,7 +8,11 @@ import { ActionState } from "@/lib/types/action-state";
 import { formatNumber } from "@/lib/utils/numbers";
 import { prisma } from "@/prisma/prisma";
 import { revalidatePath } from "next/cache";
-import { getAuthenticatedUser, verifyCharacterOwnership } from "./utils";
+import {
+  getAuthenticatedUser,
+  isAccountOffline,
+  verifyCharacterOwnership,
+} from "./utils";
 
 export async function addStatsAction(
   _state: ActionState,
@@ -29,24 +34,12 @@ export async function addStatsAction(
   if (!validated.success) {
     return {
       success: false,
-      errors: validated.error.flatten().fieldErrors,
+      errors: flattenError(validated.error).fieldErrors,
       message: "Invalid input.",
     };
   }
 
-  const accountStatus = await prisma.mEMB_STAT.findUnique({
-    where: { memb___id: accountId },
-    select: { ConnectStat: true },
-  });
-
-  if (!accountStatus) {
-    return {
-      success: false,
-      message: "Unable to verify account online status.",
-    };
-  }
-
-  if ((accountStatus.ConnectStat ?? 0) !== 0) {
+  if (!(await isAccountOffline(accountId))) {
     return {
       success: false,
       message: "Stats can be added only while account is offline.",

@@ -1,11 +1,17 @@
 "use server";
 
+import { flattenError } from "zod";
 import { MAX_RESETS } from "@/constants/resets";
 import { resetCharacterSchema } from "@/lib/validation/reset-character";
 import { ActionState } from "@/lib/types/action-state";
 import { prisma } from "@/prisma/prisma";
 import { revalidatePath } from "next/cache";
-import { getAuthenticatedUser, verifyCharacterOwnership } from "./utils";
+import {
+  getAuthenticatedUser,
+  isAccountOffline,
+  verifyCharacterOwnership,
+} from "./utils";
+import { formatNumber } from "@/lib/utils/numbers";
 import {
   getBaseClass,
   getEquipmentStatus,
@@ -29,24 +35,12 @@ export async function resetCharacterAction(
   if (!validated.success) {
     return {
       success: false,
-      errors: validated.error.flatten().fieldErrors,
+      errors: flattenError(validated.error).fieldErrors,
       message: "Invalid input.",
     };
   }
 
-  const accountStatus = await prisma.mEMB_STAT.findUnique({
-    where: { memb___id: accountId },
-    select: { ConnectStat: true },
-  });
-
-  if (!accountStatus) {
-    return {
-      success: false,
-      message: "Unable to verify account online status.",
-    };
-  }
-
-  if ((accountStatus.ConnectStat ?? 0) !== 0) {
+  if (!(await isAccountOffline(accountId))) {
     return {
       success: false,
       message: "Character can be reset only while account is offline.",
@@ -105,7 +99,7 @@ export async function resetCharacterAction(
   if (currentZen < resetCost) {
     return {
       success: false,
-      message: `Not enough Zen. Required: ${resetCost.toLocaleString()}, available: ${currentZen.toLocaleString()}.`,
+      message: `Not enough Zen. Required: ${formatNumber(resetCost)}, available: ${formatNumber(currentZen)}.`,
     };
   }
 
@@ -183,6 +177,6 @@ export async function resetCharacterAction(
   revalidatePath("/rankings");
   return {
     success: true,
-    message: `Character reset! Total points: ${totalPointsAfterReset.toLocaleString()}. ${resetCost.toLocaleString()} Zen spent.`,
+    message: `Character reset! Total points: ${formatNumber(totalPointsAfterReset)}. ${formatNumber(resetCost)} Zen spent.`,
   };
 }

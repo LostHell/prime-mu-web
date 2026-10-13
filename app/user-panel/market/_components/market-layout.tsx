@@ -1,6 +1,6 @@
 "use client";
 
-import { UserPanelPageLayout } from "../../_components/user-panel-page-layout";
+import { UserPanelPageLayout } from "@/app/user-panel/_components/user-panel-page-layout";
 
 interface MarketLayoutProps {
   children: React.ReactNode;

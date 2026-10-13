@@ -48,7 +48,7 @@ Client hooks used by more than one route (`use-media-query.ts`). Files start wit
   - `lib/game/constants/*`: fixed game facts (class ids, warehouse size) and values derived from `serverConfig`.
   - `lib/game/data/*`: synced server data. Don't hand-edit (see [database.md](./database.md)).
 - `lib/types/*`: TypeScript types shared by several layers (for example query results used by both a query and client components).
-- `lib/utils/*`: small pure helpers grouped by topic (`numbers.ts`, `dates.ts`, `pagination.ts`). A helper that needs the Next.js server runtime uses the `.server.ts` suffix (`cookies.server.ts`).
+- `lib/utils/*`: small helpers grouped by topic (`numbers.ts`, `dates.ts`, `pagination.ts`). A helper that needs the Next.js server runtime uses the `.server.ts` suffix (`cookies.server.ts`). `action-toast.ts` is a client helper (`"use client"`, no JSX) that toasts a server action's result.
 - `lib/utils.ts`: only `cn()`. It stays at this path because shadcn's `components.json` points to it. Put new helpers in `lib/utils/*`.
 - `lib/test-utils/*`: test-only helpers. Never imported by app code.
 
@@ -104,10 +104,7 @@ Each layer may import from its own layer and the layers below it, never from a l
 
 ## Existing exceptions (don't copy)
 
-- One-route components in `components/`: `blood-castle-ranking.tsx` and `devil-square-ranking.tsx` (only rankings; they also call queries themselves), `warehouse-grid.tsx` (only market sell), `logo.tsx` (only the header).
-- `app/user-panel/_components/forms/{reset,add-stats,clear-pk}-form.tsx` each belong to one route (`app/user-panel/<route>/_components/`).
-- Half of the components use `export default`. New files use named exports; convert old ones when you touch them.
+- One-route components still in `components/`: `warehouse-grid.tsx` (only market sell) and `logo.tsx` (only the header).
+- Many components still use `export default`. New files use named exports; convert old ones when you touch them.
 - Game rules in `constants/`: `character-rules.ts`, `resets.ts`, `events.ts` and most of `server.ts` read `serverConfig` or describe game rules, and `lib/game/characters/*` imports them back.
-- `hooks/use-action-toast.ts` exports helpers (`withActionToast`, `showActionToast`), not a hook.
 - `components/divider.tsx` is not used anywhere.
-- 8 `../../` imports under `app/`, and `../` imports in `lib/queries/get-warehouse-items.ts`, `lib/types/warehouse.ts` and `lib/game/item-icon/variant-digits.ts`.

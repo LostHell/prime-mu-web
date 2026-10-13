@@ -48,6 +48,8 @@ function ItemTooltipProvider({
 type RootValue = {
   open: boolean;
   setOpen: (open: boolean) => void;
+  setTrigger: (node: HTMLElement | null) => void;
+  setContent: (node: HTMLDivElement | null) => void;
   triggerRef: React.RefObject<HTMLElement | null>;
   contentRef: React.RefObject<HTMLDivElement | null>;
   delayDuration: number;
@@ -140,6 +142,12 @@ function ItemTooltip({ children, delayDuration }: ItemTooltipRootProps) {
   const contentRef = React.useRef<HTMLDivElement | null>(null);
 
   const [open, setOpen] = React.useState(false);
+  const setTrigger = React.useCallback((node: HTMLElement | null) => {
+    triggerRef.current = node;
+  }, []);
+  const setContent = React.useCallback((node: HTMLDivElement | null) => {
+    contentRef.current = node;
+  }, []);
 
   const effectiveDelay = delayDuration ?? provider?.delayDuration ?? 0;
 
@@ -147,11 +155,13 @@ function ItemTooltip({ children, delayDuration }: ItemTooltipRootProps) {
     () => ({
       open,
       setOpen,
+      setTrigger,
+      setContent,
       triggerRef,
       contentRef,
       delayDuration: effectiveDelay,
     }),
-    [open, effectiveDelay],
+    [open, effectiveDelay, setTrigger, setContent],
   );
 
   return (
@@ -175,38 +185,40 @@ function ItemTooltipTrigger({
   const openTimer = React.useRef<number | null>(null);
   const closeTimer = React.useRef<number | null>(null);
 
-  const clearTimers = () => {
+  const clearTimers = React.useEffectEvent(() => {
     if (openTimer.current) window.clearTimeout(openTimer.current);
     if (closeTimer.current) window.clearTimeout(closeTimer.current);
     openTimer.current = null;
     closeTimer.current = null;
-  };
+  });
 
   React.useEffect(() => clearTimers, []);
 
-  const scheduleOpen = () => {
+  const scheduleOpen = React.useEffectEvent(() => {
     clearTimers();
     openTimer.current = window.setTimeout(
       () => ctx.setOpen(true),
       ctx.delayDuration,
     );
-  };
+  });
 
-  const scheduleClose = () => {
+  const scheduleClose = React.useEffectEvent(() => {
     clearTimers();
     closeTimer.current = window.setTimeout(() => ctx.setOpen(false), 30);
-  };
+  });
 
   const child = React.Children.only(children) as React.ReactElement<
-    React.HTMLAttributes<HTMLElement>
+    React.HTMLAttributes<HTMLElement> & {
+      ref?: React.Ref<HTMLElement>;
+      "data-slot"?: string;
+    }
   >;
-  const childProps = child.props as Record<string, unknown>;
 
-  return React.cloneElement<any>(child, {
-    ...(asChild ? childProps : null),
+  return React.cloneElement(child, {
+    ...(asChild ? child.props : undefined),
     ...props,
-    ref: mergeRefs((child as any).ref, (node: HTMLElement | null) => {
-      ctx.triggerRef.current = node;
+    ref: mergeRefs(child.props.ref, (node: HTMLElement | null) => {
+      ctx.setTrigger(node);
     }),
     "data-slot": "tooltip-trigger",
     onMouseEnter: chainHandlers(onMouseEnter, () => scheduleOpen()),
@@ -292,12 +304,12 @@ function ItemTooltipContent({
     });
 
     return () => {
-      window.removeEventListener("scroll", onScroll, { capture: true } as any);
+      window.removeEventListener("scroll", onScroll, { capture: true });
       if (raf) window.cancelAnimationFrame(raf);
       ro?.disconnect();
       io?.disconnect();
     };
-  }, [ctx.open, updatePosition]);
+  }, [ctx, updatePosition]);
 
   React.useLayoutEffect(() => {
     if (ctx.open) updatePosition();
@@ -309,7 +321,7 @@ function ItemTooltipContent({
     <div
       {...props}
       ref={(el) => {
-        ctx.contentRef.current = el;
+        ctx.setContent(el);
       }}
       data-slot="tooltip-content"
       style={{
@@ -332,6 +344,5 @@ export {
   ItemTooltip,
   ItemTooltipContent,
   ItemTooltipProvider,
-  ItemTooltipTrigger
+  ItemTooltipTrigger,
 };
-

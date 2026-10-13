@@ -1,3 +1,5 @@
+import "server-only";
+
 import net from "node:net";
 
 const CACHE_DURATION = 5000;

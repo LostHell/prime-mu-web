@@ -1,4 +1,4 @@
-import RegisterForm from "@/app/register/_components/register-form";
+import { RegisterForm } from "@/app/register/_components/register-form";
 import { auth } from "@/auth";
 import PageLayout from "@/components/page-layout";
 import { Card, CardContent } from "@/components/ui/card";

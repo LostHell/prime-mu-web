@@ -1,5 +1,6 @@
 "use server";
 
+import { flattenError } from "zod";
 import { ActionError, actionErrorMessage } from "@/lib/errors/action-error";
 
 import {
@@ -22,6 +23,7 @@ import { withdrawSchema } from "@/lib/validation/withdraw";
 import { prisma } from "@/prisma/prisma";
 import { revalidatePath } from "next/cache";
 import { getAuthenticatedUser, isAccountOffline } from "./utils";
+import { bigIntToSafeNumber, formatNumber } from "@/lib/utils/numbers";
 
 export async function withdrawAction(
   _state: ActionState,
@@ -40,7 +42,7 @@ export async function withdrawAction(
   if (!validated.success) {
     return {
       success: false,
-      errors: validated.error.flatten().fieldErrors,
+      errors: flattenError(validated.error).fieldErrors,
       message: "Invalid input.",
     };
   }
@@ -81,7 +83,7 @@ async function withdrawZen(
       const deposited = deposit?.Zen ?? 0n;
       if (deposited < amount) {
         throw new ActionError(
-          `Not enough Zen deposited. Available: ${deposited.toLocaleString()}.`,
+          `Not enough Zen deposited. Available: ${formatNumber(bigIntToSafeNumber(deposited))}.`,
         );
       }
 
@@ -94,7 +96,7 @@ async function withdrawZen(
 
       if (withdrawCount === 0) {
         throw new ActionError(
-          `Not enough Zen deposited. Available: ${deposited.toLocaleString()}.`,
+          `Not enough Zen deposited. Available: ${formatNumber(bigIntToSafeNumber(deposited))}.`,
         );
       }
 

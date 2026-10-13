@@ -5,12 +5,12 @@ import { Button } from "@/components/ui/button";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { registerAction } from "@/lib/actions/register";
-import { AuthFormState } from "@/lib/validation/types";
+import { type ActionState } from "@/lib/types/action-state";
 import { useActionState } from "react";
 
-const initialState: AuthFormState = {};
+const initialState: ActionState = {};
 
-const RegisterForm = () => {
+export function RegisterForm() {
   const [state, formAction, isPending] = useActionState(
     registerAction,
     initialState,
@@ -75,6 +75,4 @@ const RegisterForm = () => {
       </Button>
     </form>
   );
-};
-
-export default RegisterForm;
+}

@@ -1,3 +1,5 @@
+import "server-only";
+
 import { characterClassName } from "@/lib/game/characters/class-name";
 import { UNKNOWN_CHARACTER_CLASS } from "@/lib/game/constants/characters";
 import { CharacterClass } from "@/lib/types/character";

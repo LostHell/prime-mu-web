@@ -1,4 +1,4 @@
-import { isBoxOfLuckItem } from "../item-database/box-of-luck";
+import { isBoxOfLuckItem } from "@/lib/game/item-database/box-of-luck";
 import type { ItemIconPathOptions } from "./types";
 import { clampInt, parseTwoDigitCode } from "./utils";
 

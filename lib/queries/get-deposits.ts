@@ -1,3 +1,5 @@
+import "server-only";
+
 import {
   DEPOSIT_ITEM_TYPES,
   DEPOSITABLE_ITEMS,

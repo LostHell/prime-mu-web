@@ -1,5 +1,6 @@
 "use server";
 
+import { flattenError } from "zod";
 import { getPkClearCost } from "@/lib/game/characters/pk";
 import { clearPkSchema } from "@/lib/validation/clear-pk";
 import { ActionState } from "@/lib/types/action-state";
@@ -29,7 +30,7 @@ export async function clearPkAction(
   if (!validated.success) {
     return {
       success: false,
-      errors: validated.error.flatten().fieldErrors,
+      errors: flattenError(validated.error).fieldErrors,
       message: "Invalid input.",
     };
   }

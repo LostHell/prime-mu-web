@@ -1,5 +1,6 @@
 "use server";
 
+import { flattenError } from "zod";
 import { changePasswordSchema } from "@/lib/validation/change-password";
 import { encodePassword, verifyPassword } from "@/lib/auth/password";
 import { ActionState } from "@/lib/types/action-state";
@@ -24,7 +25,7 @@ export async function changePasswordAction(
   if (!validated.success) {
     return {
       success: false,
-      errors: validated.error.flatten().fieldErrors,
+      errors: flattenError(validated.error).fieldErrors,
       message: "Please correct the errors.",
     };
   }

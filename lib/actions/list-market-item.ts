@@ -1,5 +1,6 @@
 "use server";
 
+import { flattenError } from "zod";
 import { ActionError, actionErrorMessage } from "@/lib/errors/action-error";
 import {
   BYTES_PER_SLOT,
@@ -44,7 +45,7 @@ export async function listMarketItemAction(
   if (!validated.success) {
     return {
       success: false,
-      errors: validated.error.flatten().fieldErrors,
+      errors: flattenError(validated.error).fieldErrors,
       message: listMarketItemErrorMessage(validated.error),
     };
   }

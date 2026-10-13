@@ -1,4 +1,5 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
+import { click, slide } from "@/lib/test-utils/interactions";
 import { useState } from "react";
 import { renderToString } from "react-dom/server";
 import { type CharacterWithNextReset } from "@/lib/types/character";
@@ -68,24 +69,24 @@ function Panel({
   );
 }
 
-test("switching sidebar characters keeps the service route and clears the previous character's draft", () => {
+test("switching sidebar characters keeps the service route and clears the previous character's draft", async () => {
   render(<Panel characters={[first, second]} />);
   expect(
     screen.getByRole("link", { name: /Knight Dark Knight/ }),
   ).toHaveAttribute("aria-current", "true");
-  fireEvent.change(screen.getByRole("textbox", { name: "Draft points" }), {
+  slide(screen.getByRole("textbox", { name: "Draft points" }), {
     target: { value: "12" },
   });
   const wizard = screen.getByRole("link", { name: /Wizard Dark Wizard/ });
   expect(wizard).toHaveAttribute("href", "/user-panel/add-stats");
-  fireEvent.click(wizard);
+  await click(wizard);
   expect(wizard).toHaveAttribute("aria-current", "true");
   expect(screen.getByRole("textbox", { name: "Draft points" })).toHaveValue("");
 });
 
-test("selected character uses refreshed data and falls back when removed", () => {
+test("selected character uses refreshed data and falls back when removed", async () => {
   const { rerender } = render(<Panel characters={[first, second]} />);
-  fireEvent.click(screen.getByRole("link", { name: /Wizard Dark Wizard/ }));
+  await click(screen.getByRole("link", { name: /Wizard Dark Wizard/ }));
   rerender(<Panel characters={[first, { ...second, freePoints: 7 }]} />);
   expect(screen.getByText("Available: 7")).toBeInTheDocument();
   rerender(<Panel characters={[first]} />);

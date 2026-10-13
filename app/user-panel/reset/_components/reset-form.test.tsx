@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { MAX_RESETS } from "@/constants/resets";
 import { type CharacterWithNextReset } from "@/lib/types/character";
-import { UserPanelProvider } from "../../_context/user-panel-context";
+import { UserPanelProvider } from "@/app/user-panel/_context/user-panel-context";
 import { ResetForm } from "./reset-form";
 
 jest.mock("@/lib/game/server-config", () =>

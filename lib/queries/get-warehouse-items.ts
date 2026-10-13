@@ -1,7 +1,9 @@
+import "server-only";
+
 import { getItemDefinition } from "@/lib/game/item-database";
 import { decodeItems } from "@/lib/game/item-decoder";
 import { prisma } from "@/prisma/prisma";
-import { type WarehouseItem } from "../types/warehouse";
+import { type WarehouseItem } from "@/lib/types/warehouse";
 
 export async function getWarehouseItems(
   accountId: string,

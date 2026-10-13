@@ -1,15 +1,5 @@
-"use client";
+import { AddStatsPage } from "./_components/add-stats-page";
 
-import { ActionPageLayout } from "../_components/action-page-layout";
-import { AddStatsForm } from "../_components/forms/add-stats-form";
-
-export default function AddStatsPage() {
-  return (
-    <ActionPageLayout
-      title="Add Stats"
-      description="Allocate your free stat points"
-    >
-      {(character) => <AddStatsForm character={character} />}
-    </ActionPageLayout>
-  );
+export default function Page() {
+  return <AddStatsPage />;
 }
