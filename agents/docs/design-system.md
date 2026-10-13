@@ -109,7 +109,7 @@ export function Row({ selected }: { selected: boolean }) {
 ### Route-local UI belongs in `app/<route>/_components`
 
 - **Do** keep one-route components colocated under that route subtree.
-- **Promote** to `components/` only when reused by multiple routes.
+- **Promote** to `components/` only when reused by multiple routes. Full placement rules: [project-structure.md](./project-structure.md).
 
 Bad:
 
@@ -201,22 +201,22 @@ Single source: `--radius` in `app/globals.css` (**`0.25rem`**). Tailwind exposes
 ### Depth and ornament
 
 - Depth is gold glow, not drop shadow: `.animate-glow` (pulsing, e.g. the 1st-place podium card) and `.card-hover` (lift + glow on hover). Popovers use `shadow-lg shadow-black/20`.
-- Section breaks: `Divider` (gold diamond) between major sections; `OrnamentLine` (fading `gold-dim` hairline) for quiet separation.
+- Section breaks: `Divider` (gold diamond) between major sections; `OrnamentLine` (fading `gold-dim` hairline) for quiet separation. (`Divider` exists but no page uses it yet.)
 
 ## Components
 
 Use the primitive before writing markup:
 
-| Need       | Use                                                                                                                                                                     |
-| ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Action     | `Button` (`default` gold gradient for the one primary action, `outline` for the secondary, `decorative` only on real CTAs; `secondary`, `ghost`, `destructive`, `link`) |
-| Form       | `Field*` + `Input` / `Select` / `Label`, errors via `FieldError`                                                                                                        |
-| Panel      | `Card`                                                                                                                                                                  |
-| Lists      | `Table` (gold Cinzel headers), `Pagination` / `SearchResultsPagination`                                                                                                 |
-| Messages   | `Alert` (persistent), `toast.*` from `sonner` (transient), `EmptyState`                                                                                                 |
+| Need       | Use                                                                                                                                                                                                  |
+| ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Action     | `Button` (`default` gold gradient for the one primary action, `outline` for the secondary, `decorative` only on real CTAs; `secondary`, `ghost`, `destructive`, `link`)                              |
+| Form       | `Field*` + `Input` / `Select` / `Label`, errors via `FieldError`                                                                                                                                     |
+| Panel      | `Card`                                                                                                                                                                                               |
+| Lists      | `Table` (gold Cinzel headers), `Pagination` / `SearchResultsPagination`                                                                                                                              |
+| Messages   | `Alert` (persistent), `toast.*` from `sonner` (transient), `EmptyState`                                                                                                                              |
 | Overlays   | `Dialog`, `AlertDialog` (confirm before irreversible actions), `Drawer` (side drawers below `sm`: `calc(100% - spacing-16)`, 64px; `sm` and up cap at `max-w-sm`). For item hover use `ItemTooltip`. |
-| Text       | `Text` + `Headline`; never style raw `h1`–`h6`. Small uppercase section labels: `<Text variant="section">` (renders `h3`; pass `as="h2"` if needed).                    |
-| Game items | `ItemIcon`, `ItemTooltip` + `ItemCard`, `WarehouseGrid`                                                                                                                 |
+| Text       | `Text` + `Headline`; never style raw `h1`–`h6`. Small uppercase section labels: `<Text variant="section">` (renders `h3`; pass `as="h2"` if needed).                                                 |
+| Game items | `ItemIcon`, `ItemTooltip` + `ItemCard`, `WarehouseGrid`                                                                                                                                              |
 
 ## Typography weight scale
 

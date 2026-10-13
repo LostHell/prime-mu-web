@@ -4,7 +4,8 @@ Agents should **keep these docs in sync with the repo** whenever a change would 
 
 ## Do not touch (unless the doc is wrong)
 
-- **[`AGENTS.md`](../../AGENTS.md)**: Only the one-line project truth, npm/Node/build/start facts that apply to **every** task, and the **link table**. If your work is not universal, do not add it here.
+- **[`AGENTS.md`](../../AGENTS.md)**: Only the one-line project truth, npm/Node/build/start facts that apply to **every** task, the **Hard boundaries** list, and the **link table**. If your work is not universal, do not add it here.
+- **Hard boundaries** are for actions that cause damage no review catches (data loss, overwritten synced files, unsafe writes to the game database). Keep the list short; topic rules belong in the topic doc.
 
 ## Update an existing file (default)
 
@@ -29,6 +30,8 @@ Then:
 - **Facts**: commands, script names, config filenames, one-line “when to use.”
 - **No** long prose, duplicated README content, or fragile path maps unless you will maintain them.
 - **Remove** bullets that are no longer true when you change tooling.
+- **Rules must match the code.** If you write a rule the existing code breaks, either fix the code in the same change or list the exception under that doc's "Existing exceptions" section, so agents don't copy it. Remove the exception when the code is fixed.
+- Prefer rules a tool can check. When a rule can be enforced by ESLint, TypeScript or a test, say which one enforces it.
 
 ## This file
 
