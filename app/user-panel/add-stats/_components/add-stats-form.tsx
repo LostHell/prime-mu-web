@@ -9,7 +9,10 @@ import {
   FieldGroup,
   FieldLabel,
 } from "@/components/ui/field";
-import { CharacterSection, CharacterValues } from "../character-info";
+import {
+  CharacterSection,
+  CharacterValues,
+} from "@/app/user-panel/_components/character-info";
 import { Input } from "@/components/ui/input";
 import { addStatsAction } from "@/lib/actions/add-stats";
 import { getMaxStatPoint } from "@/lib/game/characters/stat-limits";
@@ -17,6 +20,7 @@ import { type Character } from "@/lib/types/character";
 import { ALLOCATABLE_STATS, STAT_LABELS } from "@/constants/character-rules";
 import type { ActionState } from "@/lib/types/action-state";
 import { useActionState, useState } from "react";
+import { formatNumber } from "@/lib/utils/numbers";
 
 interface AddStatsFormProps {
   character: Character;
@@ -73,11 +77,11 @@ export function AddStatsForm({ character }: AddStatsFormProps) {
           items={[
             {
               label: "Available",
-              value: character.freePoints.toLocaleString(),
+              value: formatNumber(character.freePoints),
             },
             {
               label: "Remaining after allocation",
-              value: remaining.toLocaleString(),
+              value: formatNumber(remaining),
             },
           ]}
         />
@@ -97,12 +101,9 @@ export function AddStatsForm({ character }: AddStatsFormProps) {
                   {STAT_LABELS[stat]}
                 </FieldLabel>
                 <FieldDescription id={`stat-${stat}-description`}>
-                  {character.stats[stat].toLocaleString()}
+                  {formatNumber(character.stats[stat])}
                   {pts[stat] > 0 && (
-                    <>
-                      {" "}
-                      → {(character.stats[stat] + pts[stat]).toLocaleString()}
-                    </>
+                    <> → {formatNumber(character.stats[stat] + pts[stat])}</>
                   )}
                 </FieldDescription>
                 {state.errors?.[stat] && (

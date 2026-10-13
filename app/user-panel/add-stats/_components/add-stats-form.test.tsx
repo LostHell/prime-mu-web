@@ -1,4 +1,5 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
+import { click, slide } from "@/lib/test-utils/interactions";
 import { addStatsAction } from "@/lib/actions/add-stats";
 import type { Character } from "@/lib/types/character";
 import { AddStatsForm } from "./add-stats-form";
@@ -26,11 +27,11 @@ test("keeps an allocation after rejection and clears it after a successful retry
   const input = screen.getByRole("spinbutton", {
     name: "Points to add to strength",
   });
-  fireEvent.change(input, { target: { value: "12" } });
-  fireEvent.click(screen.getByRole("button", { name: "Apply 12 points" }));
+  slide(input, { target: { value: "12" } });
+  await click(screen.getByRole("button", { name: "Apply 12 points" }));
   expect(await screen.findByText("Account is online.")).toBeInTheDocument();
   expect(input).toHaveValue(12);
-  fireEvent.click(screen.getByRole("button", { name: "Apply 12 points" }));
+  await click(screen.getByRole("button", { name: "Apply 12 points" }));
   expect(await screen.findByText("Points applied.")).toBeInTheDocument();
   await waitFor(() => expect(input).toHaveValue(null));
   expect(jest.mocked(addStatsAction).mock.calls[1][1].get("str")).toBe("12");

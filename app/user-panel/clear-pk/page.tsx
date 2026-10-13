@@ -1,15 +1,5 @@
-"use client";
+import { ClearPkPage } from "./_components/clear-pk-page";
 
-import { ActionPageLayout } from "../_components/action-page-layout";
-import { ClearPkForm } from "../_components/forms/clear-pk-form";
-
-export default function ClearPkPage() {
-  return (
-    <ActionPageLayout
-      title="Clear PK"
-      description="Remove your Player Killer status"
-    >
-      {(character) => <ClearPkForm character={character} />}
-    </ActionPageLayout>
-  );
+export default function Page() {
+  return <ClearPkPage />;
 }

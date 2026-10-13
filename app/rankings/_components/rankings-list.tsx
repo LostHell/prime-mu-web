@@ -1,4 +1,4 @@
-import CastleEvents from "@/app/rankings/_components/castle-events";
+import { CastleEvents } from "@/app/rankings/_components/castle-events";
 import GuildTable from "@/app/rankings/_components/guild-table";
 import PlayersTable from "@/app/rankings/_components/players-table";
 import PodiumCard from "@/app/rankings/_components/podium-card";

@@ -9,7 +9,7 @@ import {
 } from "@/components/item-tooltip";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { withActionToast } from "@/hooks/use-action-toast";
+import { withActionToast } from "@/lib/utils/action-toast";
 import {
   DEPOSIT_ITEM_TYPES,
   DEPOSITABLE_ITEMS,

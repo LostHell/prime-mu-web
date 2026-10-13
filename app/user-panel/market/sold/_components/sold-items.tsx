@@ -4,7 +4,7 @@ import Text from "@/components/ui/text";
 import EmptyState from "@/components/empty-state";
 import type { MarketListing as Listing } from "@/lib/queries/get-marketplace-listings";
 import { Receipt } from "lucide-react";
-import MarketListing from "../../_components/market-listing";
+import MarketListing from "@/app/user-panel/market/_components/market-listing";
 
 interface SoldItemsProps {
   sales: Listing[];

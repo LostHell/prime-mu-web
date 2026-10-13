@@ -21,7 +21,10 @@ import {
 import { formatNumber } from "@/lib/utils/numbers";
 import { type Character } from "@/lib/types/character";
 import { NEUTRAL_PK_LEVEL } from "@/constants/character-rules";
-import { CharacterSection, CharacterValues } from "../character-info";
+import {
+  CharacterSection,
+  CharacterValues,
+} from "@/app/user-panel/_components/character-info";
 import { startTransition, useActionState } from "react";
 
 interface ClearPkFormProps {

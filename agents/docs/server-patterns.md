@@ -41,7 +41,7 @@ A value you read can change before you write it: another tab, another player, or
 - Fetch related rows in one batch (`where: { Name: { in: names } }` + a `Map`), never one query per row. See `get-rankings.ts`.
 - Normalize page numbers and search text with `lib/utils/pagination.ts` and `constants/pagination.ts`.
 - Wrap a query in React `cache()` when one request calls it more than once (see `get-server-info.ts`).
-- New query files start with `import "server-only";`.
+- Query files start with `import "server-only";`.
 - Client components import query result types with `import type` only.
 
 ## Validation (`lib/validation/*`)
@@ -61,14 +61,3 @@ A value you read can change before you write it: another tab, another player, or
 - Session: `auth()` from `@/auth`; in actions, `getAuthenticatedUser()`.
 - Passwords: only through `encodePassword` and `verifyPassword` from `@/lib/auth/password`. They follow the server's `MD5Encryption` mode. Never compare password bytes yourself, and never log passwords or hashes.
 - `proxy.ts` is not a security boundary. See [nextjs-patterns.md](./nextjs-patterns.md).
-
-## Existing exceptions (don't copy)
-
-- `add-stats.ts` and `reset-character.ts` query `MEMB_STAT` inline instead of calling `isAccountOffline`.
-- `register.ts` creates `MEMB_INFO` and `MEMB_STAT` outside a transaction, and two sign-ups with the same name can both pass the existence check (the second fails with an unhandled `P2002`).
-- `login.ts` and `register.ts` return `AuthFormState` (`lib/validation/types.ts`) instead of `ActionState`.
-- `cancel-market-listing.ts` validates with `buyMarketItemSchema`.
-- `buy-market-item.ts` and `cancel-market-listing.ts` each define `isUniqueConflict` and repeat the "place an item in the warehouse" block. Extract them before adding a third copy.
-- Existing `lib/queries/*` files, except `get-next-item-serial.ts`, don't import `server-only`.
-- `lib/actions/index.ts` and `lib/validation/index.ts` are incomplete barrels that nothing imports. Import from the file itself.
-- 14 call sites still use the deprecated Zod `flatten()` and `.email()`.

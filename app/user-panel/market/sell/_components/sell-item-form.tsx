@@ -18,7 +18,7 @@ import {
   type DepositAmounts,
   type DepositItemType,
 } from "@/constants/depositable-items";
-import { withActionToast } from "@/hooks/use-action-toast";
+import { withActionToast } from "@/lib/utils/action-toast";
 import { listMarketItemAction } from "@/lib/actions/list-market-item";
 import { formatItemName } from "@/lib/game/item-database/formatters";
 import { type WarehouseItem } from "@/lib/types/warehouse";

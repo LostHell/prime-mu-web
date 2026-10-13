@@ -1,3 +1,5 @@
+import "server-only";
+
 import { prisma } from "@/prisma/prisma";
 
 /** Account ids whose ConnectStat says they are in the game. */

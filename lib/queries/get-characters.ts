@@ -1,3 +1,5 @@
+import "server-only";
+
 import { CHARACTER_CLASS_BY_ID } from "@/lib/game/constants/characters";
 import { type AccountCharactersResult } from "@/lib/types/character";
 import { prisma } from "@/prisma/prisma";

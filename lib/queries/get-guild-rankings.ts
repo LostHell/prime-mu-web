@@ -1,3 +1,5 @@
+import "server-only";
+
 import { RANKING_PAGE_SIZE } from "@/constants/pagination";
 import { prisma } from "@/prisma/prisma";
 

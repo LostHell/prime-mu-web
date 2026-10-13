@@ -5,7 +5,6 @@ export const registerSchema = z
   .object({
     username: usernameSchema,
     email: z
-      .string()
       .email("Please provide a valid email address.")
       .max(50, "Email must be at most 50 characters."),
     password: passwordSchema,

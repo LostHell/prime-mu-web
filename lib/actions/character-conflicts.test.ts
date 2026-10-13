@@ -5,7 +5,6 @@ import { MIN_RESET_LEVEL } from "@/constants/resets";
 
 jest.mock("@/prisma/prisma", () => ({
   prisma: {
-    mEMB_STAT: { findUnique: jest.fn().mockResolvedValue({ ConnectStat: 0 }) },
     character: { updateMany: jest.fn().mockResolvedValue({ count: 0 }) },
     defaultClassType: {
       findUnique: jest.fn().mockResolvedValue({ Level: 1, LevelUpPoint: 0 }),
@@ -14,6 +13,7 @@ jest.mock("@/prisma/prisma", () => ({
 }));
 jest.mock("./utils", () => ({
   getAuthenticatedUser: jest.fn().mockResolvedValue("account"),
+  isAccountOffline: jest.fn().mockResolvedValue(true),
   verifyCharacterOwnership: jest.fn().mockImplementation(() =>
     Promise.resolve({
       Class: 0,

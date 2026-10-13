@@ -1,16 +1,18 @@
 "use server";
 
+import { flattenError } from "zod";
 import { signIn } from "@/auth";
 import { registerSchema } from "@/lib/validation/register";
 import { encodePassword } from "@/lib/auth/password";
-import { AuthFormState } from "@/lib/validation/types";
+import { ActionState } from "@/lib/types/action-state";
 import { prisma } from "@/prisma/prisma";
 import { redirect } from "next/navigation";
+import { isUniqueConflict } from "./utils";
 
 export async function registerAction(
-  _state: AuthFormState,
+  _state: ActionState,
   formData: FormData,
-): Promise<AuthFormState> {
+): Promise<ActionState> {
   const validatedFields = registerSchema.safeParse({
     username: formData.get("username"),
     email: formData.get("email"),
@@ -20,7 +22,8 @@ export async function registerAction(
 
   if (!validatedFields.success) {
     return {
-      errors: validatedFields.error.flatten().fieldErrors,
+      success: false,
+      errors: flattenError(validatedFields.error).fieldErrors,
       message: "Please correct the errors and try again.",
     };
   }
@@ -32,31 +35,44 @@ export async function registerAction(
 
   if (existingAccount) {
     return {
+      success: false,
       message: "This username is already taken.",
     };
   }
 
-  await prisma.mEMB_INFO.create({
-    data: {
-      memb___id: validatedFields.data.username,
-      memb__pwd: encodePassword(
-        validatedFields.data.username,
-        validatedFields.data.password,
-      ),
-      memb_name: validatedFields.data.username,
-      mail_addr: validatedFields.data.email,
-      sno__numb: "111111111111111111",
-      bloc_code: "0",
-    },
-  });
+  try {
+    await prisma.$transaction(async (tx) => {
+      await tx.mEMB_INFO.create({
+        data: {
+          memb___id: validatedFields.data.username,
+          memb__pwd: encodePassword(
+            validatedFields.data.username,
+            validatedFields.data.password,
+          ),
+          memb_name: validatedFields.data.username,
+          mail_addr: validatedFields.data.email,
+          sno__numb: "111111111111111111",
+          bloc_code: "0",
+        },
+      });
 
-  await prisma.mEMB_STAT.create({
-    data: {
-      memb___id: validatedFields.data.username,
-      ConnectStat: 0,
-      OnlineHours: 0,
-    },
-  });
+      await tx.mEMB_STAT.create({
+        data: {
+          memb___id: validatedFields.data.username,
+          ConnectStat: 0,
+          OnlineHours: 0,
+        },
+      });
+    });
+  } catch (err) {
+    if (isUniqueConflict(err)) {
+      return {
+        success: false,
+        message: "This username is already taken.",
+      };
+    }
+    throw err;
+  }
 
   await signIn("credentials", {
     username: validatedFields.data.username,

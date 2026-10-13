@@ -1,5 +1,6 @@
 "use server";
 
+import { flattenError } from "zod";
 import {
   DEPOSIT_ITEM_TYPES,
   DEPOSITABLE_ITEMS,
@@ -7,28 +8,23 @@ import {
   type DepositAmounts,
 } from "@/constants/depositable-items";
 import { ActionError, actionErrorMessage } from "@/lib/errors/action-error";
-import { getItemDefinition } from "@/lib/game/item-database";
-import {
-  decodeItem,
-  findFreeArea,
-  writeItemToSlot,
-} from "@/lib/game/item-decoder";
-import { getWarehouseItemsBuffer } from "@/lib/game/warehouse";
 import {
   depositAmountsFromColumns,
   depositColumnsFromAmounts,
   hasAnyPositiveDepositAmounts,
 } from "@/lib/utils/deposits";
-import { buyMarketItemSchema } from "@/lib/validation/buy-market-item";
+import { listingIdSchema } from "@/lib/validation/listing-id";
 import { isListingPriceInRange } from "@/lib/validation/listing-price-limits";
 import { ActionState } from "@/lib/types/action-state";
 import { Prisma } from "@/prisma/generated/prisma/client";
 import { prisma } from "@/prisma/prisma";
 import { revalidatePath } from "next/cache";
-import { getAuthenticatedUser, isAccountOffline } from "./utils";
-
-const isUniqueConflict = (err: unknown) =>
-  err instanceof Prisma.PrismaClientKnownRequestError && err.code === "P2002";
+import { placeItemInWarehouse } from "./place-warehouse-item";
+import {
+  getAuthenticatedUser,
+  isAccountOffline,
+  isUniqueConflict,
+} from "./utils";
 
 const isOutOfRange = (err: unknown) =>
   err instanceof Error && /out of range/i.test(err.message);
@@ -128,14 +124,14 @@ export async function buyMarketItemAction(
     return { success: false, message: "You must be logged in." };
   }
 
-  const validated = buyMarketItemSchema.safeParse({
+  const validated = listingIdSchema.safeParse({
     listingId: formData.get("listingId"),
   });
 
   if (!validated.success) {
     return {
       success: false,
-      errors: validated.error.flatten().fieldErrors,
+      errors: flattenError(validated.error).fieldErrors,
       message: "Invalid input.",
     };
   }
@@ -171,42 +167,6 @@ export async function buyMarketItemAction(
       if (!isListingPriceInRange(prices)) {
         throw new ActionError("This listing has an invalid price.");
       }
-      const decodedItem = decodeItem(Buffer.from(listing.itemHex));
-      if (!decodedItem) {
-        throw new ActionError("Could not decode item data.");
-      }
-
-      const itemDef = getItemDefinition({
-        group: decodedItem.group,
-        index: decodedItem.index,
-        level: decodedItem.level,
-      });
-      if (!itemDef)
-        throw new ActionError(
-          "This item is unsupported. Please contact support with the listing number.",
-        );
-      const itemWidth = itemDef.width;
-      const itemHeight = itemDef.height;
-
-      const buyerWarehouse = await tx.warehouse.findUnique({
-        where: { AccountID: accountId },
-        select: { Items: true },
-      });
-      const originalItems = buyerWarehouse?.Items ?? null;
-      const buyerBuffer = getWarehouseItemsBuffer(originalItems);
-      const freeSlot = findFreeArea(buyerBuffer, itemWidth, itemHeight);
-
-      if (freeSlot === -1) {
-        throw new ActionError(
-          `Not enough space in your warehouse for this item (${itemWidth}x${itemHeight}).`,
-        );
-      }
-
-      const updatedBuyerBuffer = writeItemToSlot(
-        buyerBuffer,
-        freeSlot,
-        listing.itemHex,
-      );
 
       const buyerCharacter = await tx.character.findFirst({
         where: { AccountID: accountId },
@@ -235,36 +195,7 @@ export async function buyMarketItemAction(
       // must retry.
       await debitDepositAmounts(tx, accountId, prices);
       await creditDepositAmounts(tx, listing.sellerAccountId, prices);
-
-      if (!buyerWarehouse) {
-        try {
-          await tx.warehouse.create({
-            data: {
-              AccountID: accountId,
-              Items: Uint8Array.from(updatedBuyerBuffer),
-            },
-          });
-          return;
-        } catch (err) {
-          if (isUniqueConflict(err)) {
-            throw new ActionError(
-              "Your warehouse changed while processing this request. Please try again.",
-            );
-          }
-          throw err;
-        }
-      }
-
-      const { count } = await tx.warehouse.updateMany({
-        where: { AccountID: accountId, Items: originalItems },
-        data: { Items: Uint8Array.from(updatedBuyerBuffer) },
-      });
-
-      if (count === 0) {
-        throw new ActionError(
-          "Your warehouse changed while processing this request. Please try again.",
-        );
-      }
+      await placeItemInWarehouse(tx, accountId, listing.itemHex);
     });
   } catch (err) {
     return {

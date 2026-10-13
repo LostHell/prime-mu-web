@@ -1,14 +1,15 @@
 "use server";
 
+import { flattenError } from "zod";
 import { signIn } from "@/auth";
 import { loginSchema } from "@/lib/validation/login";
-import { AuthFormState } from "@/lib/validation/types";
+import { ActionState } from "@/lib/types/action-state";
 import { AuthError } from "next-auth";
 
 export async function loginAction(
-  _state: AuthFormState,
+  _state: ActionState,
   formData: FormData,
-): Promise<AuthFormState> {
+): Promise<ActionState> {
   const validatedFields = loginSchema.safeParse({
     username: formData.get("username"),
     password: formData.get("password"),
@@ -16,7 +17,8 @@ export async function loginAction(
 
   if (!validatedFields.success) {
     return {
-      errors: validatedFields.error.flatten().fieldErrors,
+      success: false,
+      errors: flattenError(validatedFields.error).fieldErrors,
       message: "Please correct the errors and try again.",
     };
   }
@@ -30,6 +32,7 @@ export async function loginAction(
   } catch (error) {
     if (error instanceof AuthError) {
       return {
+        success: false,
         message: "Invalid username or password.",
       };
     }

@@ -1,5 +1,9 @@
 import { auth } from "@/auth";
+import { Prisma } from "@/prisma/generated/prisma/client";
 import { prisma } from "@/prisma/prisma";
+
+export const isUniqueConflict = (err: unknown) =>
+  err instanceof Prisma.PrismaClientKnownRequestError && err.code === "P2002";
 
 export async function getAuthenticatedUser() {
   const session = await auth();

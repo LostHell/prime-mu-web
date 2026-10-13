@@ -62,7 +62,7 @@ const [state, action, isPending] = useActionState(changeEmailAction, {});
 
 - Input `name` attributes match the keys the action reads from `formData` and the Zod schema.
 - Disable inputs and the submit button while `isPending`.
-- Feedback: persistent result in an `Alert`, or a toast. When the submitting UI can disappear after revalidation (cancel, buy), wrap the action with `withActionToast` from `@/hooks/use-action-toast` instead of toasting in an effect.
+- Feedback: persistent result in an `Alert`, or a toast. When the submitting UI can disappear after revalidation (cancel, buy), wrap the action with `withActionToast` from `@/lib/utils/action-toast` instead of toasting in an effect.
 - Client-side checks are for convenience only. The action validates again.
 
 ## useEffect Usage
@@ -105,9 +105,3 @@ Use with caution. Reference: <https://react.dev/learn/you-might-not-need-an-effe
 
 - Prefer **Design System** and existing components over bespoke markup. See [`design-system.md`](./design-system.md).
 - No `any`. Type third-party gaps with a narrow local type instead.
-
-## Existing exceptions (don't copy)
-
-- `'use client'` pages under `app/user-panel/` (`page.tsx`, `reset`, `add-stats`, `clear-pk`, `account/change-email`, `account/change-password`). They read the selected character from client context (`app/user-panel/_context/user-panel-context.tsx`).
-- 19 bare `toLocaleString()` calls in `app/` and `components/`, including `app/user-panel/page.tsx`, `reset-form.tsx` and the Blood Castle / Devil Square tables.
-- `components/item-tooltip.tsx` uses `any` and assigns to refs returned from context. It is the source of the current ESLint errors.

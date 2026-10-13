@@ -1,3 +1,5 @@
+import "server-only";
+
 import { MAX_RESETS, POINTS_PER_RESET } from "@/constants/resets";
 import {
   DROP_RATE,

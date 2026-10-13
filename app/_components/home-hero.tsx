@@ -76,8 +76,8 @@ const HomeHero = async () => {
             </span>
           </h1>
           <p className="text-muted-foreground mt-4 max-w-md text-base md:text-lg">
-            Classic combat. Four classes. High performance gaming experience with{" "}
-            <strong>{CLIENT_FPS}+</strong> FPS.
+            Classic combat. Four classes. High performance gaming experience
+            with <strong>{CLIENT_FPS}+</strong> FPS.
           </p>
 
           <RotatingStats groups={statGroups} />
@@ -98,9 +98,7 @@ const HomeHero = async () => {
               <Link href="/register">Create account</Link>
             </Button>
           </div>
-          <p className="text-muted-foreground mt-3">
-            Windows · MacOS
-          </p>
+          <p className="text-muted-foreground mt-3">Windows · MacOS</p>
           <ServerStatus
             className="mt-5 mb-0 justify-start"
             status={serverInfo.status}

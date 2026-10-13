@@ -17,7 +17,9 @@ export default function AccountActions({
   onNavigate?: () => void;
 }) {
   return (
-    <div className={cn("flex items-center justify-end gap-3 sm:gap-5", className)}>
+    <div
+      className={cn("flex items-center justify-end gap-3 sm:gap-5", className)}
+    >
       {items.map((item) => {
         const key = getItemKey(item);
 

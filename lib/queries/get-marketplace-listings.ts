@@ -1,3 +1,5 @@
+import "server-only";
+
 import { type DepositAmounts } from "@/constants/depositable-items";
 import { getItemDefinition } from "@/lib/game/item-database";
 import { type ItemDefinition } from "@/lib/game/item-database/types";

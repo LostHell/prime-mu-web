@@ -1,5 +1,6 @@
 "use server";
 
+import { flattenError } from "zod";
 import { ActionError, actionErrorMessage } from "@/lib/errors/action-error";
 
 import {
@@ -13,6 +14,7 @@ import { ActionState } from "@/lib/types/action-state";
 import { prisma } from "@/prisma/prisma";
 import { revalidatePath } from "next/cache";
 import { getAuthenticatedUser, isAccountOffline } from "./utils";
+import { formatNumber } from "@/lib/utils/numbers";
 
 export async function depositAction(
   _state: ActionState,
@@ -32,7 +34,7 @@ export async function depositAction(
   if (!validated.success) {
     return {
       success: false,
-      errors: validated.error.flatten().fieldErrors,
+      errors: flattenError(validated.error).fieldErrors,
       message: "Invalid input.",
     };
   }
@@ -79,7 +81,7 @@ async function depositZen(
 
       if (count === 0) {
         throw new ActionError(
-          `Not enough Zen in warehouse. Available: ${available.toLocaleString()}.`,
+          `Not enough Zen in warehouse. Available: ${formatNumber(available)}.`,
         );
       }
 

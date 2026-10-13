@@ -5,7 +5,7 @@ import {
 import { hasAnyPositiveDepositAmounts } from "@/lib/utils/deposits";
 import { formatNumber } from "@/lib/utils/numbers";
 import { listingPriceLimit } from "@/lib/validation/listing-price-limits";
-import { z } from "zod";
+import { flattenError, z } from "zod";
 import { MAX_ITEM_SERIAL } from "@/lib/game/item-decoder/constants";
 import { WAREHOUSE_SLOTS } from "@/lib/game/constants/warehouse";
 
@@ -47,7 +47,7 @@ export const listMarketItemSchema = z
 export type ListMarketItemInput = z.infer<typeof listMarketItemSchema>;
 
 export const listMarketItemErrorMessage = (error: z.ZodError): string => {
-  const { formErrors, fieldErrors } = error.flatten();
+  const { formErrors, fieldErrors } = flattenError(error);
   return (
     formErrors[0] ??
     Object.values(fieldErrors)

@@ -117,5 +117,4 @@ test("calls the handler when the button is clicked", async () => {
 
 ## Existing exceptions (don't copy)
 
-- `app/user-panel/_components/action-page-layout.test.tsx` and `app/user-panel/_components/forms/add-stats-form.test.tsx` use `fireEvent` directly.
-- Server actions without tests: `buy-market-item.ts`, `cancel-market-listing.ts`, `deposit.ts`, `withdraw.ts`, `change-email.ts`, `change-password.ts`, `login.ts`, `register.ts`.
+- Server actions without tests: `buy-market-item.ts`, `cancel-market-listing.ts`, `deposit.ts`, `withdraw.ts`, `change-email.ts`, `change-password.ts`, `login.ts`.

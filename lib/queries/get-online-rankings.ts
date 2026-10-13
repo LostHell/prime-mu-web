@@ -1,3 +1,5 @@
+import "server-only";
+
 import { RANKING_PAGE_SIZE, MAX_SEARCH_LENGTH } from "@/constants/pagination";
 import { characterClassName } from "@/lib/game/characters/class-name";
 import { prisma } from "@/prisma/prisma";
