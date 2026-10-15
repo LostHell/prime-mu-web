@@ -1,5 +1,6 @@
 import "server-only";
 
+import { cacheFor } from "@/lib/utils/cache-for";
 import net from "node:net";
 
 const CACHE_DURATION = 5000;
@@ -11,16 +12,8 @@ type CachedStatus = {
   lastCheck: number;
 };
 
-let cachedStatus: CachedStatus | null = null;
-
-export async function getServerStatus(): Promise<CachedStatus> {
-  const now = Date.now();
-
-  if (cachedStatus && now - cachedStatus.lastCheck < CACHE_DURATION) {
-    return cachedStatus;
-  }
-
-  const status = await new Promise<"online" | "offline">((resolve) => {
+async function probeServer(): Promise<"online" | "offline"> {
+  return new Promise((resolve) => {
     const socket = new net.Socket();
 
     const finish = (value: "online" | "offline") => {
@@ -34,8 +27,12 @@ export async function getServerStatus(): Promise<CachedStatus> {
     socket.once("error", () => finish("offline"));
     socket.connect(GAME_SERVER_PORT, GAME_SERVER_HOST);
   });
-
-  cachedStatus = { status, lastCheck: now };
-
-  return cachedStatus;
 }
+
+export const getServerStatus = cacheFor(
+  CACHE_DURATION,
+  async (): Promise<CachedStatus> => ({
+    status: await probeServer(),
+    lastCheck: Date.now(),
+  }),
+);
