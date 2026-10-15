@@ -1,97 +1,193 @@
-import { RANKING_PAGE_SIZE } from "@/constants/pagination";
 import { prisma } from "@/prisma/prisma";
-import {
-  getRankedCharacters,
-  getRankedCharactersByClass,
-} from "@/prisma/generated/prisma/sql";
+import { getLeaderboard } from "@/prisma/generated/prisma/sql";
 import { getRankings } from "./get-rankings";
 
 jest.mock("@/prisma/prisma", () => ({
   prisma: {
     $queryRawTyped: jest.fn(),
-    guildMember: { findMany: jest.fn() },
   },
 }));
 jest.mock("@/prisma/generated/prisma/sql", () => ({
-  getRankedCharacters: jest.fn((...parameters) => ({
-    query: "all-classes",
-    parameters,
-  })),
-  getRankedCharactersByClass: jest.fn((...parameters) => ({
-    query: "one-class",
-    parameters,
-  })),
+  getLeaderboard: jest.fn(() => ({ query: "leaderboard" })),
 }));
 
-const rankedRows = [
+const leaderboardRows = [
   {
     Name: "Knight",
-    Class: 0,
+    Class: 16,
     cLevel: 400n,
     ResetCount: 12n,
-    ranking: 7n,
+    ranking: 1n,
+    guild: "Codex",
+  },
+  {
+    Name: "Wizard",
+    Class: 0,
+    cLevel: 350n,
+    ResetCount: 9n,
+    ranking: 2n,
+    guild: null,
+  },
+  {
+    Name: "Elf",
+    Class: 32,
+    cLevel: 200n,
+    ResetCount: 4n,
+    ranking: 3n,
+    guild: null,
   },
 ];
 
+let now = 0;
+
 beforeEach(() => {
   jest.clearAllMocks();
-  (prisma.$queryRawTyped as jest.Mock).mockResolvedValue(rankedRows);
-  (prisma.guildMember.findMany as jest.Mock).mockResolvedValue([
-    { Name: "Knight", G_Name: "Codex" },
-  ]);
+  now += 60_000;
+  jest.spyOn(Date, "now").mockReturnValue(now);
+  (prisma.$queryRawTyped as jest.Mock).mockResolvedValue(leaderboardRows);
 });
 
-test("uses the generated unfiltered query and preserves global rank data", async () => {
-  const result = await getRankings({ page: 2 });
+afterEach(() => {
+  jest.restoreAllMocks();
+});
 
-  expect(getRankedCharacters).toHaveBeenCalledWith(
-    "%%",
-    RANKING_PAGE_SIZE + 1,
-    RANKING_PAGE_SIZE,
-  );
-  expect(getRankedCharactersByClass).not.toHaveBeenCalled();
+test("reads the typed leaderboard and keeps each character's rank and guild", async () => {
+  const result = await getRankings({ pageSize: 2 });
+
+  expect(getLeaderboard).toHaveBeenCalledWith();
+  expect(prisma.$queryRawTyped).toHaveBeenCalledWith({ query: "leaderboard" });
   expect(result).toEqual({
     characters: [
       {
-        rank: 7,
+        rank: 1,
         name: "Knight",
-        class: "Dark Wizard",
+        class: "Dark Knight",
         level: 400,
         resets: 12,
         guild: "Codex",
       },
+      {
+        rank: 2,
+        name: "Wizard",
+        class: "Dark Wizard",
+        level: 350,
+        resets: 9,
+      },
+    ],
+    hasNext: true,
+  });
+});
+
+test("keeps the global rank when a class filter hides higher characters", async () => {
+  const result = await getRankings({ classId: 0 });
+
+  expect(result).toEqual({
+    characters: [
+      {
+        rank: 2,
+        name: "Wizard",
+        class: "Dark Wizard",
+        level: 350,
+        resets: 9,
+      },
     ],
     hasNext: false,
   });
+  expect(prisma.$queryRawTyped).toHaveBeenCalledTimes(1);
 });
 
-test("uses the class-filtered query and binds escaped search text as a value", async () => {
-  await getRankings({
-    query: "Blade_100%!' OR 1=1 --",
-    classId: 16,
-    pageSize: 3,
-  });
+test("matches a name that contains the search text", async () => {
+  const result = await getRankings({ query: "night" });
 
-  expect(getRankedCharactersByClass).toHaveBeenCalledWith(
-    "%Blade!_100!%!!' OR 1=1 --%",
-    16,
-    4,
-    0,
-  );
-  expect(prisma.$queryRawTyped).toHaveBeenCalledWith({
-    query: "one-class",
-    parameters: ["%Blade!_100!%!!' OR 1=1 --%", 16, 4, 0],
-  });
+  expect(result.characters.map((character) => character.name)).toEqual([
+    "Knight",
+  ]);
 });
 
-test("normalizes invalid pagination at the query boundary", async () => {
-  await getRankings({ page: 0, pageSize: 0 });
+test("treats % and _ in the search text as literal characters", async () => {
+  await expect(getRankings({ query: "Knight%" })).resolves.toMatchObject({
+    characters: [],
+  });
+  await expect(getRankings({ query: "Kni_ght" })).resolves.toMatchObject({
+    characters: [],
+  });
+  expect(prisma.$queryRawTyped).toHaveBeenCalledTimes(1);
+});
 
-  expect(getRankedCharacters).toHaveBeenCalledWith(
-    "%%",
-    RANKING_PAGE_SIZE + 1,
-    0,
+test("reuses the leaderboard until it is thirty seconds old", async () => {
+  await getRankings();
+  jest.spyOn(Date, "now").mockReturnValue(now + 29_999);
+
+  await getRankings({ page: 2, classId: 32 });
+
+  expect(prisma.$queryRawTyped).toHaveBeenCalledTimes(1);
+});
+
+test("reads the leaderboard again once it is thirty seconds old", async () => {
+  await getRankings();
+  jest.spyOn(Date, "now").mockReturnValue(now + 30_000);
+  (prisma.$queryRawTyped as jest.Mock).mockResolvedValue([
+    {
+      Name: "Muse",
+      Class: 33,
+      cLevel: 10n,
+      ResetCount: 1n,
+      ranking: 1n,
+      guild: null,
+    },
+  ]);
+
+  const result = await getRankings();
+
+  expect(result.characters).toEqual([
+    {
+      rank: 1,
+      name: "Muse",
+      class: "Muse Elf",
+      level: 10,
+      resets: 1,
+    },
+  ]);
+  expect(prisma.$queryRawTyped).toHaveBeenCalledTimes(2);
+});
+
+test("shares one leaderboard read across overlapping callers", async () => {
+  let resolveQuery: (value: unknown) => void = () => {};
+  (prisma.$queryRawTyped as jest.Mock).mockReturnValue(
+    new Promise((resolve) => {
+      resolveQuery = resolve;
+    }),
   );
+
+  const first = getRankings({ pageSize: 3 });
+  const second = getRankings({ page: 2 });
+  resolveQuery(leaderboardRows);
+
+  const [leaders, page] = await Promise.all([first, second]);
+
+  expect(leaders.characters).toHaveLength(3);
+  expect(page.characters).toEqual([]);
+  expect(prisma.$queryRawTyped).toHaveBeenCalledTimes(1);
+});
+
+test("tries the leaderboard again after a read fails", async () => {
+  (prisma.$queryRawTyped as jest.Mock).mockRejectedValueOnce(
+    new Error("db down"),
+  );
+
+  await expect(getRankings()).rejects.toThrow("db down");
+
+  const result = await getRankings({ pageSize: 1 });
+
+  expect(result.characters[0]?.name).toBe("Knight");
+  expect(prisma.$queryRawTyped).toHaveBeenCalledTimes(2);
+});
+
+test("normalizes an invalid page and page size onto the first default page", async () => {
+  const result = await getRankings({ page: 0, pageSize: 0 });
+
+  expect(result.characters).toHaveLength(3);
+  expect(result.hasNext).toBe(false);
 });
 
 test("does not query the database when the requested offset is not exact", async () => {

@@ -3,8 +3,6 @@
 /* eslint-disable */
 // biome-ignore-all lint: generated file
 // @ts-nocheck 
-export * from "./sql/getRankedCharacters"
-
-export * from "./sql/getRankedCharactersByClass"
+export * from "./sql/getLeaderboard"
 
 export * from "./sql/getServerPopulation"

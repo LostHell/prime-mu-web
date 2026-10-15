@@ -38,10 +38,10 @@ A value you read can change before you write it: another tab, another player, or
 - One read per file: `get-<thing>.ts` exporting `get<Thing>`.
 - Queries take `accountId` as an argument. They never call `auth()`; the page or action does that and passes the id.
 - Return plain, serializable objects with readable names (`level`, not `cLevel`) and nulls already defaulted. No Prisma rows, `Buffer`, or `bigint` (use `bigIntToSafeNumber`) in anything passed to a client component.
-- Fetch related rows in one batch (`where: { Name: { in: names } }` + a `Map`), never one query per row. See `get-rankings.ts`.
+- Fetch related rows in one batch (`where: { Name: { in: names } }` + a `Map`), never one query per row. See `get-characters.ts`.
 - Normalize page numbers and search text with `lib/utils/pagination.ts` and `constants/pagination.ts`.
 - Wrap a query in React `cache()` when one request calls it more than once (see `get-server-info.ts`). That only dedupes inside a single request.
-- Reuse a value across requests with `cacheFor(ttlMs, load)` from [`lib/utils/cache-for.ts`](../../lib/utils/cache-for.ts). It remembers a successful result for `ttlMs` and shares one in-flight load; a failed load is not kept. See `get-server-status.ts` and the population read in `get-server-info.ts`.
+- Reuse a value across requests with `cacheFor(ttlMs, load)` from [`lib/utils/cache-for.ts`](../../lib/utils/cache-for.ts). It remembers a successful result for `ttlMs` and shares one in-flight load; a failed load is not kept. See `get-server-status.ts`, the population read in `get-server-info.ts`, and the leaderboard in `get-rankings.ts` (that list is filtered and paged in memory, so a filtered character keeps the global rank).
 - Query files start with `import "server-only";`.
 - Client components import query result types with `import type` only.
 

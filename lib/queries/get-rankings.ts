@@ -1,14 +1,12 @@
 import "server-only";
 
+import { MAX_SEARCH_LENGTH, RANKING_PAGE_SIZE } from "@/constants/pagination";
 import { characterClassName } from "@/lib/game/characters/class-name";
 import { UNKNOWN_CHARACTER_CLASS } from "@/lib/game/constants/characters";
 import { CharacterClass } from "@/lib/types/character";
+import { cacheFor } from "@/lib/utils/cache-for";
+import { getLeaderboard } from "@/prisma/generated/prisma/sql";
 import { prisma } from "@/prisma/prisma";
-import {
-  getRankedCharacters,
-  getRankedCharactersByClass,
-} from "@/prisma/generated/prisma/sql";
-import { MAX_SEARCH_LENGTH, RANKING_PAGE_SIZE } from "@/constants/pagination";
 
 export interface RankingEntry {
   rank: number;
@@ -18,6 +16,31 @@ export interface RankingEntry {
   resets: number;
   guild?: string;
 }
+
+type LeaderboardEntry = RankingEntry & { classId: number | null };
+
+const LEADERBOARD_CACHE_MS = 30_000;
+
+// One ordering of Character, joined to guilds. Home and the rankings page both
+// ask for it, so overlapping views share the read and then reuse it instead of
+// sorting the table again. Paging, search, and class run on this list, which
+// keeps a filtered character's global rank.
+const loadLeaderboard = cacheFor(
+  LEADERBOARD_CACHE_MS,
+  async (): Promise<LeaderboardEntry[]> => {
+    const rows = await prisma.$queryRawTyped(getLeaderboard());
+
+    return rows.map((row) => ({
+      rank: Number(row.ranking),
+      name: row.Name,
+      classId: row.Class,
+      class: characterClassName(row.Class),
+      level: Number(row.cLevel),
+      resets: Number(row.ResetCount),
+      ...(row.guild ? { guild: row.guild } : {}),
+    }));
+  },
+);
 
 export async function getRankings({
   page = 1,
@@ -37,10 +60,6 @@ export async function getRankings({
     pageSize < Number.MAX_SAFE_INTEGER
       ? pageSize
       : RANKING_PAGE_SIZE;
-  const namePattern = `%${query
-    .slice(0, MAX_SEARCH_LENGTH)
-    .replace(/[!%_]/g, "!$&")}%`;
-  const rowLimit = normalizedPageSize + 1;
   const rowOffset = (normalizedPage - 1) * normalizedPageSize;
 
   // A URL can contain a page whose calculated offset exceeds JavaScript's
@@ -49,28 +68,26 @@ export async function getRankings({
     return { characters: [], hasNext: false };
   }
 
-  // Ranking happens inside each static query before filters are applied, so
-  // filtered results keep their global rank. TypedSQL binds every argument.
-  const rows = await prisma.$queryRawTyped(
-    classId === undefined
-      ? getRankedCharacters(namePattern, rowLimit, rowOffset)
-      : getRankedCharactersByClass(namePattern, classId, rowLimit, rowOffset),
-  );
-  const visible = rows.slice(0, normalizedPageSize);
-  const guildMembers = visible.length
-    ? await prisma.guildMember.findMany({
-        where: { Name: { in: visible.map((row) => row.Name) } },
-        select: { Name: true, G_Name: true },
-      })
-    : [];
-  const guildMap = new Map(guildMembers.map((g) => [g.Name, g.G_Name]));
-  const characters: RankingEntry[] = visible.map((row) => ({
-    rank: Number(row.ranking),
-    name: row.Name,
-    class: characterClassName(row.Class),
-    level: Number(row.cLevel),
-    resets: Number(row.ResetCount),
-    guild: guildMap.get(row.Name),
-  }));
-  return { characters, hasNext: rows.length > normalizedPageSize };
+  const needle = query.slice(0, MAX_SEARCH_LENGTH).toLowerCase();
+  const leaderboard = await loadLeaderboard();
+  const matches = leaderboard.filter((entry) => {
+    if (classId !== undefined && entry.classId !== classId) return false;
+    if (!needle) return true;
+    return entry.name.toLowerCase().includes(needle);
+  });
+  const visible = matches.slice(rowOffset, rowOffset + normalizedPageSize);
+
+  return {
+    characters: visible.map(
+      (entry: LeaderboardEntry): RankingEntry => ({
+        rank: entry.rank,
+        name: entry.name,
+        class: entry.class,
+        level: entry.level,
+        resets: entry.resets,
+        ...(entry.guild ? { guild: entry.guild } : {}),
+      }),
+    ),
+    hasNext: matches.length > rowOffset + normalizedPageSize,
+  };
 }
