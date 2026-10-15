@@ -1,5 +1,6 @@
 import "server-only";
 
+import { cacheFor } from "@/lib/utils/cache-for";
 import { prisma } from "@/prisma/prisma";
 import {
   rankScoredCharacters,
@@ -8,14 +9,23 @@ import {
 
 export type DevilSquareRankingEntry = ScoredRankingEntry;
 
-export async function getDevilSquareRanking(): Promise<
-  DevilSquareRankingEntry[]
-> {
-  const rankings = await prisma.rankingDevilSquare.findMany({
-    take: 10,
-    orderBy: { Score: "desc" },
-    select: { Name: true, Score: true },
-  });
+const EVENT_RANKING_CACHE_MS = 30_000;
 
-  return rankScoredCharacters(rankings);
+// The events tab loads this beside Blood Castle. One shared read serves both
+// visitors instead of each checkout against Character.
+const loadDevilSquareRanking = cacheFor(
+  EVENT_RANKING_CACHE_MS,
+  async (): Promise<DevilSquareRankingEntry[]> => {
+    const rankings = await prisma.rankingDevilSquare.findMany({
+      take: 10,
+      orderBy: { Score: "desc" },
+      select: { Name: true, Score: true },
+    });
+
+    return rankScoredCharacters(rankings);
+  },
+);
+
+export function getDevilSquareRanking(): Promise<DevilSquareRankingEntry[]> {
+  return loadDevilSquareRanking();
 }

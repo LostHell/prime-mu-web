@@ -43,17 +43,16 @@ export async function getAccountDepositAmounts(
 }
 
 export async function getDeposits(accountId: string): Promise<DepositData> {
-  const [warehouse, deposited, stat] = await Promise.all([
-    prisma.warehouse.findUnique({
-      where: { AccountID: accountId },
-      select: { Items: true, Money: true },
-    }),
-    getAccountDepositAmounts(accountId),
-    prisma.mEMB_STAT.findUnique({
-      where: { memb___id: accountId },
-      select: { ConnectStat: true },
-    }),
-  ]);
+  // One connection at a time. These reads do not share a transaction.
+  const warehouse = await prisma.warehouse.findUnique({
+    where: { AccountID: accountId },
+    select: { Items: true, Money: true },
+  });
+  const deposited = await getAccountDepositAmounts(accountId);
+  const stat = await prisma.mEMB_STAT.findUnique({
+    where: { memb___id: accountId },
+    select: { ConnectStat: true },
+  });
 
   const warehouseZen = warehouse?.Money ?? 0;
   const warehouseItems = getWarehouseItemsBuffer(warehouse?.Items);

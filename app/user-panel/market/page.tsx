@@ -33,10 +33,9 @@ export default async function MarketPage({
   const params = await searchParams;
   const page = getPageNumber(params.page);
   const query = getSearchQuery(params.query, MAX_SEARCH_LENGTH);
-  const [result, buyerDeposits] = await Promise.all([
-    getAllActiveListings(session.user.id, page, query),
-    getAccountDepositAmounts(session.user.id),
-  ]);
+  // The catalogue walk and the balance each take a connection.
+  const result = await getAllActiveListings(session.user.id, page, query);
+  const buyerDeposits = await getAccountDepositAmounts(session.user.id);
   const paginationQuery: Record<string, string> = query ? { query } : {};
 
   if (page > 1 && result.items.length === 0) {

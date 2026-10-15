@@ -44,24 +44,23 @@ export async function getCharacters(
   const guilds = new Map(
     memberships.map((membership) => [membership.Name, membership.G_Name]),
   );
-  const [accountStatus, defaults] = await Promise.all([
-    prisma.mEMB_STAT.findUnique({
-      where: { memb___id: accountId },
-      select: { ConnectStat: true },
-    }),
-    prisma.defaultClassType.findMany({
-      where: {
-        Class: {
-          in: [
-            ...new Set(
-              characters.map((character) => getBaseClass(character.Class ?? 0)),
-            ),
-          ],
-        },
+  // One connection at a time. These reads do not share a transaction.
+  const accountStatus = await prisma.mEMB_STAT.findUnique({
+    where: { memb___id: accountId },
+    select: { ConnectStat: true },
+  });
+  const defaults = await prisma.defaultClassType.findMany({
+    where: {
+      Class: {
+        in: [
+          ...new Set(
+            characters.map((character) => getBaseClass(character.Class ?? 0)),
+          ),
+        ],
       },
-      select: { Class: true, Level: true },
-    }),
-  ]);
+    },
+    select: { Class: true, Level: true },
+  });
   const classDefaults = new Map(defaults.map((entry) => [entry.Class, entry]));
 
   return {
