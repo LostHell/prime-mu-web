@@ -327,6 +327,279 @@
       12.5,
       16.5,
       20.5
+    ],
+    "list": [
+      {
+        "id": "bloodCastle",
+        "name": "Blood Castle",
+        "enabled": true,
+        "durationMinutes": 15,
+        "schedule": [
+          {
+            "dayOfWeek": null,
+            "hour": 0,
+            "minute": 0
+          },
+          {
+            "dayOfWeek": null,
+            "hour": 2,
+            "minute": 0
+          },
+          {
+            "dayOfWeek": null,
+            "hour": 4,
+            "minute": 0
+          },
+          {
+            "dayOfWeek": null,
+            "hour": 6,
+            "minute": 0
+          },
+          {
+            "dayOfWeek": null,
+            "hour": 8,
+            "minute": 0
+          },
+          {
+            "dayOfWeek": null,
+            "hour": 10,
+            "minute": 0
+          },
+          {
+            "dayOfWeek": null,
+            "hour": 12,
+            "minute": 0
+          },
+          {
+            "dayOfWeek": null,
+            "hour": 14,
+            "minute": 0
+          },
+          {
+            "dayOfWeek": null,
+            "hour": 16,
+            "minute": 0
+          },
+          {
+            "dayOfWeek": null,
+            "hour": 18,
+            "minute": 0
+          },
+          {
+            "dayOfWeek": null,
+            "hour": 20,
+            "minute": 0
+          },
+          {
+            "dayOfWeek": null,
+            "hour": 22,
+            "minute": 0
+          }
+        ]
+      },
+      {
+        "id": "devilSquare",
+        "name": "Devil Square",
+        "enabled": true,
+        "durationMinutes": 20,
+        "schedule": [
+          {
+            "dayOfWeek": null,
+            "hour": 0,
+            "minute": 30
+          },
+          {
+            "dayOfWeek": null,
+            "hour": 4,
+            "minute": 30
+          },
+          {
+            "dayOfWeek": null,
+            "hour": 8,
+            "minute": 30
+          },
+          {
+            "dayOfWeek": null,
+            "hour": 12,
+            "minute": 30
+          },
+          {
+            "dayOfWeek": null,
+            "hour": 16,
+            "minute": 30
+          },
+          {
+            "dayOfWeek": null,
+            "hour": 20,
+            "minute": 30
+          }
+        ]
+      },
+      {
+        "id": "bonus-0",
+        "name": "Happy Hour",
+        "enabled": true,
+        "durationMinutes": 60,
+        "schedule": [
+          {
+            "dayOfWeek": null,
+            "hour": 20,
+            "minute": 0
+          }
+        ],
+        "bonuses": [
+          {
+            "type": "experience",
+            "value": 150
+          }
+        ]
+      },
+      {
+        "id": "invasion-0",
+        "name": "Death King",
+        "enabled": true,
+        "durationMinutes": 30,
+        "schedule": [
+          {
+            "dayOfWeek": null,
+            "hour": 14,
+            "minute": 50
+          }
+        ],
+        "maps": [
+          0,
+          3
+        ]
+      },
+      {
+        "id": "invasion-1",
+        "name": "Red Dragon",
+        "enabled": true,
+        "durationMinutes": 30,
+        "schedule": [
+          {
+            "dayOfWeek": null,
+            "hour": 19,
+            "minute": 35
+          }
+        ],
+        "maps": [
+          0,
+          2
+        ]
+      },
+      {
+        "id": "invasion-2",
+        "name": "Golden Dragon - Lorencia",
+        "enabled": true,
+        "durationMinutes": 30,
+        "schedule": [
+          {
+            "dayOfWeek": null,
+            "hour": 0,
+            "minute": 0
+          },
+          {
+            "dayOfWeek": null,
+            "hour": 6,
+            "minute": 0
+          },
+          {
+            "dayOfWeek": null,
+            "hour": 12,
+            "minute": 0
+          },
+          {
+            "dayOfWeek": null,
+            "hour": 18,
+            "minute": 0
+          }
+        ],
+        "maps": [
+          0,
+          7,
+          8
+        ]
+      },
+      {
+        "id": "invasion-3",
+        "name": "Golden Dragon - Davias",
+        "enabled": true,
+        "durationMinutes": 30,
+        "schedule": [
+          {
+            "dayOfWeek": null,
+            "hour": 4,
+            "minute": 0
+          },
+          {
+            "dayOfWeek": null,
+            "hour": 10,
+            "minute": 0
+          },
+          {
+            "dayOfWeek": null,
+            "hour": 16,
+            "minute": 0
+          },
+          {
+            "dayOfWeek": null,
+            "hour": 22,
+            "minute": 0
+          }
+        ],
+        "maps": [
+          2,
+          7,
+          8
+        ]
+      },
+      {
+        "id": "invasion-4",
+        "name": "Golden Dragon - Noria",
+        "enabled": true,
+        "durationMinutes": 30,
+        "schedule": [
+          {
+            "dayOfWeek": null,
+            "hour": 2,
+            "minute": 0
+          },
+          {
+            "dayOfWeek": null,
+            "hour": 8,
+            "minute": 0
+          },
+          {
+            "dayOfWeek": null,
+            "hour": 14,
+            "minute": 0
+          },
+          {
+            "dayOfWeek": null,
+            "hour": 20,
+            "minute": 0
+          }
+        ],
+        "maps": [
+          3,
+          7,
+          8
+        ]
+      },
+      {
+        "id": "goldenArcherBingo",
+        "name": "Golden Archer Bingo",
+        "enabled": true,
+        "durationMinutes": 5,
+        "schedule": [
+          {
+            "dayOfWeek": null,
+            "hour": 22,
+            "minute": 31
+          }
+        ]
+      }
     ]
   },
   "maps": {

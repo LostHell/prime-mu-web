@@ -35,7 +35,20 @@ export const serverConfig: ServerConfig = {
       { reset: 3, level: 300, money: 3_000, points: 200 },
     ],
   },
-  events: { bloodCastle: [0, 12], devilSquare: [0.5, 12.5] },
+  events: {
+    bloodCastle: [0, 12],
+    devilSquare: [0.5, 12.5],
+    list: [
+      {
+        id: "bonus-0",
+        name: "Happy Hour",
+        enabled: true,
+        durationMinutes: 60,
+        schedule: [{ dayOfWeek: null, hour: 20, minute: 0 }],
+        bonuses: [{ type: "experience", value: 150 }],
+      },
+    ],
+  },
   maps: { "0": "Lorencia" },
   warehouse: { maxMoney: 2_000_000_000 },
   pkClear: { moneyPerKill: 15_000_000 },
