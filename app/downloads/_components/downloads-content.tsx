@@ -1,32 +1,19 @@
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import Text from "@/components/ui/text";
 import {
   MACOS_CLIENT_MB,
   WINDOWS_CLIENT_UNZIPPED_MB,
   WINDOWS_CLIENT_ZIPPED_MB,
-} from "@/constants/app";
-import { VERSION } from "@/constants/server";
+} from "@/app/downloads/_constants/downloads";
+import { downloadFaq } from "@/app/downloads/_constants/faq";
+import { downloadFaqJsonLd } from "@/app/downloads/_json-ld/faq";
+import type { DownloadClient } from "@/app/downloads/_types/clients";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import Text from "@/components/ui/text";
 import { Download } from "lucide-react";
 import Link from "next/link";
 import type { ReactNode } from "react";
 
-const clients = [
-  {
-    name: "Windows",
-    version: VERSION,
-    size: `${WINDOWS_CLIENT_ZIPPED_MB} MB zipped`,
-    installed: `${WINDOWS_CLIENT_UNZIPPED_MB} MB unzipped`,
-    href: "#",
-  },
-  {
-    name: "macOS",
-    version: VERSION,
-    size: `${MACOS_CLIENT_MB} MB`,
-    installed: null,
-    href: "#",
-  },
-];
+
 
 const steps = [
   {
@@ -54,16 +41,7 @@ const steps = [
   },
 ];
 
-const questions = [
-  {
-    title: "The launcher will not open",
-    body: "Extract the Windows archive first, then run the launcher from that folder. On macOS, open the downloaded client directly.",
-  },
-  {
-    title: "Can I use another MU client?",
-    body: "No. Use the Windows or macOS client from this page.",
-  },
-];
+
 
 const Section = ({
   title,
@@ -89,9 +67,19 @@ const Section = ({
   );
 };
 
-const DownloadsContent = () => {
+type DownloadsContentProps = {
+  clients: DownloadClient[];
+};
+
+const DownloadsContent = ({ clients }: DownloadsContentProps) => {
   return (
     <div className="flex flex-col gap-10">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(downloadFaqJsonLd).replaceAll("<", "\\u003c"),
+        }}
+      />
       <div className="grid items-start gap-10 lg:grid-cols-[minmax(0,1fr)_18rem]">
         <Section title="Full client">
           <ul className="grid gap-4 md:grid-cols-2">
@@ -123,12 +111,26 @@ const DownloadsContent = () => {
                         </div>
                       ))}
                     </dl>
-                    <Button className="mt-auto" decorative asChild>
-                      <a href={client.href}>
-                        <Download aria-hidden="true" />
-                        Download {client.name}
-                      </a>
-                    </Button>
+                    <div className="mt-auto flex flex-col gap-2">
+                      {client.href ? (
+                        <Button decorative asChild>
+                          <a href={client.href}>
+                            <Download aria-hidden="true" />
+                            Download {client.name}
+                          </a>
+                        </Button>
+                      ) : (
+                        <>
+                          <Button decorative disabled>
+                            <Download aria-hidden="true" />
+                            Download {client.name}
+                          </Button>
+                          <p className="text-muted-foreground text-sm">
+                            Download link is not published yet.
+                          </p>
+                        </>
+                      )}
+                    </div>
                   </CardContent>
                 </Card>
               </li>
@@ -179,16 +181,16 @@ const DownloadsContent = () => {
         <Card>
           <CardContent>
             <div className="divide-border/50 divide-y">
-              {questions.map((question) => (
+              {downloadFaq.map((item) => (
                 <details
-                  key={question.title}
+                  key={item.question}
                   className="py-4 first:pt-0 last:pb-0"
                 >
                   <summary className="cursor-pointer font-medium">
-                    {question.title}
+                    {item.question}
                   </summary>
                   <p className="text-muted-foreground mt-2 text-sm">
-                    {question.body}
+                    {item.answer}
                   </p>
                 </details>
               ))}

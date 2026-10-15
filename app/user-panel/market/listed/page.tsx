@@ -1,10 +1,15 @@
 import { auth } from "@/auth";
+import { SearchResultsPagination } from "@/components/search-results-pagination";
 import { getMyListings } from "@/lib/queries/get-marketplace-listings";
+import { getPageNumber, type SearchParams } from "@/lib/utils/pagination";
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { MarketLayout } from "../_components/market-layout";
-import { SearchResultsPagination } from "@/components/search-results-pagination";
 import { MyListings } from "./_components/my-listings";
-import { getPageNumber, type SearchParams } from "@/lib/utils/pagination";
+
+export const metadata: Metadata = {
+  title: "My listings",
+};
 
 export default async function ListedItemsPage({
   searchParams,

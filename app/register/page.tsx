@@ -4,8 +4,15 @@ import PageLayout from "@/components/page-layout";
 import { Card, CardContent } from "@/components/ui/card";
 import Headline from "@/components/ui/headline";
 import Text from "@/components/ui/text";
+import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+
+export const metadata: Metadata = {
+  title: "Register",
+  description: "Create a new account using your email address.",
+  alternates: { canonical: "/register" },
+};
 
 const RegisterPage = async () => {
   const session = await auth();

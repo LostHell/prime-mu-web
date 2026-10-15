@@ -1,7 +1,6 @@
+import type { RankingView } from "@/app/rankings/_utils/ranking-view";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-
-export type RankingView = "players" | "guilds" | "online" | "events";
 
 const tabs: { view: RankingView; label: string }[] = [
   { view: "players", label: "Players" },
@@ -9,14 +8,6 @@ const tabs: { view: RankingView; label: string }[] = [
   { view: "online", label: "Online players" },
   { view: "events", label: "Events" },
 ];
-
-export const getRankingView = (
-  value: string | string[] | undefined,
-): RankingView => {
-  const view = Array.isArray(value) ? value[0] : value;
-  if (view === "guilds" || view === "online" || view === "events") return view;
-  return "players";
-};
 
 const RankingsTabs = ({ view }: { view: RankingView }) => {
   return (

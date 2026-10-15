@@ -1,8 +1,13 @@
 import { auth } from "@/auth";
 import { getDeposits } from "@/lib/queries/get-deposits";
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { UserPanelPageLayout } from "../_components/user-panel-page-layout";
 import { DepositsContent } from "./_components/deposits-content";
+
+export const metadata: Metadata = {
+  title: "Deposits",
+};
 
 export default async function DepositsPage() {
   const session = await auth();

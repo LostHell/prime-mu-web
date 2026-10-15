@@ -1,4 +1,5 @@
 import ClassFilter from "@/app/rankings/_components/class-filter";
+import type { RankingView } from "@/app/rankings/_utils/ranking-view";
 import { Button } from "@/components/ui/button";
 import { Field, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
@@ -15,7 +16,6 @@ import type { RankingEntry } from "@/lib/queries/get-rankings";
 import { cn } from "@/lib/utils";
 import { formatNumber } from "@/lib/utils/numbers";
 import Form from "next/form";
-import type { RankingView } from "./rankings-tabs";
 
 export default function PlayersTable({
   characters,

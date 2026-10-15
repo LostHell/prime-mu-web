@@ -4,6 +4,11 @@ import StartPlaying from "@/app/_components/start-playing";
 import TopPlayers from "@/app/_components/top-players";
 import TradeShowcase from "@/app/_components/trade-showcase";
 import PageLayout from "@/components/page-layout";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+};
 
 const Home = () => {
   return (

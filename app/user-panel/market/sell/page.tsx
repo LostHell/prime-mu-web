@@ -1,8 +1,13 @@
 import { auth } from "@/auth";
 import { getWarehouseItems } from "@/lib/queries/get-warehouse-items";
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { MarketLayout } from "../_components/market-layout";
 import { SellItemForm } from "./_components/sell-item-form";
+
+export const metadata: Metadata = {
+  title: "Sell an item",
+};
 
 export default async function SellItemPage() {
   const session = await auth();

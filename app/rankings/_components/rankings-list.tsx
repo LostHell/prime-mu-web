@@ -3,9 +3,8 @@ import GuildTable from "@/app/rankings/_components/guild-table";
 import PlayersTable from "@/app/rankings/_components/players-table";
 import PodiumCard from "@/app/rankings/_components/podium-card";
 import RankingsCta from "@/app/rankings/_components/rankings-cta";
-import RankingsTabs, {
-  getRankingView,
-} from "@/app/rankings/_components/rankings-tabs";
+import RankingsTabs from "@/app/rankings/_components/rankings-tabs";
+import { getRankingView } from "@/app/rankings/_utils/ranking-view";
 import {
   getPaginationHref,
   SearchResultsPagination,

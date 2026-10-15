@@ -7,8 +7,9 @@ import { getServerInfo } from "@/lib/queries/get-server-info";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: `Server info - ${BRAND}`,
+  title: "Server info",
   description: `Experience, drops, resets, and events on ${BRAND}.`,
+  alternates: { canonical: "/server-info" },
 };
 
 const ServerInfoPage = async () => {
@@ -18,7 +19,7 @@ const ServerInfoPage = async () => {
     <>
       <PageHero
         label="Server info"
-        title="Know the server"
+        title="Server info"
         description="Every setting. No surprises."
         status={info.status}
         statusNote={`Classic ${VERSION}`}

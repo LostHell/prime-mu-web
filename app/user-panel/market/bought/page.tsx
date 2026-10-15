@@ -1,10 +1,15 @@
 import { auth } from "@/auth";
-import { getMyPurchases } from "@/lib/queries/get-marketplace-listings";
-import { redirect } from "next/navigation";
-import { MarketLayout } from "../_components/market-layout";
 import { SearchResultsPagination } from "@/components/search-results-pagination";
-import { BoughtItems } from "./_components/bought-items";
+import { getMyPurchases } from "@/lib/queries/get-marketplace-listings";
 import { getPageNumber, type SearchParams } from "@/lib/utils/pagination";
+import type { Metadata } from "next";
+import { redirect } from "next/navigation";
+import { BoughtItems } from "./_components/bought-items";
+import { MarketLayout } from "../_components/market-layout";
+
+export const metadata: Metadata = {
+  title: "Purchased items",
+};
 
 export default async function BoughtItemsPage({
   searchParams,

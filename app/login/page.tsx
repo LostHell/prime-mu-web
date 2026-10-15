@@ -4,8 +4,15 @@ import PageLayout from "@/components/page-layout";
 import { Card, CardContent } from "@/components/ui/card";
 import Headline from "@/components/ui/headline";
 import Text from "@/components/ui/text";
+import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+
+export const metadata: Metadata = {
+  title: "Login",
+  description: "Use your existing game account credentials.",
+  alternates: { canonical: "/login" },
+};
 
 const LoginPage = async () => {
   const session = await auth();

@@ -2,9 +2,14 @@ import { auth } from "@/auth";
 import { CHARACTER_SELECTION_COOKIE } from "@/constants/character-selection";
 import { getCharacters } from "@/lib/queries/get-characters";
 import { getServerCookie } from "@/lib/utils/cookies.server";
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { UserPanelShell } from "./_components/user-panel-shell";
 import { UserPanelProvider } from "./_context/user-panel-context";
+
+export const metadata: Metadata = {
+  robots: { index: false, follow: false },
+};
 
 interface UserPanelLayoutProps {
   children: React.ReactNode;

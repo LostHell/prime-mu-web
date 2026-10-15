@@ -1,19 +1,24 @@
 import { auth } from "@/auth";
-import { getAccountDepositAmounts } from "@/lib/queries/get-deposits";
-import { getAllActiveListings } from "@/lib/queries/get-marketplace-listings";
-import { redirect } from "next/navigation";
-import { MarketBrowse } from "./_components/market-browse";
-import { MarketLayout } from "./_components/market-layout";
 import {
   getPaginationHref,
   SearchResultsPagination,
 } from "@/components/search-results-pagination";
+import { MAX_SEARCH_LENGTH } from "@/constants/pagination";
+import { getAccountDepositAmounts } from "@/lib/queries/get-deposits";
+import { getAllActiveListings } from "@/lib/queries/get-marketplace-listings";
 import {
   getPageNumber,
   getSearchQuery,
   type SearchParams,
 } from "@/lib/utils/pagination";
-import { MAX_SEARCH_LENGTH } from "@/constants/pagination";
+import type { Metadata } from "next";
+import { redirect } from "next/navigation";
+import { MarketBrowse } from "./_components/market-browse";
+import { MarketLayout } from "./_components/market-layout";
+
+export const metadata: Metadata = {
+  title: "Market",
+};
 
 export default async function MarketPage({
   searchParams,
