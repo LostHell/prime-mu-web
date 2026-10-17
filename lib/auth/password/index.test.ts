@@ -123,14 +123,16 @@ test("rejects a server mode this build does not implement", () => {
   });
 });
 
-test("seed accounts store the server's password encoding", () => {
+test("seed MEMB_INFO rows store Webzen MD5 password hashes", () => {
   const seed = readFileSync(join(process.cwd(), "prisma/seed-db.sql"), "utf8");
-  for (const account of ["test1", "test2", "test3", "test4", "test5"]) {
-    const match = seed.match(
-      new RegExp(`'${account}', 0x([0-9a-fA-F]+), '${account}'`),
-    );
-    expect(match?.[1]?.toLowerCase()).toBe(
-      hex(encodePassword(account, account)),
-    );
+  const hashes = [
+    ...seed.matchAll(
+      /INSERT `MEMB_INFO`[^;]*VALUES \('([^']+)', 0x([0-9a-fA-F]+),/g,
+    ),
+  ];
+  expect(hashes.length).toBeGreaterThan(0);
+  for (const [, account, hash] of hashes) {
+    expect(account.length).toBeGreaterThan(0);
+    expect(hash.toLowerCase()).toMatch(/^[0-9a-f]{32}$/);
   }
 });

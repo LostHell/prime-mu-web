@@ -2,6 +2,7 @@ import {
   BYTES_PER_SLOT,
   EMPTY_SLOT_BYTE,
   ITEM_ADD_OPTION_MASK,
+  ITEM_ADD_OPTION_EXTENDED_MASK,
   ITEM_EXCELLENT_MASK,
   ITEM_LEVEL_MASK,
   ITEM_LEVEL_SHIFT,
@@ -48,7 +49,10 @@ const parseItemAtSlot = (
   const index = itemType % ITEM_TYPE_GROUP_SIZE;
   const skill = (b1 & ITEM_SKILL_MASK) !== 0;
   const luck = (b1 & ITEM_LUCK_MASK) !== 0;
-  const addOption = (b1 & ITEM_ADD_OPTION_MASK) * 4;
+  const optionLevel =
+    (b1 & ITEM_ADD_OPTION_MASK) +
+    ((b7 & ITEM_ADD_OPTION_EXTENDED_MASK) !== 0 ? 4 : 0);
+  const addOption = optionLevel * 4;
   const durability = b2;
   const level = (b1 >> ITEM_LEVEL_SHIFT) & ITEM_LEVEL_MASK;
   const excellent = b7 & ITEM_EXCELLENT_MASK;
