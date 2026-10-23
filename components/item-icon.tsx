@@ -2,6 +2,7 @@
 
 import { getItemIconPath } from "@/lib/game/item-icon";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 import * as React from "react";
 
 export type ItemIconProps = {
@@ -37,12 +38,15 @@ export function ItemIcon({
   return (
     <div
       className={cn(
-        "flex items-center justify-center overflow-hidden",
+        "relative flex items-center justify-center overflow-hidden",
         className,
       )}
     >
-      <img
+      <Image
         src={src}
+        fill
+        sizes="(max-width: 768px) 64px, 96px"
+        unoptimized={src.endsWith(".gif")}
         alt={alt}
         draggable={false}
         loading="lazy"
