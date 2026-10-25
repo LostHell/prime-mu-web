@@ -10,7 +10,10 @@ import {
   getItemSerial,
 } from "@/lib/game/item-decoder";
 import { getWarehouseItemsBuffer } from "@/lib/game/warehouse";
-import { getItemDefinition } from "@/lib/game/item-database";
+import {
+  getItemDefinition,
+  searchableItemName,
+} from "@/lib/game/item-database";
 import { depositColumnsFromAmounts } from "@/lib/utils/deposits";
 import {
   listMarketItemErrorMessage,
@@ -104,11 +107,17 @@ export async function listMarketItemAction(
       if (!decodedItem) {
         throw new ActionError("Could not decode item data.");
       }
-      if (!getItemDefinition(decodedItem)) {
+      const itemId = {
+        group: decodedItem.group,
+        index: decodedItem.index,
+        level: decodedItem.level,
+      };
+      if (!getItemDefinition(itemId)) {
         throw new ActionError(
           "This item is unsupported and cannot be listed. Please contact support.",
         );
       }
+      const itemName = searchableItemName(itemId);
 
       const updatedBuffer = clearWarehouseSlot(itemsBuffer, slotIndex);
 
@@ -128,6 +137,7 @@ export async function listMarketItemAction(
           sellerAccountId: accountId,
           sellerCharacter: firstCharacter.Name,
           itemHex: Uint8Array.from(itemHex),
+          itemName,
           ...depositColumnsFromAmounts(prices),
         },
       });
