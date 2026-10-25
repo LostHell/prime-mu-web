@@ -24,3 +24,7 @@ export const getItemDefinition = (
 
   return item;
 };
+
+/** Name stored on a marketplace listing and matched by browse search. */
+export const searchableItemName = (itemId: ItemId): string =>
+  getItemDefinition(itemId)?.name ?? "Unknown item";

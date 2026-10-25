@@ -1,19 +1,17 @@
 import "server-only";
 
 import { type DepositAmounts } from "@/constants/depositable-items";
+import { MARKET_PAGE_SIZE, MAX_SEARCH_LENGTH } from "@/constants/pagination";
 import { getItemDefinition } from "@/lib/game/item-database";
 import { type ItemDefinition } from "@/lib/game/item-database/types";
 import { decodeItem } from "@/lib/game/item-decoder";
 import { type DecodedItem } from "@/lib/game/item-decoder/types";
 import { depositAmountsFromColumns } from "@/lib/utils/deposits";
-import type { MarketplaceListing as MarketplaceListingRow } from "@/prisma/generated/prisma/client";
+import type {
+  MarketplaceListing as MarketplaceListingRow,
+  Prisma,
+} from "@/prisma/generated/prisma/client";
 import { prisma } from "@/prisma/prisma";
-import type { Prisma } from "@/prisma/generated/prisma/client";
-import {
-  MARKET_PAGE_SIZE,
-  MARKET_SCAN_BATCH_SIZE,
-  MAX_SEARCH_LENGTH,
-} from "@/constants/pagination";
 
 export type ListingItem = DecodedItem &
   Pick<
@@ -68,6 +66,10 @@ const decodeItemFromHex = (itemHex: Buffer): ListingItem | null => {
     classFlags: itemDef?.classFlags,
   };
 };
+
+/** `%`, `_`, and `\` are wildcards or the escape character in a SQL LIKE pattern. */
+const escapeLikeWildcards = (value: string) =>
+  value.replace(/[\\%_]/g, (character) => `\\${character}`);
 
 const toMarketListing = (
   listing: MarketplaceListingRow,
@@ -124,41 +126,31 @@ export async function getMyPurchases(accountId: string, page = 1) {
 
 async function getListingPage(
   accountId: string,
-  where: Prisma.MarketplaceListingWhereInput,
+  filters: Prisma.MarketplaceListingWhereInput,
   page: number,
   query = "",
 ) {
   const currentPage = Number.isSafeInteger(page) && page > 0 ? page : 1;
-  const search = query.trim().slice(0, MAX_SEARCH_LENGTH).toLowerCase();
-  const items: MarketListing[] = [];
-  let beforeId: number | undefined;
-  let total = 0;
+  const search = query.trim().slice(0, MAX_SEARCH_LENGTH);
   const skip = (currentPage - 1) * MARKET_PAGE_SIZE;
-  // Names are decoded from game bytes, not a database text column. Scan bounded
-  // batches so the match total includes every page without keeping the catalogue in memory.
-  while (true) {
-    const rows = await prisma.marketplaceListing.findMany({
-      where: {
-        ...where,
-        ...(beforeId === undefined ? {} : { id: { lt: beforeId } }),
-      },
-      orderBy: { id: "desc" },
-      take: MARKET_SCAN_BATCH_SIZE,
-    });
-    for (const row of rows) {
-      const listing = toMarketListing(row, accountId);
-      if (search && !listing.item?.name.toLowerCase().includes(search))
-        continue;
-      if (total >= skip && items.length < MARKET_PAGE_SIZE) {
-        items.push(listing);
-      }
-      total += 1;
-    }
-    if (rows.length < MARKET_SCAN_BATCH_SIZE) break;
-    beforeId = rows[rows.length - 1].id;
+  if (!Number.isSafeInteger(skip)) {
+    return { items: [], hasNext: false, total: 0 };
   }
+
+  const where: Prisma.MarketplaceListingWhereInput = {
+    ...filters,
+    ...(search ? { itemName: { contains: escapeLikeWildcards(search) } } : {}),
+  };
+  const total = await prisma.marketplaceListing.count({ where });
+  const rows = await prisma.marketplaceListing.findMany({
+    where,
+    orderBy: { id: "desc" },
+    skip,
+    take: MARKET_PAGE_SIZE,
+  });
+
   return {
-    items,
+    items: rows.map((row) => toMarketListing(row, accountId)),
     hasNext: total > skip + MARKET_PAGE_SIZE,
     total,
   };

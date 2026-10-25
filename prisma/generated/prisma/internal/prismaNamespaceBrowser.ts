@@ -324,6 +324,7 @@ export const MarketplaceListingScalarFieldEnum = {
   sellerAccountId: 'sellerAccountId',
   sellerCharacter: 'sellerCharacter',
   itemHex: 'itemHex',
+  itemName: 'itemName',
   Zen: 'Zen',
   Rena: 'Rena',
   JewelOfBless: 'JewelOfBless',
@@ -475,6 +476,7 @@ export type AFK_CreditRewardOrderByRelevanceFieldEnum = (typeof AFK_CreditReward
 export const MarketplaceListingOrderByRelevanceFieldEnum = {
   sellerAccountId: 'sellerAccountId',
   sellerCharacter: 'sellerCharacter',
+  itemName: 'itemName',
   status: 'status',
   buyerAccountId: 'buyerAccountId',
   buyerCharacter: 'buyerCharacter'

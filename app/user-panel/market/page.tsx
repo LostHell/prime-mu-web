@@ -33,7 +33,7 @@ export default async function MarketPage({
   const params = await searchParams;
   const page = getPageNumber(params.page);
   const query = getSearchQuery(params.query, MAX_SEARCH_LENGTH);
-  // The catalogue walk and the balance each take a connection.
+  // The name search is one count and one page. The balance waits so each read holds one connection.
   const result = await getAllActiveListings(session.user.id, page, query);
   const buyerDeposits = await getAccountDepositAmounts(session.user.id);
   const paginationQuery: Record<string, string> = query ? { query } : {};

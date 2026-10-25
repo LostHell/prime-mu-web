@@ -219,6 +219,7 @@ model MarketplaceListing {
   sellerAccountId String    @db.VarChar(10)
   sellerCharacter String    @db.VarChar(10)
   itemHex         Bytes     @db.VarBinary(32)
+  itemName        String?   @db.VarChar(80)
   Zen             Int       @default(0) @db.UnsignedInt
   Rena            Int       @default(0) @db.UnsignedInt
   JewelOfBless    Int       @default(0) @db.UnsignedInt
