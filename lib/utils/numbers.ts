@@ -43,6 +43,12 @@ export const formatCompact = (value: number): string => {
   return `${value < 0 ? "-" : ""}${text}${suffix}`;
 };
 
+/** A file size in megabytes with one decimal (5,264,896 → "5.0 MB"); "<0.1 MB" below that. */
+export const formatMegabytes = (bytes: number): string => {
+  const megabytes = bytes / (1024 * 1024);
+  return megabytes < 0.05 ? "<0.1 MB" : `${megabytes.toFixed(1)} MB`;
+};
+
 /** Parses a user-typed amount. Empty → 0 so the field can be cleared while
  * typing. Commas are stripped so pasted formatted values like "1,000" work.
  * Returns `null` for non-integers so the caller can ignore the keystroke. */

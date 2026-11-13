@@ -2,6 +2,7 @@ import {
   bigIntToSafeNumber,
   clampAmount,
   formatCompact,
+  formatMegabytes,
   formatNumber,
   parseAmountInput,
 } from "./numbers";
@@ -77,5 +78,18 @@ describe("clampAmount", () => {
   test("falls back to min for non-finite values", () => {
     expect(clampAmount(Infinity, 1, 10)).toBe(1);
     expect(clampAmount(NaN, 1, 10)).toBe(1);
+  });
+});
+
+describe("formatMegabytes", () => {
+  test("shows megabytes with one decimal", () => {
+    expect(formatMegabytes(5_264_896)).toBe("5.0 MB");
+    expect(formatMegabytes(398_700_000)).toBe("380.2 MB");
+    expect(formatMegabytes(1024 * 1024 * 0.05)).toBe("0.1 MB");
+  });
+
+  test("does not show a tiny file as 0.0 MB", () => {
+    expect(formatMegabytes(0)).toBe("<0.1 MB");
+    expect(formatMegabytes(1000)).toBe("<0.1 MB");
   });
 });
