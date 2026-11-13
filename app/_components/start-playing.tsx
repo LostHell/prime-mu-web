@@ -11,7 +11,8 @@ const steps = [
   {
     title: "Download the client",
     href: "/downloads",
-    description: "Get the client, extract it, and run the launcher.",
+    description:
+      "Get the launcher. It installs the game and keeps it up to date.",
   },
   {
     title: "Log in and make a character",

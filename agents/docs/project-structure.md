@@ -44,6 +44,7 @@ Client hooks used by more than one route (`use-media-query.ts`). Files start wit
 - `lib/validation/*`: Zod schemas, one file per action.
 - `lib/auth/*`: password encoding that matches the game server's JoinServer.
 - `lib/errors/*`: error types shared by actions (`ActionError`).
+- `lib/launcher/*`: the game launcher's release in `LAUNCHER_FILES_DIR`: its paths, the manifest, the signature check, reading and storing the files (server-only, node `fs`). See [launcher.md](./launcher.md).
 - `lib/game/*`: MU-specific rules and binary formats, pure functions. Subfolders by topic (`characters/`, `warehouse/`, `item-decoder/`, `item-database/`, `item-icon/`).
   - `lib/game/constants/*`: fixed game facts (class ids, warehouse size) and values derived from `serverConfig`.
   - `lib/game/data/*`: synced server data. Don't hand-edit (see [database.md](./database.md)).
@@ -60,7 +61,7 @@ Game rules and anything derived from `serverConfig` belong in `lib/game/constant
 
 ### `app/api/` — route handlers
 
-HTTP endpoints owned by this app live under `app/api/*` as Route Handlers. Today only Auth.js uses this (`app/api/auth/[...nextauth]`). Forms use server actions, not new API routes.
+HTTP endpoints owned by this app live under `app/api/*` as Route Handlers: Auth.js (`app/api/auth/[...nextauth]`) and the game launcher's (`app/api/launcher/*`, see [launcher.md](./launcher.md)). The launcher's files are served by two more route handlers outside `app/api/`, at the addresses the launcher and the downloads page use: `app/patches/[...path]` and `app/downloads/launcher/[system]/[file]`. Forms use server actions, not new API routes.
 
 ### `proxy.ts` — auth/route guard middleware replacement
 
@@ -79,7 +80,7 @@ Each layer may import from its own layer and the layers below it, never from a l
 1. `app/`
 2. `components/` (which uses `components/ui/`), `hooks/`
 3. `lib/actions/`, `lib/queries/`
-4. `lib/validation/`, `lib/game/`, `lib/auth/`, `lib/errors/`
+4. `lib/validation/`, `lib/game/`, `lib/launcher/`, `lib/auth/`, `lib/errors/`
 5. `lib/utils/`, `lib/types/`, `constants/`
 
 - `lib/**`, `constants/**` and `hooks/**` never import from `@/app/*` or `@/components/*`.

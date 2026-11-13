@@ -1,8 +1,3 @@
-import {
-  MACOS_CLIENT_MB,
-  WINDOWS_CLIENT_UNZIPPED_MB,
-  WINDOWS_CLIENT_ZIPPED_MB,
-} from "@/app/downloads/_constants/downloads";
 import { downloadFaq } from "@/app/downloads/_constants/faq";
 import { downloadFaqJsonLd } from "@/app/downloads/_json-ld/faq";
 import type { DownloadClient } from "@/app/downloads/_types/clients";
@@ -13,12 +8,10 @@ import { Download } from "lucide-react";
 import Link from "next/link";
 import type { ReactNode } from "react";
 
-
-
 const steps = [
   {
-    title: "Download and extract",
-    body: `The Windows archive is ${WINDOWS_CLIENT_ZIPPED_MB} MB and expands to ${WINDOWS_CLIENT_UNZIPPED_MB} MB. The macOS client is ${MACOS_CLIENT_MB} MB.`,
+    title: "Download the launcher",
+    body: "Run it: it downloads the game and checks it on every start, so you always play with the right files.",
   },
   {
     title: "Create your account",
@@ -37,11 +30,9 @@ const steps = [
   },
   {
     title: "Launch and play",
-    body: "Open the launcher from the folder you extracted, let it finish, then log in.",
+    body: "When the launcher says it is ready, press Start game, then log in.",
   },
 ];
-
-
 
 const Section = ({
   title,
@@ -81,7 +72,7 @@ const DownloadsContent = ({ clients }: DownloadsContentProps) => {
         }}
       />
       <div className="grid items-start gap-10 lg:grid-cols-[minmax(0,1fr)_18rem]">
-        <Section title="Full client">
+        <Section title="Launcher">
           <ul className="grid gap-4 md:grid-cols-2">
             {clients.map((client) => (
               <li key={client.name} className="h-full">
@@ -93,9 +84,11 @@ const DownloadsContent = ({ clients }: DownloadsContentProps) => {
                     <dl>
                       {[
                         { label: "Version", value: client.version },
-                        { label: "Download", value: client.size },
+                        ...(client.size
+                          ? [{ label: "Download", value: client.size }]
+                          : []),
                         ...(client.installed
-                          ? [{ label: "Unzipped", value: client.installed }]
+                          ? [{ label: "Installs", value: client.installed }]
                           : []),
                       ].map((row) => (
                         <div

@@ -1,7 +1,6 @@
 import { render, screen } from "@testing-library/react";
-import DownloadsContent, {
-  type DownloadClient,
-} from "./_components/downloads-content";
+import DownloadsContent from "./_components/downloads-content";
+import type { DownloadClient } from "./_types/clients";
 
 const clients = (
   hrefs: { windows?: string | null; macos?: string | null } = {},
@@ -9,28 +8,27 @@ const clients = (
   {
     name: "Windows",
     version: "0.97d",
-    size: "150 MB zipped",
-    installed: "210 MB unzipped",
+    size: "5.0 MB",
+    installed: "About 380.2 MB",
     href: hrefs.windows ?? null,
   },
   {
     name: "macOS",
     version: "0.97d",
-    size: "170 MB",
+    size: null,
     installed: null,
     href: hrefs.macos ?? null,
   },
 ];
 
-test("points account creation at registration and lists both clients", () => {
+test("points account creation at registration and lists both launchers", () => {
   render(<DownloadsContent clients={clients()} />);
 
   expect(
     screen.getByRole("link", { name: "registration page" }),
   ).toHaveAttribute("href", "/register");
-  expect(screen.getByText("150 MB zipped")).toBeInTheDocument();
-  expect(screen.getByText("210 MB unzipped")).toBeInTheDocument();
-  expect(screen.getByText("170 MB")).toBeInTheDocument();
+  expect(screen.getByText("5.0 MB")).toBeInTheDocument();
+  expect(screen.getByText("About 380.2 MB")).toBeInTheDocument();
   expect(screen.queryByText(/User Panel/)).not.toBeInTheDocument();
   expect(
     screen.getByRole("button", { name: "Download Windows" }),
@@ -43,22 +41,22 @@ test("points account creation at registration and lists both clients", () => {
   ).toContain("The launcher will not open");
 });
 
-test("links a hosted client file", () => {
+test("links a published launcher", () => {
   render(
     <DownloadsContent
       clients={clients({
-        windows: "https://files.example/windows.zip",
-        macos: "https://files.example/macos.zip",
+        windows: "/downloads/launcher/windows/launcher.exe",
+        macos: "/downloads/launcher/macos/MU.zip",
       })}
     />,
   );
 
   expect(
     screen.getByRole("link", { name: "Download Windows" }),
-  ).toHaveAttribute("href", "https://files.example/windows.zip");
+  ).toHaveAttribute("href", "/downloads/launcher/windows/launcher.exe");
   expect(screen.getByRole("link", { name: "Download macOS" })).toHaveAttribute(
     "href",
-    "https://files.example/macos.zip",
+    "/downloads/launcher/macos/MU.zip",
   );
   expect(
     screen.queryByText("Download link is not published yet."),
