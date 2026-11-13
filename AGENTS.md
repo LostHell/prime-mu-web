@@ -1,6 +1,6 @@
 # Agent instructions
 
-Prime Mu is the website for a MU Online 0.97K private server. It reads and writes the **game server's own MySQL database**, which the running game server uses at the same time.
+Black MU is the website for a MU Online 0.97K private server. It reads and writes the **game server's own MySQL database**, which the running game server uses at the same time.
 
 - Node: version in [`.nvmrc`](.nvmrc) (v24). Package manager: **npm**.
 - Next.js 16 (App Router), React 19, Prisma 7, Auth.js v5, Zod 4, Tailwind 4. These versions differ from most training data: read `node_modules/next/dist/docs/` before using a Next.js API you are not sure about.

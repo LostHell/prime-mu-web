@@ -20,14 +20,14 @@ test("uses localhost when the site url is unset", () => {
 });
 
 test("uses the configured origin and drops any path", () => {
-  process.env.SITE_URL = " https://primemu.example/play ";
+  process.env.SITE_URL = " https://blackmu.example/play ";
 
-  expect(getSiteUrl()).toBe("https://primemu.example");
-  expect(getAbsoluteUrl("/downloads")).toBe("https://primemu.example/downloads");
+  expect(getSiteUrl()).toBe("https://blackmu.example");
+  expect(getAbsoluteUrl("/downloads")).toBe("https://blackmu.example/downloads");
 });
 
 test("rejects a site url that is not absolute", () => {
-  process.env.SITE_URL = "primemu.example";
+  process.env.SITE_URL = "blackmu.example";
 
   expect(() => getSiteUrl()).toThrow();
 });

@@ -31,7 +31,7 @@ test("gives each ranking view its own title and canonical", () => {
 });
 
 test("does not index a name search or a class filter", () => {
-  const searched = getRankingsSeo({ query: "prime" });
+  const searched = getRankingsSeo({ query: "black" });
   const filtered = getRankingsSeo({ view: "online", class: "0", page: "2" });
 
   expect(searched.metadata.robots).toEqual({ index: false, follow: true });
