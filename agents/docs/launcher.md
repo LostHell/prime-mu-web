@@ -14,6 +14,15 @@ The game client's launcher (its source and plan: `docs/LAUNCHER.md` of the clien
 
 The launcher opens only links on its own site address (`SITE_URL` in the client's `update/UpdateServer.h`): the news `url`s must be this site's.
 
+## Settings
+
+All four are environment variables of the site (Coolify: the app → Environment Variables; locally `.env`, see `.env.template`). The `LAUNCHER_*` ones are read at run time only (Coolify: runtime, not build time); `SITE_URL` is needed at both.
+
+- `SITE_URL`: the site's public origin, e.g. `https://example.com`. The news `url`s are built from it, so it must be the same origin as `SITE_URL` in the client's `update/UpdateServer.h` (there with a trailing slash, `https://example.com/`); unset, they point at `http://localhost:3000` and the launcher will not open them.
+- `LAUNCHER_FILES_DIR`: the release folder below, e.g. `/data/launcher`. Unset: no updates and no launcher to download.
+- `LAUNCHER_UPLOAD_TOKEN`: the upload's secret, e.g. made with `openssl rand -hex 32`; the same text as the publisher's `upload-token.txt`. Unset: the upload answers 404.
+- `LAUNCHER_PUBLIC_KEY`: the publisher's public key, 64 hex characters, the content of `publisher-public.key`.
+
 ## The release folder (`LAUNCHER_FILES_DIR`)
 
 ```
@@ -35,6 +44,8 @@ launcher/macos/MU.zip
 2. `PUT /api/launcher/releases/chunks/<sha256>` with each missing chunk's packed bytes. Kept only when it unpacks (at most 8 MB) to bytes of that SHA-256.
 3. `PUT /api/launcher/releases/manifest` `{ manifest: <base64 of the exact bytes>, signature: <manifest.sig text> }`. Taken only when `LAUNCHER_PUBLIC_KEY` signed it and every chunk it names is there; from then on every launcher updates to it.
 4. `PUT /api/launcher/releases/launcher/<system>` with the launcher. Taken only when it is the published manifest's launcher of that system.
+
+Where `LAUNCHER_UPLOAD_TOKEN` and `LAUNCHER_PUBLIC_KEY` come from (the publisher's `%USERPROFILE%\.mu-publish\` folder), what to back up and what can never be undone: the game server repository's root `CLAUDE.md`.
 
 Each file is written under a temporary name and renamed into place, so a reader never sees half a file. The signature check is the real protection: a launcher refuses a manifest the publisher's key did not sign, whoever uploaded it.
 
