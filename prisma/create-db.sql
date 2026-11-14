@@ -557,19 +557,19 @@ BEGIN
 		DELETE FROM `RankingDevilSquare` WHERE Name = inCharName;
 
 		UPDATE AccountCharacter
-			SET GameID1 = NULLIF(GameID1, @inCharName),
-				GameID2 = NULLIF(GameID2, @inCharName),
-				GameID3 = NULLIF(GameID3, @inCharName),
-				GameID4 = NULLIF(GameID4, @inCharName),
-				GameID5 = NULLIF(GameID5, @inCharName),
-				GameIDC = NULLIF(GameIDC, @inCharName)
-			WHERE Id = @inAccountID
-			AND (GameID1 = @inCharName
-				OR GameID2 = @inCharName
-				OR GameID3 = @inCharName
-				OR GameID4 = @inCharName
-				OR GameID5 = @inCharName
-				OR GameIDC = @inCharName);
+			SET GameID1 = NULLIF(GameID1, inCharName),
+				GameID2 = NULLIF(GameID2, inCharName),
+				GameID3 = NULLIF(GameID3, inCharName),
+				GameID4 = NULLIF(GameID4, inCharName),
+				GameID5 = NULLIF(GameID5, inCharName),
+				GameIDC = NULLIF(GameIDC, inCharName)
+			WHERE Id = inAccountID
+			AND (GameID1 = inCharName
+				OR GameID2 = inCharName
+				OR GameID3 = inCharName
+				OR GameID4 = inCharName
+				OR GameID5 = inCharName
+				OR GameIDC = inCharName);
 	END IF;
 
 	SELECT @Result AS Result;
