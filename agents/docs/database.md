@@ -25,6 +25,8 @@ Raw queries live in `prisma/sql/*.sql` and run through `prisma.$queryRawTyped(..
 
 `create-db.sql` defines the server's procedures (`WZ_*`, `Process*`). `WZ_GetItemSerial` commits internally: call it only through `lib/queries/get-next-item-serial.ts`, never on a transaction client.
 
+`ResetCarry` (not a Prisma model) keeps a deleted character's resets by name; `WZ_DeleteCharacter` fills it and `WZ_SetResetInfo` empties it. The first reset of the next character of that name brings them back: the website's reset reads it with `lib/queries/get-reset-carry.ts` and deletes the row in its transaction (`lib/actions/reset-character.ts`). A database made before it needs the server's `MuServer/DB/UpdateResetCarry.sql`.
+
 ## Local MySQL via Docker Compose
 
 The repo includes a local MySQL + phpMyAdmin setup in [`docker-compose.yaml`](../../docker-compose.yaml):

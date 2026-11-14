@@ -3,14 +3,22 @@ import { resetCharacterAction } from "./reset-character";
 import { prisma } from "@/prisma/prisma";
 import { MIN_RESET_LEVEL } from "@/constants/resets";
 
-jest.mock("@/prisma/prisma", () => ({
-  prisma: {
+jest.mock("@/prisma/prisma", () => {
+  const client = {
     character: { updateMany: jest.fn().mockResolvedValue({ count: 0 }) },
     defaultClassType: {
       findUnique: jest.fn().mockResolvedValue({ Level: 1, LevelUpPoint: 0 }),
     },
-  },
-}));
+    // The reset's first reset looks for a deleted character's resets (none here).
+    $queryRaw: jest.fn().mockResolvedValue([]),
+    $executeRaw: jest.fn().mockResolvedValue(1),
+    $transaction: jest.fn(),
+  };
+  client.$transaction.mockImplementation((run: (tx: unknown) => unknown) =>
+    run(client),
+  );
+  return { prisma: client };
+});
 jest.mock("./utils", () => ({
   getAuthenticatedUser: jest.fn().mockResolvedValue("account"),
   isAccountOffline: jest.fn().mockResolvedValue(true),
