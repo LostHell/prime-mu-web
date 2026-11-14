@@ -235,6 +235,18 @@ CREATE TABLE `ResetInfo` (
 );
 
 -- ----------------------------------------------------------------------------
+-- Table ResetCarry
+-- ----------------------------------------------------------------------------
+-- Not in kayito: the resets of a deleted character, by its name, until a character made with that
+-- name (on any account: a class change) does its first reset; they come back with it (the
+-- GameServer's /reset, the website's reset) and the row goes. WZ_DeleteCharacter keeps them.
+CREATE TABLE `ResetCarry` (
+	`Name` VARCHAR(10) NOT NULL,
+	`Reset` INT UNSIGNED NOT NULL DEFAULT 0,
+	CONSTRAINT PK_ResetCarry PRIMARY KEY (`Name`)
+);
+
+-- ----------------------------------------------------------------------------
 -- Table warehouse
 -- ----------------------------------------------------------------------------
 CREATE TABLE `warehouse` (
@@ -530,6 +542,14 @@ BEGIN
 	IF NOT EXISTS (SELECT 1 FROM `Character` WHERE Name = inCharName) THEN
 		SET @Result = 0;
 	ELSE
+		-- Not in kayito: its resets stay with its name for the next character of that name. A
+		-- character with resets already holds any it got back, so its count replaces the row;
+		-- one without resets leaves a row it has not used yet.
+		INSERT INTO `ResetCarry` (Name, Reset)
+			SELECT c.Name, c.ResetCount FROM `Character` c
+			WHERE c.AccountID = inAccountID AND c.Name = inCharName AND c.ResetCount > 0
+		ON DUPLICATE KEY UPDATE Reset = c.ResetCount;
+
 		DELETE FROM `Character` WHERE AccountID = inAccountID AND Name = inCharName;
 		DELETE FROM `ResetInfo` WHERE Name = inCharName;
 		DELETE FROM `OptionData` WHERE Name = inCharName;
@@ -813,6 +833,11 @@ BEGIN
 		ResetWek = inResetWek, ResetWekDate = NOW(),
 		ResetMon = inResetMon, ResetMonDate = NOW()
 	WHERE Name = inCharName;
+
+	-- Not in kayito: a saved reset has taken the resets a deleted character of this name left.
+	IF inReset > 0 THEN
+		DELETE FROM `ResetCarry` WHERE Name = inCharName;
+	END IF;
 
 	COMMIT;
 END $$

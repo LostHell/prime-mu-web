@@ -12,6 +12,7 @@ import {
   verifyCharacterOwnership,
 } from "./utils";
 import { formatNumber } from "@/lib/utils/numbers";
+import { getResetCarry } from "@/lib/queries/get-reset-carry";
 import {
   getBaseClass,
   getEquipmentStatus,
@@ -127,44 +128,65 @@ export async function resetCharacterAction(
     };
   }
 
+  // A class change: the first reset brings back the resets a deleted character of this name
+  // left (as the game server's reset does), within the limit.
+  const resetCarry =
+    currentResets === 0 ? await getResetCarry(characterName) : 0;
+  const resetsAfterReset = Math.min(currentResets + 1 + resetCarry, MAX_RESETS);
+
   const totalPointsAfterReset = getResetPoints({
-    resets: currentResets,
+    resets: resetsAfterReset - 1,
     quest: character.Quest,
     fruitAddPoint: character.FruitAddPoint,
   });
 
-  const { count } = await prisma.character.updateMany({
-    where: {
-      Name: characterName,
-      AccountID: accountId,
-      cLevel: character.cLevel,
-      ResetCount: currentResets,
-      LevelUpPoint: character.LevelUpPoint,
-      Strength: character.Strength,
-      Dexterity: character.Dexterity,
-      Vitality: character.Vitality,
-      Energy: character.Energy,
-      Inventory: character.Inventory,
-      Quest: character.Quest,
-      FruitAddPoint: character.FruitAddPoint,
-      Money: { gte: resetCost },
-    },
-    data: {
-      cLevel: defaultClassType.Level ?? 1,
-      ResetCount: { increment: 1 },
-      LevelUpPoint: totalPointsAfterReset,
-      Strength: defaultClassType.Strength ?? 0,
-      Dexterity: defaultClassType.Dexterity ?? 0,
-      Vitality: defaultClassType.Vitality ?? 0,
-      Energy: defaultClassType.Energy ?? 0,
-      MapNumber: defaultClassType.MapNumber ?? 0,
-      MapPosX: defaultClassType.MapPosX ?? 125,
-      MapPosY: defaultClassType.MapPosY ?? 125,
-      Money: { decrement: resetCost },
-      Experience: 0,
-    },
-  });
-  if (!count) {
+  const reset = await prisma
+    .$transaction(async (tx) => {
+      const { count } = await tx.character.updateMany({
+        where: {
+          Name: characterName,
+          AccountID: accountId,
+          cLevel: character.cLevel,
+          ResetCount: currentResets,
+          LevelUpPoint: character.LevelUpPoint,
+          Strength: character.Strength,
+          Dexterity: character.Dexterity,
+          Vitality: character.Vitality,
+          Energy: character.Energy,
+          Inventory: character.Inventory,
+          Quest: character.Quest,
+          FruitAddPoint: character.FruitAddPoint,
+          Money: { gte: resetCost },
+        },
+        data: {
+          cLevel: defaultClassType.Level ?? 1,
+          ResetCount: resetsAfterReset,
+          LevelUpPoint: totalPointsAfterReset,
+          Strength: defaultClassType.Strength ?? 0,
+          Dexterity: defaultClassType.Dexterity ?? 0,
+          Vitality: defaultClassType.Vitality ?? 0,
+          Energy: defaultClassType.Energy ?? 0,
+          MapNumber: defaultClassType.MapNumber ?? 0,
+          MapPosX: defaultClassType.MapPosX ?? 125,
+          MapPosY: defaultClassType.MapPosY ?? 125,
+          Money: { decrement: resetCost },
+          Experience: 0,
+        },
+      });
+      if (!count) return false;
+      if (resetCarry > 0) {
+        // Taken once: a carry gone or changed meanwhile undoes the reset.
+        const taken =
+          await tx.$executeRaw`DELETE FROM ResetCarry WHERE Name = ${characterName} AND Reset = ${resetCarry}`;
+        if (taken !== 1) throw new ResetCarryChanged();
+      }
+      return true;
+    })
+    .catch((error: unknown) => {
+      if (error instanceof ResetCarryChanged) return false;
+      throw error;
+    });
+  if (!reset) {
     revalidatePath("/user-panel", "layout");
     return {
       success: false,
@@ -177,6 +199,8 @@ export async function resetCharacterAction(
   revalidatePath("/rankings");
   return {
     success: true,
-    message: `Character reset! Total points: ${formatNumber(totalPointsAfterReset)}. ${formatNumber(resetCost)} Zen spent.`,
+    message: `Character reset! ${resetCarry > 0 ? `Resets from the previous character are back: ${formatNumber(resetsAfterReset)} resets. ` : ""}Total points: ${formatNumber(totalPointsAfterReset)}. ${formatNumber(resetCost)} Zen spent.`,
   };
 }
+
+class ResetCarryChanged extends Error {}
