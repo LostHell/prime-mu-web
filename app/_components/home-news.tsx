@@ -1,4 +1,3 @@
-import { NewsBody } from "@/app/_components/news-body";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import Text from "@/components/ui/text";
@@ -36,7 +35,16 @@ const HomeNews = () => {
                   {item.title}
                 </Link>
               </h3>
-              <NewsBody id={item.id} className="mt-3 text-sm" />
+              <p className="text-muted-foreground mt-3 text-sm leading-relaxed">
+                {item.summary}
+              </p>
+              <Link
+                href={`/news/${item.id}`}
+                className="text-gold mt-2 inline-block text-sm underline underline-offset-4"
+                aria-label={`Read more: ${item.title}`}
+              >
+                Read more
+              </Link>
             </article>
           ))}
         </CardContent>

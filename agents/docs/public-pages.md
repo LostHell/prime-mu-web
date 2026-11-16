@@ -25,8 +25,9 @@
 ## News
 
 - A news item is one entry in [`constants/news.ts`](../../constants/news.ts) (`id`, `date`, `dateTime`, `title`, `summary`) and its text in `app/_components/news-body.tsx`. Add it at the top of the list: newest first.
-- From that entry it appears on the home page, at `/news` and `/news/<id>` (NewsArticle + BreadcrumbList), in `/news/rss.xml`, in the sitemap with its date, in `/llms.txt` and in the launcher (`/api/launcher/news` opens `/news/<id>`). An unknown id is a 404 (`dynamicParams = false`).
-- `summary` is the plain-text version for search results, the feed and structured data: keep it in step with the text.
+- From that entry it appears at `/news/<id>` with its full text (NewsArticle + BreadcrumbList), and with its summary on the home page and `/news`. It is also in `/news/rss.xml`, in the sitemap with its date, in `/llms.txt` and in the launcher (`/api/launcher/news` opens `/news/<id>`). An unknown id is a 404 (`dynamicParams = false`).
+- `summary` is the plain-text version (about 105–155 characters) for search results, the feed and structured data: keep it in step with the text.
+- Take every figure in a news text from the server config or the site's limits, not typed in (tested in `app/_components/news-body.test.tsx`), and check each claim against the code: for example, resets, Add stats, the market and deposits all need the account logged out of the game.
 
 ## Links
 
