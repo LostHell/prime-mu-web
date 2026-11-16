@@ -13,7 +13,7 @@ export const getGameJsonLd = (): JsonLdData => ({
   image: getAbsoluteUrl("/hero-banner.jpg"),
   genre: "MMORPG",
   playMode: "MultiPlayer",
-  applicationCategory: "Game",
+  applicationCategory: "GameApplication",
   gamePlatform: ["Windows", "macOS"],
   operatingSystem: "Windows, macOS",
   publisher: { "@type": "Organization", name: BRAND, url: getAbsoluteUrl("/") },

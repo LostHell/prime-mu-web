@@ -9,7 +9,7 @@ const pageLayoutVariants = cva("mx-auto", {
       public: "max-w-5xl pt-8 pb-16 px-4",
       /** Narrow auth flows (login, register). */
       auth: "max-w-md pt-12 pb-16 px-4",
-      /** User-panel pages — used inside `app/user-panel/layout.tsx`'s `<main>`. */
+      /** User-panel pages (`app/user-panel/_components/user-panel-shell.tsx`). */
       panel: "max-w-5xl py-8 px-4",
     },
   },
@@ -21,10 +21,10 @@ const pageLayoutVariants = cva("mx-auto", {
 type PageLayoutProps = HTMLAttributes<HTMLElement> &
   VariantProps<typeof pageLayoutVariants> & {
     /**
-     * Render as a different element. Defaults to `section`. Pass `"main"` when
-     * the page layout is the outermost landmark for the route.
+     * Render as a different element. Defaults to `section`. Never `main`: the
+     * root layout already wraps every page in `<main>`.
      */
-    as?: "section" | "main" | "div";
+    as?: "section" | "div";
   };
 
 const PageLayout = ({
