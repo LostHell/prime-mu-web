@@ -10,7 +10,6 @@ const Logo = () => {
       height={48}
       className="size-10 md:size-12"
       loading="eager"
-      priority
     />
   );
 };

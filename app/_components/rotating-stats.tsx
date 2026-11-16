@@ -45,13 +45,14 @@ const RotatingStats = ({ groups }: { groups: Stat[][] }) => {
           {statIndex > 0 ? (
             <div className="bg-border mx-4 hidden w-px self-stretch sm:block" />
           ) : null}
-          <div>
-            <dd className="font-serif text-2xl font-bold whitespace-nowrap md:text-3xl">
-              {stat.value}
-            </dd>
+          {/* dt before dd, as <dl> requires; the value still shows on top. */}
+          <div className="flex flex-col-reverse">
             <dt className="text-muted-foreground text-xs tracking-widest whitespace-nowrap uppercase">
               {stat.label}
             </dt>
+            <dd className="font-serif text-2xl font-bold whitespace-nowrap md:text-3xl">
+              {stat.value}
+            </dd>
           </div>
         </div>
       ))}

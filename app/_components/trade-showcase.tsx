@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import Text from "@/components/ui/text";
 import { DEPOSITABLE_ITEMS } from "@/constants/depositable-items";
+import Image from "next/image";
 import Link from "next/link";
 
 const currencies = Object.values(DEPOSITABLE_ITEMS).map((item) => item.label);
@@ -14,9 +15,16 @@ const TradeShowcase = () => {
       <div className="border-border relative overflow-hidden rounded-xl border">
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-0 bg-cover bg-position-[75%_center]"
-          style={{ backgroundImage: "url(/hero-banner.jpg)" }}
-        />
+          className="pointer-events-none absolute inset-0"
+        >
+          <Image
+            src="/hero-banner.jpg"
+            alt=""
+            fill
+            sizes="(min-width: 1024px) 1024px, 100vw"
+            className="object-cover object-[75%_center]"
+          />
+        </div>
         <div
           aria-hidden="true"
           className="from-background via-background/85 to-background/35 pointer-events-none absolute inset-0 bg-linear-to-r"

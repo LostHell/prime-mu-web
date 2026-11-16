@@ -1,5 +1,8 @@
+import { JsonLd } from "@/components/json-ld";
 import ServerStatus from "@/components/server-status";
 import Text from "@/components/ui/text";
+import { breadcrumbJsonLd } from "@/lib/utils/json-ld";
+import Image from "next/image";
 import Link from "next/link";
 
 type PageHeroProps = {
@@ -21,11 +24,20 @@ const PageHero = ({
 }: PageHeroProps) => {
   return (
     <section className="relative overflow-hidden">
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 bg-cover bg-right md:bg-position-[65%_center]"
-        style={{ backgroundImage: "url(/hero-banner.jpg)" }}
+      <JsonLd
+        data={breadcrumbJsonLd([{ name: "Home", path: "/" }, { name: label }])}
       />
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0">
+        <Image
+          src="/hero-banner.jpg"
+          alt=""
+          fill
+          sizes="100vw"
+          loading="eager"
+          fetchPriority="high"
+          className="object-cover object-right md:object-[65%_center]"
+        />
+      </div>
       <div
         aria-hidden="true"
         className="from-background via-background/80 to-background/40 pointer-events-none absolute inset-0 bg-linear-to-r"

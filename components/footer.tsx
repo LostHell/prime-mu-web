@@ -1,5 +1,6 @@
 import OrnamentLine from "@/components/ui/ornament-line";
 import { BRAND } from "@/constants/app";
+import { VERSION } from "@/constants/server";
 import { FOOTER_NAV } from "@/constants/footer";
 import Link from "next/link";
 
@@ -23,7 +24,7 @@ const Footer = () => {
           </ul>
         </nav>
         <p className="text-muted-foreground text-sm">
-          &copy; {new Date().getFullYear()} {BRAND} &mdash; Season 0.97d
+          &copy; {new Date().getFullYear()} {BRAND} &mdash; Season {VERSION}
         </p>
         <p className="text-muted-foreground/60 mt-2 text-xs">
           MU Online is a registered trademark of Webzen Inc.

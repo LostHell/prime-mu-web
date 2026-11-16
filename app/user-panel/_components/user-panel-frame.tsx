@@ -25,7 +25,7 @@ export function UserPanelFrame({ children }: { children: React.ReactNode }) {
         </div>
       </aside>
 
-      <main className="min-w-0 md:col-span-9">
+      <div className="min-w-0 md:col-span-9">
         {isSectionList ? null : (
           <Link
             href="/user-panel"
@@ -36,7 +36,7 @@ export function UserPanelFrame({ children }: { children: React.ReactNode }) {
           </Link>
         )}
         <div className={cn(isSectionList && "hidden md:block")}>{children}</div>
-      </main>
+      </div>
     </div>
   );
 }

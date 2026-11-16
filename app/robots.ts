@@ -6,7 +6,8 @@ const robots = (): MetadataRoute.Robots => {
     rules: {
       userAgent: "*",
       allow: "/",
-      disallow: "/user-panel",
+      // The user panel needs a login; /api and /patches are for the game launcher, not for search.
+      disallow: ["/user-panel", "/api/", "/patches/"],
     },
     sitemap: getAbsoluteUrl("/sitemap.xml"),
   };

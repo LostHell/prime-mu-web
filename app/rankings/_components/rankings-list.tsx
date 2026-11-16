@@ -67,7 +67,7 @@ const RankingsList = async ({
         <RankingsTabs view={view} />
         <section>
           <Text variant="h3" as="h2" className="mb-4">
-            Guild rankings
+            All guilds
           </Text>
           <Card>
             <CardContent>
@@ -100,7 +100,7 @@ const RankingsList = async ({
         <section>
           <div className="mb-4">
             <Text variant="h3" as="h2">
-              Online players
+              Online now
             </Text>
             <Text variant="small" className="mt-1">
               Ranked by resets, then level.
@@ -155,7 +155,7 @@ const RankingsList = async ({
       <section>
         <div className="mb-4">
           <Text variant="h3" as="h2">
-            Player rankings
+            All players
           </Text>
           <Text variant="small" className="mt-1">
             Ranked by resets, then level.
