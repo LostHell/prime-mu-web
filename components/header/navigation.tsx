@@ -35,7 +35,7 @@ export default function Navigation({
 
   return (
     <nav className="bg-background/80 border-border border-b">
-      <div className="mx-auto grid max-w-5xl grid-cols-[minmax(0,1fr)_auto] items-center px-4 py-3 md:grid-cols-3">
+      <div className="mx-auto grid max-w-5xl grid-cols-[minmax(0,1fr)_auto] items-center px-4 py-3 md:grid-cols-[minmax(0,1fr)_auto_1fr] md:gap-4">
         <BrandLockup />
 
         <div className="hidden items-center justify-center gap-5 md:flex">

@@ -1,7 +1,7 @@
 const SettingRows = ({
   rows,
 }: {
-  rows: { label: string; value: string }[];
+  rows: { label: string; value: string; note?: string }[];
 }) => {
   return (
     <dl>
@@ -10,7 +10,14 @@ const SettingRows = ({
           key={row.label}
           className="border-border/50 flex items-baseline justify-between gap-4 border-b py-2 last:border-b-0"
         >
-          <dt className="text-muted-foreground text-sm">{row.label}</dt>
+          <dt className="text-muted-foreground text-sm">
+            {row.label}
+            {row.note ? (
+              <span className="text-muted-foreground/80 mt-0.5 block text-xs">
+                {row.note}
+              </span>
+            ) : null}
+          </dt>
           <dd className="gold-gradient-text text-right text-sm font-semibold">
             {row.value}
           </dd>

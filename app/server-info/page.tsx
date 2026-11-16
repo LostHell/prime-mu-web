@@ -14,7 +14,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Server info",
-  description: `${BRAND} server settings: ${EXPERIENCE_RATE} experience, ${DROP_RATE} drop, max level ${MAX_LEVEL}, resets, character points, economy and the Blood Castle and Devil Square times.`,
+  description: `${BRAND} server settings: ${EXPERIENCE_RATE} experience, ${DROP_RATE} drop, max level ${MAX_LEVEL}, resets, character points, economy and the daily event schedule.`,
   alternates: { canonical: "/server-info" },
   openGraph: openGraphFor("/server-info"),
 };

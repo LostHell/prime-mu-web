@@ -42,3 +42,48 @@ export function formatCountdown(milliseconds: number): string {
     .map((part) => String(part).padStart(2, "0"))
     .join(":");
 }
+
+const formatClock = (minuteOfDay: number): string => {
+  const hour = Math.floor(minuteOfDay / 60);
+  const minute = minuteOfDay % 60;
+  return `${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}`;
+};
+
+/**
+ * Plain description of a daily event schedule. Hours may be fractional (0.5 = 00:30).
+ * "Every N hours" only when the starts repeat evenly around the whole day; otherwise the times.
+ */
+export const describeDailySchedule = (hours: number[]): string => {
+  const minutes = [
+    ...new Set(
+      hours
+        .filter((hour) => Number.isFinite(hour) && hour >= 0 && hour < 24)
+        .map((hour) => Math.round(hour * 60))
+        .filter((minute) => minute < 1440),
+    ),
+  ].sort((a, b) => a - b);
+  if (minutes.length === 0) return "Not scheduled";
+
+  const step = minutes.length > 1 ? minutes[1] - minutes[0] : 0;
+  const repeatsAllDay =
+    step > 0 &&
+    step * minutes.length === 1440 &&
+    minutes.every(
+      (minute, index) => index === 0 || minute - minutes[index - 1] === step,
+    );
+
+  if (!repeatsAllDay) {
+    return minutes.map(formatClock).join(", ");
+  }
+
+  const everyHours = step / 60;
+  const every = Number.isInteger(everyHours)
+    ? String(everyHours)
+    : everyHours.toFixed(1);
+  const first = minutes[0];
+  if (first === 0) return `Every ${every} hours`;
+  if (first < 60) {
+    return `Every ${every} hours, at :${String(first).padStart(2, "0")}`;
+  }
+  return `Every ${every} hours, from ${formatClock(first)}`;
+};

@@ -30,11 +30,19 @@ test("states the server settings the site shows", () => {
   expect(text).toContain("launched on 11 October 2026");
 });
 
-test("gives event start times as clock times", () => {
+test("lists every enabled event with its schedule, length and bonus", () => {
   const text = buildLlmsText();
 
-  expect(text).toContain("- Blood Castle: 00:00, 12:00");
-  expect(text).toContain("- Devil Square: 00:30, 12:30");
+  expect(text).toContain("## Events (UTC)");
+  expect(text).toContain("- Happy Hour: 20:00 (60 min, +150% experience)");
+});
+
+test("includes the FAQ questions with their answers", () => {
+  const text = buildLlmsText();
+
+  expect(text).toContain("## FAQ");
+  expect(text).toContain("### What is Black MU?");
+  expect(text).toContain("### How do resets work?");
 });
 
 test("links every page with the public origin", () => {
@@ -47,6 +55,9 @@ test("links every page with the public origin", () => {
   );
   expect(text).toContain(
     "- [Guild rankings](https://blackmu.example/rankings?view=guilds)",
+  );
+  expect(text).toContain(
+    "- [FAQ](https://blackmu.example/faq): short answers about the server",
   );
   expect(text).toContain(
     "- [Items marketplace is now open!](https://blackmu.example/#news-marketplace): 2026-10-08",

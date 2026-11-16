@@ -1,4 +1,4 @@
-import { breadcrumbJsonLd, serializeJsonLd } from "./json-ld";
+import { breadcrumbJsonLd, faqPageJsonLd, serializeJsonLd } from "./json-ld";
 
 const original = process.env.SITE_URL;
 
@@ -35,6 +35,22 @@ test("lists the crumbs in order with absolute links, leaving the current page wi
         item: "https://blackmu.example/",
       },
       { "@type": "ListItem", position: 2, name: "Rankings" },
+    ],
+  });
+});
+
+test("turns questions and answers into an FAQPage", () => {
+  expect(
+    faqPageJsonLd([{ question: "Does it run on macOS?", answer: "Yes." }]),
+  ).toEqual({
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: [
+      {
+        "@type": "Question",
+        name: "Does it run on macOS?",
+        acceptedAnswer: { "@type": "Answer", text: "Yes." },
+      },
     ],
   });
 });

@@ -1,3 +1,4 @@
+import { SITE_FAQ } from "@/app/_constants/site-faq";
 import { BRAND, SERVER_LIVE_DATE } from "@/constants/app";
 import { eventSchedules } from "@/constants/events";
 import { NEWS } from "@/constants/news";
@@ -17,27 +18,14 @@ import {
   SITE_DESCRIPTION,
   VERSION,
 } from "@/constants/server";
+import { MAP_NAME_BY_ID } from "@/lib/game/constants/maps";
+import { describeEvents } from "@/lib/game/events/describe-events";
 import { serverConfig } from "@/lib/game/server-config";
+import { formatLongDate } from "@/lib/utils/dates";
 import { formatNumber } from "@/lib/utils/numbers";
 import { getAbsoluteUrl } from "@/lib/utils/site-url";
 
-/** Event start hours (0.5 = 00:30) as 24-hour clock times. */
-const formatHours = (hours: number[]) =>
-  hours
-    .map((hour) => {
-      const minutes = Math.round(hour * 60);
-      const hh = String(Math.floor(minutes / 60)).padStart(2, "0");
-      const mm = String(minutes % 60).padStart(2, "0");
-      return `${hh}:${mm}`;
-    })
-    .join(", ");
-
-const launchDate = new Intl.DateTimeFormat("en-GB", {
-  timeZone: "UTC",
-  day: "numeric",
-  month: "long",
-  year: "numeric",
-}).format(SERVER_LIVE_DATE);
+const launchDate = formatLongDate(SERVER_LIVE_DATE);
 
 /**
  * /llms.txt (llmstxt.org): what the site says about the server, in plain text with absolute links,
@@ -66,10 +54,12 @@ export const buildLlmsText = (): string => {
     `- Points per level: Dark Wizard ${dw}, Dark Knight ${dk}, Fairy Elf ${fe}, Magic Gladiator ${mg}`,
     `- Stat cap: ${formatNumber(MAX_STAT_POINT)}`,
     "",
-    `## Daily events (${SERVER_TIME_ZONE})`,
+    `## Events (${SERVER_TIME_ZONE})`,
     "",
-    `- Blood Castle: ${formatHours(eventSchedules.bloodCastle)}`,
-    `- Devil Square: ${formatHours(eventSchedules.devilSquare)}`,
+    ...describeEvents(eventSchedules.list, MAP_NAME_BY_ID).map(
+      (event) =>
+        `- ${event.name}: ${event.schedule} (${[`${event.durationMinutes} min`, ...event.details].join(", ")})`,
+    ),
     "",
     "## How to start",
     "",
@@ -105,7 +95,16 @@ export const buildLlmsText = (): string => {
       "/downloads",
       "the launcher for Windows and macOS, with install help",
     ),
+    link("FAQ", "/faq", "short answers about the server"),
     "",
+    "## FAQ",
+    "",
+    ...SITE_FAQ.flatMap((item) => [
+      `### ${item.question}`,
+      "",
+      item.answer,
+      "",
+    ]),
     "## News",
     "",
     ...NEWS.map((item) => link(item.title, `/#news-${item.id}`, item.dateTime)),

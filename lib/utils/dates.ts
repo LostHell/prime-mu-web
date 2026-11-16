@@ -17,3 +17,12 @@ export const formatDayMonthYear = (date: Date): string => {
     .format(date)
     .replaceAll("/", ".");
 };
+
+/** "11 October 2026", in UTC, for prose such as the FAQ and /llms.txt. */
+export const formatLongDate = (date: Date): string =>
+  new Intl.DateTimeFormat("en-GB", {
+    timeZone: "UTC",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  }).format(date);
