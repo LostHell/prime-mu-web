@@ -1,5 +1,7 @@
+import { JsonLd } from "@/components/json-ld";
 import ServerStatus from "@/components/server-status";
 import Text from "@/components/ui/text";
+import { breadcrumbJsonLd } from "@/lib/utils/json-ld";
 import Link from "next/link";
 
 type PageHeroProps = {
@@ -21,6 +23,9 @@ const PageHero = ({
 }: PageHeroProps) => {
   return (
     <section className="relative overflow-hidden">
+      <JsonLd
+        data={breadcrumbJsonLd([{ name: "Home", path: "/" }, { name: label }])}
+      />
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 bg-cover bg-right md:bg-position-[65%_center]"

@@ -29,7 +29,7 @@ describe("SearchResultsPagination", () => {
     );
   });
 
-  test("makes unavailable directions non-interactive", () => {
+  test("gives unavailable directions no address to follow", () => {
     render(
       <SearchResultsPagination
         page={1}
@@ -38,14 +38,12 @@ describe("SearchResultsPagination", () => {
       />,
     );
 
-    expect(screen.getByRole("link", { name: /previous/i })).toHaveAttribute(
-      "aria-disabled",
-      "true",
-    );
-    expect(screen.getByRole("link", { name: /next/i })).toHaveAttribute(
-      "aria-disabled",
-      "true",
-    );
+    const previous = screen.getByRole("link", { name: /previous/i });
+    const next = screen.getByRole("link", { name: /next/i });
+    expect(previous).toHaveAttribute("aria-disabled", "true");
+    expect(previous).not.toHaveAttribute("href");
+    expect(next).toHaveAttribute("aria-disabled", "true");
+    expect(next).not.toHaveAttribute("href");
   });
 });
 

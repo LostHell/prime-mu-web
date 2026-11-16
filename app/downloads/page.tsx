@@ -1,5 +1,7 @@
 import DownloadsContent from "@/app/downloads/_components/downloads-content";
+import { getGameJsonLd } from "@/app/downloads/_json-ld/game";
 import { toDownloadClients } from "@/app/downloads/_utils/download-clients";
+import { JsonLd } from "@/components/json-ld";
 import PageHero from "@/components/page-hero";
 import PageLayout from "@/components/page-layout";
 import { BRAND } from "@/constants/app";
@@ -23,6 +25,7 @@ const DownloadPage = async () => {
 
   return (
     <>
+      <JsonLd data={getGameJsonLd()} />
       <PageHero
         label="Downloads"
         title="Download the launcher"

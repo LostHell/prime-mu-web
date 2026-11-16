@@ -4,6 +4,7 @@ import {
   PaginationItem,
   PaginationLink,
 } from "@/components/ui/pagination";
+import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 
@@ -23,6 +24,39 @@ export function getPaginationHref(
   return search ? `${pathname}?${search}` : pathname;
 }
 
+/** Previous or next page. With nowhere to go it is not a link, so crawlers do not follow it to a page that redirects. */
+function PageStep({
+  href,
+  label,
+  children,
+}: {
+  href: string | null;
+  label: string;
+  children: React.ReactNode;
+}) {
+  if (href === null) {
+    return (
+      <span
+        role="link"
+        aria-label={label}
+        aria-disabled="true"
+        className={cn(
+          buttonVariants({ variant: "ghost", size: "icon-xs" }),
+          "pointer-events-none opacity-50",
+        )}
+      >
+        {children}
+      </span>
+    );
+  }
+
+  return (
+    <PaginationLink href={href} aria-label={label} size="icon-xs">
+      {children}
+    </PaginationLink>
+  );
+}
+
 export function SearchResultsPagination({
   page,
   hasNext,
@@ -36,24 +70,17 @@ export function SearchResultsPagination({
 }) {
   const href = (target: number) =>
     getPaginationHref(pathname, target, searchParams);
-  const hasPrevious = page > 1;
-  const disabledClassName = "pointer-events-none opacity-50";
 
   return (
     <Pagination aria-label="Results pages" className="mt-5">
       <PaginationContent className="w-full justify-between">
         <PaginationItem>
-          <PaginationLink
-            href={href(Math.max(1, page - 1))}
-            aria-label="Go to previous page"
-            aria-disabled={!hasPrevious}
-            tabIndex={hasPrevious ? undefined : -1}
-            prefetch={hasPrevious ? undefined : false}
-            className={cn(!hasPrevious && disabledClassName)}
-            size="icon-xs"
+          <PageStep
+            href={page > 1 ? href(page - 1) : null}
+            label="Go to previous page"
           >
             <ChevronLeftIcon aria-hidden />
-          </PaginationLink>
+          </PageStep>
         </PaginationItem>
         <PaginationItem>
           <PaginationLink
@@ -66,17 +93,12 @@ export function SearchResultsPagination({
           </PaginationLink>
         </PaginationItem>
         <PaginationItem>
-          <PaginationLink
-            href={href(page + 1)}
-            aria-label="Go to next page"
-            aria-disabled={!hasNext}
-            tabIndex={hasNext ? undefined : -1}
-            prefetch={hasNext ? undefined : false}
-            className={cn(!hasNext && disabledClassName)}
-            size="icon-xs"
+          <PageStep
+            href={hasNext ? href(page + 1) : null}
+            label="Go to next page"
           >
             <ChevronRightIcon aria-hidden />
-          </PaginationLink>
+          </PageStep>
         </PaginationItem>
       </PaginationContent>
     </Pagination>
