@@ -17,6 +17,7 @@ import { getServerInfo } from "@/lib/queries/get-server-info";
 import { cn } from "@/lib/utils";
 import { formatCompact, formatNumber } from "@/lib/utils/numbers";
 import { Download } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 
 const statGroups = [
@@ -52,9 +53,19 @@ const HomeHero = async () => {
     <section className="relative overflow-hidden">
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 bg-cover bg-left md:left-auto md:w-[68%] md:bg-left"
-        style={{ backgroundImage: "url(/hero-banner.jpg)" }}
-      />
+        className="pointer-events-none absolute inset-0 md:left-auto md:w-[68%]"
+      >
+        {/* The largest element on a phone, so it loads first and in the size the screen needs. */}
+        <Image
+          src="/hero-banner.jpg"
+          alt=""
+          fill
+          sizes="(min-width: 768px) 68vw, 100vw"
+          loading="eager"
+          fetchPriority="high"
+          className="object-cover object-left"
+        />
+      </div>
       <div
         aria-hidden="true"
         className="from-background via-background/75 pointer-events-none absolute inset-0 bg-linear-to-r via-55% to-transparent md:via-40%"
@@ -66,11 +77,12 @@ const HomeHero = async () => {
 
       <div className="relative mx-auto max-w-5xl px-4 pt-6 pb-8 md:pt-10 md:pb-10">
         <div className="max-w-xl">
-          <p className="text-gold mb-4 text-xs font-semibold tracking-widest uppercase">
-            Classic MU Online · {VERSION}
-          </p>
           <h1 className="font-serif text-4xl leading-tight font-bold md:text-6xl">
-            <span className="text-foreground block">Your next reset.</span>
+            {/* The eyebrow is part of the h1 so the heading says what the site is, not only the slogan. */}
+            <span className="text-gold mb-4 block font-sans text-xs font-semibold tracking-widest uppercase">
+              Classic MU Online · {VERSION} private server
+            </span>{" "}
+            <span className="text-foreground block">Your next reset.</span>{" "}
             <span className="gold-gradient-text block">
               Your old obsession.
             </span>
@@ -110,21 +122,22 @@ const HomeHero = async () => {
             <div
               key={item.label}
               className={cn(
-                "border-border px-5 py-4",
+                // dt before dd, as <dl> requires; the value still shows on top.
+                "border-border flex flex-col-reverse px-5 py-4",
                 index % 2 === 0 && "max-md:border-r",
                 index < 2 && "max-md:border-b",
                 index < population.length - 1 && "md:border-r",
               )}
             >
+              <dt className="text-muted-foreground mt-1 text-xs tracking-widest uppercase">
+                {item.label}
+              </dt>
               <dd className="flex items-center gap-2 font-serif text-3xl font-bold">
                 {item.live ? (
                   <span className="bg-online size-2 rounded-full" />
                 ) : null}
                 {item.value}
               </dd>
-              <dt className="text-muted-foreground mt-1 text-xs tracking-widest uppercase">
-                {item.label}
-              </dt>
             </div>
           ))}
         </dl>

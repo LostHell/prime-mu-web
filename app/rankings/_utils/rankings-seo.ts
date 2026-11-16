@@ -1,6 +1,8 @@
 import { getRankingView, type RankingView } from "./ranking-view";
 import { BRAND } from "@/constants/app";
 import { MAX_SEARCH_LENGTH } from "@/constants/pagination";
+import { VERSION } from "@/constants/server";
+import { openGraphFor } from "@/lib/utils/open-graph";
 import { getPageNumber, getSearchQuery } from "@/lib/utils/pagination";
 import type { Metadata } from "next";
 
@@ -10,19 +12,19 @@ const RANKING_PAGES: Record<
 > = {
   players: {
     title: "Player rankings",
-    description: `Player rankings on ${BRAND}, ordered by resets and level.`,
+    description: `${BRAND} player rankings: characters ranked by resets, then level, with the top three on the podium. Search by name or filter by class.`,
   },
   guilds: {
     title: "Guild rankings",
-    description: `Guild rankings on ${BRAND}.`,
+    description: `${BRAND} guild rankings: every guild with its master, member count and score, on the MU Online ${VERSION} private server.`,
   },
   online: {
     title: "Online players",
-    description: `Characters online now on ${BRAND}.`,
+    description: `Characters online now on ${BRAND}, ranked by resets, then level. Search by name or filter by class to see who is playing.`,
   },
   events: {
     title: "Event rankings",
-    description: `Blood Castle and Devil Square rankings on ${BRAND}.`,
+    description: `Blood Castle and Devil Square rankings on ${BRAND}: the best scores of each event and the countdown to the next one.`,
   },
 };
 
@@ -52,12 +54,12 @@ export const getRankingsSeo = (
 ) => {
   const view = getRankingView(params.view);
   const page = RANKING_PAGES[view];
+  const canonical = rankingsCanonical(view, getPageNumber(params.page));
   const metadata: Metadata = {
     title: page.title,
     description: page.description,
-    alternates: {
-      canonical: rankingsCanonical(view, getPageNumber(params.page)),
-    },
+    alternates: { canonical },
+    openGraph: openGraphFor(canonical),
   };
 
   if (hasFilteredParams(params)) {

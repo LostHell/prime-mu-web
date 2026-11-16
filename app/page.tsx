@@ -6,10 +6,12 @@ import TopPlayers from "@/app/_components/top-players";
 import TradeShowcase from "@/app/_components/trade-showcase";
 import { JsonLd } from "@/components/json-ld";
 import PageLayout from "@/components/page-layout";
+import { openGraphFor } from "@/lib/utils/open-graph";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/" },
+  openGraph: openGraphFor("/"),
 };
 
 const Home = () => {

@@ -4,14 +4,17 @@ import PageLayout from "@/components/page-layout";
 import { Card, CardContent } from "@/components/ui/card";
 import Headline from "@/components/ui/headline";
 import Text from "@/components/ui/text";
+import { BRAND } from "@/constants/app";
+import { openGraphFor } from "@/lib/utils/open-graph";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "Login",
-  description: "Use your existing game account credentials.",
+  description: `Log in to ${BRAND} with your game account to reset characters, add stats, clear PK, and buy or sell items on the market.`,
   alternates: { canonical: "/login" },
+  openGraph: openGraphFor("/login"),
 };
 
 const LoginPage = async () => {

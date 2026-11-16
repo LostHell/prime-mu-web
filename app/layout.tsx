@@ -4,6 +4,7 @@ import { SiteFooter } from "@/components/site-footer";
 import { Toaster } from "@/components/ui/sonner";
 import { BRAND } from "@/constants/app";
 import { SITE_DESCRIPTION, VERSION } from "@/constants/server";
+import { SITE_OPEN_GRAPH } from "@/lib/utils/open-graph";
 import { getSiteUrl } from "@/lib/utils/site-url";
 import type { Metadata } from "next";
 import { Cinzel, Raleway } from "next/font/google";
@@ -29,19 +30,7 @@ export const metadata: Metadata = {
   },
   description: SITE_DESCRIPTION,
   keywords: ["mu online", "private server", "0.97d", "mmorpg", BRAND],
-  openGraph: {
-    type: "website",
-    siteName: BRAND,
-    locale: "en_US",
-    images: [
-      {
-        url: "/hero-banner.jpg",
-        width: 1920,
-        height: 1080,
-        alt: `${BRAND} castle`,
-      },
-    ],
-  },
+  openGraph: SITE_OPEN_GRAPH,
   twitter: {
     card: "summary_large_image",
   },

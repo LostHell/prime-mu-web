@@ -5,16 +5,19 @@ import { JsonLd } from "@/components/json-ld";
 import PageHero from "@/components/page-hero";
 import PageLayout from "@/components/page-layout";
 import { BRAND } from "@/constants/app";
+import { VERSION } from "@/constants/server";
 import { getLauncherDownloads } from "@/lib/queries/get-launcher-downloads";
 import { getServerStatus } from "@/lib/queries/get-server-status";
 import { formatServerLiveNote } from "@/lib/utils/dates";
+import { openGraphFor } from "@/lib/utils/open-graph";
 import type { Metadata } from "next";
 import { connection } from "next/server";
 
 export const metadata: Metadata = {
   title: "Downloads",
-  description: `Download the ${BRAND} launcher for Windows or macOS.`,
+  description: `Download the ${BRAND} launcher for Windows or macOS. It installs the MU Online ${VERSION} client, keeps it up to date and checks the files on every start.`,
   alternates: { canonical: "/downloads" },
+  openGraph: openGraphFor("/downloads"),
 };
 
 const DownloadPage = async () => {

@@ -57,3 +57,12 @@ test("treats an unknown view as the player rankings", () => {
   expect(seo.title).toBe("Player rankings");
   expect(seo.metadata.alternates).toEqual({ canonical: "/rankings" });
 });
+
+test("shares each ranking page at its canonical url", () => {
+  const seo = getRankingsSeo({ view: "guilds", page: "2", query: "x" });
+
+  expect(seo.metadata.openGraph).toMatchObject({
+    url: "/rankings?view=guilds&page=2",
+    siteName: "Black MU",
+  });
+});
