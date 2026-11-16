@@ -26,11 +26,15 @@ test("links the public pages", () => {
   );
 });
 
-test("links the server rules in the legal row", () => {
+test("links the FAQ and the rules in the same row as the site's pages", () => {
   render(<Footer />);
 
-  expect(screen.getByRole("navigation", { name: "Legal" })).toBeInTheDocument();
-  expect(screen.getByRole("link", { name: "Server rules" })).toHaveAttribute(
+  expect(screen.getAllByRole("navigation")).toHaveLength(1);
+  expect(screen.getByRole("link", { name: "FAQ" })).toHaveAttribute(
+    "href",
+    "/faq",
+  );
+  expect(screen.getByRole("link", { name: "Rules" })).toHaveAttribute(
     "href",
     "/rules",
   );

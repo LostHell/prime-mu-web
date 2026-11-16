@@ -5,7 +5,7 @@ export const LEGAL_PAGES_PUBLISHED = LEGAL_CONTACT !== null;
 
 /** The legal pages to link (footer, registration, sitemap, /llms.txt). */
 export const LEGAL_LINKS: { href: string; label: string }[] = [
-  { href: "/rules", label: "Server rules" },
+  { href: "/rules", label: "Rules" },
   ...(LEGAL_PAGES_PUBLISHED
     ? [
         { href: "/terms", label: "Terms of use" },
