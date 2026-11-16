@@ -1,5 +1,6 @@
 import { getAbsoluteUrl } from "@/lib/utils/site-url";
 import { LEGAL_LINKS } from "@/constants/legal";
+import { NEWS } from "@/constants/news";
 import type { MetadataRoute } from "next";
 
 const PUBLIC_PATHS = [
@@ -17,7 +18,20 @@ const PUBLIC_PATHS = [
 ];
 
 const sitemap = (): MetadataRoute.Sitemap => {
-  return PUBLIC_PATHS.map((path) => ({ url: getAbsoluteUrl(path) }));
+  // News pages carry their real date; the newest one dates the /news list.
+  const news = [
+    ...(NEWS.length > 0
+      ? [{ url: getAbsoluteUrl("/news"), lastModified: NEWS[0].dateTime }]
+      : []),
+    ...NEWS.map((item) => ({
+      url: getAbsoluteUrl(`/news/${item.id}`),
+      lastModified: item.dateTime,
+    })),
+  ];
+  return [
+    ...PUBLIC_PATHS.map((path) => ({ url: getAbsoluteUrl(path) })),
+    ...news,
+  ];
 };
 
 export default sitemap;

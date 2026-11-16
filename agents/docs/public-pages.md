@@ -22,6 +22,12 @@
 - `/llms.txt` is built at build time by `app/llms.txt/_utils/llms-text.ts`. A new public page goes into `app/sitemap.ts` and into the Pages list of `llms-text.ts`.
 - `app/_constants/site-faq.ts` feeds `/faq`, its FAQPage and `/llms.txt`. The events come from `describeEvents` (`lib/game/events/describe-events.ts`). Take figures from `serverConfig` and its constants; don't hard-code them. The FAQ makes no claims about prices or payments (owner decision).
 
+## News
+
+- A news item is one entry in [`constants/news.ts`](../../constants/news.ts) (`id`, `date`, `dateTime`, `title`, `summary`) and its text in `app/_components/news-body.tsx`. Add it at the top of the list: newest first.
+- From that entry it appears on the home page, at `/news` and `/news/<id>` (NewsArticle + BreadcrumbList), in `/news/rss.xml`, in the sitemap with its date, in `/llms.txt` and in the launcher (`/api/launcher/news` opens `/news/<id>`). An unknown id is a 404 (`dynamicParams = false`).
+- `summary` is the plain-text version for search results, the feed and structured data: keep it in step with the text.
+
 ## Links
 
 - Header and mobile menu: `NAVIGATION_ITEMS` ([`constants/navigation.ts`](../../constants/navigation.ts)).

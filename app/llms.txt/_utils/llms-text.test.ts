@@ -60,8 +60,9 @@ test("links every page with the public origin", () => {
     "- [FAQ](https://blackmu.example/faq): short answers about the server",
   );
   expect(text).toContain("- [Rules](https://blackmu.example/rules)");
+  expect(text).toContain("- [News](https://blackmu.example/news): ");
   expect(text).toContain(
-    "- [Items marketplace is now open!](https://blackmu.example/#news-marketplace): 2026-10-08",
+    "- [Items marketplace is now open!](https://blackmu.example/news/marketplace): 2026-10-08. The website market is open",
   );
   expect(text).not.toContain("localhost");
 });
