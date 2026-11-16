@@ -1,4 +1,5 @@
 import { getAbsoluteUrl } from "@/lib/utils/site-url";
+import { LEGAL_LINKS } from "@/constants/legal";
 import type { MetadataRoute } from "next";
 
 const PUBLIC_PATHS = [
@@ -12,6 +13,7 @@ const PUBLIC_PATHS = [
   "/faq",
   "/login",
   "/register",
+  ...LEGAL_LINKS.map((link) => link.href),
 ];
 
 const sitemap = (): MetadataRoute.Sitemap => {

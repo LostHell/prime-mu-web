@@ -1,5 +1,6 @@
 import { SITE_FAQ } from "@/app/_constants/site-faq";
 import { BRAND, SERVER_LIVE_DATE } from "@/constants/app";
+import { LEGAL_LINKS } from "@/constants/legal";
 import { eventSchedules } from "@/constants/events";
 import { NEWS } from "@/constants/news";
 import {
@@ -96,6 +97,7 @@ export const buildLlmsText = (): string => {
       "the launcher for Windows and macOS, with install help",
     ),
     link("FAQ", "/faq", "short answers about the server"),
+    ...LEGAL_LINKS.map((item) => link(item.label, item.href)),
     "",
     "## FAQ",
     "",
