@@ -6,7 +6,7 @@ import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Server rules",
-  description: `The rules of ${BRAND}: fair play with the official launcher, no bots, bug abuse or real-money trading, respect for other players, and the sanctions for breaking them.`,
+  description: `The rules of ${BRAND}: play only with the official launcher, no bots, bug abuse or real-money trading, respect for others, and the sanctions.`,
   alternates: { canonical: "/rules" },
   openGraph: openGraphFor("/rules"),
 };
