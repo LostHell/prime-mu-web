@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import Headline from "@/components/ui/headline";
 import Text from "@/components/ui/text";
 import { BRAND } from "@/constants/app";
+import { LEGAL_PAGES_PUBLISHED } from "@/constants/legal";
 import { openGraphFor } from "@/lib/utils/open-graph";
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -40,6 +41,26 @@ const RegisterPage = async () => {
         <Link href="/login" className="text-gold hover:underline">
           Login
         </Link>
+      </p>
+      <p className="text-muted-foreground mt-3 text-center text-xs">
+        By creating an account you accept the{" "}
+        <Link href="/rules" className="text-gold hover:underline">
+          server rules
+        </Link>
+        {LEGAL_PAGES_PUBLISHED ? (
+          <>
+            {" "}
+            and the{" "}
+            <Link href="/terms" className="text-gold hover:underline">
+              terms of use
+            </Link>
+            . See how your data is used in the{" "}
+            <Link href="/privacy" className="text-gold hover:underline">
+              privacy policy
+            </Link>
+          </>
+        ) : null}
+        .
       </p>
     </PageLayout>
   );

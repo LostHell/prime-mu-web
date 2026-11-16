@@ -59,6 +59,7 @@ test("links every page with the public origin", () => {
   expect(text).toContain(
     "- [FAQ](https://blackmu.example/faq): short answers about the server",
   );
+  expect(text).toContain("- [Server rules](https://blackmu.example/rules)");
   expect(text).toContain(
     "- [Items marketplace is now open!](https://blackmu.example/#news-marketplace): 2026-10-08",
   );

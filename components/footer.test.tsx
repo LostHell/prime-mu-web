@@ -25,3 +25,13 @@ test("links the public pages", () => {
     "/register",
   );
 });
+
+test("links the server rules in the legal row", () => {
+  render(<Footer />);
+
+  expect(screen.getByRole("navigation", { name: "Legal" })).toBeInTheDocument();
+  expect(screen.getByRole("link", { name: "Server rules" })).toHaveAttribute(
+    "href",
+    "/rules",
+  );
+});

@@ -2,6 +2,7 @@ import OrnamentLine from "@/components/ui/ornament-line";
 import { BRAND } from "@/constants/app";
 import { VERSION } from "@/constants/server";
 import { FOOTER_NAV } from "@/constants/footer";
+import { LEGAL_LINKS } from "@/constants/legal";
 import Link from "next/link";
 
 const Footer = () => {
@@ -16,6 +17,20 @@ const Footer = () => {
                 <Link
                   href={item.href}
                   className="text-muted-foreground hover:text-gold text-sm"
+                >
+                  {item.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
+        <nav aria-label="Legal" className="mb-4">
+          <ul className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
+            {LEGAL_LINKS.map((item) => (
+              <li key={item.href}>
+                <Link
+                  href={item.href}
+                  className="text-muted-foreground/80 hover:text-gold text-xs"
                 >
                   {item.label}
                 </Link>
