@@ -1,4 +1,3 @@
-import { describeDailySchedule } from "@/app/server-info/_components/event-schedule-label";
 import ServerGuideNav from "@/app/server-info/_components/server-guide-nav";
 import SettingRows from "@/app/server-info/_components/setting-rows";
 import { Button } from "@/components/ui/button";
@@ -20,6 +19,8 @@ import {
   SERVER_TIME_ZONE,
   VERSION,
 } from "@/constants/server";
+import { describeEvents } from "@/lib/game/events/describe-events";
+import { MAP_NAME_BY_ID } from "@/lib/game/constants/maps";
 import { serverConfig } from "@/lib/game/server-config";
 import { formatCompact } from "@/lib/utils/numbers";
 import { Download } from "lucide-react";
@@ -27,6 +28,7 @@ import Link from "next/link";
 
 const { dw, dk, fe, mg } = serverConfig.character.levelUpPoints;
 const sharedLevelUpPoints = dw === dk && dk === fe;
+const events = describeEvents(eventSchedules.list, MAP_NAME_BY_ID);
 
 type ServerInfoGuideProps = {
   online: number;
@@ -200,16 +202,13 @@ const ServerInfoGuide = ({
           <Card>
             <CardContent>
               <SettingRows
-                rows={[
-                  {
-                    label: "Blood Castle",
-                    value: describeDailySchedule(eventSchedules.bloodCastle),
-                  },
-                  {
-                    label: "Devil Square",
-                    value: describeDailySchedule(eventSchedules.devilSquare),
-                  },
-                ]}
+                rows={events.map((event) => ({
+                  label: event.name,
+                  value: event.schedule,
+                  note: [`${event.durationMinutes} min`, ...event.details].join(
+                    " · ",
+                  ),
+                }))}
               />
             </CardContent>
           </Card>

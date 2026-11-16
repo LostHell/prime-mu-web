@@ -23,3 +23,16 @@ export const breadcrumbJsonLd = (items: BreadcrumbItem[]): JsonLdData => ({
     ...(item.path ? { item: getAbsoluteUrl(item.path) } : {}),
   })),
 });
+
+/** schema.org FAQPage for questions and answers the page shows as text. */
+export const faqPageJsonLd = (
+  items: { question: string; answer: string }[],
+): JsonLdData => ({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: items.map((item) => ({
+    "@type": "Question",
+    name: item.question,
+    acceptedAnswer: { "@type": "Answer", text: item.answer },
+  })),
+});

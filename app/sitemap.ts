@@ -9,6 +9,7 @@ const PUBLIC_PATHS = [
   "/rankings?view=online",
   "/rankings?view=events",
   "/downloads",
+  "/faq",
   "/login",
   "/register",
 ];
