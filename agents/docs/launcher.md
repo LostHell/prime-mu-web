@@ -4,13 +4,13 @@ The game client's launcher (its source and plan: `docs/LAUNCHER.md` of the clien
 
 ## Endpoints
 
-| Address                                      | Handler                                           | What                                                                                        |
-| -------------------------------------------- | ------------------------------------------------- | ------------------------------------------------------------------------------------------- |
-| `GET /api/launcher/status`                   | `app/api/launcher/status/route.ts`                | `{ online, max, servers: [{ name, online, players }] }` from `getServerInfo`                |
-| `GET /api/launcher/news`                     | `app/api/launcher/news/route.ts`                  | `{ news: [{ date, title, author, url }] }` from `constants/news.ts`; `url` is `/#news-<id>` |
-| `GET /patches/manifest.json`, `manifest.sig` | `app/patches/[...path]/route.ts`                  | the latest release, never cached                                                            |
-| `GET /patches/chunks/<sha256>`               | same                                              | a zstd chunk, cached for good (a name never changes content)                                |
-| `GET /downloads/launcher/<system>/<file>`    | `app/downloads/launcher/[system]/[file]/route.ts` | `windows/launcher.exe`, `macos/MU.zip`: the `/downloads` buttons                            |
+| Address                                      | Handler                                           | What                                                                                                        |
+| -------------------------------------------- | ------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `GET /api/launcher/status`                   | `app/api/launcher/status/route.ts`                | `{ online, max, servers: [{ name, online, players }] }` from `getServerInfo`                                |
+| `GET /api/launcher/news`                     | `app/api/launcher/news/route.ts`                  | `{ news: [{ date, title, author, url }] }` from `constants/news.ts`; `url` is the item's page, `/news/<id>` |
+| `GET /patches/manifest.json`, `manifest.sig` | `app/patches/[...path]/route.ts`                  | the latest release, never cached                                                                            |
+| `GET /patches/chunks/<sha256>`               | same                                              | a zstd chunk, cached for good (a name never changes content)                                                |
+| `GET /downloads/launcher/<system>/<file>`    | `app/downloads/launcher/[system]/[file]/route.ts` | `windows/launcher.exe`, `macos/MU.zip`: the `/downloads` buttons                                            |
 
 The launcher opens only links on its own site address (`SITE_URL` in the client's `update/UpdateServer.h`): the news `url`s must be this site's.
 

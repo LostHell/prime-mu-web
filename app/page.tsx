@@ -1,4 +1,5 @@
 import HomeHero from "@/app/_components/home-hero";
+import { NEWS_FEED_ALTERNATE } from "@/app/_constants/news-feed";
 import { getSiteJsonLd } from "@/app/_json-ld/site";
 import HomeNews from "@/app/_components/home-news";
 import StartPlaying from "@/app/_components/start-playing";
@@ -10,7 +11,7 @@ import { openGraphFor } from "@/lib/utils/open-graph";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  alternates: { canonical: "/" },
+  alternates: { canonical: "/", types: NEWS_FEED_ALTERNATE },
   openGraph: openGraphFor("/"),
 };
 

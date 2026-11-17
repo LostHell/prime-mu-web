@@ -1,3 +1,4 @@
+import { NEWS } from "@/constants/news";
 import { buildLlmsText } from "./llms-text";
 
 jest.mock("@/lib/game/server-config", () =>
@@ -60,8 +61,10 @@ test("links every page with the public origin", () => {
     "- [FAQ](https://blackmu.example/faq): short answers about the server",
   );
   expect(text).toContain("- [Rules](https://blackmu.example/rules)");
+  expect(text).toContain("- [News](https://blackmu.example/news): ");
+  const [latest] = NEWS;
   expect(text).toContain(
-    "- [Items marketplace is now open!](https://blackmu.example/#news-marketplace): 2026-10-08",
+    `- [${latest.title}](https://blackmu.example/news/${latest.id}): ${latest.dateTime}. ${latest.summary}`,
   );
   expect(text).not.toContain("localhost");
 });

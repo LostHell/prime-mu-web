@@ -97,6 +97,11 @@ export const buildLlmsText = (): string => {
       "the launcher for Windows and macOS, with install help",
     ),
     link("FAQ", "/faq", "short answers about the server"),
+    link(
+      "News",
+      "/news",
+      "server and website updates, newest first (RSS: /news/rss.xml)",
+    ),
     ...LEGAL_LINKS.map((item) => link(item.label, item.href)),
     "",
     "## FAQ",
@@ -109,7 +114,9 @@ export const buildLlmsText = (): string => {
     ]),
     "## News",
     "",
-    ...NEWS.map((item) => link(item.title, `/#news-${item.id}`, item.dateTime)),
+    ...NEWS.map((item) =>
+      link(item.title, `/news/${item.id}`, `${item.dateTime}. ${item.summary}`),
+    ),
     "",
     "MU Online is a registered trademark of Webzen Inc.",
     "",
