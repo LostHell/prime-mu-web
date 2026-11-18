@@ -1,6 +1,6 @@
 {
   "server": {
-    "maxOnline": 120,
+    "maxOnline": 500,
     "experienceRate": 100,
     "itemDropRate": 30
   },
