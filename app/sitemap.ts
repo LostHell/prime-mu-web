@@ -12,8 +12,6 @@ const PUBLIC_PATHS = [
   "/rankings?view=events",
   "/downloads",
   "/faq",
-  "/login",
-  "/register",
   ...LEGAL_LINKS.map((link) => link.href),
 ];
 

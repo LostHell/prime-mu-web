@@ -14,6 +14,8 @@ export const metadata: Metadata = {
   title: "Login",
   description: `Log in to ${BRAND} with your game account to reset characters, add stats, clear PK, and buy or sell items on the market.`,
   alternates: { canonical: "/login" },
+  // Kept out of the sitemap and search results, but not out of robots.txt: Google must read the noindex.
+  robots: { index: false, follow: true },
   openGraph: openGraphFor("/login"),
 };
 
