@@ -1,4 +1,4 @@
-import { BRAND, SERVER_LIVE_DATE } from "@/constants/app";
+import { BRAND, SERVER_LAUNCH_DATE, SERVER_OPEN_DATE } from "@/constants/app";
 import { DEPOSITABLE_ITEMS } from "@/constants/depositable-items";
 import { eventSchedules } from "@/constants/events";
 import {
@@ -54,8 +54,13 @@ const eventSummary = describeEvents(eventSchedules.list, MAP_NAME_BY_ID)
 export const SITE_FAQ: FaqItem[] = [
   {
     question: `What is ${BRAND}?`,
-    answer: `${BRAND} is a classic MU Online ${VERSION} private server with ${EXPERIENCE_RATE} experience, ${DROP_RATE} drop and a max level of ${formatNumber(MAX_LEVEL)}. It launched on ${formatLongDate(SERVER_LIVE_DATE)}.`,
+    answer: `${BRAND} is a classic MU Online ${VERSION} private server with ${EXPERIENCE_RATE} experience, ${DROP_RATE} drop and a max level of ${formatNumber(MAX_LEVEL)}. It has been open since ${formatLongDate(SERVER_OPEN_DATE)}, with the official launch on ${formatLongDate(SERVER_LAUNCH_DATE)}.`,
     link: { href: "/server-info", label: "All server settings" },
+  },
+  {
+    question: "Is my progress kept at the official launch?",
+    answer:
+      "The players decide: a temporary poll, which will be announced, lets them vote whether progress continues or the server is wiped at the official launch.",
   },
   {
     question: `How do I start playing ${BRAND}?`,

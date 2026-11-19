@@ -1,5 +1,5 @@
 import { SITE_FAQ } from "@/app/_constants/site-faq";
-import { BRAND, SERVER_LIVE_DATE } from "@/constants/app";
+import { BRAND, SERVER_LAUNCH_DATE, SERVER_OPEN_DATE } from "@/constants/app";
 import { LEGAL_LINKS } from "@/constants/legal";
 import { eventSchedules } from "@/constants/events";
 import { NEWS } from "@/constants/news";
@@ -26,7 +26,8 @@ import { formatLongDate } from "@/lib/utils/dates";
 import { formatNumber } from "@/lib/utils/numbers";
 import { getAbsoluteUrl } from "@/lib/utils/site-url";
 
-const launchDate = formatLongDate(SERVER_LIVE_DATE);
+const openDate = formatLongDate(SERVER_OPEN_DATE);
+const launchDate = formatLongDate(SERVER_LAUNCH_DATE);
 
 /**
  * /llms.txt (llmstxt.org): what the site says about the server, in plain text with absolute links,
@@ -42,7 +43,7 @@ export const buildLlmsText = (): string => {
     "",
     `> ${SITE_DESCRIPTION}`,
     "",
-    `${BRAND} is a classic MU Online ${VERSION} private server, launched on ${launchDate}. The game is installed and kept up to date by the ${BRAND} launcher for Windows and macOS. An account made on the website is the game account.`,
+    `${BRAND} is a classic MU Online ${VERSION} private server, open since ${openDate}, with the official launch on ${launchDate}. The game is installed and kept up to date by the ${BRAND} launcher for Windows and macOS. An account made on the website is the game account.`,
     "",
     "## Server settings",
     "",

@@ -9,7 +9,7 @@ const answerTo = (question: string) =>
 
 test("takes its figures from the server config", () => {
   expect(answerTo("What is Black MU?")).toBe(
-    "Black MU is a classic MU Online 0.97d private server with 10x experience, 20% drop and a max level of 300. It launched on 11 October 2026.",
+    "Black MU is a classic MU Online 0.97d private server with 10x experience, 20% drop and a max level of 300. It has been open since 11 October 2026, with the official launch on 20 December 2026.",
   );
   expect(answerTo("How do resets work?")).toContain(
     "A character can reset at level 300, up to 3 times. Each reset gives 100 points",
@@ -43,5 +43,11 @@ test("links each detailed answer to a page that covers it", () => {
       "/server-info#resets",
       "/server-info#events",
     ]),
+  );
+});
+
+test("leaves the progress at the official launch to the players' poll", () => {
+  expect(answerTo("Is my progress kept at the official launch?")).toBe(
+    "The players decide: a temporary poll, which will be announced, lets them vote whether progress continues or the server is wiped at the official launch.",
   );
 });

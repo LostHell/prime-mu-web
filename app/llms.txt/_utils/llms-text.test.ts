@@ -28,7 +28,9 @@ test("states the server settings the site shows", () => {
   expect(text).toContain(
     "- Points per level: Dark Wizard 5, Dark Knight 5, Fairy Elf 5, Magic Gladiator 7",
   );
-  expect(text).toContain("launched on 11 October 2026");
+  expect(text).toContain(
+    "open since 11 October 2026, with the official launch on 20 December 2026.",
+  );
 });
 
 test("lists every enabled event with its schedule, length and bonus", () => {
