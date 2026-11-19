@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { cdnCacheHeaders } from "./lib/utils/cdn-cache";
 
 // Sent with every response. No Content-Security-Policy yet: it needs testing against every page first.
 const securityHeaders = [
@@ -16,7 +17,10 @@ const securityHeaders = [
 const nextConfig: NextConfig = {
   allowedDevOrigins: ["192.168.0.11", "192.168.0.59"],
   poweredByHeader: false,
-  headers: async () => [{ source: "/:path*", headers: securityHeaders }],
+  headers: async () => [
+    { source: "/:path*", headers: securityHeaders },
+    ...cdnCacheHeaders(),
+  ],
 };
 
 export default nextConfig;

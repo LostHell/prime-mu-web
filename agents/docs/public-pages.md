@@ -19,7 +19,7 @@
 
 - Render JSON-LD with `<JsonLd data={…} />` ([`components/json-ld.tsx`](../../components/json-ld.tsx)), in server components only. The builders live in [`lib/utils/json-ld.ts`](../../lib/utils/json-ld.ts) (breadcrumbs, FAQPage) and in route `_json-ld/` folders: `app/_json-ld/site.ts` (WebSite, Organization) and `app/downloads/_json-ld/game.ts` (VideoGame). `PageHero` adds the BreadcrumbList itself.
 - Structured data only states what the page shows.
-- `/llms.txt` is built at build time by `app/llms.txt/_utils/llms-text.ts`. A new public page goes into `app/sitemap.ts` and into the Pages list of `llms-text.ts`.
+- `/llms.txt` is built at build time by `app/llms.txt/_utils/llms-text.ts`. A new public page goes into `app/sitemap.ts`, into the Pages list of `llms-text.ts`, and into the Cloudflare edge cache ([deployment.md](./deployment.md)).
 - `app/_constants/site-faq.ts` feeds `/faq`, its FAQPage and `/llms.txt`. The events come from `describeEvents` (`lib/game/events/describe-events.ts`). Take figures from `serverConfig` and its constants; don't hard-code them. The FAQ makes no claims about prices or payments (owner decision).
 
 ## News
