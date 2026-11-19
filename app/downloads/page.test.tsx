@@ -1,5 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import DownloadsContent from "./_components/downloads-content";
+import { downloadFaq } from "./_constants/faq";
 import type { DownloadClient } from "./_types/clients";
 
 const clients = (
@@ -39,6 +40,15 @@ test("points account creation at registration and lists both launchers", () => {
   expect(
     document.querySelector('script[type="application/ld+json"]')?.textContent,
   ).toContain("The launcher will not open");
+});
+
+test("tells a Mac player how to open the launcher when macOS refuses it", () => {
+  expect(downloadFaq[0].answer).toContain(
+    "right-click (or Control-click) MU, choose Open, then Open again",
+  );
+  expect(downloadFaq[0].answer).toContain(
+    "System Settings → Privacy & Security, scroll down to the message about MU, click Open Anyway and confirm.",
+  );
 });
 
 test("links a published launcher", () => {
