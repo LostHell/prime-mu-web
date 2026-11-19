@@ -1,4 +1,9 @@
-import { BRAND, SERVER_LAUNCH_DATE, SERVER_OPEN_DATE } from "@/constants/app";
+import {
+  BRAND,
+  CLIENT_FPS,
+  SERVER_LAUNCH_DATE,
+  SERVER_OPEN_DATE,
+} from "@/constants/app";
 import { DEPOSITABLE_ITEMS } from "@/constants/depositable-items";
 import type { NewsId } from "@/constants/news";
 import { RANKING_PAGE_SIZE } from "@/constants/pagination";
@@ -70,6 +75,11 @@ const bodies: Record<NewsId, ReactNode> = {
         </li>
       </ul>
       <p>
+        <strong>Your progress at the launch.</strong> The players decide whether
+        progress continues after the official launch or the server is wiped: a
+        temporary poll will let you vote. It will be announced.
+      </p>
+      <p>
         The rates, resets and the event schedule are on{" "}
         <Link href="/server-info">Server info</Link>.
       </p>
@@ -80,8 +90,9 @@ const bodies: Record<NewsId, ReactNode> = {
       <p>
         {BRAND} runs on macOS with its own launcher, just like on Windows. The
         launcher installs the MU Online {VERSION} client and keeps it up to
-        date, so there are no patches to download by hand. Here is how to get
-        from zero to in-game on a Mac.
+        date, so there are no patches to download by hand. It is tested on Macs
+        with Apple Silicon (M1 to M4). Here is how to get from zero to in-game
+        on a Mac.
       </p>
       <ol>
         <li>
@@ -100,8 +111,12 @@ const bodies: Record<NewsId, ReactNode> = {
           Applications folder.
         </li>
         <li>
-          <strong>Open it the first time.</strong> Right-click MU in
-          Applications and choose Open. After that, open it as any other app.
+          <strong>Open it the first time.</strong> Right-click (or
+          Control-click) MU in Applications, choose Open, then Open again. If
+          macOS still refuses (&ldquo;cannot be opened&rdquo; or &ldquo;Apple
+          could not verify&hellip;&rdquo;), go to System Settings &rarr; Privacy
+          &amp; Security, scroll down to the message about MU, click Open Anyway
+          and confirm. After that, open it as any other app.
         </li>
         <li>
           <strong>Let it install the game.</strong> The launcher puts the game
@@ -113,6 +128,10 @@ const bodies: Record<NewsId, ReactNode> = {
           game, then log in with the account from step 1.
         </li>
       </ol>
+      <p>
+        <strong>Tip:</strong> the game reaches {CLIENT_FPS}+ FPS on a Mac too,
+        but its default FPS limit is lower: raise it in the game options.
+      </p>
       <p>
         The rates, resets and events are on{" "}
         <Link href="/server-info">Server info</Link>, and short answers to

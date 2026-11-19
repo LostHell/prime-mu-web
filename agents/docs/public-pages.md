@@ -2,6 +2,7 @@
 
 ## Waiting for us
 
+- **The poll on progress at the official launch (20 December 2026).** The FAQ answer "Is my progress kept at the official launch?" (`app/_constants/site-faq.ts`) and the `official-launch` news say a poll will be announced, nothing more. When the poll is announced or decided, update both (and add a news item); don't state its result before then.
 - **`/terms` and `/privacy` are written but not published.** `LEGAL_CONTACT` in [`constants/app.ts`](../../constants/app.ts) is `null`. Until then both pages are `noindex`, nothing links to them, and their Contact section says the details are not published. To publish them, set it to the email that answers account and privacy requests. That one change links them in the footer, the registration text, the sitemap and `/llms.txt`, and makes them indexable ([`constants/legal.ts`](../../constants/legal.ts), tested in `constants/legal.test.ts`).
 - **The owner reviews the texts first.** They are drafts, not legal advice. Open decisions:
   - Rules (`app/rules/page.tsx`): "The staff will never ask for your password"; a ban can cover every account of a player; there is no rule on several accounts per player yet.

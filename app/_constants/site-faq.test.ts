@@ -45,3 +45,9 @@ test("links each detailed answer to a page that covers it", () => {
     ]),
   );
 });
+
+test("leaves the progress at the official launch to the players' poll", () => {
+  expect(answerTo("Is my progress kept at the official launch?")).toBe(
+    "The players decide: a temporary poll, which will be announced, lets them vote whether progress continues or the server is wiped at the official launch.",
+  );
+});

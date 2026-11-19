@@ -58,6 +58,11 @@ export const SITE_FAQ: FaqItem[] = [
     link: { href: "/server-info", label: "All server settings" },
   },
   {
+    question: "Is my progress kept at the official launch?",
+    answer:
+      "The players decide: a temporary poll, which will be announced, lets them vote whether progress continues or the server is wiped at the official launch.",
+  },
+  {
     question: `How do I start playing ${BRAND}?`,
     answer:
       "Create an account on the website, download the launcher for Windows or macOS, then start the game from the launcher and log in with the same account.",

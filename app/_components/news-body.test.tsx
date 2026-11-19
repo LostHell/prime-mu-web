@@ -50,7 +50,13 @@ test("walks a Mac player from the account to the game, with the pages they need"
 
   expect(screen.getAllByRole("listitem")).toHaveLength(6);
   expect(screen.getByText(/Unzip MU.zip and move MU/)).toBeInTheDocument();
-  expect(screen.getByText(/Right-click MU in/)).toBeInTheDocument();
+  expect(screen.getByText(/Apple Silicon \(M1 to M4\)/)).toBeInTheDocument();
+  expect(screen.getByText(/Right-click \(or/)).toHaveTextContent(
+    "System Settings → Privacy & Security, scroll down to the message about MU, click Open Anyway and confirm.",
+  );
+  expect(screen.getByText(/the game reaches/)).toHaveTextContent(
+    "the game reaches 165+ FPS on a Mac too, but its default FPS limit is lower",
+  );
   for (const href of ["/register", "/downloads", "/server-info", "/faq"]) {
     expect(
       screen
@@ -70,5 +76,15 @@ test("dates the official launch the same in the text and in the summary", () => 
   ).toBeInTheDocument();
   expect(NEWS.find((item) => item.id === "official-launch")?.summary).toContain(
     launchDate,
+  );
+});
+
+test("says a players' poll decides whether progress continues at the launch", () => {
+  render(<NewsBody id="official-launch" />);
+
+  expect(
+    screen.getByText(/a temporary poll will let you vote/),
+  ).toHaveTextContent(
+    "whether progress continues after the official launch or the server is wiped",
   );
 });
