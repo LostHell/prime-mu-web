@@ -12,12 +12,12 @@
 ## Metadata
 
 - Every public page sets `title`, a `description` of about 105–155 characters with facts the page shows, `alternates.canonical`, and `openGraph: openGraphFor(path)` ([`lib/utils/open-graph.ts`](../../lib/utils/open-graph.ts)). A page's own `openGraph` replaces the layout's, so always start from `openGraphFor`.
-- Searches and class filters on `/rankings` are `noindex, follow` (`app/rankings/_utils/rankings-seo.ts`). `/user-panel` is `noindex` and disallowed in `app/robots.ts`.
+- Searches and class filters on `/rankings` are `noindex, follow` (`app/rankings/_utils/rankings-seo.ts`). `/user-panel` is `noindex` and disallowed in `app/robots.ts`. `/login` and `/register` are `noindex, follow` and not in the sitemap, but **not** disallowed: a crawler must be able to read the noindex.
 - `SITE_URL` is required for `npm run build`: see [local-development.md](./local-development.md).
 
 ## Structured data and `/llms.txt`
 
-- Render JSON-LD with `<JsonLd data={…} />` ([`components/json-ld.tsx`](../../components/json-ld.tsx)), in server components only. The builders live in [`lib/utils/json-ld.ts`](../../lib/utils/json-ld.ts) (breadcrumbs, FAQPage) and in route `_json-ld/` folders: `app/_json-ld/site.ts` (WebSite, Organization) and `app/downloads/_json-ld/game.ts` (VideoGame). `PageHero` adds the BreadcrumbList itself.
+- Render JSON-LD with `<JsonLd data={…} />` ([`components/json-ld.tsx`](../../components/json-ld.tsx)), in server components only. The builders live in [`lib/utils/json-ld.ts`](../../lib/utils/json-ld.ts) (breadcrumbs, FAQPage) and in route `_json-ld/` folders: `app/_json-ld/site.ts` (WebSite, Organization) and `app/downloads/_json-ld/game.ts` (VideoGame). `PageHero` and `LegalDocument` (`/rules`, `/terms`, `/privacy`) add the BreadcrumbList themselves, next to the breadcrumb they show.
 - Structured data only states what the page shows.
 - `/llms.txt` is built at build time by `app/llms.txt/_utils/llms-text.ts`. A new public page goes into `app/sitemap.ts`, into the Pages list of `llms-text.ts`, and into the Cloudflare edge cache ([deployment.md](./deployment.md)).
 - `app/_constants/site-faq.ts` feeds `/faq`, its FAQPage and `/llms.txt`. The events come from `describeEvents` (`lib/game/events/describe-events.ts`). Take figures from `serverConfig` and its constants; don't hard-code them. The FAQ makes no claims about prices or payments (owner decision).

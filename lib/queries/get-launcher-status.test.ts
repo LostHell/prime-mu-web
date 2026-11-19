@@ -25,7 +25,7 @@ test("lists the server with its players while it is online", async () => {
   expect(await getLauncherStatus()).toEqual({
     online: 142,
     max: 500,
-    servers: [{ name: "Prime Mu", online: true, players: 142 }],
+    servers: [{ name: "Black MU", online: true, players: 142 }],
   });
 });
 
@@ -35,6 +35,6 @@ test("counts nobody while the server is offline, whatever MEMB_STAT still says",
   expect(await getLauncherStatus()).toEqual({
     online: 0,
     max: 500,
-    servers: [{ name: "Prime Mu", online: false, players: 0 }],
+    servers: [{ name: "Black MU", online: false, players: 0 }],
   });
 });

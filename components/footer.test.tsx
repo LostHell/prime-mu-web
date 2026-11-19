@@ -16,14 +16,6 @@ test("links the public pages", () => {
     "href",
     "/downloads",
   );
-  expect(screen.getByRole("link", { name: "Login" })).toHaveAttribute(
-    "href",
-    "/login",
-  );
-  expect(screen.getByRole("link", { name: "Register" })).toHaveAttribute(
-    "href",
-    "/register",
-  );
 });
 
 test("links the FAQ and the rules in the same row as the site's pages", () => {

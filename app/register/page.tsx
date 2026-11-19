@@ -15,6 +15,8 @@ export const metadata: Metadata = {
   title: "Register",
   description: `Create your ${BRAND} account with an email address. The same account signs in to the game launcher and to the website.`,
   alternates: { canonical: "/register" },
+  // Kept out of the sitemap and search results, but not out of robots.txt: Google must read the noindex.
+  robots: { index: false, follow: true },
   openGraph: openGraphFor("/register"),
 };
 

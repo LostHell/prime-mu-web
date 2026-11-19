@@ -27,3 +27,12 @@ test("lists every news page with its own date and dates the list by the newest",
   }
   expect(entries).toContainEqual({ url: "https://blackmu.example/faq" });
 });
+
+test("leaves out the login and registration pages", () => {
+  process.env.SITE_URL = "https://blackmu.example";
+  const urls = sitemap().map((entry) => entry.url);
+
+  expect(urls).not.toContain("https://blackmu.example/login");
+  expect(urls).not.toContain("https://blackmu.example/register");
+  expect(urls).toContain("https://blackmu.example/rules");
+});
