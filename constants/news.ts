@@ -6,6 +6,22 @@
  */
 export const NEWS = [
   {
+    id: "official-launch",
+    date: "19 Nov 2026",
+    dateTime: "2026-11-19",
+    title: "Black MU is open: official launch on 20 December",
+    summary:
+      "Black MU is already open: register, download the launcher and play now. The official launch of the server is on 20 December 2026.",
+  },
+  {
+    id: "play-mu-online-on-mac",
+    date: "19 Nov 2026",
+    dateTime: "2026-11-19",
+    title: "How to play MU Online on Mac",
+    summary:
+      "Play Black MU on macOS: download the Mac launcher, move MU to Applications, open it once with right-click and Open, then log in with your account.",
+  },
+  {
     id: "marketplace",
     date: "8 Nov 2026",
     dateTime: "2026-11-08",

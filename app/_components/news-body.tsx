@@ -1,3 +1,4 @@
+import { BRAND, SERVER_LAUNCH_DATE, SERVER_OPEN_DATE } from "@/constants/app";
 import { DEPOSITABLE_ITEMS } from "@/constants/depositable-items";
 import type { NewsId } from "@/constants/news";
 import { RANKING_PAGE_SIZE } from "@/constants/pagination";
@@ -6,8 +7,10 @@ import {
   MIN_RESET_LEVEL,
   POINTS_PER_RESET,
 } from "@/constants/resets";
+import { VERSION } from "@/constants/server";
 import { serverConfig } from "@/lib/game/server-config";
 import { cn } from "@/lib/utils";
+import { formatLongDate } from "@/lib/utils/dates";
 import { formatNumber } from "@/lib/utils/numbers";
 import {
   MAX_LISTING_ITEM_PRICE,
@@ -33,6 +36,90 @@ const itemCurrencyList =
 // The text of each news item; its date, title and summary are in constants/news.ts. Every figure
 // comes from the server config or the site's limits, so the text follows them.
 const bodies: Record<NewsId, ReactNode> = {
+  "official-launch": (
+    <>
+      <p>
+        {BRAND} has been open since {formatLongDate(SERVER_OPEN_DATE)}: you can
+        register and play right now. The official launch of the server is on{" "}
+        <strong>{formatLongDate(SERVER_LAUNCH_DATE)}</strong>.
+      </p>
+      <p>
+        <strong>What you can do today:</strong>
+      </p>
+      <ul>
+        <li>
+          <Link href="/register">Create your account</Link>. The account you
+          make on the website is your game account.
+        </li>
+        <li>
+          Download the launcher for Windows or macOS from{" "}
+          <Link href="/downloads">Downloads</Link>. It installs the game and
+          checks its files on every start.
+        </li>
+        <li>
+          Play the four classes, reset your characters and take part in Blood
+          Castle and Devil Square.
+        </li>
+        <li>
+          In the user panel: reset, add stats, clear PK, deposit zen and jewels,
+          and buy or sell items on the market.
+        </li>
+        <li>
+          Follow the <Link href="/rankings">rankings</Link>: players, guilds,
+          who is online and the event scores.
+        </li>
+      </ul>
+      <p>
+        The rates, resets and the event schedule are on{" "}
+        <Link href="/server-info">Server info</Link>.
+      </p>
+    </>
+  ),
+  "play-mu-online-on-mac": (
+    <>
+      <p>
+        {BRAND} runs on macOS with its own launcher, just like on Windows. The
+        launcher installs the MU Online {VERSION} client and keeps it up to
+        date, so there are no patches to download by hand. Here is how to get
+        from zero to in-game on a Mac.
+      </p>
+      <ol>
+        <li>
+          <strong>Create your account.</strong> Register on the{" "}
+          <Link href="/register">registration page</Link>. The account you make
+          on the website is your game account.
+        </li>
+        <li>
+          <strong>Download the launcher.</strong> On{" "}
+          <Link href="/downloads">Downloads</Link>, press Download macOS. You
+          get MU.zip; the page shows its size and how much the game takes once
+          installed.
+        </li>
+        <li>
+          <strong>Install it.</strong> Unzip MU.zip and move MU to your
+          Applications folder.
+        </li>
+        <li>
+          <strong>Open it the first time.</strong> Right-click MU in
+          Applications and choose Open. After that, open it as any other app.
+        </li>
+        <li>
+          <strong>Let it install the game.</strong> The launcher puts the game
+          in your user&apos;s Application Support folder. It checks the files on
+          every start and downloads only what is missing or changed.
+        </li>
+        <li>
+          <strong>Play.</strong> When the launcher says it is ready, press Start
+          game, then log in with the account from step 1.
+        </li>
+      </ol>
+      <p>
+        The rates, resets and events are on{" "}
+        <Link href="/server-info">Server info</Link>, and short answers to
+        common questions are in the <Link href="/faq">FAQ</Link>.
+      </p>
+    </>
+  ),
   marketplace: (
     <>
       <p>

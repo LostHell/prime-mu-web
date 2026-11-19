@@ -1,4 +1,7 @@
 import { render, screen } from "@testing-library/react";
+import { SERVER_LAUNCH_DATE } from "@/constants/app";
+import { NEWS } from "@/constants/news";
+import { formatLongDate } from "@/lib/utils/dates";
 import { NewsBody } from "./news-body";
 
 jest.mock("@/lib/game/server-config", () =>
@@ -40,4 +43,32 @@ test("describes the four ranking tabs", () => {
 
   expect(screen.getAllByRole("listitem")).toHaveLength(4);
   expect(screen.getByText(/20 per page/)).toBeInTheDocument();
+});
+
+test("walks a Mac player from the account to the game, with the pages they need", () => {
+  render(<NewsBody id="play-mu-online-on-mac" />);
+
+  expect(screen.getAllByRole("listitem")).toHaveLength(6);
+  expect(screen.getByText(/Unzip MU.zip and move MU/)).toBeInTheDocument();
+  expect(screen.getByText(/Right-click MU in/)).toBeInTheDocument();
+  for (const href of ["/register", "/downloads", "/server-info", "/faq"]) {
+    expect(
+      screen
+        .getAllByRole("link")
+        .some((link) => link.getAttribute("href") === href),
+    ).toBe(true);
+  }
+});
+
+test("dates the official launch the same in the text and in the summary", () => {
+  render(<NewsBody id="official-launch" />);
+  const launchDate = formatLongDate(SERVER_LAUNCH_DATE);
+
+  expect(screen.getByText(launchDate)).toBeInTheDocument();
+  expect(
+    screen.getByText(/has been open since 11 October 2026/),
+  ).toBeInTheDocument();
+  expect(NEWS.find((item) => item.id === "official-launch")?.summary).toContain(
+    launchDate,
+  );
 });
