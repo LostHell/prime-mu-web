@@ -15,6 +15,7 @@ import {
 } from "@/constants/server";
 import { getServerInfo } from "@/lib/queries/get-server-info";
 import { cn } from "@/lib/utils";
+import { formatServerLiveNote } from "@/lib/utils/dates";
 import { formatCompact, formatNumber } from "@/lib/utils/numbers";
 import { Download } from "lucide-react";
 import Image from "next/image";
@@ -111,10 +112,16 @@ const HomeHero = async () => {
             </Button>
           </div>
           <p className="text-muted-foreground mt-3">Windows · MacOS</p>
-          <ServerStatus
-            className="mt-5 mb-0 justify-start"
-            status={serverInfo.status}
-          />
+          {/* As the other pages' hero: the status, then the launch date beside it. */}
+          <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2">
+            <ServerStatus
+              className="mb-0 justify-start"
+              status={serverInfo.status}
+            />
+            <p className="text-muted-foreground text-sm">
+              {formatServerLiveNote()}
+            </p>
+          </div>
         </div>
 
         <dl className="border-border bg-card/80 mt-10 grid grid-cols-2 overflow-hidden rounded-xl border md:grid-cols-4">
