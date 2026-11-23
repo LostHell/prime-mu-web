@@ -332,6 +332,7 @@ export const MarketplaceListingScalarFieldEnum = {
   JewelOfLife: 'JewelOfLife',
   JewelOfCreation: 'JewelOfCreation',
   JewelOfChaos: 'JewelOfChaos',
+  Credits: 'Credits',
   listedAt: 'listedAt',
   status: 'status',
   buyerAccountId: 'buyerAccountId',

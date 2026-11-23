@@ -37,6 +37,7 @@ export async function listMarketItemAction(
     slotIndex: formData.get("slotIndex"),
     itemSerial: formData.get("itemSerial"),
     zen: formData.get("zen"),
+    credits: formData.get("credits"),
     rena: formData.get("rena"),
     jewelOfBless: formData.get("jewelOfBless"),
     jewelOfSoul: formData.get("jewelOfSoul"),
@@ -139,6 +140,7 @@ export async function listMarketItemAction(
           itemHex: Uint8Array.from(itemHex),
           itemName,
           ...depositColumnsFromAmounts(prices),
+          Credits: prices.credits,
         },
       });
     });

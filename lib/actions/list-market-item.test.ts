@@ -76,3 +76,44 @@ test("stores the searchable item name when a listing is created", async () => {
     }),
   });
 });
+
+test("stores a price in credits, alone or with zen", async () => {
+  const itemBytes = createItemBytes(
+    { group: 14, index: 13, level: 0 },
+    0x0005e79d,
+    1,
+  );
+  const create = jest.fn().mockResolvedValue({ id: 1 });
+  const transaction = {
+    warehouse: {
+      findUnique: jest.fn().mockResolvedValue({
+        Items: Buffer.from(itemBytes),
+      }),
+      updateMany: jest.fn().mockResolvedValue({ count: 1 }),
+    },
+    marketplaceListing: { create },
+  };
+  (prisma.$transaction as jest.Mock).mockImplementation((run) =>
+    run(transaction),
+  );
+  const serial = String(getItemSerial(Uint8Array.from(itemBytes)));
+
+  const creditsOnly = new FormData();
+  creditsOnly.set("slotIndex", "0");
+  creditsOnly.set("credits", "40");
+  creditsOnly.set("itemSerial", serial);
+  expect((await listMarketItemAction({}, creditsOnly)).success).toBe(true);
+  expect(create).toHaveBeenLastCalledWith({
+    data: expect.objectContaining({ Zen: 0, Credits: 40 }),
+  });
+
+  const withZen = new FormData();
+  withZen.set("slotIndex", "0");
+  withZen.set("zen", "500");
+  withZen.set("credits", "2");
+  withZen.set("itemSerial", serial);
+  expect((await listMarketItemAction({}, withZen)).success).toBe(true);
+  expect(create).toHaveBeenLastCalledWith({
+    data: expect.objectContaining({ Zen: 500, Credits: 2 }),
+  });
+});

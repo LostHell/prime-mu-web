@@ -1,12 +1,12 @@
 import "server-only";
 
-import { type DepositAmounts } from "@/constants/depositable-items";
+import { type MarketPrices } from "@/constants/market-prices";
 import { MARKET_PAGE_SIZE, MAX_SEARCH_LENGTH } from "@/constants/pagination";
 import { getItemDefinition } from "@/lib/game/item-database";
 import { type ItemDefinition } from "@/lib/game/item-database/types";
 import { decodeItem } from "@/lib/game/item-decoder";
 import { type DecodedItem } from "@/lib/game/item-decoder/types";
-import { depositAmountsFromColumns } from "@/lib/utils/deposits";
+import { marketPricesFromListing } from "@/lib/utils/market-prices";
 import type {
   MarketplaceListing as MarketplaceListingRow,
   Prisma,
@@ -34,7 +34,7 @@ export type MarketListing = {
   isOwnListing: boolean;
   sellerCharacter: string;
   item: ListingItem | null;
-  prices: DepositAmounts;
+  prices: MarketPrices;
   listedAt: Date;
   status: string;
   buyerCharacter: string | null;
@@ -82,7 +82,7 @@ const toMarketListing = (
     isOwnListing: listing.sellerAccountId === accountId,
     sellerCharacter: listing.sellerCharacter,
     item,
-    prices: depositAmountsFromColumns(listing),
+    prices: marketPricesFromListing(listing),
     listedAt: listing.listedAt,
     status: listing.status,
     buyerCharacter: listing.buyerCharacter,

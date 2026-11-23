@@ -35,6 +35,7 @@ type ListingRow = {
   JewelOfLife: number;
   JewelOfCreation: number;
   JewelOfChaos: number;
+  Credits: number;
   listedAt: Date;
   status: string;
   buyerAccountId: string | null;
@@ -66,6 +67,7 @@ const listing = (
   JewelOfLife: 0,
   JewelOfCreation: 0,
   JewelOfChaos: 0,
+  Credits: 0,
   listedAt: new Date(),
   status: "active",
   buyerAccountId: null,
@@ -162,6 +164,16 @@ test("returns one page of listings and a total across every page", async () => {
   expect(result.items[0].isOwnListing).toBe(true);
   expect(result.total).toBe(151);
   expect(result.hasNext).toBe(true);
+});
+
+test("gives each listing its price in credits with the other prices", async () => {
+  mockListings([{ ...listing(1, "Sword"), Zen: 0, Credits: 12 }]);
+
+  const result = await getAllActiveListings("buyer");
+
+  expect(result.items[0].prices).toEqual(
+    expect.objectContaining({ zen: 0, credits: 12 }),
+  );
 });
 
 test("reports the final partial page without a next page", async () => {
