@@ -1,3 +1,4 @@
+import { QuestWindowSection } from "@/app/server-info/_components/quest-window-section";
 import ServerGuideNav from "@/app/server-info/_components/server-guide-nav";
 import SettingRows from "@/app/server-info/_components/setting-rows";
 import { Button } from "@/components/ui/button";
@@ -21,6 +22,12 @@ import {
 } from "@/constants/server";
 import { describeEvents } from "@/lib/game/events/describe-events";
 import { MAP_NAME_BY_ID } from "@/lib/game/constants/maps";
+import { getItemDefinition } from "@/lib/game/item-database";
+import { formatItemName } from "@/lib/game/item-database/formatters";
+import {
+  describeQuestWindow,
+  type QuestItemName,
+} from "@/lib/game/quests/describe-quest-window";
 import { serverConfig } from "@/lib/game/server-config";
 import { formatCompact } from "@/lib/utils/numbers";
 import { Download } from "lucide-react";
@@ -29,6 +36,21 @@ import Link from "next/link";
 const { dw, dk, fe, mg } = serverConfig.character.levelUpPoints;
 const sharedLevelUpPoints = dw === dk && dk === fe;
 const events = describeEvents(eventSchedules.list, MAP_NAME_BY_ID);
+
+// The server's item number: 32 * category + index.
+const ITEMS_PER_CATEGORY = 32;
+
+const questItemName: QuestItemName = ({ index, level }) => {
+  const itemId = {
+    group: Math.floor(index / ITEMS_PER_CATEGORY),
+    index: index % ITEMS_PER_CATEGORY,
+    level,
+  };
+  const item = getItemDefinition(itemId);
+  return item
+    ? formatItemName({ item: { ...itemId, name: item.name } })
+    : "Unknown item";
+};
 
 type ServerInfoGuideProps = {
   online: number;
@@ -41,10 +63,16 @@ const ServerInfoGuide = ({
   registered,
   guilds,
 }: ServerInfoGuideProps) => {
+  const questGroups = describeQuestWindow(
+    serverConfig.questWindow ?? [],
+    MAP_NAME_BY_ID,
+    questItemName,
+  );
+
   return (
     <div className="grid gap-8 lg:grid-cols-[17rem_minmax(0,1fr)]">
       <nav aria-label="Server guide">
-        <ServerGuideNav />
+        <ServerGuideNav showQuests={questGroups.length > 0} />
       </nav>
 
       <div className="flex flex-col gap-10">
@@ -169,6 +197,10 @@ const ServerInfoGuide = ({
             </CardContent>
           </Card>
         </section>
+
+        {questGroups.length > 0 ? (
+          <QuestWindowSection groups={questGroups} />
+        ) : null}
 
         <section id="economy" className="scroll-mt-8">
           <Text variant="h3" as="h2" className="mb-4">

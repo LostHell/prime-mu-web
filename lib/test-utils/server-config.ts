@@ -35,6 +35,75 @@ export const serverConfig: ServerConfig = {
       { reset: 3, level: 300, money: 3_000, points: 200 },
     ],
   },
+  questWindow: [
+    {
+      index: 10,
+      name: "Slay 50 Spiders",
+      requirements: [
+        {
+          classes: ["dw", "dk", "fe"],
+          quest: null,
+          classChange: true,
+          minLevel: null,
+          maxLevel: null,
+          resets: null,
+        },
+        {
+          classes: ["mg"],
+          quest: null,
+          classChange: false,
+          minLevel: null,
+          maxLevel: null,
+          resets: 1,
+        },
+      ],
+      objectives: [
+        { kind: "kill", monster: 3, name: "Spider", count: 50, maps: [0] },
+      ],
+      rewards: [
+        { kind: "zen", value: 10_000_000, classes: ["dw", "dk", "fe", "mg"] },
+      ],
+    },
+    {
+      index: 11,
+      name: "Slay 50 Budge Dragons",
+      requirements: [
+        {
+          classes: ["dw", "dk", "fe", "mg"],
+          quest: 10,
+          classChange: false,
+          minLevel: null,
+          maxLevel: null,
+          resets: null,
+        },
+      ],
+      objectives: [
+        {
+          kind: "kill",
+          monster: 2,
+          name: "Budge Dragon",
+          count: 50,
+          maps: [0],
+        },
+      ],
+      rewards: [
+        {
+          kind: "item",
+          value: 3,
+          item: {
+            index: 459,
+            level: 3,
+            skill: false,
+            luck: false,
+            option: 0,
+            excellent: 0,
+          },
+          classes: ["dw", "dk", "fe", "mg"],
+        },
+        { kind: "points", value: 5, classes: ["dw", "dk", "fe", "mg"] },
+      ],
+    },
+  ],
   events: {
     bloodCastle: [0, 12],
     devilSquare: [0.5, 12.5],

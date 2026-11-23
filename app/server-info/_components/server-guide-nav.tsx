@@ -7,6 +7,7 @@ import {
   ChevronRight,
   Coins,
   FileText,
+  ListChecks,
   ScrollText,
   Swords,
   Users,
@@ -14,22 +15,32 @@ import {
 } from "lucide-react";
 import { useEffect, useState, type MouseEvent } from "react";
 
-const items: { id: string; label: string; icon: LucideIcon }[] = [
+const allItems: { id: string; label: string; icon: LucideIcon }[] = [
   { id: "glance", label: "At a glance", icon: Users },
   { id: "server", label: "Server", icon: FileText },
   { id: "resets", label: "Resets", icon: ChartColumn },
   { id: "character", label: "Character", icon: ScrollText },
+  { id: "quests", label: "Quests", icon: ListChecks },
   { id: "economy", label: "Economy", icon: Coins },
   { id: "events", label: "Events", icon: Swords },
 ];
 
-const ServerGuideNav = () => {
+type ServerGuideNavProps = {
+  /** Whether the page has the quest window's section (once the server's quests are synced). */
+  showQuests: boolean;
+};
+
+const ServerGuideNav = ({ showQuests }: ServerGuideNavProps) => {
+  const items = showQuests
+    ? allItems
+    : allItems.filter((item) => item.id !== "quests");
   const [active, setActive] = useState(items[0].id);
 
   useEffect(() => {
     if (typeof IntersectionObserver === "undefined") return;
 
-    const sections = items
+    // A section not on the page (the quests before they are synced) is left out here.
+    const sections = allItems
       .map((item) => document.getElementById(item.id))
       .filter((section): section is HTMLElement => section !== null);
 

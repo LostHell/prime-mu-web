@@ -39,6 +39,70 @@ export type GameEvent = {
 };
 
 /**
+ * What a quest of the quest window needs before it may be taken, for the
+ * classes it names (class keys "dw", "dk", "fe", "mg").
+ */
+export type QuestWindowRequirement = {
+  classes: string[];
+  /** The quest (its quest index) that must be finished first. */
+  quest: number | null;
+  /** The class change at the quest NPC must be done first. */
+  classChange: boolean;
+  minLevel: number | null;
+  maxLevel: number | null;
+  /** Resets the character needs at least. */
+  resets: number | null;
+};
+
+/**
+ * What a quest of the quest window asks. kind is "kill" (monster, name, count,
+ * maps), "item" (item, level, count) or "zen" (value).
+ */
+export type QuestWindowObjective = {
+  kind: string;
+  monster?: number;
+  name?: string;
+  count?: number;
+  /** Map numbers the monster lives on (MonsterSetBase.txt, no events). */
+  maps?: number[];
+  /** The item: 32 * category + index. */
+  item?: number;
+  level?: number;
+  value?: number;
+};
+
+/**
+ * What a quest of the quest window gives. kind is "points" (level-up points),
+ * "zen" or "item" (value = how many). Rewards with the same group: the server
+ * gives one of them, drawn at random. classes: who gets it.
+ */
+export type QuestWindowReward = {
+  kind: string;
+  value: number;
+  item?: {
+    /** 32 * category + index. */
+    index: number;
+    level: number;
+    skill: boolean;
+    luck: boolean;
+    option: number;
+    excellent: number;
+  };
+  group?: number;
+  classes: string[];
+};
+
+/** A quest of the in-game quest window (T), in the window's order. */
+export type QuestWindowQuest = {
+  /** The server's quest index (Quest.txt). */
+  index: number;
+  name: string;
+  requirements: QuestWindowRequirement[];
+  objectives: QuestWindowObjective[];
+  rewards: QuestWindowReward[];
+};
+
+/**
  * Server settings synced from LostHell/mu-online-server by its
  * "Sync server data to web" workflow (.github/scripts/export-web-config.ts).
  * Don't edit server-config.json by hand; change the server and let the
@@ -79,6 +143,12 @@ export type ServerConfig = {
     limit: number;
     table: ResetRule[];
   };
+  /**
+   * The quests of the in-game quest window, from Quest.txt, QuestObjective.txt,
+   * QuestReward.txt and the client's quest texts. Missing before the first sync
+   * that has them.
+   */
+  questWindow?: QuestWindowQuest[];
   events: {
     /** Daily start times in hours (0.5 = 00:30). */
     bloodCastle: number[];
