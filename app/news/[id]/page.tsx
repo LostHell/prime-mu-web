@@ -3,6 +3,7 @@ import { NEWS_FEED_ALTERNATE } from "@/app/_constants/news-feed";
 import { getNewsArticleJsonLd } from "@/app/news/_json-ld/article";
 import { JsonLd } from "@/components/json-ld";
 import PageLayout from "@/components/page-layout";
+import { Card, CardContent } from "@/components/ui/card";
 import Headline from "@/components/ui/headline";
 import Text from "@/components/ui/text";
 import { NEWS } from "@/constants/news";
@@ -46,7 +47,8 @@ const NewsArticlePage = async ({ params }: NewsPageProps) => {
   if (!item) notFound();
 
   return (
-    <PageLayout className="max-w-3xl">
+    // The width and the card of /news, so the text lines up with the list's.
+    <PageLayout>
       <JsonLd data={getNewsArticleJsonLd(item)} />
       <JsonLd
         data={breadcrumbJsonLd([
@@ -66,19 +68,23 @@ const NewsArticlePage = async ({ params }: NewsPageProps) => {
         <span aria-hidden="true"> / </span>
         <span className="text-foreground">{item.title}</span>
       </p>
-      <article>
-        <Headline>
-          <time
-            dateTime={item.dateTime}
-            className="text-muted-foreground text-xs tracking-widest uppercase"
-          >
-            {item.date}
-          </time>
-          <Text variant="h1">{item.title}</Text>
-        </Headline>
-        <NewsBody id={item.id} className="text-base" />
-      </article>
-      <p className="mt-10 text-sm">
+      <Card>
+        <CardContent>
+          <article>
+            <Headline>
+              <time
+                dateTime={item.dateTime}
+                className="text-muted-foreground text-xs tracking-widest uppercase"
+              >
+                {item.date}
+              </time>
+              <Text variant="h1">{item.title}</Text>
+            </Headline>
+            <NewsBody id={item.id} className="text-base" />
+          </article>
+        </CardContent>
+      </Card>
+      <p className="mt-6 text-sm">
         <Link href="/news" className="text-gold underline underline-offset-4">
           All news
         </Link>
