@@ -7,7 +7,7 @@ test("shows the account's credits and where they come from", () => {
   expect(screen.getByText("Credits")).toBeInTheDocument();
   expect(screen.getByText("1,234")).toBeInTheDocument();
   expect(
-    screen.getByText(/staying online in Devias town or the Arena/),
+    screen.getByText(/staying online in Davias town or the Arena/),
   ).toBeInTheDocument();
   expect(
     screen.queryByRole("button", { name: /Deposit|Withdraw/ }),

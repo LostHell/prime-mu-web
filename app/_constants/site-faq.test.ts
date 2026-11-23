@@ -28,9 +28,15 @@ test("summarises every enabled event with its bonus", () => {
   );
 });
 
-test("names every currency a market listing can use", () => {
+test("names every currency a market listing can use, credits included", () => {
   expect(answerTo("Can I trade items on the website?")).toContain(
-    "Zen, Rena, Jewel of Bless, Jewel of Soul, Jewel of Life, Jewel of Creation or Jewel of Chaos.",
+    "Zen, Credits, Rena, Jewel of Bless, Jewel of Soul, Jewel of Life, Jewel of Creation or Jewel of Chaos.",
+  );
+});
+
+test("names the only admins and links the rules", () => {
+  expect(answerTo("Who are the admins of Black MU?")).toBe(
+    "Only Cry and Sky. Anyone else who says they are an admin is not one, and the staff will never ask for your password.",
   );
 });
 
@@ -42,6 +48,7 @@ test("links each detailed answer to a page that covers it", () => {
       "/downloads",
       "/server-info#resets",
       "/server-info#events",
+      "/rules#conduct",
     ]),
   );
 });

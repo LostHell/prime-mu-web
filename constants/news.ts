@@ -6,6 +6,30 @@
  */
 export const NEWS = [
   {
+    id: "afk-credits",
+    date: "23 Nov 2026",
+    dateTime: "2026-11-23",
+    title: "AFK credits: earn them in game, spend them on the market",
+    summary:
+      "Stay online in Davias town or the Arena to earn credits, then buy items with them on the market or sell your own items for credits, zen or jewels.",
+  },
+  {
+    id: "quests",
+    date: "23 Nov 2026",
+    dateTime: "2026-11-23",
+    title: "Quests in the new quest window",
+    summary:
+      "Press T in the game for the quest window: quests that open one after another, with jewels, zen, Boxes of Kundun and stat points that stay after resets.",
+  },
+  {
+    id: "game-keys",
+    date: "23 Nov 2026",
+    dateTime: "2026-11-23",
+    title: "New keys: quests, map, events, autoclick and camera",
+    summary:
+      "T opens the quest window, M the Move list, H the Event Timer and Tab the map; F9 to F12 run autoclick, the 3D camera and hide the game.",
+  },
+  {
     id: "official-launch",
     date: "19 Nov 2026",
     dateTime: "2026-11-19",
@@ -46,6 +70,9 @@ export const NEWS = [
       "The rankings now cover players, guilds and who is online, and the Events tab shows the Blood Castle and Devil Square scores.",
   },
 ] as const;
+
+/** How many of the newest items the home page shows; /news has them all. */
+export const HOME_NEWS_COUNT = 5;
 
 export type NewsItem = (typeof NEWS)[number];
 export type NewsId = NewsItem["id"];

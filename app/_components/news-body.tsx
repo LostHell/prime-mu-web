@@ -13,6 +13,7 @@ import {
   POINTS_PER_RESET,
 } from "@/constants/resets";
 import { VERSION } from "@/constants/server";
+import { AFK_CREDIT_ZONES } from "@/lib/game/constants/afk-credits";
 import { serverConfig } from "@/lib/game/server-config";
 import { cn } from "@/lib/utils";
 import { formatLongDate } from "@/lib/utils/dates";
@@ -38,9 +39,143 @@ const itemCurrencyList =
     ? `${itemCurrencies.slice(0, -1).join(", ")} or ${itemCurrencies[itemCurrencies.length - 1]}`
     : itemCurrencies.join("");
 
+const questWindow = serverConfig.questWindow ?? [];
+const questPoints = questWindow
+  .flatMap((quest) => quest.rewards)
+  .filter((reward) => reward.kind === "points")
+  .reduce((sum, reward) => sum + reward.value, 0);
+
+const everyHours = (hours: number) =>
+  hours === 1 ? "every hour" : `every ${formatNumber(hours)} hours`;
+
 // The text of each news item; its date, title and summary are in constants/news.ts. Every figure
 // comes from the server config or the site's limits, so the text follows them.
 const bodies: Record<NewsId, ReactNode> = {
+  "afk-credits": (
+    <>
+      <p>
+        Credits are a new currency of {BRAND}. You earn them in the game just by
+        staying online in the right place, and spend them on the market.
+      </p>
+      <p>
+        <strong>Earning.</strong> Keep your character online in one of these
+        zones:
+      </p>
+      <ul>
+        {AFK_CREDIT_ZONES.map((zone) => (
+          <li key={zone.column}>
+            <strong>{zone.name}:</strong> 1 credit{" "}
+            {everyHours(zone.hoursPerCredit)}.
+          </li>
+        ))}
+      </ul>
+      <p>
+        The character has to stay inside the zone: leaving it or logging out
+        starts the count again. In Davias the zone is the town, where the Move
+        list takes you. Credits belong to your account, not to one character.
+      </p>
+      <p>
+        <strong>Spending.</strong> On the market a price can ask for credits
+        alone, or together with zen and jewels: the seller decides, and credits
+        have no price limit of their own. When you buy, the credits go from your
+        account straight to the seller&apos;s.
+      </p>
+      <p>
+        <strong>Your balance</strong> is at the top of Deposits. Credits stay on
+        your account: they are not deposited or withdrawn like zen and jewels.
+      </p>
+      <p>Log out of the game before you list or buy on the market.</p>
+      <p>
+        <Link href="/user-panel/market">Browse the market</Link> ·{" "}
+        <Link href="/user-panel/deposits">See your credits</Link>
+      </p>
+    </>
+  ),
+  quests: (
+    <>
+      <p>
+        Press <strong>T</strong> in the game to open the quest window. It holds{" "}
+        {formatNumber(questWindow.length)} quests that open one after another:
+        finish one and the next is ready.
+      </p>
+      <p>
+        <strong>Starting.</strong> The first quest opens after your class change
+        at Sebina the Priest in Davias; a Magic Gladiator needs one reset
+        instead.
+      </p>
+      <p>
+        <strong>Playing.</strong> Accept the quest in the window and slay the
+        monsters it asks for. In a party, the kills near you count for you too.
+        When the quest is done the game tells you: open the window again and
+        press Claim reward.
+      </p>
+      <p>
+        <strong>Rewards.</strong> Jewels of Bless, Soul, Life and Chaos, Boxes
+        of Kundun, zen and {formatNumber(questPoints)} level-up points in all.
+        The points stay with your character after every reset, in the game and
+        on the website. Items go to your inventory, so make room before you
+        claim them.
+      </p>
+      <p>
+        <Link href="/server-info#quests">
+          Every quest with its monsters, their maps and its rewards
+        </Link>
+      </p>
+    </>
+  ),
+  "game-keys": (
+    <>
+      <p>Update the game through the launcher, then try these keys.</p>
+      <p>
+        <strong>Windows</strong>
+      </p>
+      <ul>
+        <li>
+          <strong>T:</strong> the quest window.
+        </li>
+        <li>
+          <strong>M:</strong> the Move list. Pick a map to travel there.
+        </li>
+        <li>
+          <strong>H:</strong> the Event Timer, with the next events and how long
+          until they start.
+        </li>
+        <li>
+          <strong>Tab:</strong> the map of the area you are in.
+        </li>
+      </ul>
+      <p>M, H and Tab close the windows on the right side to make room.</p>
+      <p>
+        <strong>Playing</strong>
+      </p>
+      <ul>
+        <li>
+          <strong>F9:</strong> autoclick. Your character keeps using the skill
+          you have chosen where the cursor points, until you press F9 again.
+        </li>
+        <li>
+          <strong>F10:</strong> the 3D camera. Hold the middle mouse button to
+          turn it; the mouse wheel zooms in and out.
+        </li>
+        <li>
+          <strong>F11:</strong> the camera back to normal.
+        </li>
+        <li>
+          <strong>F12:</strong> hides the game. On Windows it goes to an icon
+          next to the clock: click the icon to bring it back. On a Mac it goes
+          to the Dock.
+        </li>
+        <li>
+          <strong>Alt+Enter:</strong> full screen or a window.
+        </li>
+      </ul>
+      <p>
+        <strong>On a laptop or a Mac</strong> the F keys often change the
+        brightness or the sound instead: hold <strong>Fn</strong> while you
+        press them, for example Fn+F9.
+      </p>
+    </>
+  ),
   "official-launch": (
     <>
       <p>

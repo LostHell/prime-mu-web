@@ -9,6 +9,15 @@ export const SERVER_LAUNCH_DATE = new Date(Date.UTC(2026, 11, 20));
 /** Frame rate the public site can cite for the game client. */
 export const CLIENT_FPS = 165;
 
+/** The only admins of the server, as their characters are named in the game. */
+export const ADMIN_NAMES = ["Cry", "Sky"] as const;
+
+/** "Cry and Sky": the admins' names as a sentence lists them. */
+export const ADMIN_NAMES_TEXT =
+  ADMIN_NAMES.length > 1
+    ? `${ADMIN_NAMES.slice(0, -1).join(", ")} and ${ADMIN_NAMES[ADMIN_NAMES.length - 1]}`
+    : ADMIN_NAMES.join("");
+
 /**
  * Email address players write to about their account and personal data (privacy requests, account
  * deletion). While it is null, /privacy and /terms stay unlisted and noindex: a privacy policy

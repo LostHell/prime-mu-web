@@ -1,5 +1,5 @@
 import { LegalDocument, LegalSection } from "@/app/_components/legal-document";
-import { BRAND } from "@/constants/app";
+import { ADMIN_NAMES_TEXT, BRAND } from "@/constants/app";
 import { openGraphFor } from "@/lib/utils/open-graph";
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -15,7 +15,7 @@ const RulesPage = () => {
   return (
     <LegalDocument
       title="Server rules"
-      updated="16 November 2026"
+      updated="23 November 2026"
       intro={
         <p>
           These rules apply in the game, on this website and on the market. They
@@ -76,7 +76,10 @@ const RulesPage = () => {
             or hate speech.
           </li>
           <li>No spam, and no advertising of other servers.</li>
-          <li>Do not pretend to be a member of the staff.</li>
+          <li>
+            The only admins of {BRAND} are {ADMIN_NAMES_TEXT}. Do not pretend to
+            be a member of the staff.
+          </li>
           <li>
             Character and guild names must not be offensive and must not imitate
             the staff.

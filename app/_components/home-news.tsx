@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import Text from "@/components/ui/text";
-import { NEWS } from "@/constants/news";
+import { HOME_NEWS_COUNT, NEWS } from "@/constants/news";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 
@@ -18,7 +18,7 @@ const HomeNews = () => {
       </div>
       <Card>
         <CardContent className="flex flex-col gap-6">
-          {NEWS.map((item, index) => (
+          {NEWS.slice(0, HOME_NEWS_COUNT).map((item, index) => (
             <article
               key={item.id}
               id={`news-${item.id}`}
