@@ -755,6 +755,2977 @@
       }
     ]
   },
+  "questWindow": [
+    {
+      "index": 10,
+      "name": "Slay 50 Spiders",
+      "requirements": [
+        {
+          "classes": [
+            "dw",
+            "dk",
+            "fe"
+          ],
+          "quest": null,
+          "classChange": true,
+          "minLevel": null,
+          "maxLevel": null,
+          "resets": null
+        },
+        {
+          "classes": [
+            "mg"
+          ],
+          "quest": null,
+          "classChange": false,
+          "minLevel": null,
+          "maxLevel": null,
+          "resets": 1
+        }
+      ],
+      "objectives": [
+        {
+          "kind": "kill",
+          "monster": 3,
+          "name": "Spider",
+          "count": 50,
+          "maps": [
+            0
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "kind": "zen",
+          "value": 10000000,
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 11,
+      "name": "Slay 50 Budge Dragons",
+      "requirements": [
+        {
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ],
+          "quest": 10,
+          "classChange": false,
+          "minLevel": null,
+          "maxLevel": null,
+          "resets": null
+        }
+      ],
+      "objectives": [
+        {
+          "kind": "kill",
+          "monster": 2,
+          "name": "Budge Dragon",
+          "count": 50,
+          "maps": [
+            0
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "kind": "item",
+          "value": 3,
+          "item": {
+            "index": 459,
+            "level": 3,
+            "skill": false,
+            "luck": false,
+            "option": 0,
+            "excellent": 0
+          },
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 12,
+      "name": "Slay 65 Bull Fighters",
+      "requirements": [
+        {
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ],
+          "quest": 11,
+          "classChange": false,
+          "minLevel": null,
+          "maxLevel": null,
+          "resets": null
+        }
+      ],
+      "objectives": [
+        {
+          "kind": "kill",
+          "monster": 0,
+          "name": "Bull Fighter",
+          "count": 65,
+          "maps": [
+            0
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "kind": "item",
+          "value": 3,
+          "item": {
+            "index": 399,
+            "level": 0,
+            "skill": false,
+            "luck": false,
+            "option": 0,
+            "excellent": 0
+          },
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 13,
+      "name": "Slay 70 Chain Scorpions",
+      "requirements": [
+        {
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ],
+          "quest": 12,
+          "classChange": false,
+          "minLevel": null,
+          "maxLevel": null,
+          "resets": null
+        }
+      ],
+      "objectives": [
+        {
+          "kind": "kill",
+          "monster": 27,
+          "name": "Chain Scorpion",
+          "count": 70,
+          "maps": [
+            3
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "kind": "zen",
+          "value": 10000000,
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 14,
+      "name": "Slay 70 Elite Goblins",
+      "requirements": [
+        {
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ],
+          "quest": 13,
+          "classChange": false,
+          "minLevel": null,
+          "maxLevel": null,
+          "resets": null
+        }
+      ],
+      "objectives": [
+        {
+          "kind": "kill",
+          "monster": 33,
+          "name": "Elite Goblin",
+          "count": 70,
+          "maps": [
+            3
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "kind": "item",
+          "value": 2,
+          "item": {
+            "index": 399,
+            "level": 0,
+            "skill": false,
+            "luck": false,
+            "option": 0,
+            "excellent": 0
+          },
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 15,
+      "name": "Slay 75 Hounds",
+      "requirements": [
+        {
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ],
+          "quest": 14,
+          "classChange": false,
+          "minLevel": null,
+          "maxLevel": null,
+          "resets": null
+        }
+      ],
+      "objectives": [
+        {
+          "kind": "kill",
+          "monster": 1,
+          "name": "Hound",
+          "count": 75,
+          "maps": [
+            0
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "kind": "zen",
+          "value": 12000000,
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 16,
+      "name": "Slay 80 Beetle Monsters",
+      "requirements": [
+        {
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ],
+          "quest": 15,
+          "classChange": false,
+          "minLevel": null,
+          "maxLevel": null,
+          "resets": null
+        }
+      ],
+      "objectives": [
+        {
+          "kind": "kill",
+          "monster": 28,
+          "name": "Beetle Monster",
+          "count": 80,
+          "maps": [
+            3
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "kind": "item",
+          "value": 1,
+          "item": {
+            "index": 399,
+            "level": 0,
+            "skill": false,
+            "luck": false,
+            "option": 0,
+            "excellent": 0
+          },
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 17,
+      "name": "Slay 80 Elite Bull Fighters",
+      "requirements": [
+        {
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ],
+          "quest": 16,
+          "classChange": false,
+          "minLevel": null,
+          "maxLevel": null,
+          "resets": null
+        }
+      ],
+      "objectives": [
+        {
+          "kind": "kill",
+          "monster": 4,
+          "name": "Elite Bull Fighter",
+          "count": 80,
+          "maps": [
+            0
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "kind": "item",
+          "value": 2,
+          "item": {
+            "index": 399,
+            "level": 0,
+            "skill": false,
+            "luck": false,
+            "option": 0,
+            "excellent": 0
+          },
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 18,
+      "name": "Slay 85 Hunters",
+      "requirements": [
+        {
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ],
+          "quest": 17,
+          "classChange": false,
+          "minLevel": null,
+          "maxLevel": null,
+          "resets": null
+        }
+      ],
+      "objectives": [
+        {
+          "kind": "kill",
+          "monster": 29,
+          "name": "Hunter",
+          "count": 85,
+          "maps": [
+            3
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "kind": "zen",
+          "value": 15000000,
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 19,
+      "name": "Slay 60 Liches and 60 Forest Monsters",
+      "requirements": [
+        {
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ],
+          "quest": 18,
+          "classChange": false,
+          "minLevel": null,
+          "maxLevel": null,
+          "resets": null
+        }
+      ],
+      "objectives": [
+        {
+          "kind": "kill",
+          "monster": 6,
+          "name": "Lich",
+          "count": 60,
+          "maps": [
+            0
+          ]
+        },
+        {
+          "kind": "kill",
+          "monster": 30,
+          "name": "Forest Monster",
+          "count": 60,
+          "maps": [
+            3
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "kind": "item",
+          "value": 2,
+          "item": {
+            "index": 399,
+            "level": 0,
+            "skill": false,
+            "luck": false,
+            "option": 0,
+            "excellent": 0
+          },
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ]
+        },
+        {
+          "kind": "item",
+          "value": 1,
+          "item": {
+            "index": 461,
+            "level": 0,
+            "skill": false,
+            "luck": false,
+            "option": 0,
+            "excellent": 0
+          },
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ]
+        },
+        {
+          "kind": "points",
+          "value": 5,
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 20,
+      "name": "Slay 90 Agons",
+      "requirements": [
+        {
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ],
+          "quest": 19,
+          "classChange": false,
+          "minLevel": null,
+          "maxLevel": null,
+          "resets": null
+        }
+      ],
+      "objectives": [
+        {
+          "kind": "kill",
+          "monster": 31,
+          "name": "Agon",
+          "count": 90,
+          "maps": [
+            3
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "kind": "zen",
+          "value": 18000000,
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 21,
+      "name": "Slay 90 Giants",
+      "requirements": [
+        {
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ],
+          "quest": 20,
+          "classChange": false,
+          "minLevel": null,
+          "maxLevel": null,
+          "resets": null
+        }
+      ],
+      "objectives": [
+        {
+          "kind": "kill",
+          "monster": 7,
+          "name": "Giant",
+          "count": 90,
+          "maps": [
+            0
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "kind": "item",
+          "value": 2,
+          "item": {
+            "index": 399,
+            "level": 0,
+            "skill": false,
+            "luck": false,
+            "option": 0,
+            "excellent": 0
+          },
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 22,
+      "name": "Slay 100 Stone Golems",
+      "requirements": [
+        {
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ],
+          "quest": 21,
+          "classChange": false,
+          "minLevel": null,
+          "maxLevel": null,
+          "resets": null
+        }
+      ],
+      "objectives": [
+        {
+          "kind": "kill",
+          "monster": 32,
+          "name": "Stone Golem",
+          "count": 100,
+          "maps": [
+            3
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "kind": "item",
+          "value": 3,
+          "item": {
+            "index": 399,
+            "level": 0,
+            "skill": false,
+            "luck": false,
+            "option": 0,
+            "excellent": 0
+          },
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 23,
+      "name": "Slay 100 Skeletons",
+      "requirements": [
+        {
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ],
+          "quest": 22,
+          "classChange": false,
+          "minLevel": null,
+          "maxLevel": null,
+          "resets": null
+        }
+      ],
+      "objectives": [
+        {
+          "kind": "kill",
+          "monster": 14,
+          "name": "Skeleton",
+          "count": 100,
+          "maps": [
+            0,
+            1
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "kind": "zen",
+          "value": 20000000,
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 24,
+      "name": "Slay 100 Worms",
+      "requirements": [
+        {
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ],
+          "quest": 23,
+          "classChange": false,
+          "minLevel": null,
+          "maxLevel": null,
+          "resets": null
+        }
+      ],
+      "objectives": [
+        {
+          "kind": "kill",
+          "monster": 24,
+          "name": "Worm",
+          "count": 100,
+          "maps": [
+            2
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "kind": "item",
+          "value": 1,
+          "item": {
+            "index": 461,
+            "level": 0,
+            "skill": false,
+            "luck": false,
+            "option": 0,
+            "excellent": 0
+          },
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 25,
+      "name": "Slay 90 Ice Monsters",
+      "requirements": [
+        {
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ],
+          "quest": 24,
+          "classChange": false,
+          "minLevel": null,
+          "maxLevel": null,
+          "resets": null
+        }
+      ],
+      "objectives": [
+        {
+          "kind": "kill",
+          "monster": 22,
+          "name": "Ice Monster",
+          "count": 90,
+          "maps": [
+            2
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "kind": "item",
+          "value": 2,
+          "item": {
+            "index": 399,
+            "level": 0,
+            "skill": false,
+            "luck": false,
+            "option": 0,
+            "excellent": 0
+          },
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 26,
+      "name": "Slay 110 Hommerds",
+      "requirements": [
+        {
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ],
+          "quest": 25,
+          "classChange": false,
+          "minLevel": null,
+          "maxLevel": null,
+          "resets": null
+        }
+      ],
+      "objectives": [
+        {
+          "kind": "kill",
+          "monster": 23,
+          "name": "Hommerd",
+          "count": 110,
+          "maps": [
+            2
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "kind": "zen",
+          "value": 25000000,
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 27,
+      "name": "Slay 90 Larvae",
+      "requirements": [
+        {
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ],
+          "quest": 26,
+          "classChange": false,
+          "minLevel": null,
+          "maxLevel": null,
+          "resets": null
+        }
+      ],
+      "objectives": [
+        {
+          "kind": "kill",
+          "monster": 12,
+          "name": "Larva",
+          "count": 90,
+          "maps": [
+            1
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "kind": "item",
+          "value": 1,
+          "item": {
+            "index": 462,
+            "level": 0,
+            "skill": false,
+            "luck": false,
+            "option": 0,
+            "excellent": 0
+          },
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 28,
+      "name": "Slay 100 Assassins",
+      "requirements": [
+        {
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ],
+          "quest": 27,
+          "classChange": false,
+          "minLevel": null,
+          "maxLevel": null,
+          "resets": null
+        }
+      ],
+      "objectives": [
+        {
+          "kind": "kill",
+          "monster": 21,
+          "name": "Assassin",
+          "count": 100,
+          "maps": [
+            2
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "kind": "item",
+          "value": 3,
+          "item": {
+            "index": 399,
+            "level": 0,
+            "skill": false,
+            "luck": false,
+            "option": 0,
+            "excellent": 0
+          },
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 29,
+      "name": "Slay 100 Cyclops and 60 Yetis",
+      "requirements": [
+        {
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ],
+          "quest": 28,
+          "classChange": false,
+          "minLevel": null,
+          "maxLevel": null,
+          "resets": null
+        }
+      ],
+      "objectives": [
+        {
+          "kind": "kill",
+          "monster": 17,
+          "name": "Cyclops",
+          "count": 100,
+          "maps": [
+            1
+          ]
+        },
+        {
+          "kind": "kill",
+          "monster": 19,
+          "name": "Yeti",
+          "count": 60,
+          "maps": [
+            2
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "kind": "item",
+          "value": 1,
+          "item": {
+            "index": 459,
+            "level": 8,
+            "skill": false,
+            "luck": false,
+            "option": 0,
+            "excellent": 0
+          },
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ]
+        },
+        {
+          "kind": "item",
+          "value": 2,
+          "item": {
+            "index": 461,
+            "level": 0,
+            "skill": false,
+            "luck": false,
+            "option": 0,
+            "excellent": 0
+          },
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ]
+        },
+        {
+          "kind": "item",
+          "value": 1,
+          "item": {
+            "index": 462,
+            "level": 0,
+            "skill": false,
+            "luck": false,
+            "option": 0,
+            "excellent": 0
+          },
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ]
+        },
+        {
+          "kind": "points",
+          "value": 7,
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 30,
+      "name": "Slay 110 Ghosts",
+      "requirements": [
+        {
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ],
+          "quest": 29,
+          "classChange": false,
+          "minLevel": null,
+          "maxLevel": null,
+          "resets": null
+        }
+      ],
+      "objectives": [
+        {
+          "kind": "kill",
+          "monster": 11,
+          "name": "Ghost",
+          "count": 110,
+          "maps": [
+            1
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "kind": "zen",
+          "value": 30000000,
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 31,
+      "name": "Slay 120 Skeleton Archers",
+      "requirements": [
+        {
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ],
+          "quest": 30,
+          "classChange": false,
+          "minLevel": null,
+          "maxLevel": null,
+          "resets": null
+        }
+      ],
+      "objectives": [
+        {
+          "kind": "kill",
+          "monster": 15,
+          "name": "Skeleton Archer",
+          "count": 120,
+          "maps": [
+            1
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "kind": "item",
+          "value": 1,
+          "item": {
+            "index": 461,
+            "level": 0,
+            "skill": false,
+            "luck": false,
+            "option": 0,
+            "excellent": 0
+          },
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 32,
+      "name": "Slay 130 Elite Yetis",
+      "requirements": [
+        {
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ],
+          "quest": 31,
+          "classChange": false,
+          "minLevel": null,
+          "maxLevel": null,
+          "resets": null
+        }
+      ],
+      "objectives": [
+        {
+          "kind": "kill",
+          "monster": 20,
+          "name": "Elite Yeti",
+          "count": 130,
+          "maps": [
+            2
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "kind": "item",
+          "value": 3,
+          "item": {
+            "index": 399,
+            "level": 0,
+            "skill": false,
+            "luck": false,
+            "option": 0,
+            "excellent": 0
+          },
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 33,
+      "name": "Slay 120 Hell Spiders",
+      "requirements": [
+        {
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ],
+          "quest": 32,
+          "classChange": false,
+          "minLevel": null,
+          "maxLevel": null,
+          "resets": null
+        }
+      ],
+      "objectives": [
+        {
+          "kind": "kill",
+          "monster": 13,
+          "name": "Hell Spider",
+          "count": 120,
+          "maps": [
+            1
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "kind": "zen",
+          "value": 35000000,
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 34,
+      "name": "Slay 130 Chief Skeleton Warriors in the Dungeon",
+      "requirements": [
+        {
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ],
+          "quest": 33,
+          "classChange": false,
+          "minLevel": null,
+          "maxLevel": null,
+          "resets": null
+        }
+      ],
+      "objectives": [
+        {
+          "kind": "kill",
+          "monster": 16,
+          "name": "Chief Skeleton Warrior",
+          "count": 130,
+          "maps": [
+            1
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "kind": "item",
+          "value": 1,
+          "item": {
+            "index": 462,
+            "level": 0,
+            "skill": false,
+            "luck": false,
+            "option": 0,
+            "excellent": 0
+          },
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 35,
+      "name": "Slay 130 Bahamuts",
+      "requirements": [
+        {
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ],
+          "quest": 34,
+          "classChange": false,
+          "minLevel": null,
+          "maxLevel": null,
+          "resets": null
+        }
+      ],
+      "objectives": [
+        {
+          "kind": "kill",
+          "monster": 45,
+          "name": "Bahamut",
+          "count": 130,
+          "maps": [
+            7
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "kind": "zen",
+          "value": 40000000,
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 36,
+      "name": "Slay 140 Vepars",
+      "requirements": [
+        {
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ],
+          "quest": 35,
+          "classChange": false,
+          "minLevel": null,
+          "maxLevel": null,
+          "resets": null
+        }
+      ],
+      "objectives": [
+        {
+          "kind": "kill",
+          "monster": 46,
+          "name": "Vepar",
+          "count": 140,
+          "maps": [
+            7
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "kind": "item",
+          "value": 1,
+          "item": {
+            "index": 464,
+            "level": 0,
+            "skill": false,
+            "luck": false,
+            "option": 0,
+            "excellent": 0
+          },
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 37,
+      "name": "Slay 140 Valkyries",
+      "requirements": [
+        {
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ],
+          "quest": 36,
+          "classChange": false,
+          "minLevel": null,
+          "maxLevel": null,
+          "resets": null
+        }
+      ],
+      "objectives": [
+        {
+          "kind": "kill",
+          "monster": 47,
+          "name": "Valkyrie",
+          "count": 140,
+          "maps": [
+            7
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "kind": "item",
+          "value": 1,
+          "item": {
+            "index": 461,
+            "level": 0,
+            "skill": false,
+            "luck": false,
+            "option": 0,
+            "excellent": 0
+          },
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ]
+        },
+        {
+          "kind": "item",
+          "value": 1,
+          "item": {
+            "index": 462,
+            "level": 0,
+            "skill": false,
+            "luck": false,
+            "option": 0,
+            "excellent": 0
+          },
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 38,
+      "name": "Slay 25 Hell Hounds and 25 Thunder Liches",
+      "requirements": [
+        {
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ],
+          "quest": 37,
+          "classChange": false,
+          "minLevel": null,
+          "maxLevel": null,
+          "resets": null
+        }
+      ],
+      "objectives": [
+        {
+          "kind": "kill",
+          "monster": 5,
+          "name": "Hell Hound",
+          "count": 25,
+          "maps": [
+            1
+          ]
+        },
+        {
+          "kind": "kill",
+          "monster": 9,
+          "name": "Thunder Lich",
+          "count": 25,
+          "maps": [
+            1
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "kind": "zen",
+          "value": 45000000,
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 39,
+      "name": "Slay 120 Dark Knights and 25 Poison Bull Fighters",
+      "requirements": [
+        {
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ],
+          "quest": 38,
+          "classChange": false,
+          "minLevel": null,
+          "maxLevel": null,
+          "resets": null
+        }
+      ],
+      "objectives": [
+        {
+          "kind": "kill",
+          "monster": 10,
+          "name": "Dark Knight",
+          "count": 120,
+          "maps": [
+            1
+          ]
+        },
+        {
+          "kind": "kill",
+          "monster": 8,
+          "name": "Poison Bull Fighter",
+          "count": 25,
+          "maps": [
+            1
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "kind": "item",
+          "value": 1,
+          "item": {
+            "index": 459,
+            "level": 9,
+            "skill": false,
+            "luck": false,
+            "option": 0,
+            "excellent": 0
+          },
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ]
+        },
+        {
+          "kind": "item",
+          "value": 1,
+          "item": {
+            "index": 461,
+            "level": 0,
+            "skill": false,
+            "luck": false,
+            "option": 0,
+            "excellent": 0
+          },
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ]
+        },
+        {
+          "kind": "item",
+          "value": 1,
+          "item": {
+            "index": 462,
+            "level": 0,
+            "skill": false,
+            "luck": false,
+            "option": 0,
+            "excellent": 0
+          },
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ]
+        },
+        {
+          "kind": "item",
+          "value": 1,
+          "item": {
+            "index": 464,
+            "level": 0,
+            "skill": false,
+            "luck": false,
+            "option": 0,
+            "excellent": 0
+          },
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ]
+        },
+        {
+          "kind": "points",
+          "value": 10,
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 40,
+      "name": "Slay 130 Shadows",
+      "requirements": [
+        {
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ],
+          "quest": 39,
+          "classChange": false,
+          "minLevel": null,
+          "maxLevel": null,
+          "resets": null
+        }
+      ],
+      "objectives": [
+        {
+          "kind": "kill",
+          "monster": 36,
+          "name": "Shadow",
+          "count": 130,
+          "maps": [
+            4
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "kind": "zen",
+          "value": 50000000,
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 41,
+      "name": "Slay 130 Poison Shadows",
+      "requirements": [
+        {
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ],
+          "quest": 40,
+          "classChange": false,
+          "minLevel": null,
+          "maxLevel": null,
+          "resets": null
+        }
+      ],
+      "objectives": [
+        {
+          "kind": "kill",
+          "monster": 39,
+          "name": "Poison Shadow",
+          "count": 130,
+          "maps": [
+            4
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "kind": "item",
+          "value": 2,
+          "item": {
+            "index": 461,
+            "level": 0,
+            "skill": false,
+            "luck": false,
+            "option": 0,
+            "excellent": 0
+          },
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ]
+        },
+        {
+          "kind": "item",
+          "value": 1,
+          "item": {
+            "index": 464,
+            "level": 0,
+            "skill": false,
+            "luck": false,
+            "option": 0,
+            "excellent": 0
+          },
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 42,
+      "name": "Slay 140 Cursed Wizards",
+      "requirements": [
+        {
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ],
+          "quest": 41,
+          "classChange": false,
+          "minLevel": null,
+          "maxLevel": null,
+          "resets": null
+        }
+      ],
+      "objectives": [
+        {
+          "kind": "kill",
+          "monster": 34,
+          "name": "Cursed Wizard",
+          "count": 140,
+          "maps": [
+            4
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "kind": "item",
+          "value": 4,
+          "item": {
+            "index": 399,
+            "level": 0,
+            "skill": false,
+            "luck": false,
+            "option": 0,
+            "excellent": 0
+          },
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 43,
+      "name": "Slay 140 Death Cows",
+      "requirements": [
+        {
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ],
+          "quest": 42,
+          "classChange": false,
+          "minLevel": null,
+          "maxLevel": null,
+          "resets": null
+        }
+      ],
+      "objectives": [
+        {
+          "kind": "kill",
+          "monster": 41,
+          "name": "Death Cow",
+          "count": 140,
+          "maps": [
+            4
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "kind": "zen",
+          "value": 55000000,
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 44,
+      "name": "Slay 150 Devils",
+      "requirements": [
+        {
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ],
+          "quest": 43,
+          "classChange": false,
+          "minLevel": null,
+          "maxLevel": null,
+          "resets": null
+        }
+      ],
+      "objectives": [
+        {
+          "kind": "kill",
+          "monster": 37,
+          "name": "Devil",
+          "count": 150,
+          "maps": [
+            4
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "kind": "item",
+          "value": 2,
+          "item": {
+            "index": 462,
+            "level": 0,
+            "skill": false,
+            "luck": false,
+            "option": 0,
+            "excellent": 0
+          },
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ]
+        },
+        {
+          "kind": "item",
+          "value": 1,
+          "item": {
+            "index": 464,
+            "level": 0,
+            "skill": false,
+            "luck": false,
+            "option": 0,
+            "excellent": 0
+          },
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 45,
+      "name": "Slay 100 Valkyries and 100 Vepars",
+      "requirements": [
+        {
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ],
+          "quest": 44,
+          "classChange": false,
+          "minLevel": null,
+          "maxLevel": null,
+          "resets": null
+        }
+      ],
+      "objectives": [
+        {
+          "kind": "kill",
+          "monster": 47,
+          "name": "Valkyrie",
+          "count": 100,
+          "maps": [
+            7
+          ]
+        },
+        {
+          "kind": "kill",
+          "monster": 46,
+          "name": "Vepar",
+          "count": 100,
+          "maps": [
+            7
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "kind": "item",
+          "value": 2,
+          "item": {
+            "index": 461,
+            "level": 0,
+            "skill": false,
+            "luck": false,
+            "option": 0,
+            "excellent": 0
+          },
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ]
+        },
+        {
+          "kind": "item",
+          "value": 1,
+          "item": {
+            "index": 464,
+            "level": 0,
+            "skill": false,
+            "luck": false,
+            "option": 0,
+            "excellent": 0
+          },
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 46,
+      "name": "Slay 150 Death Knights",
+      "requirements": [
+        {
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ],
+          "quest": 45,
+          "classChange": false,
+          "minLevel": null,
+          "maxLevel": null,
+          "resets": null
+        }
+      ],
+      "objectives": [
+        {
+          "kind": "kill",
+          "monster": 40,
+          "name": "Death Knight",
+          "count": 150,
+          "maps": [
+            4
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "kind": "zen",
+          "value": 60000000,
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 47,
+      "name": "Slay 100 Shadows, Poison Shadows and Cursed Wizards",
+      "requirements": [
+        {
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ],
+          "quest": 46,
+          "classChange": false,
+          "minLevel": null,
+          "maxLevel": null,
+          "resets": null
+        }
+      ],
+      "objectives": [
+        {
+          "kind": "kill",
+          "monster": 36,
+          "name": "Shadow",
+          "count": 100,
+          "maps": [
+            4
+          ]
+        },
+        {
+          "kind": "kill",
+          "monster": 39,
+          "name": "Poison Shadow",
+          "count": 100,
+          "maps": [
+            4
+          ]
+        },
+        {
+          "kind": "kill",
+          "monster": 34,
+          "name": "Cursed Wizard",
+          "count": 100,
+          "maps": [
+            4
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "kind": "item",
+          "value": 2,
+          "item": {
+            "index": 464,
+            "level": 0,
+            "skill": false,
+            "luck": false,
+            "option": 0,
+            "excellent": 0
+          },
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ]
+        },
+        {
+          "kind": "item",
+          "value": 1,
+          "item": {
+            "index": 462,
+            "level": 0,
+            "skill": false,
+            "luck": false,
+            "option": 0,
+            "excellent": 0
+          },
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 48,
+      "name": "Slay 120 Death Cows and 120 Devils",
+      "requirements": [
+        {
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ],
+          "quest": 47,
+          "classChange": false,
+          "minLevel": null,
+          "maxLevel": null,
+          "resets": null
+        }
+      ],
+      "objectives": [
+        {
+          "kind": "kill",
+          "monster": 41,
+          "name": "Death Cow",
+          "count": 120,
+          "maps": [
+            4
+          ]
+        },
+        {
+          "kind": "kill",
+          "monster": 37,
+          "name": "Devil",
+          "count": 120,
+          "maps": [
+            4
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "kind": "zen",
+          "value": 70000000,
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 49,
+      "name": "Slay 150 Death Knights and 100 Devils",
+      "requirements": [
+        {
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ],
+          "quest": 48,
+          "classChange": false,
+          "minLevel": null,
+          "maxLevel": null,
+          "resets": null
+        }
+      ],
+      "objectives": [
+        {
+          "kind": "kill",
+          "monster": 40,
+          "name": "Death Knight",
+          "count": 150,
+          "maps": [
+            4
+          ]
+        },
+        {
+          "kind": "kill",
+          "monster": 37,
+          "name": "Devil",
+          "count": 100,
+          "maps": [
+            4
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "kind": "item",
+          "value": 1,
+          "item": {
+            "index": 459,
+            "level": 10,
+            "skill": false,
+            "luck": false,
+            "option": 0,
+            "excellent": 0
+          },
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ]
+        },
+        {
+          "kind": "item",
+          "value": 3,
+          "item": {
+            "index": 461,
+            "level": 0,
+            "skill": false,
+            "luck": false,
+            "option": 0,
+            "excellent": 0
+          },
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ]
+        },
+        {
+          "kind": "item",
+          "value": 2,
+          "item": {
+            "index": 462,
+            "level": 0,
+            "skill": false,
+            "luck": false,
+            "option": 0,
+            "excellent": 0
+          },
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ]
+        },
+        {
+          "kind": "item",
+          "value": 2,
+          "item": {
+            "index": 464,
+            "level": 0,
+            "skill": false,
+            "luck": false,
+            "option": 0,
+            "excellent": 0
+          },
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ]
+        },
+        {
+          "kind": "points",
+          "value": 13,
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 50,
+      "name": "Slay 120 Death Gorgons",
+      "requirements": [
+        {
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ],
+          "quest": 49,
+          "classChange": false,
+          "minLevel": null,
+          "maxLevel": null,
+          "resets": null
+        }
+      ],
+      "objectives": [
+        {
+          "kind": "kill",
+          "monster": 35,
+          "name": "Death Gorgon",
+          "count": 120,
+          "maps": [
+            4
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "kind": "zen",
+          "value": 75000000,
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 51,
+      "name": "Slay 150 Great Bahamuts",
+      "requirements": [
+        {
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ],
+          "quest": 50,
+          "classChange": false,
+          "minLevel": null,
+          "maxLevel": null,
+          "resets": null
+        }
+      ],
+      "objectives": [
+        {
+          "kind": "kill",
+          "monster": 51,
+          "name": "Great Bahamut",
+          "count": 150,
+          "maps": [
+            6,
+            7
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "kind": "item",
+          "value": 3,
+          "item": {
+            "index": 464,
+            "level": 0,
+            "skill": false,
+            "luck": false,
+            "option": 0,
+            "excellent": 0
+          },
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 52,
+      "name": "Slay 160 Silver Valkyries",
+      "requirements": [
+        {
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ],
+          "quest": 51,
+          "classChange": false,
+          "minLevel": null,
+          "maxLevel": null,
+          "resets": null
+        }
+      ],
+      "objectives": [
+        {
+          "kind": "kill",
+          "monster": 52,
+          "name": "Silver Valkyrie",
+          "count": 160,
+          "maps": [
+            6,
+            7
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "kind": "item",
+          "value": 4,
+          "item": {
+            "index": 461,
+            "level": 0,
+            "skill": false,
+            "luck": false,
+            "option": 0,
+            "excellent": 0
+          },
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ]
+        },
+        {
+          "kind": "item",
+          "value": 1,
+          "item": {
+            "index": 464,
+            "level": 0,
+            "skill": false,
+            "luck": false,
+            "option": 0,
+            "excellent": 0
+          },
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 53,
+      "name": "Slay 150 Lizard Kings",
+      "requirements": [
+        {
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ],
+          "quest": 52,
+          "classChange": false,
+          "minLevel": null,
+          "maxLevel": null,
+          "resets": null
+        }
+      ],
+      "objectives": [
+        {
+          "kind": "kill",
+          "monster": 48,
+          "name": "Lizard King",
+          "count": 150,
+          "maps": [
+            6,
+            7
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "kind": "zen",
+          "value": 80000000,
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 54,
+      "name": "Slay 100 Death Gorgons and 100 Death Knights",
+      "requirements": [
+        {
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ],
+          "quest": 53,
+          "classChange": false,
+          "minLevel": null,
+          "maxLevel": null,
+          "resets": null
+        }
+      ],
+      "objectives": [
+        {
+          "kind": "kill",
+          "monster": 35,
+          "name": "Death Gorgon",
+          "count": 100,
+          "maps": [
+            4
+          ]
+        },
+        {
+          "kind": "kill",
+          "monster": 40,
+          "name": "Death Knight",
+          "count": 100,
+          "maps": [
+            4
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "kind": "item",
+          "value": 3,
+          "item": {
+            "index": 462,
+            "level": 0,
+            "skill": false,
+            "luck": false,
+            "option": 0,
+            "excellent": 0
+          },
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ]
+        },
+        {
+          "kind": "item",
+          "value": 3,
+          "item": {
+            "index": 399,
+            "level": 0,
+            "skill": false,
+            "luck": false,
+            "option": 0,
+            "excellent": 0
+          },
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 55,
+      "name": "Slay 120 Great Bahamuts and 120 Silver Valkyries",
+      "requirements": [
+        {
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ],
+          "quest": 54,
+          "classChange": false,
+          "minLevel": null,
+          "maxLevel": null,
+          "resets": null
+        }
+      ],
+      "objectives": [
+        {
+          "kind": "kill",
+          "monster": 51,
+          "name": "Great Bahamut",
+          "count": 120,
+          "maps": [
+            6,
+            7
+          ]
+        },
+        {
+          "kind": "kill",
+          "monster": 52,
+          "name": "Silver Valkyrie",
+          "count": 120,
+          "maps": [
+            6,
+            7
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "kind": "item",
+          "value": 2,
+          "item": {
+            "index": 461,
+            "level": 0,
+            "skill": false,
+            "luck": false,
+            "option": 0,
+            "excellent": 0
+          },
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ]
+        },
+        {
+          "kind": "item",
+          "value": 2,
+          "item": {
+            "index": 462,
+            "level": 0,
+            "skill": false,
+            "luck": false,
+            "option": 0,
+            "excellent": 0
+          },
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ]
+        },
+        {
+          "kind": "item",
+          "value": 1,
+          "item": {
+            "index": 464,
+            "level": 0,
+            "skill": false,
+            "luck": false,
+            "option": 0,
+            "excellent": 0
+          },
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 56,
+      "name": "Slay 200 Lizard Kings",
+      "requirements": [
+        {
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ],
+          "quest": 55,
+          "classChange": false,
+          "minLevel": null,
+          "maxLevel": null,
+          "resets": null
+        }
+      ],
+      "objectives": [
+        {
+          "kind": "kill",
+          "monster": 48,
+          "name": "Lizard King",
+          "count": 200,
+          "maps": [
+            6,
+            7
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "kind": "zen",
+          "value": 90000000,
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 57,
+      "name": "Slay 200 Silver Valkyries and 100 Lizard Kings",
+      "requirements": [
+        {
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ],
+          "quest": 56,
+          "classChange": false,
+          "minLevel": null,
+          "maxLevel": null,
+          "resets": null
+        }
+      ],
+      "objectives": [
+        {
+          "kind": "kill",
+          "monster": 52,
+          "name": "Silver Valkyrie",
+          "count": 200,
+          "maps": [
+            6,
+            7
+          ]
+        },
+        {
+          "kind": "kill",
+          "monster": 48,
+          "name": "Lizard King",
+          "count": 100,
+          "maps": [
+            6,
+            7
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "kind": "item",
+          "value": 3,
+          "item": {
+            "index": 464,
+            "level": 0,
+            "skill": false,
+            "luck": false,
+            "option": 0,
+            "excellent": 0
+          },
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ]
+        },
+        {
+          "kind": "item",
+          "value": 1,
+          "item": {
+            "index": 461,
+            "level": 0,
+            "skill": false,
+            "luck": false,
+            "option": 0,
+            "excellent": 0
+          },
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ]
+        },
+        {
+          "kind": "item",
+          "value": 1,
+          "item": {
+            "index": 462,
+            "level": 0,
+            "skill": false,
+            "luck": false,
+            "option": 0,
+            "excellent": 0
+          },
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 58,
+      "name": "Slay 150 Death Gorgons and 150 Lizard Kings",
+      "requirements": [
+        {
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ],
+          "quest": 57,
+          "classChange": false,
+          "minLevel": null,
+          "maxLevel": null,
+          "resets": null
+        }
+      ],
+      "objectives": [
+        {
+          "kind": "kill",
+          "monster": 35,
+          "name": "Death Gorgon",
+          "count": 150,
+          "maps": [
+            4
+          ]
+        },
+        {
+          "kind": "kill",
+          "monster": 48,
+          "name": "Lizard King",
+          "count": 150,
+          "maps": [
+            6,
+            7
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "kind": "zen",
+          "value": 100000000,
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 59,
+      "name": "Slay 150 Great Bahamuts, Silver Valkyries and Lizard Kings",
+      "requirements": [
+        {
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ],
+          "quest": 58,
+          "classChange": false,
+          "minLevel": null,
+          "maxLevel": null,
+          "resets": null
+        }
+      ],
+      "objectives": [
+        {
+          "kind": "kill",
+          "monster": 51,
+          "name": "Great Bahamut",
+          "count": 150,
+          "maps": [
+            6,
+            7
+          ]
+        },
+        {
+          "kind": "kill",
+          "monster": 52,
+          "name": "Silver Valkyrie",
+          "count": 150,
+          "maps": [
+            6,
+            7
+          ]
+        },
+        {
+          "kind": "kill",
+          "monster": 48,
+          "name": "Lizard King",
+          "count": 150,
+          "maps": [
+            6,
+            7
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "kind": "item",
+          "value": 1,
+          "item": {
+            "index": 459,
+            "level": 10,
+            "skill": false,
+            "luck": false,
+            "option": 0,
+            "excellent": 0
+          },
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ]
+        },
+        {
+          "kind": "item",
+          "value": 4,
+          "item": {
+            "index": 461,
+            "level": 0,
+            "skill": false,
+            "luck": false,
+            "option": 0,
+            "excellent": 0
+          },
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ]
+        },
+        {
+          "kind": "item",
+          "value": 4,
+          "item": {
+            "index": 462,
+            "level": 0,
+            "skill": false,
+            "luck": false,
+            "option": 0,
+            "excellent": 0
+          },
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ]
+        },
+        {
+          "kind": "item",
+          "value": 3,
+          "item": {
+            "index": 464,
+            "level": 0,
+            "skill": false,
+            "luck": false,
+            "option": 0,
+            "excellent": 0
+          },
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ]
+        },
+        {
+          "kind": "points",
+          "value": 15,
+          "classes": [
+            "dw",
+            "dk",
+            "fe",
+            "mg"
+          ]
+        }
+      ]
+    }
+  ],
   "events": {
     "bloodCastle": [
       0,
