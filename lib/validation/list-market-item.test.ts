@@ -1,6 +1,7 @@
-import { EMPTY_DEPOSIT_AMOUNTS } from "@/constants/depositable-items";
+import { EMPTY_MARKET_PRICES } from "@/constants/market-prices";
 import { formatNumber } from "@/lib/utils/numbers";
 import {
+  MAX_LISTING_CREDITS_PRICE,
   MAX_LISTING_ITEM_PRICE,
   MAX_LISTING_ZEN_PRICE,
 } from "@/lib/validation/listing-price-limits";
@@ -53,7 +54,7 @@ describe("listMarketItemSchema", () => {
       expect(result.data).toEqual({
         slotIndex: 3,
         itemSerial,
-        prices: { ...EMPTY_DEPOSIT_AMOUNTS, zen: 1000, jewelOfBless: 5 },
+        prices: { ...EMPTY_MARKET_PRICES, zen: 1000, jewelOfBless: 5 },
       });
     }
   });
@@ -99,5 +100,52 @@ describe("listMarketItemSchema", () => {
         `Must be at most ${formatNumber(MAX_LISTING_ITEM_PRICE)}.`,
       );
     }
+  });
+
+  test("accepts a price in credits alone, or credits with zen", () => {
+    const creditsOnly = listMarketItemSchema.safeParse({
+      slotIndex: 0,
+      itemSerial,
+      credits: "25",
+    });
+    expect(creditsOnly.success).toBe(true);
+    if (creditsOnly.success) {
+      expect(creditsOnly.data.prices).toEqual({
+        ...EMPTY_MARKET_PRICES,
+        credits: 25,
+      });
+    }
+
+    const mixed = listMarketItemSchema.safeParse({
+      slotIndex: 0,
+      itemSerial,
+      zen: "1000",
+      credits: "3",
+    });
+    expect(mixed.success).toBe(true);
+    if (mixed.success) {
+      expect(mixed.data.prices).toEqual({
+        ...EMPTY_MARKET_PRICES,
+        zen: 1000,
+        credits: 3,
+      });
+    }
+  });
+
+  test("allows credits up to what an account can hold, above the item cap", () => {
+    expect(
+      listMarketItemSchema.safeParse({
+        slotIndex: 0,
+        itemSerial,
+        credits: String(MAX_LISTING_CREDITS_PRICE),
+      }).success,
+    ).toBe(true);
+    expect(
+      listMarketItemSchema.safeParse({
+        slotIndex: 0,
+        itemSerial,
+        credits: String(MAX_LISTING_CREDITS_PRICE + 1),
+      }).success,
+    ).toBe(false);
   });
 });

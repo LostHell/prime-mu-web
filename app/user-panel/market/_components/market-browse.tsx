@@ -16,6 +16,8 @@ interface MarketBrowseProps {
   total: number;
   query: string;
   buyerDeposits: DepositAmounts;
+  /** For the buy button's check only: the balance itself shows on Deposits. */
+  buyerCredits: number;
 }
 
 export function MarketBrowse({
@@ -23,6 +25,7 @@ export function MarketBrowse({
   total,
   query,
   buyerDeposits,
+  buyerCredits,
 }: MarketBrowseProps) {
   return (
     <div className="flex flex-col gap-5">
@@ -66,6 +69,7 @@ export function MarketBrowse({
                       <MarketListing.Buy
                         listing={listing}
                         buyerDeposits={buyerDeposits}
+                        buyerCredits={buyerCredits}
                       />
                     )}
                   </>

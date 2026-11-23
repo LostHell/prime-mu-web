@@ -227,6 +227,7 @@ model MarketplaceListing {
   JewelOfLife     Int       @default(0) @db.UnsignedInt
   JewelOfCreation Int       @default(0) @db.UnsignedInt
   JewelOfChaos    Int       @default(0) @db.UnsignedInt
+  Credits         Int       @default(0) @db.UnsignedInt
   listedAt        DateTime  @default(now()) @db.DateTime(0)
   status          String    @default("active") @db.VarChar(10)
   buyerAccountId  String?   @db.VarChar(10)

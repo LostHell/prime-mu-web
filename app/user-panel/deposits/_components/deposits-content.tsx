@@ -6,15 +6,18 @@ import type { DepositData } from "@/lib/queries/get-deposits";
 import { Fragment } from "react";
 import { useDeposits } from "../_hooks/use-deposits";
 import { ConfirmAllDialog } from "./confirm-all-dialog";
+import { CreditsBalance } from "./credits-balance";
 import { ItemBalance } from "./item-balance";
 import { TransferForm } from "./transfer-form";
 import { TransferModal } from "./transfer-modal";
 
 type DepositsContentProps = {
   deposits: DepositData;
+  /** The account's credits (AFK_CreditReward): shown, never transferred. */
+  credits: number;
 };
 
-export function DepositsContent({ deposits }: DepositsContentProps) {
+export function DepositsContent({ deposits, credits }: DepositsContentProps) {
   const {
     items,
     isOffline,
@@ -35,9 +38,11 @@ export function DepositsContent({ deposits }: DepositsContentProps) {
         </Alert>
       )}
 
-      {items.map((item, index) => (
+      <CreditsBalance credits={credits} />
+
+      {items.map((item) => (
         <Fragment key={item.type}>
-          {index > 0 && <Separator />}
+          <Separator />
           <ItemBalance
             item={item}
             actionsLocked={actionsLocked}

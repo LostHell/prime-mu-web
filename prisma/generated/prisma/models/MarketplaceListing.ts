@@ -35,6 +35,7 @@ export type MarketplaceListingAvgAggregateOutputType = {
   JewelOfLife: number | null
   JewelOfCreation: number | null
   JewelOfChaos: number | null
+  Credits: number | null
 }
 
 export type MarketplaceListingSumAggregateOutputType = {
@@ -46,6 +47,7 @@ export type MarketplaceListingSumAggregateOutputType = {
   JewelOfLife: number | null
   JewelOfCreation: number | null
   JewelOfChaos: number | null
+  Credits: number | null
 }
 
 export type MarketplaceListingMinAggregateOutputType = {
@@ -61,6 +63,7 @@ export type MarketplaceListingMinAggregateOutputType = {
   JewelOfLife: number | null
   JewelOfCreation: number | null
   JewelOfChaos: number | null
+  Credits: number | null
   listedAt: Date | null
   status: string | null
   buyerAccountId: string | null
@@ -81,6 +84,7 @@ export type MarketplaceListingMaxAggregateOutputType = {
   JewelOfLife: number | null
   JewelOfCreation: number | null
   JewelOfChaos: number | null
+  Credits: number | null
   listedAt: Date | null
   status: string | null
   buyerAccountId: string | null
@@ -101,6 +105,7 @@ export type MarketplaceListingCountAggregateOutputType = {
   JewelOfLife: number
   JewelOfCreation: number
   JewelOfChaos: number
+  Credits: number
   listedAt: number
   status: number
   buyerAccountId: number
@@ -119,6 +124,7 @@ export type MarketplaceListingAvgAggregateInputType = {
   JewelOfLife?: true
   JewelOfCreation?: true
   JewelOfChaos?: true
+  Credits?: true
 }
 
 export type MarketplaceListingSumAggregateInputType = {
@@ -130,6 +136,7 @@ export type MarketplaceListingSumAggregateInputType = {
   JewelOfLife?: true
   JewelOfCreation?: true
   JewelOfChaos?: true
+  Credits?: true
 }
 
 export type MarketplaceListingMinAggregateInputType = {
@@ -145,6 +152,7 @@ export type MarketplaceListingMinAggregateInputType = {
   JewelOfLife?: true
   JewelOfCreation?: true
   JewelOfChaos?: true
+  Credits?: true
   listedAt?: true
   status?: true
   buyerAccountId?: true
@@ -165,6 +173,7 @@ export type MarketplaceListingMaxAggregateInputType = {
   JewelOfLife?: true
   JewelOfCreation?: true
   JewelOfChaos?: true
+  Credits?: true
   listedAt?: true
   status?: true
   buyerAccountId?: true
@@ -185,6 +194,7 @@ export type MarketplaceListingCountAggregateInputType = {
   JewelOfLife?: true
   JewelOfCreation?: true
   JewelOfChaos?: true
+  Credits?: true
   listedAt?: true
   status?: true
   buyerAccountId?: true
@@ -292,6 +302,7 @@ export type MarketplaceListingGroupByOutputType = {
   JewelOfLife: number
   JewelOfCreation: number
   JewelOfChaos: number
+  Credits: number
   listedAt: Date
   status: string
   buyerAccountId: string | null
@@ -335,6 +346,7 @@ export type MarketplaceListingWhereInput = {
   JewelOfLife?: Prisma.IntFilter<"MarketplaceListing"> | number
   JewelOfCreation?: Prisma.IntFilter<"MarketplaceListing"> | number
   JewelOfChaos?: Prisma.IntFilter<"MarketplaceListing"> | number
+  Credits?: Prisma.IntFilter<"MarketplaceListing"> | number
   listedAt?: Prisma.DateTimeFilter<"MarketplaceListing"> | Date | string
   status?: Prisma.StringFilter<"MarketplaceListing"> | string
   buyerAccountId?: Prisma.StringNullableFilter<"MarketplaceListing"> | string | null
@@ -355,6 +367,7 @@ export type MarketplaceListingOrderByWithRelationInput = {
   JewelOfLife?: Prisma.SortOrder
   JewelOfCreation?: Prisma.SortOrder
   JewelOfChaos?: Prisma.SortOrder
+  Credits?: Prisma.SortOrder
   listedAt?: Prisma.SortOrder
   status?: Prisma.SortOrder
   buyerAccountId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -379,6 +392,7 @@ export type MarketplaceListingWhereUniqueInput = Prisma.AtLeast<{
   JewelOfLife?: Prisma.IntFilter<"MarketplaceListing"> | number
   JewelOfCreation?: Prisma.IntFilter<"MarketplaceListing"> | number
   JewelOfChaos?: Prisma.IntFilter<"MarketplaceListing"> | number
+  Credits?: Prisma.IntFilter<"MarketplaceListing"> | number
   listedAt?: Prisma.DateTimeFilter<"MarketplaceListing"> | Date | string
   status?: Prisma.StringFilter<"MarketplaceListing"> | string
   buyerAccountId?: Prisma.StringNullableFilter<"MarketplaceListing"> | string | null
@@ -399,6 +413,7 @@ export type MarketplaceListingOrderByWithAggregationInput = {
   JewelOfLife?: Prisma.SortOrder
   JewelOfCreation?: Prisma.SortOrder
   JewelOfChaos?: Prisma.SortOrder
+  Credits?: Prisma.SortOrder
   listedAt?: Prisma.SortOrder
   status?: Prisma.SortOrder
   buyerAccountId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -427,6 +442,7 @@ export type MarketplaceListingScalarWhereWithAggregatesInput = {
   JewelOfLife?: Prisma.IntWithAggregatesFilter<"MarketplaceListing"> | number
   JewelOfCreation?: Prisma.IntWithAggregatesFilter<"MarketplaceListing"> | number
   JewelOfChaos?: Prisma.IntWithAggregatesFilter<"MarketplaceListing"> | number
+  Credits?: Prisma.IntWithAggregatesFilter<"MarketplaceListing"> | number
   listedAt?: Prisma.DateTimeWithAggregatesFilter<"MarketplaceListing"> | Date | string
   status?: Prisma.StringWithAggregatesFilter<"MarketplaceListing"> | string
   buyerAccountId?: Prisma.StringNullableWithAggregatesFilter<"MarketplaceListing"> | string | null
@@ -446,6 +462,7 @@ export type MarketplaceListingCreateInput = {
   JewelOfLife?: number
   JewelOfCreation?: number
   JewelOfChaos?: number
+  Credits?: number
   listedAt?: Date | string
   status?: string
   buyerAccountId?: string | null
@@ -466,6 +483,7 @@ export type MarketplaceListingUncheckedCreateInput = {
   JewelOfLife?: number
   JewelOfCreation?: number
   JewelOfChaos?: number
+  Credits?: number
   listedAt?: Date | string
   status?: string
   buyerAccountId?: string | null
@@ -485,6 +503,7 @@ export type MarketplaceListingUpdateInput = {
   JewelOfLife?: Prisma.IntFieldUpdateOperationsInput | number
   JewelOfCreation?: Prisma.IntFieldUpdateOperationsInput | number
   JewelOfChaos?: Prisma.IntFieldUpdateOperationsInput | number
+  Credits?: Prisma.IntFieldUpdateOperationsInput | number
   listedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   buyerAccountId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -505,6 +524,7 @@ export type MarketplaceListingUncheckedUpdateInput = {
   JewelOfLife?: Prisma.IntFieldUpdateOperationsInput | number
   JewelOfCreation?: Prisma.IntFieldUpdateOperationsInput | number
   JewelOfChaos?: Prisma.IntFieldUpdateOperationsInput | number
+  Credits?: Prisma.IntFieldUpdateOperationsInput | number
   listedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   buyerAccountId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -525,6 +545,7 @@ export type MarketplaceListingCreateManyInput = {
   JewelOfLife?: number
   JewelOfCreation?: number
   JewelOfChaos?: number
+  Credits?: number
   listedAt?: Date | string
   status?: string
   buyerAccountId?: string | null
@@ -544,6 +565,7 @@ export type MarketplaceListingUpdateManyMutationInput = {
   JewelOfLife?: Prisma.IntFieldUpdateOperationsInput | number
   JewelOfCreation?: Prisma.IntFieldUpdateOperationsInput | number
   JewelOfChaos?: Prisma.IntFieldUpdateOperationsInput | number
+  Credits?: Prisma.IntFieldUpdateOperationsInput | number
   listedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   buyerAccountId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -564,6 +586,7 @@ export type MarketplaceListingUncheckedUpdateManyInput = {
   JewelOfLife?: Prisma.IntFieldUpdateOperationsInput | number
   JewelOfCreation?: Prisma.IntFieldUpdateOperationsInput | number
   JewelOfChaos?: Prisma.IntFieldUpdateOperationsInput | number
+  Credits?: Prisma.IntFieldUpdateOperationsInput | number
   listedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   buyerAccountId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -590,6 +613,7 @@ export type MarketplaceListingCountOrderByAggregateInput = {
   JewelOfLife?: Prisma.SortOrder
   JewelOfCreation?: Prisma.SortOrder
   JewelOfChaos?: Prisma.SortOrder
+  Credits?: Prisma.SortOrder
   listedAt?: Prisma.SortOrder
   status?: Prisma.SortOrder
   buyerAccountId?: Prisma.SortOrder
@@ -606,6 +630,7 @@ export type MarketplaceListingAvgOrderByAggregateInput = {
   JewelOfLife?: Prisma.SortOrder
   JewelOfCreation?: Prisma.SortOrder
   JewelOfChaos?: Prisma.SortOrder
+  Credits?: Prisma.SortOrder
 }
 
 export type MarketplaceListingMaxOrderByAggregateInput = {
@@ -621,6 +646,7 @@ export type MarketplaceListingMaxOrderByAggregateInput = {
   JewelOfLife?: Prisma.SortOrder
   JewelOfCreation?: Prisma.SortOrder
   JewelOfChaos?: Prisma.SortOrder
+  Credits?: Prisma.SortOrder
   listedAt?: Prisma.SortOrder
   status?: Prisma.SortOrder
   buyerAccountId?: Prisma.SortOrder
@@ -641,6 +667,7 @@ export type MarketplaceListingMinOrderByAggregateInput = {
   JewelOfLife?: Prisma.SortOrder
   JewelOfCreation?: Prisma.SortOrder
   JewelOfChaos?: Prisma.SortOrder
+  Credits?: Prisma.SortOrder
   listedAt?: Prisma.SortOrder
   status?: Prisma.SortOrder
   buyerAccountId?: Prisma.SortOrder
@@ -657,6 +684,7 @@ export type MarketplaceListingSumOrderByAggregateInput = {
   JewelOfLife?: Prisma.SortOrder
   JewelOfCreation?: Prisma.SortOrder
   JewelOfChaos?: Prisma.SortOrder
+  Credits?: Prisma.SortOrder
 }
 
 
@@ -674,6 +702,7 @@ export type MarketplaceListingSelect<ExtArgs extends runtime.Types.Extensions.In
   JewelOfLife?: boolean
   JewelOfCreation?: boolean
   JewelOfChaos?: boolean
+  Credits?: boolean
   listedAt?: boolean
   status?: boolean
   buyerAccountId?: boolean
@@ -696,6 +725,7 @@ export type MarketplaceListingSelectScalar = {
   JewelOfLife?: boolean
   JewelOfCreation?: boolean
   JewelOfChaos?: boolean
+  Credits?: boolean
   listedAt?: boolean
   status?: boolean
   buyerAccountId?: boolean
@@ -703,7 +733,7 @@ export type MarketplaceListingSelectScalar = {
   soldAt?: boolean
 }
 
-export type MarketplaceListingOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "sellerAccountId" | "sellerCharacter" | "itemHex" | "itemName" | "Zen" | "Rena" | "JewelOfBless" | "JewelOfSoul" | "JewelOfLife" | "JewelOfCreation" | "JewelOfChaos" | "listedAt" | "status" | "buyerAccountId" | "buyerCharacter" | "soldAt", ExtArgs["result"]["marketplaceListing"]>
+export type MarketplaceListingOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "sellerAccountId" | "sellerCharacter" | "itemHex" | "itemName" | "Zen" | "Rena" | "JewelOfBless" | "JewelOfSoul" | "JewelOfLife" | "JewelOfCreation" | "JewelOfChaos" | "Credits" | "listedAt" | "status" | "buyerAccountId" | "buyerCharacter" | "soldAt", ExtArgs["result"]["marketplaceListing"]>
 
 export type $MarketplaceListingPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "MarketplaceListing"
@@ -721,6 +751,7 @@ export type $MarketplaceListingPayload<ExtArgs extends runtime.Types.Extensions.
     JewelOfLife: number
     JewelOfCreation: number
     JewelOfChaos: number
+    Credits: number
     listedAt: Date
     status: string
     buyerAccountId: string | null
@@ -1107,6 +1138,7 @@ export interface MarketplaceListingFieldRefs {
   readonly JewelOfLife: Prisma.FieldRef<"MarketplaceListing", 'Int'>
   readonly JewelOfCreation: Prisma.FieldRef<"MarketplaceListing", 'Int'>
   readonly JewelOfChaos: Prisma.FieldRef<"MarketplaceListing", 'Int'>
+  readonly Credits: Prisma.FieldRef<"MarketplaceListing", 'Int'>
   readonly listedAt: Prisma.FieldRef<"MarketplaceListing", 'DateTime'>
   readonly status: Prisma.FieldRef<"MarketplaceListing", 'String'>
   readonly buyerAccountId: Prisma.FieldRef<"MarketplaceListing", 'String'>

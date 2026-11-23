@@ -11,11 +11,14 @@ import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { withActionToast } from "@/lib/utils/action-toast";
 import {
-  DEPOSIT_ITEM_TYPES,
   DEPOSITABLE_ITEMS,
   type DepositAmounts,
-  type DepositItemType,
 } from "@/constants/depositable-items";
+import {
+  MARKET_PRICE_TYPES,
+  marketPriceLabel,
+  type MarketPriceType,
+} from "@/constants/market-prices";
 import { buyMarketItemAction } from "@/lib/actions/buy-market-item";
 import { cancelMarketplaceListingAction } from "@/lib/actions/cancel-market-listing";
 import { formatItemName } from "@/lib/game/item-database/formatters";
@@ -24,9 +27,12 @@ import type {
   MarketListing,
 } from "@/lib/queries/get-marketplace-listings";
 import { cn } from "@/lib/utils";
-import { hasAnyPositiveDepositAmounts } from "@/lib/utils/deposits";
+import {
+  canAffordMarketPrices,
+  hasAnyPositiveMarketPrice,
+} from "@/lib/utils/market-prices";
 import { formatNumber } from "@/lib/utils/numbers";
-import { Coins } from "lucide-react";
+import { Coins, Gem } from "lucide-react";
 import { useRouter } from "next/navigation";
 import * as React from "react";
 import { useActionState } from "react";
@@ -83,11 +89,13 @@ function PriceLine({
   amount,
   variant = "default",
 }: {
-  type: DepositItemType;
+  type: MarketPriceType;
   amount: number;
   variant?: "default" | "spent" | "earned";
 }) {
-  const config = DEPOSITABLE_ITEMS[type];
+  const label = marketPriceLabel(type);
+  const icon = type === "credits" ? undefined : DEPOSITABLE_ITEMS[type].icon;
+  const FallbackIcon = type === "credits" ? Gem : Coins;
   const amountClass =
     variant === "spent"
       ? "text-destructive"
@@ -97,17 +105,17 @@ function PriceLine({
   const prefix = variant === "spent" ? "-" : variant === "earned" ? "+" : "";
 
   return (
-    <div className="flex items-center gap-0.5" title={config.label}>
-      {config.icon ? (
+    <div className="flex items-center gap-0.5" title={label}>
+      {icon ? (
         <div className="size-icon-sm flex shrink-0 items-center justify-center overflow-hidden">
           <ItemIcon
-            group={config.icon.group}
-            index={config.icon.index}
+            group={icon.group}
+            index={icon.index}
             className="size-full"
           />
         </div>
       ) : (
-        <Coins className="text-gold-dim size-icon-sm shrink-0" />
+        <FallbackIcon className="text-gold-dim size-icon-sm shrink-0" />
       )}
       <span
         className={cn(
@@ -117,7 +125,7 @@ function PriceLine({
       >
         {prefix}
         {formatNumber(amount)}
-        <span className="sr-only"> {config.label}</span>
+        <span className="sr-only"> {label}</span>
       </span>
     </div>
   );
@@ -138,7 +146,7 @@ function ListingPrices({
   listing: MarketListing;
   variant?: "default" | "spent" | "earned";
 }) {
-  const lines = DEPOSIT_ITEM_TYPES.filter(
+  const lines = MARKET_PRICE_TYPES.filter(
     (type) => listing.prices[type] > 0,
   ).map((type) => ({
     type,
@@ -166,9 +174,11 @@ function ListingPrices({
 function Buy({
   listing,
   buyerDeposits,
+  buyerCredits,
 }: {
   listing: MarketListing;
   buyerDeposits: DepositAmounts;
+  buyerCredits: number;
 }) {
   const [, formAction, isPending] = useActionState(
     withActionToast(buyMarketItemAction),
@@ -178,12 +188,10 @@ function Buy({
     },
   );
   const router = useRouter();
-  const hasPrice = hasAnyPositiveDepositAmounts(listing.prices);
+  const hasPrice = hasAnyPositiveMarketPrice(listing.prices);
   const canAfford =
     hasPrice &&
-    DEPOSIT_ITEM_TYPES.every(
-      (type) => buyerDeposits[type] >= listing.prices[type],
-    );
+    canAffordMarketPrices(listing.prices, buyerDeposits, buyerCredits);
 
   return (
     <form
@@ -192,6 +200,11 @@ function Buy({
       onSubmit={(event) => {
         if (!hasPrice || canAfford) return;
         event.preventDefault();
+        // Credits are earned in game, not deposited: no way to the deposits for them.
+        if (buyerCredits < listing.prices.credits) {
+          toast.error("Not enough credits.");
+          return;
+        }
         toast.error("Insufficient funds.", {
           action: {
             label: "Deposit",

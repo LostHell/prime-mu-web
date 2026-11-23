@@ -13,6 +13,10 @@ import {
   depositColumnsFromAmounts,
   hasAnyPositiveDepositAmounts,
 } from "@/lib/utils/deposits";
+import {
+  hasAnyPositiveMarketPrice,
+  marketPricesFromListing,
+} from "@/lib/utils/market-prices";
 import { listingIdSchema } from "@/lib/validation/listing-id";
 import { isListingPriceInRange } from "@/lib/validation/listing-price-limits";
 import { ActionState } from "@/lib/types/action-state";
@@ -115,6 +119,55 @@ const creditDepositAmounts = async (
   }
 };
 
+/** The buyer's credits (AFK_CreditReward), taken only when they cover the price. */
+const debitCredits = async (
+  tx: Prisma.TransactionClient,
+  accountId: string,
+  credits: number,
+) => {
+  const { count } = await tx.aFK_CreditReward.updateMany({
+    where: { AccountID: accountId, Credits: { gte: credits } },
+    data: { Credits: { decrement: credits } },
+  });
+  if (count === 0) {
+    throw new ActionError("Not enough credits to buy this item.");
+  }
+};
+
+/**
+ * The seller's credits. The AFK procedure (ProcessZoneCreditRewards) adds to
+ * the same column every minute; both change it in one statement, so neither
+ * loses the other's credits. A seller without a row yet gets one.
+ */
+const payCredits = async (
+  tx: Prisma.TransactionClient,
+  accountId: string,
+  credits: number,
+) => {
+  try {
+    try {
+      await tx.aFK_CreditReward.upsert({
+        where: { AccountID: accountId },
+        create: { AccountID: accountId, Credits: credits },
+        update: { Credits: { increment: credits } },
+      });
+    } catch (err) {
+      if (!isUniqueConflict(err)) throw err;
+      // The row was made between the upsert's check and its insert (a second
+      // sale, or the AFK procedure creating the account's row).
+      await tx.aFK_CreditReward.update({
+        where: { AccountID: accountId },
+        data: { Credits: { increment: credits } },
+      });
+    }
+  } catch (err) {
+    if (isOutOfRange(err)) {
+      throw new ActionError("Seller cannot receive this payment.");
+    }
+    throw err;
+  }
+};
+
 export async function buyMarketItemAction(
   _state: ActionState,
   formData: FormData,
@@ -160,8 +213,8 @@ export async function buyMarketItemAction(
         throw new ActionError("You cannot buy your own listing.");
       }
 
-      const prices = depositAmountsFromColumns(listing);
-      if (!hasAnyPositiveDepositAmounts(prices)) {
+      const prices = marketPricesFromListing(listing);
+      if (!hasAnyPositiveMarketPrice(prices)) {
         throw new ActionError("This listing has no price set.");
       }
       if (!isListingPriceInRange(prices)) {
@@ -192,9 +245,16 @@ export async function buyMarketItemAction(
       // other at the same moment, the transactions can lock those rows in
       // opposite orders and deadlock; MySQL aborts one of them and it fails
       // safely (no partial transfer), but the buyer sees a generic error and
-      // must retry.
-      await debitDepositAmounts(tx, accountId, prices);
-      await creditDepositAmounts(tx, listing.sellerAccountId, prices);
+      // must retry. The credits (AFK_CreditReward) follow in the same order.
+      const depositPrices = depositAmountsFromColumns(listing);
+      if (hasAnyPositiveDepositAmounts(depositPrices)) {
+        await debitDepositAmounts(tx, accountId, depositPrices);
+        await creditDepositAmounts(tx, listing.sellerAccountId, depositPrices);
+      }
+      if (prices.credits > 0) {
+        await debitCredits(tx, accountId, prices.credits);
+        await payCredits(tx, listing.sellerAccountId, prices.credits);
+      }
       await placeItemInWarehouse(tx, accountId, listing.itemHex);
     });
   } catch (err) {

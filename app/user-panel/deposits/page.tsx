@@ -1,4 +1,5 @@
 import { auth } from "@/auth";
+import { getAccountCredits } from "@/lib/queries/get-credits";
 import { getDeposits } from "@/lib/queries/get-deposits";
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
@@ -16,14 +17,16 @@ export default async function DepositsPage() {
     redirect("/login");
   }
 
+  // One read after the other, each holding one connection.
   const deposits = await getDeposits(session.user.id);
+  const credits = await getAccountCredits(session.user.id);
 
   return (
     <UserPanelPageLayout
       title="Deposits"
       description="Deposit and withdraw zen and items from your warehouse"
     >
-      <DepositsContent deposits={deposits} />
+      <DepositsContent deposits={deposits} credits={credits} />
     </UserPanelPageLayout>
   );
 }

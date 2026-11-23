@@ -11,31 +11,32 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { WarehouseGrid } from "@/components/warehouse-grid";
+import { DEPOSITABLE_ITEMS } from "@/constants/depositable-items";
 import {
-  DEPOSIT_ITEM_TYPES,
-  DEPOSITABLE_ITEMS,
-  EMPTY_DEPOSIT_AMOUNTS,
-  type DepositAmounts,
-  type DepositItemType,
-} from "@/constants/depositable-items";
+  EMPTY_MARKET_PRICES,
+  MARKET_PRICE_TYPES,
+  marketPriceLabel,
+  type MarketPriceType,
+  type MarketPrices,
+} from "@/constants/market-prices";
 import { withActionToast } from "@/lib/utils/action-toast";
 import { listMarketItemAction } from "@/lib/actions/list-market-item";
 import { formatItemName } from "@/lib/game/item-database/formatters";
 import { type WarehouseItem } from "@/lib/types/warehouse";
 import { cn } from "@/lib/utils";
-import { hasAnyPositiveDepositAmounts } from "@/lib/utils/deposits";
+import { hasAnyPositiveMarketPrice } from "@/lib/utils/market-prices";
 import { clampAmount, parseAmountInput } from "@/lib/utils/numbers";
 import { listingPriceLimit } from "@/lib/validation/listing-price-limits";
-import { Coins, Loader2, Package } from "lucide-react";
+import { Coins, Gem, Loader2, Package } from "lucide-react";
 import { useActionState, useState } from "react";
 
 interface SellItemFormProps {
   warehouseItems: WarehouseItem[];
 }
 
-const emptyPriceInputs = (): Record<DepositItemType, string> =>
-  Object.fromEntries(DEPOSIT_ITEM_TYPES.map((type) => [type, ""])) as Record<
-    DepositItemType,
+const emptyPriceInputs = (): Record<MarketPriceType, string> =>
+  Object.fromEntries(MARKET_PRICE_TYPES.map((type) => [type, ""])) as Record<
+    MarketPriceType,
     string
   >;
 
@@ -43,10 +44,10 @@ const selectionIconFrameClass =
   "border-border/50 bg-muted/50 flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-lg border";
 
 const toListingPrices = (
-  inputs: Record<DepositItemType, string>,
-): DepositAmounts => {
-  const prices = { ...EMPTY_DEPOSIT_AMOUNTS };
-  for (const type of DEPOSIT_ITEM_TYPES) {
+  inputs: Record<MarketPriceType, string>,
+): MarketPrices => {
+  const prices = { ...EMPTY_MARKET_PRICES };
+  for (const type of MARKET_PRICE_TYPES) {
     prices[type] = Number(inputs[type] || 0);
   }
   return prices;
@@ -78,9 +79,9 @@ export function SellItemForm({ warehouseItems }: SellItemFormProps) {
 
   const canSubmit =
     Boolean(selectedItem) &&
-    hasAnyPositiveDepositAmounts(toListingPrices(priceInputs));
+    hasAnyPositiveMarketPrice(toListingPrices(priceInputs));
 
-  const setPrice = (type: DepositItemType, value: string) => {
+  const setPrice = (type: MarketPriceType, value: string) => {
     const parsed = parseAmountInput(value);
     if (parsed === null) return;
     const amount = clampAmount(parsed, 0, listingPriceLimit(type));
@@ -171,29 +172,33 @@ export function SellItemForm({ warehouseItems }: SellItemFormProps) {
               </div>
 
               <div className="flex flex-col gap-3">
-                {DEPOSIT_ITEM_TYPES.map((type) => {
-                  const config = DEPOSITABLE_ITEMS[type];
+                {MARKET_PRICE_TYPES.map((type) => {
+                  const icon =
+                    type === "credits"
+                      ? undefined
+                      : DEPOSITABLE_ITEMS[type].icon;
+                  const FallbackIcon = type === "credits" ? Gem : Coins;
                   return (
                     <label
                       key={type}
                       className="flex items-center gap-2"
                       htmlFor={`price-${type}`}
                     >
-                      {config.icon ? (
+                      {icon ? (
                         <div className="flex size-8 shrink-0 items-center justify-center overflow-hidden">
                           <ItemIcon
-                            group={config.icon.group}
-                            index={config.icon.index}
+                            group={icon.group}
+                            index={icon.index}
                             className="size-full"
                           />
                         </div>
                       ) : (
                         <div className="flex size-8 shrink-0 items-center justify-center">
-                          <Coins className="text-gold-dim size-icon-md" />
+                          <FallbackIcon className="text-gold-dim size-icon-md" />
                         </div>
                       )}
                       <span className="w-32 shrink-0 text-sm font-medium">
-                        {config.label}
+                        {marketPriceLabel(type)}
                       </span>
                       <Input
                         id={`price-${type}`}
@@ -231,7 +236,7 @@ export function SellItemForm({ warehouseItems }: SellItemFormProps) {
               name="slotIndex"
               value={selectedItem?.slot ?? ""}
             />
-            {DEPOSIT_ITEM_TYPES.map((type) => (
+            {MARKET_PRICE_TYPES.map((type) => (
               <input
                 key={type}
                 type="hidden"
