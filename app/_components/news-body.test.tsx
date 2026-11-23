@@ -88,3 +88,58 @@ test("says a players' poll decides whether progress continues at the launch", ()
     "whether progress continues after the official launch or the server is wiped",
   );
 });
+
+test("lists the new window keys and F9 to F12, with the Fn note for laptops and Macs", () => {
+  render(<NewsBody id="game-keys" />);
+
+  for (const key of [
+    "T:",
+    "M:",
+    "H:",
+    "Tab:",
+    "F9:",
+    "F10:",
+    "F11:",
+    "F12:",
+    "Alt+Enter:",
+  ]) {
+    expect(screen.getByText(key)).toBeInTheDocument();
+  }
+  expect(screen.getAllByRole("listitem")).toHaveLength(9);
+  expect(screen.getByText(/the F keys often change/)).toHaveTextContent(
+    "hold Fn while you press them, for example Fn+F9.",
+  );
+});
+
+test("counts the quests and their level-up points from the synced quest window", () => {
+  render(<NewsBody id="quests" />);
+
+  expect(screen.getByText(/to open the quest window/)).toHaveTextContent(
+    "It holds 2 quests that open one after another",
+  );
+  expect(screen.getByText(/level-up points in all/)).toHaveTextContent(
+    "zen and 5 level-up points in all",
+  );
+  expect(
+    screen.getByRole("link", {
+      name: "Every quest with its monsters, their maps and its rewards",
+    }),
+  ).toHaveAttribute("href", "/server-info#quests");
+});
+
+test("gives each AFK zone's credits and links the market and the balance", () => {
+  render(<NewsBody id="afk-credits" />);
+
+  expect(screen.getByText(/1 credit every hour/)).toHaveTextContent(
+    "Davias town: 1 credit every hour.",
+  );
+  expect(screen.getByText(/1 credit every 6 hours/)).toHaveTextContent(
+    "the Arena: 1 credit every 6 hours.",
+  );
+  expect(
+    screen.getByRole("link", { name: "Browse the market" }),
+  ).toHaveAttribute("href", "/user-panel/market");
+  expect(
+    screen.getByRole("link", { name: "See your credits" }),
+  ).toHaveAttribute("href", "/user-panel/deposits");
+});

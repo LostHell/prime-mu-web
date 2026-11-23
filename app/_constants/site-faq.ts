@@ -1,5 +1,13 @@
-import { BRAND, SERVER_LAUNCH_DATE, SERVER_OPEN_DATE } from "@/constants/app";
-import { DEPOSITABLE_ITEMS } from "@/constants/depositable-items";
+import {
+  ADMIN_NAMES_TEXT,
+  BRAND,
+  SERVER_LAUNCH_DATE,
+  SERVER_OPEN_DATE,
+} from "@/constants/app";
+import {
+  MARKET_PRICE_TYPES,
+  marketPriceLabel,
+} from "@/constants/market-prices";
 import { eventSchedules } from "@/constants/events";
 import {
   MAX_RESETS,
@@ -90,7 +98,7 @@ export const SITE_FAQ: FaqItem[] = [
   },
   {
     question: "Can I trade items on the website?",
-    answer: `Yes. On the market you list items from your warehouse and buy items from other players. A listing can be priced in ${listWithOr(Object.values(DEPOSITABLE_ITEMS).map((item) => item.label))}.`,
+    answer: `Yes. On the market you list items from your warehouse and buy items from other players. A listing can be priced in ${listWithOr(MARKET_PRICE_TYPES.map(marketPriceLabel))}.`,
   },
   {
     question: "How do I clear my PK status?",
@@ -101,5 +109,10 @@ export const SITE_FAQ: FaqItem[] = [
     answer:
       "The rankings list players by resets and level, guilds by score, the players online now, and the Blood Castle and Devil Square scores.",
     link: { href: "/rankings", label: "Rankings" },
+  },
+  {
+    question: `Who are the admins of ${BRAND}?`,
+    answer: `Only ${ADMIN_NAMES_TEXT}. Anyone else who says they are an admin is not one, and the staff will never ask for your password.`,
+    link: { href: "/rules#conduct", label: "Server rules" },
   },
 ];

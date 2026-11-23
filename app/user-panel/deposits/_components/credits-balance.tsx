@@ -23,7 +23,7 @@ export function CreditsBalance({ credits }: CreditsBalanceProps) {
         highlight={credits > 0}
       />
       <p className="text-muted-foreground mt-1 text-xs">
-        Earned by staying online in Devias town or the Arena. Buy items on the
+        Earned by staying online in Davias town or the Arena. Buy items on the
         market with them, or sell your items for them. Credits stay on your
         account: they are not deposited or withdrawn.
       </p>
