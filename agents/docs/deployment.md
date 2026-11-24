@@ -51,3 +51,9 @@ node -e "fetch('https://api.cloudflare.com/client/v4/zones/'+process.env.CLOUDFL
 ```
 
 The deploy log shows `Cloudflare purge true []` when it worked. Test a new token first: `curl -X POST https://api.cloudflare.com/client/v4/zones/<zone id>/purge_cache -H "Authorization: Bearer <token>" -H "Content-Type: application/json" --data '{"purge_everything":true}'`.
+
+## IndexNow (Bing, Yandex)
+
+`INDEXNOW_KEY` (runtime variable in Coolify; 8–128 letters, digits or dashes, e.g. `openssl rand -hex 16`) turns it on. The key is served at `/indexnow-key.txt` ([`app/indexnow-key.txt/route.ts`](../../app/indexnow-key.txt/route.ts)), so the search engines can check that the submission is ours.
+
+News, pages and the sitemap change only with a deploy, so [`instrumentation.ts`](../../instrumentation.ts) sends every sitemap URL to `api.indexnow.org` once when the production server starts (`submitToIndexNow` in [`lib/utils/indexnow.ts`](../../lib/utils/indexnow.ts)). It does nothing in `next dev`, without the key or on a local `SITE_URL`, and never blocks the start. The app log shows `IndexNow: <n> URLs, HTTP 200` (or `202` while the key is still being checked). Never change the key after the first submission without a reason: the engines then have to check the new one.
