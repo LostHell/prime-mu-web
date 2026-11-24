@@ -168,6 +168,17 @@ export type ServerConfig = {
     /** How memb__pwd is stored (JoinServer.ini MD5Encryption): 0 plain, 1 Webzen MD5, 2 MD5. */
     md5Encryption: number;
   };
+  /** Missing before the first sync that has it. */
+  party?: {
+    /** How many steps from the monster a member can be and still share its experience. */
+    maxDistance: number;
+    /**
+     * The experience each member gets for a kill, in percent of the monster's, by how many
+     * members are near it (index 0 = 1 member): PartyGeneralExperience when everyone has the
+     * killer's class, PartySpecialExperience when at least one has another class.
+     */
+    experience: { oneClass: number[]; mixedClasses: number[] };
+  };
 };
 
 export const serverConfig: ServerConfig = config;

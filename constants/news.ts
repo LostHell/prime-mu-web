@@ -6,6 +6,14 @@
  */
 export const NEWS = [
   {
+    id: "party-experience",
+    date: "24 Nov 2026",
+    dateTime: "2026-11-24",
+    title: "Party experience: hunt together, level faster",
+    summary:
+      "In a party every member near the monster gets experience for each kill, more than alone and even more with mixed classes, shared by level.",
+  },
+  {
     id: "afk-credits",
     date: "23 Nov 2026",
     dateTime: "2026-11-23",
