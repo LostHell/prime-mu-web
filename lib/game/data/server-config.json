@@ -4050,5 +4050,24 @@
   },
   "account": {
     "md5Encryption": 1
+  },
+  "party": {
+    "maxDistance": 10,
+    "experience": {
+      "oneClass": [
+        50,
+        125,
+        150,
+        175,
+        200
+      ],
+      "mixedClasses": [
+        70,
+        140,
+        180,
+        200,
+        230
+      ]
+    }
   }
 }
