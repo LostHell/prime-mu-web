@@ -122,4 +122,11 @@ export const serverConfig: ServerConfig = {
   warehouse: { maxMoney: 2_000_000_000 },
   pkClear: { moneyPerKill: 15_000_000 },
   account: { md5Encryption: 1 },
+  party: {
+    maxDistance: 10,
+    experience: {
+      oneClass: [50, 125, 150, 175, 200],
+      mixedClasses: [70, 140, 180, 200, 230],
+    },
+  },
 };

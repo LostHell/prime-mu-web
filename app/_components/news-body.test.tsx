@@ -127,6 +127,28 @@ test("counts the quests and their level-up points from the synced quest window",
   ).toHaveAttribute("href", "/server-info#quests");
 });
 
+test("gives the party experience for 2 to 5 members, and the summary its best figures", () => {
+  render(<NewsBody id="party-experience" />);
+
+  expect(screen.getAllByRole("listitem")).toHaveLength(4);
+  expect(screen.getByText("2 members:").closest("li")).toHaveTextContent(
+    "2 members: 125% with one class, 140% with mixed classes.",
+  );
+  expect(screen.getByText("5 members:").closest("li")).toHaveTextContent(
+    "5 members: 200% with one class, 230% with mixed classes.",
+  );
+  expect(screen.getByText(/within 10 steps of it/)).toBeInTheDocument();
+  expect(screen.getByText(/you get only 50%/)).toHaveTextContent(
+    "you get only 50% of its experience: less than alone.",
+  );
+});
+
+test("gives no party figures in the summary: it cannot follow the synced config", () => {
+  expect(
+    NEWS.find((item) => item.id === "party-experience")?.summary,
+  ).not.toMatch(/\d/);
+});
+
 test("gives each AFK zone's credits and links the market and the balance", () => {
   render(<NewsBody id="afk-credits" />);
 

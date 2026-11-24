@@ -45,12 +45,65 @@ const questPoints = questWindow
   .filter((reward) => reward.kind === "points")
   .reduce((sum, reward) => sum + reward.value, 0);
 
+const party = serverConfig.party;
+// 2 members and up: index 0 is a member with the rest of the party far away.
+const partyRows = (party?.experience.oneClass ?? [])
+  .map((oneClass, index) => ({
+    members: index + 1,
+    oneClass,
+    mixedClasses: party?.experience.mixedClasses[index],
+  }))
+  .slice(1);
+const partyAlone = party?.experience.oneClass[0];
+
 const everyHours = (hours: number) =>
   hours === 1 ? "every hour" : `every ${formatNumber(hours)} hours`;
 
 // The text of each news item; its date, title and summary are in constants/news.ts. Every figure
 // comes from the server config or the site's limits, so the text follows them.
 const bodies: Record<NewsId, ReactNode> = {
+  "party-experience": (
+    <>
+      <p>
+        Hunting in a party gives more experience than hunting alone. Every
+        monster the party kills gives experience to each member on the same map
+        {party ? ` within ${formatNumber(party.maxDistance)} steps of it` : ""}.
+      </p>
+      {partyRows.length > 0 && (
+        <>
+          <p>
+            <strong>How much.</strong> Each member gets this much of the
+            monster&apos;s experience, by how many members are near it:
+          </p>
+          <ul>
+            {partyRows.map((row) => (
+              <li key={row.members}>
+                <strong>{row.members} members:</strong> {row.oneClass}% with one
+                class, {row.mixedClasses}% with mixed classes.
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
+      <p>
+        <strong>Mixed classes</strong> means the party has more than one class,
+        for example a Dark Knight and a Fairy Elf.
+      </p>
+      <p>
+        <strong>Shared by level.</strong> Members of the same level get the
+        same; a higher-level member gets a bigger share, a lower-level member a
+        smaller one.
+      </p>
+      {partyAlone !== undefined && (
+        <p>
+          <strong>Stay close.</strong> If the rest of the party is far from the
+          monster, you get only {partyAlone}% of its experience
+          {partyAlone < 100 ? ": less than alone" : ""}.
+        </p>
+      )}
+      <p>Happy Hour counts for every member too.</p>
+    </>
+  ),
   "afk-credits": (
     <>
       <p>
