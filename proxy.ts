@@ -14,6 +14,13 @@ const getSessionToken = async (req: NextRequest) => {
   );
 };
 
+const SIGNED_OUT_PAGES = [
+  "/login",
+  "/register",
+  "/forgot-password",
+  "/reset-password",
+];
+
 export const proxy = async (req: NextRequest) => {
   const token = await getSessionToken(req);
   // A session made before a password change is no session (auth.ts ends it the same way): else the
@@ -23,9 +30,10 @@ export const proxy = async (req: NextRequest) => {
     typeof token.pws === "string" &&
     token.pws === (await getAccountPasswordStamp(token.sub));
   const isUserPanelRoute = req.nextUrl.pathname.startsWith("/user-panel");
-  const isAuthRoute =
-    req.nextUrl.pathname.startsWith("/login") ||
-    req.nextUrl.pathname.startsWith("/register");
+  // Pages for signed-out visitors only: signing in, registering and the password reset.
+  const isAuthRoute = SIGNED_OUT_PAGES.some((page) =>
+    req.nextUrl.pathname.startsWith(page),
+  );
 
   if (isUserPanelRoute && !isAuthenticated) {
     return NextResponse.redirect(new URL("/login", req.nextUrl));
@@ -39,5 +47,11 @@ export const proxy = async (req: NextRequest) => {
 };
 
 export const config = {
-  matcher: ["/user-panel/:path*", "/login", "/register"],
+  matcher: [
+    "/user-panel/:path*",
+    "/login",
+    "/register",
+    "/forgot-password",
+    "/reset-password",
+  ],
 };

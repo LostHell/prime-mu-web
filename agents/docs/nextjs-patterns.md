@@ -28,8 +28,8 @@ Auth is checked in three places. Only the last two are security checks:
 
 - A session counts only while its password stamp is the account's (one database read): one made before a password change is none, else `/login` and `/user-panel` would send it to each other. `auth.ts` ends it the same way.
 - Redirect unauthenticated users from `/user-panel/*` → `/login`
-- Redirect authenticated users away from `/login` and `/register` → `/user-panel`
-- Uses an explicit `config.matcher` for: `/user-panel/:path*`, `/login`, `/register`
+- Redirect authenticated users away from `/login`, `/register`, `/forgot-password` and `/reset-password` → `/user-panel` (the pages check `auth()` too)
+- Uses an explicit `config.matcher` for: `/user-panel/:path*`, `/login`, `/register`, `/forgot-password`, `/reset-password`
 
 When changing this logic or the matcher, make sure you don’t accidentally intercept Next internals (like `/_next/*`), and test auth flows end-to-end (login, register, user-panel navigation).
 
