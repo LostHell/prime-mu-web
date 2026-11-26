@@ -30,7 +30,13 @@ export const CONTENT_PAGES = [
   "/news/:id",
   "/llms.txt",
 ];
-export const PRIVATE_PAGES = ["/user-panel/:path*", "/login", "/register"];
+export const PRIVATE_PAGES = [
+  "/user-panel/:path*",
+  "/login",
+  "/register",
+  "/forgot-password",
+  "/reset-password",
+];
 
 // Auth.js's session cookie: `__Secure-` on the https site, plain on http.
 export const SESSION_COOKIES = [

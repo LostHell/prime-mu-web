@@ -4,6 +4,7 @@ import {
   CONTENT_CDN_CACHE,
   LIVE_CDN_CACHE,
   PRIVATE_CDN_CACHE,
+  PRIVATE_PAGES,
   cdnCacheHeaders,
 } from "./cdn-cache";
 
@@ -53,6 +54,9 @@ test("forbids Cloudflare to keep the user panel and the sign-in pages", () => {
     "/user-panel/market/sell",
     "/login",
     "/register",
+    "/forgot-password",
+    // Its link carries the reset token.
+    "/reset-password",
   ]) {
     expect([path, cdnCacheFor(path)]).toEqual([path, PRIVATE_CDN_CACHE]);
   }
@@ -94,7 +98,7 @@ test("marks private pages no-store for everyone, signed in or not", () => {
     (rule) => rule.headers[0].value === PRIVATE_CDN_CACHE,
   );
 
-  expect(privateRules).toHaveLength(3);
+  expect(privateRules).toHaveLength(PRIVATE_PAGES.length);
   for (const rule of privateRules) {
     expect(rule.missing).toBeUndefined();
   }

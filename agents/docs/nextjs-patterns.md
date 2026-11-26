@@ -26,6 +26,7 @@ Auth is checked in three places. Only the last two are security checks:
 
 `proxy.ts` implements route guards using `next-auth` JWT:
 
+- A session counts only while its password stamp is the account's (one database read): one made before a password change is none, else `/login` and `/user-panel` would send it to each other. `auth.ts` ends it the same way.
 - Redirect unauthenticated users from `/user-panel/*` → `/login`
 - Redirect authenticated users away from `/login` and `/register` → `/user-panel`
 - Uses an explicit `config.matcher` for: `/user-panel/:path*`, `/login`, `/register`

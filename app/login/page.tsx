@@ -43,6 +43,12 @@ const LoginPage = async () => {
           Register
         </Link>
       </p>
+      <p className="text-muted-foreground mt-3 text-center text-sm">
+        Forgot your password?{" "}
+        <Link href="/forgot-password" className="text-gold hover:underline">
+          Reset it
+        </Link>
+      </p>
     </PageLayout>
   );
 };

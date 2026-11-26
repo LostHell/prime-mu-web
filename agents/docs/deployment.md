@@ -10,7 +10,7 @@ The site runs on Coolify behind Cloudflare (Free plan) at `blackmu.net`. `www.bl
 | ------------------------------------------------------------------------------------------------------------- | -------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
 | `LIVE_PAGES`: `/`, `/rankings` (every `view`, search and page), `/server-info`, `/downloads`, `/faq`, `/news` | `public, max-age=60, stale-if-error=86400`   | Live game data: the online/offline status, online count, rankings, online list, the launcher release (uploaded without a deploy). |
 | `CONTENT_PAGES`: `/rules`, `/terms`, `/privacy`, `/news/<id>`, `/news/rss.xml`, `/llms.txt`                   | `public, max-age=3600, stale-if-error=86400` | Change only on a deploy, which purges the cache.                                                                                  |
-| `PRIVATE_PAGES`: `/user-panel` and below, `/login`, `/register`                                               | `no-store`                                   | Personal or sign-in pages, for everyone.                                                                                          |
+| `PRIVATE_PAGES`: `/user-panel` and below, `/login`, `/register`, `/forgot-password`, `/reset-password`        | `no-store`                                   | Personal or sign-in pages, for everyone.                                                                                          |
 | Everything else (`/api/`, `/_next/`, `/patches/`, `/downloads/launcher/`, `public/` files, 404s)              | none                                         | Cloudflare's own rules apply.                                                                                                     |
 
 - The public headers are **not** sent when the request has `authjs.session-token` or `__Secure-authjs.session-token` (the header shows the account) or an `RSC` header (the client router gets an RSC payload on the same URL). Next matches `missing` cookies by exact name.
@@ -35,7 +35,7 @@ Caching → Cache Rules, in this order (the later rule wins):
 2. **Bypass private and signed-in**, Expression:
 
    ```
-   (http.cookie contains "authjs.session-token") or (http.request.uri.query contains "_rsc=") or starts_with(http.request.uri.path, "/user-panel") or (http.request.uri.path in {"/login" "/register"})
+   (http.cookie contains "authjs.session-token") or (http.request.uri.query contains "_rsc=") or starts_with(http.request.uri.path, "/user-panel") or (http.request.uri.path in {"/login" "/register" "/forgot-password" "/reset-password"})
    ```
 
    → Bypass cache. `contains` also catches `__Secure-authjs.session-token` and chunked session cookies.
@@ -57,3 +57,9 @@ The deploy log shows `Cloudflare purge true []` when it worked. Test a new token
 `INDEXNOW_KEY` (runtime variable in Coolify; 8–128 letters, digits or dashes, e.g. `openssl rand -hex 16`) turns it on. The key is served at `/indexnow-key.txt` ([`app/indexnow-key.txt/route.ts`](../../app/indexnow-key.txt/route.ts)), so the search engines can check that the submission is ours.
 
 News, pages and the sitemap change only with a deploy, so [`instrumentation.ts`](../../instrumentation.ts) sends every sitemap URL to `api.indexnow.org` once when the production server starts (`submitToIndexNow` in [`lib/utils/indexnow.ts`](../../lib/utils/indexnow.ts)). It does nothing in `next dev`, without the key or on a local `SITE_URL`, and never blocks the start. The app log shows `IndexNow: <n> URLs, HTTP 200` (or `202` while the key is still being checked). Never change the key after the first submission without a reason: the engines then have to check the new one.
+
+## Email (Resend): password reset
+
+`RESEND_API_KEY` and `MAIL_FROM` (runtime variables in Coolify) let `/forgot-password` send its links ([`lib/mail/send-mail.ts`](../../lib/mail/send-mail.ts)). In Resend: Domains → add `blackmu.net` → add the DNS records it shows (SPF, DKIM, and the MX of its sending subdomain) in Cloudflare DNS as **DNS only** (grey cloud) → wait for Verified. Then API Keys → a key with "Sending access" only → `RESEND_API_KEY`, and `MAIL_FROM=Black MU <no-reply@blackmu.net>`. Without a verified domain Resend sends only to the account owner's own address. A failed send shows `Mail: Resend answered HTTP <status>` in the app log; the player still sees the usual answer.
+
+The links point at `SITE_URL`, and work for `PASSWORD_RESET_LINK_MINUTES` ([`constants/password-reset.ts`](../../constants/password-reset.ts)) and once. They are signed with `AUTH_SECRET`: changing it ends every open link and every session.
