@@ -3,6 +3,13 @@ import { createItemBytes } from "@/lib/game/item-decoder/encode";
 import { getItemSerial } from "@/lib/game/item-decoder/decode";
 import { prisma } from "@/prisma/prisma";
 import { sendGlobalNotice } from "@/lib/game/data-server";
+import {
+  ANNOUNCEMENT_FEE_CREDITS,
+  LISTING_FEE_CREDITS,
+} from "@/constants/market-fees";
+
+/** What a listing costs with the announcement. */
+const ANNOUNCED_FEE_CREDITS = LISTING_FEE_CREDITS + ANNOUNCEMENT_FEE_CREDITS;
 
 jest.mock("@/prisma/prisma", () => ({
   prisma: {
@@ -167,7 +174,7 @@ beforeEach(() => {
   (prisma.aFK_CreditReward.update as jest.Mock).mockClear();
 });
 
-test("takes 5 credits for a listing and announces nothing", async () => {
+test("takes the listing fee and announces nothing", async () => {
   const { form, credits } = listKris(false);
 
   const result = await listMarketItemAction({}, form);
@@ -177,13 +184,13 @@ test("takes 5 credits for a listing and announces nothing", async () => {
     message: "Item listed on the marketplace.",
   });
   expect(credits.updateMany).toHaveBeenCalledWith({
-    where: { AccountID: "account", Credits: { gte: 5 } },
-    data: { Credits: { decrement: 5 } },
+    where: { AccountID: "account", Credits: { gte: LISTING_FEE_CREDITS } },
+    data: { Credits: { decrement: LISTING_FEE_CREDITS } },
   });
   expect(sendGlobalNotice).not.toHaveBeenCalled();
 });
 
-test("takes 10 credits with the announcement and tells the game who sells what, without the price", async () => {
+test("takes the listing and announcement fees and tells the game who sells what, without the price", async () => {
   const { form, credits } = listKris(true);
 
   const result = await listMarketItemAction({}, form);
@@ -193,8 +200,8 @@ test("takes 10 credits with the announcement and tells the game who sells what, 
     message: "Item listed on the marketplace and announced in the game.",
   });
   expect(credits.updateMany).toHaveBeenCalledWith({
-    where: { AccountID: "account", Credits: { gte: 10 } },
-    data: { Credits: { decrement: 10 } },
+    where: { AccountID: "account", Credits: { gte: ANNOUNCED_FEE_CREDITS } },
+    data: { Credits: { decrement: ANNOUNCED_FEE_CREDITS } },
   });
   expect(sendGlobalNotice).toHaveBeenCalledWith(
     "[Market] Knight sells Kris +9",
@@ -211,24 +218,26 @@ test("lists nothing when the credits do not cover the fee", async () => {
 
   expect(result).toEqual({
     success: false,
-    message: "Listing this item costs 10 credits, and you do not have enough.",
+    message: `Listing this item costs ${ANNOUNCED_FEE_CREDITS} credits, and you do not have enough.`,
   });
   expect(warehouseUpdate).not.toHaveBeenCalled();
   expect(create).not.toHaveBeenCalled();
   expect(sendGlobalNotice).not.toHaveBeenCalled();
 });
 
-test("keeps the listing but gives the announcement's 5 credits back when the game cannot be reached", async () => {
+test("keeps the listing but gives the announcement's credits back when the game cannot be reached", async () => {
   const { form, create } = listKris(true);
   (sendGlobalNotice as jest.Mock).mockResolvedValue(false);
 
   const result = await listMarketItemAction({}, form);
 
   expect(result.success).toBe(true);
-  expect(result.message).toMatch(/so its 5 credits were given back/);
+  expect(result.message).toContain(
+    `so its ${ANNOUNCEMENT_FEE_CREDITS} credits were given back`,
+  );
   expect(create).toHaveBeenCalled();
   expect(prisma.aFK_CreditReward.update).toHaveBeenCalledWith({
     where: { AccountID: "account" },
-    data: { Credits: { increment: 5 } },
+    data: { Credits: { increment: ANNOUNCEMENT_FEE_CREDITS } },
   });
 });
