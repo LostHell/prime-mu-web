@@ -73,7 +73,8 @@ const bodies: Record<NewsId, ReactNode> = {
         <>
           <p>
             <strong>How much.</strong> Each member gets this much of the
-            monster&apos;s experience, by how many members are near it:
+            experience the monster gives them alone, by how many members are
+            near it:
           </p>
           <ul>
             {partyRows.map((row) => (
@@ -90,9 +91,10 @@ const bodies: Record<NewsId, ReactNode> = {
         for example a Dark Knight and a Fairy Elf.
       </p>
       <p>
-        <strong>Shared by level.</strong> Members of the same level get the
-        same; a higher-level member gets a bigger share, a lower-level member a
-        smaller one.
+        <strong>Whatever your levels.</strong> Nothing is shared: each member
+        gets their own experience, as if they had killed the monster alone, plus
+        the party&apos;s bonus. A low level loses nothing by hunting with a high
+        level, and the other way round.
       </p>
       {partyAlone !== undefined && (
         <p>

@@ -13,6 +13,10 @@ import { Input } from "@/components/ui/input";
 import { WarehouseGrid } from "@/components/warehouse-grid";
 import { DEPOSITABLE_ITEMS } from "@/constants/depositable-items";
 import {
+  ANNOUNCEMENT_FEE_CREDITS,
+  listingFeeCredits,
+} from "@/constants/market-fees";
+import {
   EMPTY_MARKET_PRICES,
   MARKET_PRICE_TYPES,
   marketPriceLabel,
@@ -56,6 +60,7 @@ const toListingPrices = (
 export function SellItemForm({ warehouseItems }: SellItemFormProps) {
   const [selectedSlot, setSelectedSlot] = useState<number | null>(null);
   const [priceInputs, setPriceInputs] = useState(emptyPriceInputs);
+  const [announce, setAnnounce] = useState(false);
 
   const [, formAction, isPending] = useActionState(
     withActionToast(async (state, formData) => {
@@ -63,6 +68,7 @@ export function SellItemForm({ warehouseItems }: SellItemFormProps) {
       if (result.success) {
         setSelectedSlot(null);
         setPriceInputs(emptyPriceInputs());
+        setAnnounce(false);
       }
       return result;
     }),
@@ -244,6 +250,30 @@ export function SellItemForm({ warehouseItems }: SellItemFormProps) {
                 value={priceInputs[type]}
               />
             ))}
+
+            <label
+              htmlFor="announce"
+              className="mb-2 flex items-start gap-2 text-sm"
+            >
+              <input
+                id="announce"
+                name="announce"
+                type="checkbox"
+                checked={announce}
+                onChange={(event) => setAnnounce(event.target.checked)}
+                disabled={isPending}
+                className="accent-gold mt-0.5 size-4 shrink-0"
+              />
+              <span>
+                Announce in game (+{ANNOUNCEMENT_FEE_CREDITS} credits): every
+                player online sees &ldquo;[Market] your character sells the
+                item&rdquo;, without the price.
+              </span>
+            </label>
+            <p className="text-muted-foreground mb-3 text-xs">
+              Listing costs {listingFeeCredits(announce)} credits. They are not
+              given back if you cancel the listing.
+            </p>
 
             <Button disabled={!canSubmit || isPending} className="w-full">
               {isPending ? (

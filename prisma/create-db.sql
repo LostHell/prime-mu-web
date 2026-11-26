@@ -861,9 +861,13 @@ BEGIN
 
 	START TRANSACTION;
 
+	-- FOR UPDATE locks the counter until the COMMIT: a second caller (the DataServer and the website
+	-- call this at once) waits and reads the new value. A plain SELECT let both read the same
+	-- ItemCount and give the same serial to two items.
 	SELECT ItemCount INTO @ItemSerial
 	FROM `GameServerInfo`
-	WHERE Number = 0;
+	WHERE Number = 0
+	FOR UPDATE;
 
 	IF (@ItemSerial >= 2147483647) THEN -- MAX INTEGER VALUE
 		SET @ItemSerial = 1;

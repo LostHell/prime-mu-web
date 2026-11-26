@@ -138,6 +138,11 @@ test("gives the party experience for 2 to 5 members, and the summary its best fi
     "5 members: 200% with one class, 230% with mixed classes.",
   );
   expect(screen.getByText(/within 10 steps of it/)).toBeInTheDocument();
+  expect(
+    screen.getByText("Whatever your levels.").closest("p"),
+  ).toHaveTextContent(
+    "each member gets their own experience, as if they had killed the monster alone, plus the party's bonus.",
+  );
   expect(screen.getByText(/you get only 50%/)).toHaveTextContent(
     "you get only 50% of its experience: less than alone.",
   );

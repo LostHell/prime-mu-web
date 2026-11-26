@@ -11,7 +11,7 @@ export const NEWS = [
     dateTime: "2026-11-24",
     title: "Party experience: hunt together, level faster",
     summary:
-      "In a party every member near the monster gets experience for each kill, more than alone and even more with mixed classes, shared by level.",
+      "In a party every member near the monster gets more experience for each kill than alone, whatever their levels, and even more with mixed classes.",
   },
   {
     id: "afk-credits",

@@ -2,18 +2,29 @@ import { listMarketItemAction } from "./list-market-item";
 import { createItemBytes } from "@/lib/game/item-decoder/encode";
 import { getItemSerial } from "@/lib/game/item-decoder/decode";
 import { prisma } from "@/prisma/prisma";
+import { sendGlobalNotice } from "@/lib/game/data-server";
 
 jest.mock("@/prisma/prisma", () => ({
   prisma: {
     character: { findFirst: jest.fn().mockResolvedValue({ Name: "Knight" }) },
+    aFK_CreditReward: { update: jest.fn() },
     $transaction: jest.fn(),
   },
+}));
+jest.mock("@/lib/game/data-server", () => ({
+  NOTICE_BLUE: 1,
+  sendGlobalNotice: jest.fn().mockResolvedValue(true),
 }));
 jest.mock("./utils", () => ({
   getAuthenticatedUser: jest.fn().mockResolvedValue("account"),
   isAccountOffline: jest.fn().mockResolvedValue(true),
 }));
 jest.mock("next/cache", () => ({ revalidatePath: jest.fn() }));
+
+/** The account's credits cover the fee. */
+const paidFee = () => ({
+  updateMany: jest.fn().mockResolvedValue({ count: 1 }),
+});
 
 test("refuses to list a replacement item from a stale warehouse tab", async () => {
   const updateMany = jest.fn();
@@ -26,6 +37,7 @@ test("refuses to list a replacement item from a stale warehouse tab", async () =
       updateMany,
     },
     marketplaceListing: { create },
+    aFK_CreditReward: paidFee(),
   };
   (prisma.$transaction as jest.Mock).mockImplementation((run) =>
     run(transaction),
@@ -57,6 +69,7 @@ test("stores the searchable item name when a listing is created", async () => {
       updateMany,
     },
     marketplaceListing: { create },
+    aFK_CreditReward: paidFee(),
   };
   (prisma.$transaction as jest.Mock).mockImplementation((run) =>
     run(transaction),
@@ -92,6 +105,7 @@ test("stores a price in credits, alone or with zen", async () => {
       updateMany: jest.fn().mockResolvedValue({ count: 1 }),
     },
     marketplaceListing: { create },
+    aFK_CreditReward: paidFee(),
   };
   (prisma.$transaction as jest.Mock).mockImplementation((run) =>
     run(transaction),
@@ -115,5 +129,106 @@ test("stores a price in credits, alone or with zen", async () => {
   expect((await listMarketItemAction({}, withZen)).success).toBe(true);
   expect(create).toHaveBeenLastCalledWith({
     data: expect.objectContaining({ Zen: 500, Credits: 2 }),
+  });
+});
+
+/** A Kris +9 in slot 0 of the warehouse, and a form that lists it for 100 zen. */
+const listKris = (announce: boolean) => {
+  const itemBytes = createItemBytes(
+    { group: 0, index: 0, level: 9 },
+    0x0005e79d,
+    1,
+  );
+  const credits = paidFee();
+  const create = jest.fn().mockResolvedValue({ id: 1 });
+  const warehouseUpdate = jest.fn().mockResolvedValue({ count: 1 });
+  (prisma.$transaction as jest.Mock).mockImplementation((run) =>
+    run({
+      warehouse: {
+        findUnique: jest.fn().mockResolvedValue({
+          Items: Buffer.from(itemBytes),
+        }),
+        updateMany: warehouseUpdate,
+      },
+      marketplaceListing: { create },
+      aFK_CreditReward: credits,
+    }),
+  );
+  const form = new FormData();
+  form.set("slotIndex", "0");
+  form.set("zen", "100");
+  form.set("itemSerial", String(getItemSerial(Uint8Array.from(itemBytes))));
+  if (announce) form.set("announce", "on");
+  return { form, credits, create, warehouseUpdate };
+};
+
+beforeEach(() => {
+  (sendGlobalNotice as jest.Mock).mockClear().mockResolvedValue(true);
+  (prisma.aFK_CreditReward.update as jest.Mock).mockClear();
+});
+
+test("takes 5 credits for a listing and announces nothing", async () => {
+  const { form, credits } = listKris(false);
+
+  const result = await listMarketItemAction({}, form);
+
+  expect(result).toEqual({
+    success: true,
+    message: "Item listed on the marketplace.",
+  });
+  expect(credits.updateMany).toHaveBeenCalledWith({
+    where: { AccountID: "account", Credits: { gte: 5 } },
+    data: { Credits: { decrement: 5 } },
+  });
+  expect(sendGlobalNotice).not.toHaveBeenCalled();
+});
+
+test("takes 10 credits with the announcement and tells the game who sells what, without the price", async () => {
+  const { form, credits } = listKris(true);
+
+  const result = await listMarketItemAction({}, form);
+
+  expect(result).toEqual({
+    success: true,
+    message: "Item listed on the marketplace and announced in the game.",
+  });
+  expect(credits.updateMany).toHaveBeenCalledWith({
+    where: { AccountID: "account", Credits: { gte: 10 } },
+    data: { Credits: { decrement: 10 } },
+  });
+  expect(sendGlobalNotice).toHaveBeenCalledWith(
+    "[Market] Knight sells Kris +9",
+    1,
+  );
+  expect(prisma.aFK_CreditReward.update).not.toHaveBeenCalled();
+});
+
+test("lists nothing when the credits do not cover the fee", async () => {
+  const { form, credits, create, warehouseUpdate } = listKris(true);
+  credits.updateMany.mockResolvedValue({ count: 0 });
+
+  const result = await listMarketItemAction({}, form);
+
+  expect(result).toEqual({
+    success: false,
+    message: "Listing this item costs 10 credits, and you do not have enough.",
+  });
+  expect(warehouseUpdate).not.toHaveBeenCalled();
+  expect(create).not.toHaveBeenCalled();
+  expect(sendGlobalNotice).not.toHaveBeenCalled();
+});
+
+test("keeps the listing but gives the announcement's 5 credits back when the game cannot be reached", async () => {
+  const { form, create } = listKris(true);
+  (sendGlobalNotice as jest.Mock).mockResolvedValue(false);
+
+  const result = await listMarketItemAction({}, form);
+
+  expect(result.success).toBe(true);
+  expect(result.message).toMatch(/so its 5 credits were given back/);
+  expect(create).toHaveBeenCalled();
+  expect(prisma.aFK_CreditReward.update).toHaveBeenCalledWith({
+    where: { AccountID: "account" },
+    data: { Credits: { increment: 5 } },
   });
 });

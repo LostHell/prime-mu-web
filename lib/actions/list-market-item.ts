@@ -1,7 +1,14 @@
 "use server";
 
 import { flattenError } from "zod";
+import {
+  ANNOUNCEMENT_FEE_CREDITS,
+  listingFeeCredits,
+  listingNotice,
+} from "@/constants/market-fees";
 import { ActionError, actionErrorMessage } from "@/lib/errors/action-error";
+import { NOTICE_BLUE, sendGlobalNotice } from "@/lib/game/data-server";
+import { formatItemName } from "@/lib/game/item-database/formatters";
 import {
   BYTES_PER_SLOT,
   EMPTY_SLOT_BYTE,
@@ -44,6 +51,7 @@ export async function listMarketItemAction(
     jewelOfLife: formData.get("jewelOfLife"),
     jewelOfCreation: formData.get("jewelOfCreation"),
     jewelOfChaos: formData.get("jewelOfChaos"),
+    announce: formData.get("announce"),
   });
 
   if (!validated.success) {
@@ -54,7 +62,8 @@ export async function listMarketItemAction(
     };
   }
 
-  const { slotIndex, prices, itemSerial } = validated.data;
+  const { slotIndex, prices, itemSerial, announce } = validated.data;
+  const fee = listingFeeCredits(announce);
 
   const offline = await isAccountOffline(accountId);
   if (!offline) {
@@ -76,6 +85,7 @@ export async function listMarketItemAction(
     };
   }
 
+  let noticeItem = "";
   try {
     await prisma.$transaction(async (tx) => {
       const warehouse = await tx.warehouse.findUnique({
@@ -119,6 +129,18 @@ export async function listMarketItemAction(
         );
       }
       const itemName = searchableItemName(itemId);
+      noticeItem = formatItemName({ item: { ...itemId, name: itemName } });
+
+      // The fee, taken only when the account's credits (AFK_CreditReward) cover it.
+      const { count: paid } = await tx.aFK_CreditReward.updateMany({
+        where: { AccountID: accountId, Credits: { gte: fee } },
+        data: { Credits: { decrement: fee } },
+      });
+      if (paid === 0) {
+        throw new ActionError(
+          `Listing this item costs ${fee} credits, and you do not have enough.`,
+        );
+      }
 
       const updatedBuffer = clearWarehouseSlot(itemsBuffer, slotIndex);
 
@@ -153,5 +175,35 @@ export async function listMarketItemAction(
 
   revalidatePath("/user-panel/market", "layout");
 
-  return { success: true, message: "Item listed on the marketplace." };
+  if (
+    announce &&
+    !(await sendGlobalNotice(
+      listingNotice(firstCharacter.Name, noticeItem),
+      NOTICE_BLUE,
+    ))
+  ) {
+    // The listing stands; only the announcement's credits come back.
+    try {
+      await prisma.aFK_CreditReward.update({
+        where: { AccountID: accountId },
+        data: { Credits: { increment: ANNOUNCEMENT_FEE_CREDITS } },
+      });
+    } catch (err) {
+      return {
+        success: true,
+        message: `Item listed on the marketplace, but the game could not be reached for the announcement. ${actionErrorMessage(err, "Its credits could not be given back: please contact support.")}`,
+      };
+    }
+    return {
+      success: true,
+      message: `Item listed on the marketplace. The game could not be reached for the announcement, so its ${ANNOUNCEMENT_FEE_CREDITS} credits were given back.`,
+    };
+  }
+
+  return {
+    success: true,
+    message: announce
+      ? "Item listed on the marketplace and announced in the game."
+      : "Item listed on the marketplace.",
+  };
 }
