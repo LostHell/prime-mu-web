@@ -1,5 +1,7 @@
 import { loginSchema } from "@/lib/validation/login";
 import { verifyPassword } from "@/lib/auth/password";
+import { refreshSessionToken } from "@/lib/auth/session-token";
+import { getAccountPasswordStamp } from "@/lib/queries/get-account-password-stamp";
 import { prisma } from "@/prisma/prisma";
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
@@ -61,12 +63,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     }),
   ],
   callbacks: {
-    jwt: async ({ token, user }) => {
-      if (user) {
-        token.sub = user.id;
-      }
-      return token;
-    },
+    // A new password (the reset link or the account page) ends every session made with the old one.
+    // proxy.ts checks the same.
+    jwt: ({ token, user }) =>
+      refreshSessionToken(token, user?.id, getAccountPasswordStamp),
     session: async ({ session, token }) => {
       if (session.user && token.sub) {
         session.user.id = token.sub;

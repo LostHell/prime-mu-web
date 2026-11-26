@@ -16,8 +16,16 @@ jest.mock("next-auth/jwt", () => ({
       ? "__Secure-authjs.session-token"
       : "authjs.session-token";
 
-    return req.cookies.get(name)?.value === "valid" ? { sub: "1" } : null;
+    const value = req.cookies.get(name)?.value;
+    if (value === "valid") {
+      return { sub: "1", pws: "current" };
+    }
+    // Made before the password changed.
+    return value === "old-password" ? { sub: "1", pws: "old" } : null;
   },
+}));
+jest.mock("@/lib/queries/get-account-password-stamp", () => ({
+  getAccountPasswordStamp: async () => "current",
 }));
 
 // The request as it reaches the app: http, also behind Coolify's https proxy.
@@ -56,4 +64,14 @@ test("sends a visitor without a session from the user panel to the login page", 
   const response = await proxy(request("/user-panel/market"));
 
   expect(response.headers.get("location")).toBe("http://localhost:3000/login");
+});
+
+test("treats a session made before a password change as none, so the login page shows", async () => {
+  const cookie = "__Secure-authjs.session-token=old-password";
+
+  const panel = await proxy(request("/user-panel", cookie));
+  const login = await proxy(request("/login", cookie));
+
+  expect(panel.headers.get("location")).toBe("http://localhost:3000/login");
+  expect(login.headers.get("location")).toBeNull();
 });

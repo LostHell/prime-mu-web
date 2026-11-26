@@ -1,6 +1,7 @@
 "use server";
 
 import { flattenError } from "zod";
+import { signIn } from "@/auth";
 import { changePasswordSchema } from "@/lib/validation/change-password";
 import { encodePassword, verifyPassword } from "@/lib/auth/password";
 import { ActionState } from "@/lib/types/action-state";
@@ -52,6 +53,14 @@ export async function changePasswordAction(
     data: {
       memb__pwd: encodePassword(account.memb___id, validated.data.newPassword),
     },
+  });
+
+  // The new password ends every session made with the old one (auth.ts), this one too: sign this
+  // browser in again with it, so only the others are logged out.
+  await signIn("credentials", {
+    username: account.memb___id,
+    password: validated.data.newPassword,
+    redirect: false,
   });
 
   return { success: true, message: "Password changed successfully." };
