@@ -23,6 +23,15 @@ describe("listMarketItemSchema", () => {
     ).toBe(false);
   });
 
+  test("announces only when the checkbox is ticked", () => {
+    const parse = (announce?: string) =>
+      listMarketItemSchema.parse({ slotIndex: 0, itemSerial, zen: 1, announce })
+        .announce;
+    expect(parse("on")).toBe(true);
+    expect(parse(undefined)).toBe(false);
+    expect(parse("off")).toBe(false);
+  });
+
   test("requires at least one price", () => {
     const result = listMarketItemSchema.safeParse({ slotIndex: 0, itemSerial });
     expect(result.success).toBe(false);
@@ -54,6 +63,7 @@ describe("listMarketItemSchema", () => {
       expect(result.data).toEqual({
         slotIndex: 3,
         itemSerial,
+        announce: false,
         prices: { ...EMPTY_MARKET_PRICES, zen: 1000, jewelOfBless: 5 },
       });
     }

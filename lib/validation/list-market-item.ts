@@ -35,11 +35,13 @@ export const listMarketItemSchema = z
     jewelOfLife: listingPriceSchema(listingPriceLimit("jewelOfLife")),
     jewelOfCreation: listingPriceSchema(listingPriceLimit("jewelOfCreation")),
     jewelOfChaos: listingPriceSchema(listingPriceLimit("jewelOfChaos")),
+    // The "announce in game" checkbox: "on" when ticked, missing otherwise.
+    announce: z.preprocess((value) => value === "on", z.boolean()),
   })
   .transform((data) => {
-    const { slotIndex, itemSerial, ...priceFields } = data;
+    const { slotIndex, itemSerial, announce, ...priceFields } = data;
     const prices: MarketPrices = { ...EMPTY_MARKET_PRICES, ...priceFields };
-    return { slotIndex, itemSerial, prices };
+    return { slotIndex, itemSerial, announce, prices };
   })
   .refine((data) => hasAnyPositiveMarketPrice(data.prices), {
     message: "Set at least one price.",
