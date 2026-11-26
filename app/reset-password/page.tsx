@@ -1,3 +1,4 @@
+import { auth } from "@/auth";
 import { ResetPasswordForm } from "@/app/reset-password/_components/reset-password-form";
 import PageLayout from "@/components/page-layout";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -8,6 +9,7 @@ import { getPasswordResetAccount } from "@/lib/queries/get-password-reset-accoun
 import type { SearchParams } from "@/lib/utils/pagination";
 import type { Metadata } from "next";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "Set a new password",
@@ -20,6 +22,13 @@ interface ResetPasswordPageProps {
 }
 
 const ResetPasswordPage = async ({ searchParams }: ResetPasswordPageProps) => {
+  // For signed-out visitors only: a signed-in player changes the password on the account page.
+  const session = await auth();
+
+  if (session?.user?.id) {
+    redirect("/user-panel");
+  }
+
   const { token } = await searchParams;
   const resetToken = typeof token === "string" ? token : "";
   const account = resetToken ? await getPasswordResetAccount(resetToken) : null;

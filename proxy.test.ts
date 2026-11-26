@@ -75,3 +75,24 @@ test("treats a session made before a password change as none, so the login page 
   expect(panel.headers.get("location")).toBe("http://localhost:3000/login");
   expect(login.headers.get("location")).toBeNull();
 });
+
+test("sends a signed-in user from the password reset pages to the user panel", async () => {
+  for (const path of ["/forgot-password", "/reset-password?token=abc"]) {
+    const response = await proxy(
+      request(path, "__Secure-authjs.session-token=valid"),
+    );
+
+    expect([path, response.headers.get("location")]).toEqual([
+      path,
+      "http://localhost:3000/user-panel",
+    ]);
+  }
+});
+
+test("lets a visitor without a session reach the password reset pages", async () => {
+  for (const path of ["/forgot-password", "/reset-password?token=abc"]) {
+    const response = await proxy(request(path));
+
+    expect([path, response.headers.get("location")]).toEqual([path, null]);
+  }
+});
