@@ -6,12 +6,28 @@
  */
 export const NEWS = [
   {
+    id: "forgot-password",
+    date: "26 Nov 2026",
+    dateTime: "2026-11-26",
+    title: "Forgot your password? Reset it by email",
+    summary:
+      "Locked out? Enter your username and the account's email on the login page and we send you a link to set a new password. It logs out every other device too.",
+  },
+  {
+    id: "market-announcements",
+    date: "26 Nov 2026",
+    dateTime: "2026-11-26",
+    title: "Shout your market listing across the game",
+    summary:
+      "When you list an item on the market, tick Announce in game and every player online sees in the chat that you sell it. It costs a few credits.",
+  },
+  {
     id: "party-experience",
     date: "24 Nov 2026",
     dateTime: "2026-11-24",
     title: "Party experience: hunt together, level faster",
     summary:
-      "In a party every member near the monster gets more experience for each kill than alone, whatever their levels, and even more with mixed classes.",
+      "In a party every member near the monster gets more experience for each kill than alone, and even more with mixed classes. Here is who can join and when you leave.",
   },
   {
     id: "afk-credits",
