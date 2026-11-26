@@ -87,6 +87,27 @@ test("changes nothing with a link that ran out, was used, or is not one", async 
   expect(prisma.mEMB_INFO.updateMany).not.toHaveBeenCalled();
 });
 
+test("refuses the account's current password, which would leave the link and the other sessions working", async () => {
+  const current = encodePassword("Knight", "samepass1");
+  (prisma.mEMB_INFO.findUnique as jest.Mock).mockResolvedValue({
+    ...stored,
+    memb__pwd: current,
+  });
+  const token = createPasswordResetToken(
+    { username: "Knight", password: current, email: "knight@example.com" },
+    Math.floor(Date.now() / 1000) + 600,
+    "test-secret",
+  );
+
+  const result = await submit(token, "samepass1");
+
+  expect(result.success).toBe(false);
+  expect(result.errors?.newPassword).toEqual([
+    "Choose a password different from your current one.",
+  ]);
+  expect(prisma.mEMB_INFO.updateMany).not.toHaveBeenCalled();
+});
+
 test("returns the field errors and changes nothing for invalid input", async () => {
   const result = await submit(tokenFor(), "newpass1", "newpass2");
 

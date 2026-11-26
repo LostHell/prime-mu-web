@@ -115,6 +115,17 @@ test("mails an account once in its interval, whatever is asked", async () => {
   expect(sendMail).toHaveBeenCalledTimes(1);
 });
 
+test("lets an account ask again at once when its email did not go out", async () => {
+  mockAccount("Summoner", "summoner@example.com");
+  (sendMail as jest.Mock).mockResolvedValueOnce(false);
+
+  await submit("Summoner", "summoner@example.com");
+  fromNewAddress();
+  await submit("Summoner", "summoner@example.com");
+
+  expect(sendMail).toHaveBeenCalledTimes(2);
+});
+
 test("stops an address after its requests of the hour", async () => {
   mockAccount("Wizard", "other@example.com");
 

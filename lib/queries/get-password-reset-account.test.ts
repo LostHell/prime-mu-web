@@ -3,7 +3,10 @@
  */
 import { createPasswordResetToken } from "@/lib/auth/password-reset-token";
 import { prisma } from "@/prisma/prisma";
-import { getPasswordResetAccount } from "./get-password-reset-account";
+import {
+  findPasswordResetAccount,
+  getPasswordResetAccount,
+} from "./get-password-reset-account";
 
 jest.mock("@/prisma/prisma", () => ({
   prisma: { mEMB_INFO: { findUnique: jest.fn() } },
@@ -35,6 +38,13 @@ test("names the account of a link that still works", async () => {
   expect(prisma.mEMB_INFO.findUnique).toHaveBeenCalledWith({
     where: { memb___id: "Knight" },
     select: { memb___id: true, memb__pwd: true, mail_addr: true },
+  });
+});
+
+test("gives the action the account with the stored password the link was made for", async () => {
+  expect(await findPasswordResetAccount(token, NOW)).toEqual({
+    username: "Knight",
+    password,
   });
 });
 

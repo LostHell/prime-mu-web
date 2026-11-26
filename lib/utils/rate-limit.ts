@@ -1,9 +1,11 @@
-// Past this many keys, the keys with no use inside the window are dropped, so the map stays small.
-const PRUNE_AT = 1000;
+// The most keys kept: past it the key used longest ago is dropped, so neither the memory nor the
+// time of a use grows with the number of keys (an address header that a request can set itself).
+const MAX_KEYS = 10_000;
 
 /**
  * Allows `limit` uses of a key in each `windowMs`, in this server process: a restart forgets them.
- * Returns a function that takes one use of the key and says whether it was allowed.
+ * `take` takes one use of the key and says whether it was allowed; `giveBack` returns the last one
+ * taken, for work that did not happen after all.
  */
 export const createRateLimiter = ({
   limit,
@@ -12,26 +14,29 @@ export const createRateLimiter = ({
   limit: number;
   windowMs: number;
 }) => {
+  // In the order of their last use: the first key is the one used longest ago.
   const uses = new Map<string, number[]>();
 
-  return (key: string, now = Date.now()): boolean => {
-    if (uses.size > PRUNE_AT) {
-      for (const [other, times] of uses) {
-        if (now - times[times.length - 1] >= windowMs) {
-          uses.delete(other);
-        }
-      }
-    }
-
+  const take = (key: string, now = Date.now()): boolean => {
     const recent = (uses.get(key) ?? []).filter(
       (time) => now - time < windowMs,
     );
-    if (recent.length >= limit) {
-      uses.set(key, recent);
-      return false;
+    uses.delete(key);
+    if (uses.size >= MAX_KEYS) {
+      uses.delete(uses.keys().next().value!);
     }
-    recent.push(now);
+
+    const allowed = recent.length < limit;
+    if (allowed) {
+      recent.push(now);
+    }
     uses.set(key, recent);
-    return true;
+    return allowed;
   };
+
+  const giveBack = (key: string) => {
+    uses.get(key)?.pop();
+  };
+
+  return { take, giveBack };
 };

@@ -22,11 +22,11 @@ import { prisma } from "@/prisma/prisma";
 
 const MINUTE_MS = 60_000;
 
-const takeAddressRequest = createRateLimiter({
+const addressRequests = createRateLimiter({
   limit: PASSWORD_RESET_REQUESTS_PER_HOUR,
   windowMs: 60 * MINUTE_MS,
 });
-const takeAccountEmail = createRateLimiter({
+const accountEmails = createRateLimiter({
   limit: 1,
   windowMs: PASSWORD_RESET_EMAIL_INTERVAL_MINUTES * MINUTE_MS,
 });
@@ -42,9 +42,12 @@ const sendResetLink = async (username: string, email: string) => {
     if (
       !account ||
       !accountEmail ||
-      accountEmail.toLowerCase() !== email.trim().toLowerCase() ||
-      !takeAccountEmail(account.memb___id.toLowerCase())
+      accountEmail.toLowerCase() !== email.trim().toLowerCase()
     ) {
+      return;
+    }
+    const accountKey = account.memb___id.toLowerCase();
+    if (!accountEmails.take(accountKey)) {
       return;
     }
 
@@ -59,7 +62,7 @@ const sendResetLink = async (username: string, email: string) => {
       expires,
       getAuthSecret(),
     );
-    await sendMail({
+    const sent = await sendMail({
       to: accountEmail,
       ...passwordResetEmail({
         username: account.memb___id,
@@ -69,6 +72,10 @@ const sendResetLink = async (username: string, email: string) => {
         minutes: PASSWORD_RESET_LINK_MINUTES,
       }),
     });
+    // No email went out: the player may ask again at once, not after the interval.
+    if (!sent) {
+      accountEmails.giveBack(accountKey);
+    }
   } catch (error) {
     console.error("Password reset: the link could not be sent", error);
   }
@@ -91,7 +98,7 @@ export async function requestPasswordResetAction(
     };
   }
 
-  if (!takeAddressRequest(getClientAddress(await headers()))) {
+  if (!addressRequests.take(getClientAddress(await headers()))) {
     return {
       success: false,
       message: "Too many requests. Please try again later.",

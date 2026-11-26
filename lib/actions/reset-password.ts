@@ -1,12 +1,8 @@
 "use server";
 
 import { flattenError } from "zod";
-import { encodePassword } from "@/lib/auth/password";
-import {
-  isPasswordResetTokenValid,
-  readPasswordResetToken,
-} from "@/lib/auth/password-reset-token";
-import { getAuthSecret } from "@/lib/auth/secret";
+import { encodePassword, verifyPassword } from "@/lib/auth/password";
+import { findPasswordResetAccount } from "@/lib/queries/get-password-reset-account";
 import { ActionState } from "@/lib/types/action-state";
 import { resetPasswordSchema } from "@/lib/validation/reset-password";
 import { prisma } from "@/prisma/prisma";
@@ -36,36 +32,28 @@ export async function resetPasswordAction(
   }
 
   const { token, newPassword } = validated.data;
-  const named = readPasswordResetToken(token);
-  if (!named) {
+  const account = await findPasswordResetAccount(token);
+  if (!account) {
     return LINK_NOT_VALID;
   }
 
-  const account = await prisma.mEMB_INFO.findUnique({
-    where: { memb___id: named.username },
-    select: { memb___id: true, memb__pwd: true, mail_addr: true },
-  });
-  if (
-    !account?.mail_addr ||
-    !isPasswordResetTokenValid(
-      token,
-      {
-        username: account.memb___id,
-        password: account.memb__pwd,
-        email: account.mail_addr,
+  // The same password stores the same bytes: the link would keep working, and the other sessions
+  // would not end.
+  if (verifyPassword({ password: newPassword, account })) {
+    return {
+      success: false,
+      errors: {
+        newPassword: ["Choose a password different from your current one."],
       },
-      Math.floor(Date.now() / 1000),
-      getAuthSecret(),
-    )
-  ) {
-    return LINK_NOT_VALID;
+      message: "Please correct the errors.",
+    };
   }
 
   // Only over the password the link was made for: a second use of the link at the same time finds
   // it changed. The new password also ends every session made with the old one (auth.ts).
   const { count } = await prisma.mEMB_INFO.updateMany({
-    where: { memb___id: account.memb___id, memb__pwd: account.memb__pwd },
-    data: { memb__pwd: encodePassword(account.memb___id, newPassword) },
+    where: { memb___id: account.username, memb__pwd: account.password },
+    data: { memb__pwd: encodePassword(account.username, newPassword) },
   });
   if (count === 0) {
     return LINK_NOT_VALID;

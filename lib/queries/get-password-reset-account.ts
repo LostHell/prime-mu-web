@@ -6,11 +6,14 @@ import {
 import { getAuthSecret } from "@/lib/auth/secret";
 import { prisma } from "@/prisma/prisma";
 
-/** The account a reset link is for, while the link still works; null when it does not. */
-export const getPasswordResetAccount = async (
+/**
+ * The account a reset link is for, with its stored password, while the link still works; null when
+ * it does not. The reset page and the reset action check a link only through this.
+ */
+export const findPasswordResetAccount = async (
   token: string,
   now = Math.floor(Date.now() / 1000),
-): Promise<{ username: string } | null> => {
+): Promise<{ username: string; password: Uint8Array<ArrayBuffer> } | null> => {
   const named = readPasswordResetToken(token);
   if (!named || named.expires <= now) {
     return null;
@@ -35,5 +38,14 @@ export const getPasswordResetAccount = async (
   ) {
     return null;
   }
-  return { username: account.memb___id };
+  return { username: account.memb___id, password: account.memb__pwd };
+};
+
+/** The account name a reset link is for, while the link still works; null when it does not. */
+export const getPasswordResetAccount = async (
+  token: string,
+  now?: number,
+): Promise<{ username: string } | null> => {
+  const account = await findPasswordResetAccount(token, now);
+  return account && { username: account.username };
 };
