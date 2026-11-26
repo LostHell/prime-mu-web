@@ -170,3 +170,61 @@ test("gives each AFK zone's credits and links the market and the balance", () =>
     screen.getByRole("link", { name: "See your credits" }),
   ).toHaveAttribute("href", "/user-panel/deposits");
 });
+
+test("walks a player through the password reset, with the link's limits from the site", () => {
+  render(<NewsBody id="forgot-password" />);
+
+  expect(screen.getAllByRole("listitem")).toHaveLength(4);
+  expect(screen.getByText(/The link works for/)).toHaveTextContent(
+    "The link works for 30 minutes and only once.",
+  );
+  expect(screen.getByText(/The link works for/)).toHaveTextContent(
+    "you can ask for a new one every 5 minutes.",
+  );
+  expect(screen.getByText(/logs out every other browser/)).toBeInTheDocument();
+  expect(screen.getByRole("link", { name: "login page" })).toHaveAttribute(
+    "href",
+    "/login",
+  );
+  expect(
+    screen.getByRole("link", { name: "Reset your password" }),
+  ).toHaveAttribute("href", "/forgot-password");
+});
+
+test("shows the market announcement as the game writes it, with its fee and refund", () => {
+  render(<NewsBody id="market-announcements" />);
+
+  expect(
+    screen.getByText(/\[Market\] your character sells the item/),
+  ).toBeInTheDocument();
+  expect(screen.getByText(/on top of the listing/)).toHaveTextContent(
+    "3 credits, on top of the listing.",
+  );
+  expect(
+    screen.getByText(/the credits come straight back/),
+  ).toBeInTheDocument();
+  expect(screen.getByText(/No credits yet/)).toHaveTextContent(
+    "Davias town or the Arena",
+  );
+  expect(screen.getByRole("link", { name: "Sell an item" })).toHaveAttribute(
+    "href",
+    "/user-panel/market/sell",
+  );
+});
+
+test("says who can join a party and that a reset takes you out of it", () => {
+  render(<NewsBody id="party-experience" />);
+
+  expect(screen.getByText("Who can join.").closest("p")).toHaveTextContent(
+    "close to the level of every member already in it",
+  );
+  expect(screen.getByText("After a reset.").closest("p")).toHaveTextContent(
+    "A reset or a grand reset always takes you out of your party",
+  );
+});
+
+test("gives no figures in the new summaries: the site's limits may change", () => {
+  for (const id of ["forgot-password", "market-announcements"]) {
+    expect(NEWS.find((item) => item.id === id)?.summary).not.toMatch(/\d/);
+  }
+});

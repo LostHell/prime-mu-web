@@ -5,6 +5,14 @@ import {
   SERVER_OPEN_DATE,
 } from "@/constants/app";
 import { DEPOSITABLE_ITEMS } from "@/constants/depositable-items";
+import {
+  ANNOUNCEMENT_FEE_CREDITS,
+  listingNotice,
+} from "@/constants/market-fees";
+import {
+  PASSWORD_RESET_EMAIL_INTERVAL_MINUTES,
+  PASSWORD_RESET_LINK_MINUTES,
+} from "@/constants/password-reset";
 import type { NewsId } from "@/constants/news";
 import { RANKING_PAGE_SIZE } from "@/constants/pagination";
 import {
@@ -62,6 +70,72 @@ const everyHours = (hours: number) =>
 // The text of each news item; its date, title and summary are in constants/news.ts. Every figure
 // comes from the server config or the site's limits, so the text follows them.
 const bodies: Record<NewsId, ReactNode> = {
+  "forgot-password": (
+    <>
+      <p>
+        It happens to everyone: you come back after a break and the password is
+        gone from your head. No need to write to us any more, you can now set a
+        new one yourself.
+      </p>
+      <ol>
+        <li>
+          On the <Link href="/login">login page</Link>, under the form, click{" "}
+          <strong>Forgot your password? Reset it</strong>.
+        </li>
+        <li>
+          Enter your username and the email of your account, the one you gave
+          when you registered.
+        </li>
+        <li>
+          Open the email from {BRAND} and click{" "}
+          <strong>Set a new password</strong>. If the button does not work, the
+          same link is right below it.
+        </li>
+        <li>Choose your new password, and you are ready to log in.</li>
+      </ol>
+      <p>
+        <strong>Good to know.</strong> The link works for{" "}
+        {formatNumber(PASSWORD_RESET_LINK_MINUTES)} minutes and only once. If
+        the email is not in your inbox, take a look in the spam folder; you can
+        ask for a new one every{" "}
+        {formatNumber(PASSWORD_RESET_EMAIL_INTERVAL_MINUTES)} minutes.
+      </p>
+      <p>
+        <strong>Safer account.</strong> A new password, set this way or on the
+        account page, logs out every other browser where your account was signed
+        in. So if someone else knew your old password, they are out.
+      </p>
+      <p>
+        <Link href="/forgot-password">Reset your password</Link>
+      </p>
+    </>
+  ),
+  "market-announcements": (
+    <>
+      <p>Got something good to sell? Now the whole server can hear about it.</p>
+      <p>
+        When you list an item on the market, tick{" "}
+        <strong>Announce in game</strong>. Every player online at that moment
+        sees a blue line in the chat: &ldquo;
+        {listingNotice("your character", "the item")}&rdquo;. The price stays on
+        the market, so curious buyers come to have a look.
+      </p>
+      <p>
+        <strong>What it costs.</strong> {formatNumber(ANNOUNCEMENT_FEE_CREDITS)}{" "}
+        credits, on top of the listing. If the game cannot be reached at that
+        moment, your item is still listed and the credits come straight back to
+        you.
+      </p>
+      <p>
+        No credits yet? You earn them just by staying online in{" "}
+        {AFK_CREDIT_ZONES.map((zone) => zone.name).join(" or ")}, see{" "}
+        <Link href="/news/afk-credits">AFK credits</Link>.
+      </p>
+      <p>
+        <Link href="/user-panel/market/sell">Sell an item</Link>
+      </p>
+    </>
+  ),
   "party-experience": (
     <>
       <p>
@@ -104,6 +178,17 @@ const bodies: Record<NewsId, ReactNode> = {
         </p>
       )}
       <p>Happy Hour counts for every member too.</p>
+      <p>
+        <strong>Who can join.</strong> A party is for players of about the same
+        level: to join, your level has to be close to the level of every member
+        already in it, not just the leader&apos;s. If it is too far from one of
+        them, the game tells you so.
+      </p>
+      <p>
+        <strong>After a reset.</strong> A reset or a grand reset always takes
+        you out of your party, so you come back fresh. Your friends just invite
+        you again.
+      </p>
     </>
   ),
   "afk-credits": (
