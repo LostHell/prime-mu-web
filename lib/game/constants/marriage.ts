@@ -5,7 +5,7 @@
  * by hand when those change.
  */
 export const MARRIAGE = {
-  /** The experience each of a couple hunting together outside a party gets, in % of alone. */
+  /** 100 + the bonus (in % of its own experience alone) each of a couple near a kill gets outside a party. */
   experiencePercent: 130,
   /** Added to the party's experience rate for the two of them when they are in one party. */
   partyBonusPercent: 30,

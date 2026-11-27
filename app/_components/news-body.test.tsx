@@ -241,7 +241,14 @@ test("walks a couple through the wedding, with the price, the experience and /di
   );
   expect(
     screen.getByText("More experience together.").closest("p"),
-  ).toHaveTextContent("each of you gets 30% more experience than alone");
+  ).toHaveTextContent(
+    "the one who hit it gets their experience as usual plus 30% more from the marriage, and the other one gets the 30% even without hitting.",
+  );
+  expect(
+    screen.getByText("More experience together.").closest("p"),
+  ).toHaveTextContent(
+    "If you both fight, each gets their own share plus the 30%.",
+  );
   expect(
     screen.getByText("More experience together.").closest("p"),
   ).toHaveTextContent("the party's bonus plus another 30%.");

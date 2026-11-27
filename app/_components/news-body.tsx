@@ -106,11 +106,14 @@ const bodies: Record<NewsId, ReactNode> = {
       </ol>
       <p>
         <strong>More experience together.</strong> When you hunt as a couple
-        outside a party and both of you are within{" "}
-        {formatNumber(MARRIAGE.maxDistance)} steps of the monster, each of you
-        gets {MARRIAGE.experiencePercent - 100}% more experience than alone,
-        even the one who did not hit it. In a party together, the two of you get
-        the party&apos;s bonus plus another {MARRIAGE.partyBonusPercent}%.
+        outside a party and one of you kills a monster with both of you within{" "}
+        {formatNumber(MARRIAGE.maxDistance)} steps of it, the one who hit it
+        gets their experience as usual plus {MARRIAGE.experiencePercent - 100}%
+        more from the marriage, and the other one gets the{" "}
+        {MARRIAGE.experiencePercent - 100}% even without hitting. If you both
+        fight, each gets their own share plus the{" "}
+        {MARRIAGE.experiencePercent - 100}%. In a party together, the two of you
+        get the party&apos;s bonus plus another {MARRIAGE.partyBonusPercent}%.
       </p>
       <p>
         <strong>Never far apart.</strong> <code>/tracemarry</code> takes you
