@@ -15,6 +15,8 @@ export interface RankingEntry {
   level: number;
   resets: number;
   guild?: string;
+  /** Character.MapNumber; only the online list asks for it. */
+  map?: number | null;
 }
 
 type LeaderboardEntry = RankingEntry & { classId: number | null };

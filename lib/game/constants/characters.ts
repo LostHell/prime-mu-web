@@ -12,6 +12,17 @@ export const CHARACTER_CLASS_BY_ID: Record<number, CharacterClass> = {
   48: "Magic Gladiator",
 };
 
+/** The short names players use for the classes (the online list). */
+export const CHARACTER_CLASS_SHORT_NAME: Record<CharacterClass, string> = {
+  "Dark Wizard": "DW",
+  "Soul Master": "SM",
+  "Dark Knight": "DK",
+  "Blade Knight": "BK",
+  "Fairy Elf": "FE",
+  "Muse Elf": "ME",
+  "Magic Gladiator": "MG",
+};
+
 /** Classes a new character can start as. The other entries are their evolutions. */
 export const BASE_CHARACTER_CLASSES = [
   CHARACTER_CLASS_BY_ID[0],

@@ -12,6 +12,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { MAX_SEARCH_LENGTH } from "@/constants/pagination";
+import { characterClassShortName } from "@/lib/game/characters/class-name";
+import { onlineMapName } from "@/lib/game/maps/online-map-name";
 import type { RankingEntry } from "@/lib/queries/get-rankings";
 import { cn } from "@/lib/utils";
 import { formatNumber } from "@/lib/utils/numbers";
@@ -30,6 +32,9 @@ export default function PlayersTable({
   view: RankingView;
   onlineNames: ReadonlySet<string>;
 }) {
+  // The online list: where each one is, and the classes by their short names to make room for it.
+  const online = view === "online";
+  const columns = online ? 8 : 7;
   return (
     <div>
       <Form
@@ -62,6 +67,9 @@ export default function PlayersTable({
             <TableHead>#</TableHead>
             <TableHead>Character</TableHead>
             <TableHead className="hidden md:table-cell">Class</TableHead>
+            {online && (
+              <TableHead className="hidden md:table-cell">Map</TableHead>
+            )}
             <TableHead className="hidden lg:table-cell">Guild</TableHead>
             <TableHead>Resets</TableHead>
             <TableHead>Level</TableHead>
@@ -71,25 +79,39 @@ export default function PlayersTable({
         <TableBody>
           {!characters.length && (
             <TableRow>
-              <TableCell colSpan={7}>
+              <TableCell colSpan={columns}>
                 No characters match these filters.
               </TableCell>
             </TableRow>
           )}
           {characters.map((character) => {
-            const online = onlineNames.has(character.name);
+            const isOnline = onlineNames.has(character.name);
+            const className = online
+              ? characterClassShortName(character.class)
+              : character.class;
+            const mapName = online ? onlineMapName(character.map) : undefined;
             return (
               <TableRow key={character.name}>
                 <TableCell className="text-gold">{character.rank}</TableCell>
                 <TableCell className="font-medium">
                   <span>{character.name}</span>
                   <span className="text-muted-foreground block text-xs md:hidden">
-                    {character.class}
+                    {online
+                      ? [className, mapName].filter(Boolean).join(" · ")
+                      : className}
                   </span>
                 </TableCell>
-                <TableCell className="hidden md:table-cell">
-                  {character.class}
+                <TableCell
+                  className="hidden md:table-cell"
+                  title={online ? character.class : undefined}
+                >
+                  {className}
                 </TableCell>
+                {online && (
+                  <TableCell className="hidden md:table-cell">
+                    {mapName ?? "—"}
+                  </TableCell>
+                )}
                 <TableCell className="text-muted-foreground hidden lg:table-cell">
                   {character.guild || "—"}
                 </TableCell>
@@ -102,11 +124,11 @@ export default function PlayersTable({
                     <span
                       className={cn(
                         "size-2 rounded-full",
-                        online ? "bg-online" : "bg-muted-foreground",
+                        isOnline ? "bg-online" : "bg-muted-foreground",
                       )}
                       aria-hidden="true"
                     />
-                    {online ? "Online" : "Offline"}
+                    {isOnline ? "Online" : "Offline"}
                   </span>
                 </TableCell>
               </TableRow>
