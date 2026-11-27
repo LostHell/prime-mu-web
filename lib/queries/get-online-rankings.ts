@@ -44,7 +44,13 @@ export async function getOnlineRankings({
     orderBy: [{ ResetCount: "desc" }, { cLevel: "desc" }, { Name: "asc" }],
     skip: rowOffset,
     take: normalizedPageSize + 1,
-    select: { Name: true, Class: true, cLevel: true, ResetCount: true },
+    select: {
+      Name: true,
+      Class: true,
+      cLevel: true,
+      ResetCount: true,
+      MapNumber: true,
+    },
   });
   const visible = rows.slice(0, normalizedPageSize);
   const guildMembers = visible.length
@@ -61,6 +67,7 @@ export async function getOnlineRankings({
     level: row.cLevel,
     resets: row.ResetCount,
     guild: guildMap.get(row.Name),
+    map: row.MapNumber,
   }));
 
   return { characters, hasNext: rows.length > normalizedPageSize };
