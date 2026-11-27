@@ -22,6 +22,7 @@ import {
 } from "@/constants/resets";
 import { VERSION } from "@/constants/server";
 import { AFK_CREDIT_ZONES } from "@/lib/game/constants/afk-credits";
+import { MARRIAGE } from "@/lib/game/constants/marriage";
 import { serverConfig } from "@/lib/game/server-config";
 import { cn } from "@/lib/utils";
 import { formatLongDate } from "@/lib/utils/dates";
@@ -54,12 +55,13 @@ const questPoints = questWindow
   .reduce((sum, reward) => sum + reward.value, 0);
 
 const party = serverConfig.party;
-// 2 members and up: index 0 is a member with the rest of the party far away.
+// 2 members and up: index 0 is a member with the rest of the party far away. The server's rates are
+// in % of the experience alone (125 = a quarter more); the news gives what is added to it (25%).
 const partyRows = (party?.experience.oneClass ?? [])
   .map((oneClass, index) => ({
     members: index + 1,
-    oneClass,
-    mixedClasses: party?.experience.mixedClasses[index],
+    oneClass: oneClass - 100,
+    mixedClasses: (party?.experience.mixedClasses[index] ?? 100) - 100,
   }))
   .slice(1);
 const partyAlone = party?.experience.oneClass[0];
@@ -70,6 +72,66 @@ const everyHours = (hours: number) =>
 // The text of each news item; its date, title and summary are in constants/news.ts. Every figure
 // comes from the server config or the site's limits, so the text follows them.
 const bodies: Record<NewsId, ReactNode> = {
+  marriage: (
+    <>
+      <p>
+        Wedding bells are ringing in {BRAND}! A Dark Knight, Dark Wizard or
+        Magic Gladiator can now marry a Fairy Elf, and the whole server gets to
+        hear about it.
+      </p>
+      <p>
+        <strong>How to get married.</strong>
+      </p>
+      <ol>
+        <li>
+          Stand together, fewer than {formatNumber(MARRIAGE.maxDistance)} steps
+          apart. Neither of you may be married already, and the two characters
+          have to be on different accounts.
+        </li>
+        <li>
+          He writes <code>/marry</code> and her name, for example{" "}
+          <code>/marry Elfina</code>.
+        </li>
+        <li>
+          She has {formatNumber(MARRIAGE.answerSeconds)} seconds to answer with{" "}
+          <code>/marry yes</code> or <code>/marry no</code>.
+        </li>
+        <li>
+          On her yes, each of you pays for the wedding: an{" "}
+          <strong>excellent Ring of Ice or Ring of Poison</strong> from the
+          inventory and {formatNumber(MARRIAGE.money)} zen. A ring you wear is
+          never taken, only one in the inventory. Then a golden message tells
+          everyone online that you are married.
+        </li>
+      </ol>
+      <p>
+        <strong>More experience together.</strong> When you hunt as a couple
+        outside a party and both of you are within{" "}
+        {formatNumber(MARRIAGE.maxDistance)} steps of the monster, each of you
+        gets {MARRIAGE.experiencePercent - 100}% more experience than alone,
+        even the one who did not hit it. In a party together, the two of you get
+        the party&apos;s bonus plus another {MARRIAGE.partyBonusPercent}%.
+      </p>
+      <p>
+        <strong>Never far apart.</strong> <code>/tracemarry</code> takes you
+        straight to your wife or husband. It goes only to maps you could reach
+        with /move, with the same level and other conditions, and never into or
+        out of Blood Castle or Devil Square. You also see in the chat when your
+        partner comes online or leaves the game.
+      </p>
+      <p>
+        <strong>If it does not work out.</strong> Either of you can end the
+        marriage at any time with <code>/divorce</code>, for free. The one who
+        uses it has to wait {formatNumber(MARRIAGE.divorceWaitDays)} days before
+        marrying again; the other can marry right away.
+      </p>
+      <p>
+        <strong>Good to know.</strong> If a character is deleted and made again
+        with the same name but another class, the marriage ends at its next
+        login.
+      </p>
+    </>
+  ),
   "forgot-password": (
     <>
       <p>
@@ -146,9 +208,9 @@ const bodies: Record<NewsId, ReactNode> = {
       {partyRows.length > 0 && (
         <>
           <p>
-            <strong>How much.</strong> Each member gets this much of the
-            experience the monster gives them alone, by how many members are
-            near it:
+            <strong>How much.</strong> Each member gets this much more
+            experience than the monster gives them alone, by how many members
+            are near it:
           </p>
           <ul>
             {partyRows.map((row) => (
@@ -173,8 +235,8 @@ const bodies: Record<NewsId, ReactNode> = {
       {partyAlone !== undefined && (
         <p>
           <strong>Stay close.</strong> If the rest of the party is far from the
-          monster, you get only {partyAlone}% of its experience
-          {partyAlone < 100 ? ": less than alone" : ""}.
+          monster, you get only {partyAlone}% of the experience you would get
+          alone.
         </p>
       )}
       <p>Happy Hour counts for every member too.</p>
