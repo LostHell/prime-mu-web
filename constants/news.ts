@@ -6,6 +6,14 @@
  */
 export const NEWS = [
   {
+    id: "marriage",
+    date: "27 Nov 2026",
+    dateTime: "2026-11-27",
+    title: "Marriage System: say yes and level up together",
+    summary:
+      "A Dark Knight, Dark Wizard or Magic Gladiator can now marry a Fairy Elf. Married couples get more experience hunting together and can go to each other with /tracemarry.",
+  },
+  {
     id: "forgot-password",
     date: "26 Nov 2026",
     dateTime: "2026-11-26",

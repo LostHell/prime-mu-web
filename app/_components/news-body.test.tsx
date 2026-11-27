@@ -132,10 +132,10 @@ test("gives the party experience for 2 to 5 members, and the summary its best fi
 
   expect(screen.getAllByRole("listitem")).toHaveLength(4);
   expect(screen.getByText("2 members:").closest("li")).toHaveTextContent(
-    "2 members: 125% with one class, 140% with mixed classes.",
+    "2 members: 25% with one class, 40% with mixed classes.",
   );
   expect(screen.getByText("5 members:").closest("li")).toHaveTextContent(
-    "5 members: 200% with one class, 230% with mixed classes.",
+    "5 members: 100% with one class, 130% with mixed classes.",
   );
   expect(screen.getByText(/within 10 steps of it/)).toBeInTheDocument();
   expect(
@@ -144,7 +144,7 @@ test("gives the party experience for 2 to 5 members, and the summary its best fi
     "each member gets their own experience, as if they had killed the monster alone, plus the party's bonus.",
   );
   expect(screen.getByText(/you get only 50%/)).toHaveTextContent(
-    "you get only 50% of its experience: less than alone.",
+    "you get only 50% of the experience you would get alone.",
   );
 });
 
@@ -227,4 +227,31 @@ test("gives no figures in the new summaries: the site's limits may change", () =
   for (const id of ["forgot-password", "market-announcements"]) {
     expect(NEWS.find((item) => item.id === id)?.summary).not.toMatch(/\d/);
   }
+});
+
+test("walks a couple through the wedding, with the price, the experience and /divorce", () => {
+  render(<NewsBody id="marriage" />);
+
+  expect(screen.getAllByRole("listitem")).toHaveLength(4);
+  expect(screen.getByText(/On her yes/)).toHaveTextContent(
+    "excellent Ring of Ice or Ring of Poison from the inventory and 50,000,000 zen.",
+  );
+  expect(screen.getByText(/seconds to answer/)).toHaveTextContent(
+    "She has 60 seconds to answer with /marry yes or /marry no.",
+  );
+  expect(
+    screen.getByText("More experience together.").closest("p"),
+  ).toHaveTextContent("each of you gets 30% more experience than alone");
+  expect(
+    screen.getByText("More experience together.").closest("p"),
+  ).toHaveTextContent("the party's bonus plus another 30%.");
+  expect(
+    screen.getByText("If it does not work out.").closest("p"),
+  ).toHaveTextContent("has to wait 7 days before marrying again");
+});
+
+test("gives no figures in the marriage summary: the server's settings may change", () => {
+  expect(NEWS.find((item) => item.id === "marriage")?.summary).not.toMatch(
+    /\d/,
+  );
 });
